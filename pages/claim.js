@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import Confetti from 'react-confetti'
+import { useWindowSize, useTimeout } from 'react-use'
 import { useAccount, useConnect } from 'wagmi'
 
 export default function Claim() {
@@ -6,6 +8,10 @@ export default function Claim() {
   const [{ data: accountData }, disconnect] = useAccount({
     fetchEns: true,
   })
+
+  const [claimed, setClaimed] = useState(false)
+  const { width, height } = useWindowSize()
+  const [isComplete] = useTimeout(5000)
 
   return (
     <>
@@ -23,7 +29,12 @@ export default function Claim() {
                 <div class="stats stats-vertical lg:stats-horizontal shadow my-4">
                   <div class="stat">
                     <div class="stat-figure text-secondary">
-                      <button class="btn btn-primary grow">Claim</button>
+                      <button
+                        class="btn btn-primary grow"
+                        onClick={() => setClaimed(true)}
+                      >
+                        Claim
+                      </button>
                     </div>
                     <div class="stat-title">Your claimable</div>
                     <div class="stat-value">5</div>
@@ -35,6 +46,16 @@ export default function Claim() {
           </div>
         </div>
       </div>
+      {claimed ? (
+        <Confetti
+          width={width / 3}
+          height={height}
+          recycle={!isComplete()}
+          style={{ left: '33%' }}
+        />
+      ) : (
+        ''
+      )}
     </>
   )
 }

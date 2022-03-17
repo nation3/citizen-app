@@ -8,6 +8,7 @@ import {
   UserIcon,
   LogoutIcon,
   XCircleIcon,
+  MenuIcon,
 } from '@heroicons/react/outline'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -59,26 +60,16 @@ export default function Layout({ children }) {
       <div className="flex flex-col h-screen">
         <div class="navbar bg-base-100 border-slate-100 border-b-2 py-0 pl-0">
           <div class="navbar-start border-slate-100 pl-0">
-            <div class="w-80 border-slate-100 border-r-2 py-4 box-content">
+            <div class="w-80 border-slate-100 lg:border-r-2 py-4 box-content">
               <div className="pl-6 pt-2 cursor-pointer">
-                <Link href="/">
-                  <Image src={Logo}></Image>
-                </Link>
+                <div class="flex-none hidden lg:block">
+                  <Link href="/">
+                    <Image src={Logo}></Image>
+                  </Link>
+                </div>
                 <div class="flex-none lg:hidden">
                   <label for="my-drawer-2" class="btn btn-square btn-ghost">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      class="inline-block w-6 h-6 stroke-current"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M4 6h16M4 12h16M4 18h16"
-                      ></path>
-                    </svg>
+                    <MenuIcon className="h-8 w-8" />
                   </label>
                 </div>
               </div>
@@ -103,7 +94,7 @@ export default function Layout({ children }) {
         <div className="drawer drawer-mobile w-full grow max-h-screen flex-1">
           <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
 
-          <div className="drawer-side border-slate-100 border-r-2">
+          <div className="drawer-side border-slate-100 border-r-2 z-10">
             <label for="my-drawer-2" className="drawer-overlay"></label>
             <ul className="menu p-4 overflow-y-auto w-80 text-base-content bg-white">
               {navigation.map((item) => (
@@ -177,12 +168,16 @@ export default function Layout({ children }) {
                 Sign in by connecting your account
               </h3>
               <p className="p-4">You can choose from these providers:</p>
-              <div class="alert alert-error mb-4">
-                <div>
-                  <XCircleIcon className="h-5 w-5" />
-                  <span>{connectError?.message ?? 'Failed to connect'}</span>
+              {connectError ? (
+                <div class="alert alert-error mb-4">
+                  <div>
+                    <XCircleIcon className="h-5 w-5" />
+                    <span>{connectError?.message || 'Failed to connect'}</span>
+                  </div>
                 </div>
-              </div>
+              ) : (
+                ''
+              )}
               <ul class="menu bg-base-100 p-2 -m-2 rounded-box">
                 {connectData.connectors.map((connector) => (
                   <li>
