@@ -1,0 +1,7 @@
+{
+  "extends": ["next", "prettier"],
+  "rules": {
+    "sort-imports": 1,
+    "react/no-unescaped-entities": 0
+  }
+}
