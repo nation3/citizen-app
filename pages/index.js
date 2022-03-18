@@ -1,11 +1,6 @@
-import Image from 'next/image'
-import Link from 'next/link'
-import Head from '../components/Head'
-import BigTitle from '../components/BigTitle'
-import GradientLink from '../components/GradientLink'
-import ThesisIcon from '../public/icons/thesis.svg'
-import RfsIcon from '../public/icons/rfs.svg'
-import TeamIcon from '../public/icons/team.svg'
+import React, { useState, useEffect, useRef } from 'react'
+import Confetti from 'react-confetti'
+import { useWindowSize, useTimeout } from 'react-use'
 import { useAccount, useConnect } from 'wagmi'
 
 export default function Home() {
@@ -13,44 +8,53 @@ export default function Home() {
   const [{ data: accountData }, disconnect] = useAccount({
     fetchEns: true,
   })
+
+  const [claimed, setClaimed] = useState(false)
+  const [width, setWidth] = useState(0)
+  const [height, setHeight] = useState(0)
+  const elementRef = useRef()
+  const [isComplete] = useTimeout(5000)
+
+  useEffect(() => {
+    setWidth(elementRef.current.offsetWidth)
+    setHeight(elementRef.current.offsetHeight)
+  }, [])
+
   return (
     <>
-      <Head
-        title=""
-        description="It's time to reinvent the nation state."
-        image=""
-        type="website"
-      />
-      <div class="hero min-h-screen bg-base-100">
-        <div class="hero-content text-center">
+      <div
+        ref={elementRef}
+        class="hero bg-gradient-to-r from-n3blue-100 to-n3green-100 flex-auto overflow-auto relative"
+      >
+        {claimed && (
+          <Confetti width={width} height={height} recycle={!isComplete()} />
+        )}
+        <div class="hero-content">
           <div class="max-w-md">
-            <h1 class="text-5xl font-bold">Hello there</h1>
-            <div>
-              <img src={accountData?.ens?.avatar} alt="ENS Avatar" />
-              <div>
-                {accountData?.ens?.name
-                  ? `${accountData?.ens?.name} (${accountData?.address})`
-                  : accountData?.address}
-              </div>
-              <div>Connected to {accountData?.connector.name}</div>
-              <button onClick={disconnect}>Disconnect</button>
-            </div>
-            <div>
-              {connectData.connectors.map((connector) => (
-                <button
-                  disabled={!connector.ready}
-                  key={connector.id}
-                  onClick={() => connect(connector)}
-                  className="btn btn-primary"
-                >
-                  {connector.name}
-                  {!connector.ready && ' (unsupported)'}
-                </button>
-              ))}
+            <div class="card w-96 bg-base-100 shadow-xl">
+              <div class="card-body items-stretch items-center">
+                <h2 class="card-title text-center">Welcome!</h2>
+                <p>
+                  If you have participated in the $NATION tweetdrop, you can
+                  claim here. If not, you can buy $NATION.
+                </p>
 
-              {connectError && (
-                <div>{connectError?.message ?? 'Failed to connect'}</div>
-              )}
+                <div class="stats stats-vertical lg:stats-horizontal shadow my-4">
+                  <div class="stat">
+                    <div class="stat-figure text-secondary">
+                      <button
+                        class="btn btn-primary grow"
+                        onClick={() => setClaimed(true)}
+                      >
+                        Claim
+                      </button>
+                    </div>
+                    <div class="stat-title">Your claimable</div>
+                    <div class="stat-value">5</div>
+                    <div class="stat-desc">NATION tokens</div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

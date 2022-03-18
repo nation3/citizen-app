@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import Confetti from 'react-confetti'
 import { useWindowSize, useTimeout } from 'react-use'
 import { useAccount, useConnect } from 'wagmi'
+import ActionNeedsAccount from '../components/ActionNeedsAccount'
 
 export default function Claim() {
   const [{ data: connectData, error: connectError }, connect] = useConnect()
@@ -42,12 +43,12 @@ export default function Claim() {
                 <div class="stats stats-vertical lg:stats-horizontal shadow my-4">
                   <div class="stat">
                     <div class="stat-figure text-secondary">
-                      <button
-                        class="btn btn-primary grow"
+                      <ActionNeedsAccount
+                        className="btn btn-primary grow"
                         onClick={() => setClaimed(true)}
                       >
                         Claim
-                      </button>
+                      </ActionNeedsAccount>
                     </div>
                     <div class="stat-title">Your claimable</div>
                     <div class="stat-value">5</div>

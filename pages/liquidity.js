@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useAccount, useConnect } from 'wagmi'
+import ActionNeedsAccount from '../components/ActionNeedsAccount'
 
 export default function Liquidity() {
   const [{ data: connectData, error: connectError }, connect] = useConnect()
@@ -37,7 +38,9 @@ export default function Liquidity() {
                 <div class="stats stats-vertical lg:stats-horizontal shadow mb-4">
                   <div class="stat">
                     <div class="stat-figure text-secondary">
-                      <button class="btn btn-primary grow">Claim</button>
+                      <ActionNeedsAccount className="btn btn-primary grow">
+                        Claim
+                      </ActionNeedsAccount>
                     </div>
                     <div class="stat-title">Your rewards</div>
                     <div class="stat-value">203030</div>
@@ -78,9 +81,9 @@ export default function Liquidity() {
                             <button class="btn btn-outline">Max</button>
                           </div>
                           <div class="card-actions mt-4">
-                            <button class="btn btn-primary w-full">
+                            <ActionNeedsAccount className="btn btn-primary w-full">
                               Stake
-                            </button>
+                            </ActionNeedsAccount>
                           </div>
                         </>
                       ) : (
@@ -95,9 +98,9 @@ export default function Liquidity() {
                             <button class="btn btn-outline">Max</button>
                           </div>
                           <div class="card-actions mt-4">
-                            <button class="btn btn-primary w-full">
+                            <ActionNeedsAccount className="btn btn-primary w-full">
                               Unstake
-                            </button>
+                            </ActionNeedsAccount>
                           </div>
                         </>
                       )}

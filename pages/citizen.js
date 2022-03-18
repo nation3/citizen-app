@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useAccount, useConnect } from 'wagmi'
+import ActionNeedsAccount from '../components/ActionNeedsAccount'
 
 export default function Citizen() {
   const [{ data: connectData, error: connectError }, connect] = useConnect()
@@ -39,10 +40,12 @@ export default function Citizen() {
                     <div class="stat-desc">$NATION</div>
                   </div>
                 </div>
-                <button class="btn btn-primary grow">Buy $NATION</button>
-                <button class="btn btn-primary btn-disabled grow">
+                <ActionNeedsAccount className="btn btn-primary grow">
+                  Buy $NATION
+                </ActionNeedsAccount>
+                <ActionNeedsAccount className="btn btn-primary btn-disabled grow">
                   Stake and mint
-                </button>
+                </ActionNeedsAccount>
               </div>
             </div>
           </div>
