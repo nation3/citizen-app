@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Confetti from 'react-confetti'
 import { useWindowSize, useTimeout } from 'react-use'
 import { useAccount, useConnect } from 'wagmi'
@@ -10,12 +10,25 @@ export default function Claim() {
   })
 
   const [claimed, setClaimed] = useState(false)
-  const { width, height } = useWindowSize()
+  const [width, setWidth] = useState(0)
+  const [height, setHeight] = useState(0)
+  const elementRef = useRef()
   const [isComplete] = useTimeout(5000)
+
+  useEffect(() => {
+    setWidth(elementRef.current.offsetWidth)
+    setHeight(elementRef.current.offsetHeight)
+  }, [])
 
   return (
     <>
-      <div class="hero bg-gradient-to-r from-n3blue-100 to-n3green-100 flex-auto overflow-auto">
+      <div
+        ref={elementRef}
+        class="hero bg-gradient-to-r from-n3blue-100 to-n3green-100 flex-auto overflow-auto relative"
+      >
+        {claimed && (
+          <Confetti width={width} height={height} recycle={!isComplete()} />
+        )}
         <div class="hero-content">
           <div class="max-w-md">
             <div class="card w-96 bg-base-100 shadow-xl">
@@ -46,16 +59,6 @@ export default function Claim() {
           </div>
         </div>
       </div>
-      {claimed ? (
-        <Confetti
-          width={width / 3}
-          height={height}
-          recycle={!isComplete()}
-          style={{ left: '33%' }}
-        />
-      ) : (
-        ''
-      )}
     </>
   )
 }
