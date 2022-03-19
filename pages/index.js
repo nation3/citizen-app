@@ -24,34 +24,34 @@ export default function Home() {
     <>
       <div
         ref={elementRef}
-        class="hero bg-gradient-to-r from-n3blue-100 to-n3green-100 flex-auto overflow-auto relative"
+        className="hero bg-gradient-to-r from-n3blue-100 to-n3green-100 flex-auto overflow-auto relative"
       >
         {claimed && (
           <Confetti width={width} height={height} recycle={!isComplete()} />
         )}
-        <div class="hero-content">
-          <div class="max-w-md">
-            <div class="card w-96 bg-base-100 shadow-xl">
-              <div class="card-body items-stretch items-center">
-                <h2 class="card-title text-center">Welcome!</h2>
+        <div className="hero-content">
+          <div className="max-w-md">
+            <div className="card w-96 bg-base-100 shadow-xl">
+              <div className="card-body items-stretch items-center">
+                <h2 className="card-title text-center">Welcome!</h2>
                 <p>
                   If you have participated in the $NATION tweetdrop, you can
                   claim here. If not, you can buy $NATION.
                 </p>
 
-                <div class="stats stats-vertical lg:stats-horizontal shadow my-4">
-                  <div class="stat">
-                    <div class="stat-figure text-secondary">
+                <div className="stats stats-vertical lg:stats-horizontal shadow my-4">
+                  <div className="stat">
+                    <div className="stat-figure text-secondary">
                       <button
-                        class="btn btn-primary grow"
+                        className="btn btn-primary grow"
                         onClick={() => setClaimed(true)}
                       >
                         Claim
                       </button>
                     </div>
-                    <div class="stat-title">Your claimable</div>
-                    <div class="stat-value">5</div>
-                    <div class="stat-desc">NATION tokens</div>
+                    <div className="stat-title">Your claimable</div>
+                    <div className="stat-value">5</div>
+                    <div className="stat-desc">NATION tokens</div>
                   </div>
                 </div>
               </div>

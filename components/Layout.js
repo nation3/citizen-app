@@ -58,32 +58,38 @@ export default function Layout({ children }) {
   return (
     <div className="mx-auto">
       <div className="flex flex-col h-screen">
-        <div class="navbar bg-base-100 border-slate-100 border-b-2 py-0 pl-0">
-          <div class="navbar-start border-slate-100 pl-0">
-            <div class="w-80 border-slate-100 lg:border-r-2 py-4 box-content">
+        <div className="navbar bg-base-100 border-slate-100 border-b-2 py-0 pl-0">
+          <div className="navbar-start border-slate-100 pl-0">
+            <div className="w-80 border-slate-100 lg:border-r-2 py-4 box-content">
               <div className="pl-6 pt-2 cursor-pointer">
-                <div class="flex-none hidden lg:block">
+                <div className="flex-none hidden lg:block">
                   <Link href="/">
                     <Image src={Logo}></Image>
                   </Link>
                 </div>
-                <div class="flex-none lg:hidden">
-                  <label for="my-drawer-2" class="btn btn-square btn-ghost">
+                <div className="flex-none lg:hidden">
+                  <label
+                    htmlFor="my-drawer-2"
+                    className="btn btn-square btn-ghost"
+                  >
                     <MenuIcon className="h-8 w-8" />
                   </label>
                 </div>
               </div>
             </div>
           </div>
-          <div class="navbar-end pr-4">
+          <div className="navbar-end pr-4">
             {accountData ? (
-              <label for="web3-modal" class="mask mask-circle cursor-pointer">
+              <label
+                htmlFor="web3-modal"
+                className="mask mask-circle cursor-pointer"
+              >
                 <Blockies seed={accountData?.address} size={12} />
               </label>
             ) : (
               <label
-                for="web3-modal"
-                class="btn btn-primary text-white modal-button"
+                htmlFor="web3-modal"
+                className="btn btn-primary text-white modal-button"
               >
                 Sign in
               </label>
@@ -92,10 +98,10 @@ export default function Layout({ children }) {
         </div>
 
         <div className="drawer drawer-mobile w-full grow max-h-screen flex-1">
-          <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
+          <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
 
           <div className="drawer-side border-slate-100 border-r-2 z-10">
-            <label for="my-drawer-2" className="drawer-overlay"></label>
+            <label htmlFor="my-drawer-2" className="drawer-overlay"></label>
             <ul className="menu p-4 overflow-y-auto w-80 text-base-content bg-white">
               {navigation.map((item) => (
                 <>
@@ -119,26 +125,26 @@ export default function Layout({ children }) {
               ))}
             </ul>
           </div>
-          <div class="drawer-content flex flex-col">
+          <div className="drawer-content flex flex-col">
             <div className="overflow-y-auto flex-1 flex">{children}</div>
           </div>
         </div>
       </div>
-      <input type="checkbox" id="web3-modal" class="modal-toggle" />
-      <label for="web3-modal" className="modal cursor-pointer">
-        <label class="modal-box relative" for="">
+      <input type="checkbox" id="web3-modal" className="modal-toggle" />
+      <label htmlFor="web3-modal" className="modal cursor-pointer">
+        <label className="modal-box relative" htmlFor="">
           <label
-            for="web3-modal"
-            class="btn btn-sm btn-circle btn-ghost absolute right-6 top-5"
+            htmlFor="web3-modal"
+            className="btn btn-sm btn-circle btn-ghost absolute right-6 top-5"
           >
             ✕
           </label>
 
           {accountData ? (
             <>
-              <h3 class="text-lg font-bold px-4">Account</h3>
-              <p class="p-4">Connected to {accountData.connector.name}</p>
-              <ul class="menu bg-base-100 p-2 -m-2 rounded-box">
+              <h3 className="text-lg font-bold px-4">Account</h3>
+              <p className="p-4">Connected to {accountData.connector.name}</p>
+              <ul className="menu bg-base-100 p-2 -m-2 rounded-box">
                 <li>
                   <a
                     href={`https://etherscan.io/address/${accountData.address}`}
@@ -169,7 +175,7 @@ export default function Layout({ children }) {
               </h3>
               <p className="p-4">You can choose from these providers:</p>
               {connectError ? (
-                <div class="alert alert-error mb-4">
+                <div className="alert alert-error mb-4">
                   <div>
                     <XCircleIcon className="h-5 w-5" />
                     <span>{connectError?.message || 'Failed to connect'}</span>
@@ -178,12 +184,11 @@ export default function Layout({ children }) {
               ) : (
                 ''
               )}
-              <ul class="menu bg-base-100 p-2 -m-2 rounded-box">
+              <ul className="menu bg-base-100 p-2 -m-2 rounded-box">
                 {connectData.connectors.map((connector) => (
-                  <li>
+                  <li key={connector.id}>
                     <a
                       disabled={!connector.ready}
-                      key={connector.id}
                       onClick={() => connect(connector)}
                     >
                       {connectorIcons[connector.name] ? (

@@ -9,7 +9,7 @@ export default function ActionNeedsAccount({ onClick, className, children }) {
           {children}
         </div>
       ) : (
-        <label for="web3-modal" className={`${className} modal-button`}>
+        <label htmlFor="web3-modal" className={`${className} modal-button`}>
           {children}
         </label>
       )}

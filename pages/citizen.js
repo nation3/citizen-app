@@ -11,15 +11,17 @@ export default function Citizen() {
   const [activeTab, setActiveTab] = useState(0)
   return (
     <>
-      <div class="hero bg-gradient-to-r from-n3blue-100 to-n3green-100 flex-auto overflow-auto">
-        <div class="hero-content">
-          <div class="max-w-md">
-            <div class="card w-96 bg-base-100 shadow-xl">
-              <div class="card-body items-stretch items-center">
-                <h2 class="card-title text-center">Become a Nation3 citizen</h2>
-                <ul class="steps steps-vertical lg:steps-horizontal my-8">
-                  <li class="step step-primary">Stake and mint</li>
-                  <li class="step">Adore your passport</li>
+      <div className="hero bg-gradient-to-r from-n3blue-100 to-n3green-100 flex-auto overflow-auto">
+        <div className="hero-content">
+          <div className="max-w-md">
+            <div className="card w-96 bg-base-100 shadow-xl">
+              <div className="card-body items-stretch items-center">
+                <h2 className="card-title text-center">
+                  Become a Nation3 citizen
+                </h2>
+                <ul className="steps steps-vertical lg:steps-horizontal my-8">
+                  <li className="step step-primary">Stake and mint</li>
+                  <li className="step">Adore your passport</li>
                 </ul>
                 <p>
                   To become a citizen, you need to mint a passport NFT by
@@ -27,17 +29,17 @@ export default function Citizen() {
                   citizens are economically aligned.
                 </p>
 
-                <div class="stats stats-vertical lg:stats-horizontal shadow my-4">
-                  <div class="stat">
-                    <div class="stat-title">Needed balance</div>
-                    <div class="stat-value">10</div>
-                    <div class="stat-desc">$NATION</div>
+                <div className="stats stats-vertical lg:stats-horizontal shadow my-4">
+                  <div className="stat">
+                    <div className="stat-title">Needed balance</div>
+                    <div className="stat-value">10</div>
+                    <div className="stat-desc">$NATION</div>
                   </div>
 
-                  <div class="stat">
-                    <div class="stat-title">Your balance</div>
-                    <div class="stat-value">5</div>
-                    <div class="stat-desc">$NATION</div>
+                  <div className="stat">
+                    <div className="stat-title">Your balance</div>
+                    <div className="stat-value">5</div>
+                    <div className="stat-desc">$NATION</div>
                   </div>
                 </div>
                 <ActionNeedsAccount className="btn btn-primary grow">
