@@ -1,16 +1,24 @@
-import React, { useState } from 'react'
+import { useRouter } from 'next/router'
+import React, { useState, useEffect } from 'react'
 import { useAccount, useBalance } from 'wagmi'
-import { useNationBalance } from '../lib/nationToken'
+import { useNationBalance } from '../lib/nation-token'
 import ActionNeedsAccount from '../components/ActionNeedsAccount'
 import LoadingBalance from '../components/LoadingBalance'
 
 const requiredStake = process.env.NEXT_PUBLIC_NATION_REQUIRED_STAKE
 
-export default function Citizen() {
+export default function Join() {
   const [{ data: accountData }] = useAccount()
   const [{ balanceData, balanceLoading }] = useNationBalance(
     accountData?.address
   )
+  const router = useRouter()
+  useEffect(() => {
+    console.log(balanceData)
+    if (!balanceLoading && balanceData) {
+      router.push('/citizen')
+    }
+  }, [balanceData, balanceLoading])
 
   return (
     <>

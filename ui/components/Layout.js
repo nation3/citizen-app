@@ -16,38 +16,8 @@ import { useRouter } from 'next/router'
 import Blockies from 'react-blockies'
 import { useAccount, useConnect } from 'wagmi'
 import { connectorIcons } from '../lib/connectors'
+import { useNationBalance } from '../lib/nation-token'
 import Logo from '../public/logo.svg'
-
-const navigation = [
-  {
-    name: 'Become a citizen',
-    href: '/citizen',
-    icon: <UserAddIcon className="h-5 w-5" />,
-  },
-  {
-    name: 'Claim airdrop',
-    href: '/claim',
-    icon: <SparklesIcon className="h-5 w-5" />,
-  },
-  {
-    name: 'Liquidity rewards',
-    href: '/liquidity',
-    icon: <CurrencyDollarIcon className="h-5 w-5" />,
-  },
-  {
-    name: 'Divider',
-  },
-  {
-    name: 'Homepage',
-    href: 'https://nation3.org',
-    icon: <HomeIcon className="h-5 w-5" />,
-  },
-  {
-    name: 'Wiki',
-    href: 'https://wiki.nation3.org',
-    icon: <NewspaperIcon className="h-5 w-5" />,
-  },
-]
 
 export default function Layout({ children }) {
   const router = useRouter()
@@ -55,6 +25,41 @@ export default function Layout({ children }) {
   const [{ data: accountData }, disconnect] = useAccount({
     fetchEns: true,
   })
+  const [{ balanceData, balanceLoading }] = useNationBalance(
+    accountData?.address
+  )
+
+  const navigation = [
+    {
+      name: balanceData ? 'Welcome citizen' : 'Become a citizen',
+      href: '/join',
+      icon: <UserAddIcon className="h-5 w-5" />,
+    },
+    {
+      name: 'Claim airdrop',
+      href: '/claim',
+      icon: <SparklesIcon className="h-5 w-5" />,
+    },
+    {
+      name: 'Liquidity rewards',
+      href: '/liquidity',
+      icon: <CurrencyDollarIcon className="h-5 w-5" />,
+    },
+    {
+      name: 'Divider',
+    },
+    {
+      name: 'Homepage',
+      href: 'https://nation3.org',
+      icon: <HomeIcon className="h-5 w-5" />,
+    },
+    {
+      name: 'Wiki',
+      href: 'https://wiki.nation3.org',
+      icon: <NewspaperIcon className="h-5 w-5" />,
+    },
+  ]
+
   return (
     <div className="mx-auto">
       <div className="flex flex-col h-screen">
@@ -114,6 +119,7 @@ export default function Layout({ children }) {
                       onClick={() =>
                         (document.getElementById('side-drawer').checked = false)
                       }
+                      key={item.href}
                     >
                       <Link key={item.name} href={item.href}>
                         <a

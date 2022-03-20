@@ -1,10 +1,9 @@
 import { ethers } from 'ethers'
 import { useState, useEffect } from 'react'
 import { useContractRead } from 'wagmi'
-import balancerVaultABI from '../contracts/externalABIs/balancerVault.json'
+import balancerVaultABI from '../../contracts/externalABIs/balancerVault.json'
 
 export function useBalancerPool(id) {
-  console.log(process.env.NEXT_PUBLIC_BALANCER_VAULT_ADDRESS)
   const [{ data: balancerPoolData, loading: balancerPoolTokensLoading }] =
     useContractRead(
       {
@@ -21,7 +20,6 @@ export function useBalancerPool(id) {
   const [nationPrice, setNationPrice] = useState(0)
 
   useEffect(async () => {
-    console.log(balancerPoolData)
     const nationBalance = balancerPoolData?.balances[0]
     const wethBalance = balancerPoolData?.balances[1]
     const priceRes = await fetch(

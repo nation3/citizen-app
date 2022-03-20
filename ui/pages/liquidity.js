@@ -2,8 +2,8 @@ import { ethers } from 'ethers'
 import React, { useState, useEffect } from 'react'
 import { useAccount, useContractRead } from 'wagmi'
 import { useBalancerPool } from '../lib/balancer'
-import { useLiquidityRewards } from '../lib/liquidityRewards'
-import { useNationBalance, usePoolTokenBalance } from '../lib/nationToken'
+import { useLiquidityRewards } from '../lib/liquidity-rewards'
+import { useNationBalance, usePoolTokenBalance } from '../lib/nation-token'
 import ActionNeedsAccount from '../components/ActionNeedsAccount'
 import LoadingBalance from '../components/LoadingBalance'
 
@@ -100,7 +100,7 @@ export default function Liquidity() {
                               balanceLoading={balanceLoading}
                               balanceData={balanceData}
                             />{' '}
-                            NATION
+                            LP tokens
                           </p>
                           <div className="input-group">
                             <input
@@ -119,7 +119,7 @@ export default function Liquidity() {
                       ) : (
                         <>
                           <p className="mb-4">
-                            Available to unstake: 0 pool tokens
+                            Available to unstake: 0 LP tokens
                           </p>
                           <div className="input-group">
                             <input
