@@ -69,7 +69,7 @@ export default function Layout({ children }) {
                 </div>
                 <div className="flex-none lg:hidden">
                   <label
-                    htmlFor="my-drawer-2"
+                    htmlFor="side-drawer"
                     className="btn btn-square btn-ghost"
                   >
                     <MenuIcon className="h-8 w-8" />
@@ -98,15 +98,23 @@ export default function Layout({ children }) {
         </div>
 
         <div className="drawer drawer-mobile w-full grow max-h-screen flex-1">
-          <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
+          <input id="side-drawer" type="checkbox" className="drawer-toggle" />
 
-          <div className="drawer-side border-slate-100 border-r-2 z-10">
-            <label htmlFor="my-drawer-2" className="drawer-overlay"></label>
+          <div className="drawer-side border-slate-100 border-r-2">
+            <label
+              htmlFor="side-drawer"
+              className="drawer-overlay z-10"
+            ></label>
             <ul className="menu p-4 overflow-y-auto w-80 text-base-content bg-white">
               {navigation.map((item) => (
                 <>
                   {item.name !== 'Divider' ? (
-                    <li className="mt-1">
+                    <li
+                      className="mt-1"
+                      onClick={() =>
+                        (document.getElementById('side-drawer').checked = false)
+                      }
+                    >
                       <Link key={item.name} href={item.href}>
                         <a
                           className={

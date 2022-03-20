@@ -14,7 +14,7 @@ export default function Citizen() {
       <div className="hero bg-gradient-to-r from-n3blue-100 to-n3green-100 flex-auto overflow-auto">
         <div className="hero-content">
           <div className="max-w-md">
-            <div className="card w-96 bg-base-100 shadow-xl">
+            <div className="card md:w-96 bg-base-100 shadow-xl">
               <div className="card-body items-stretch items-center">
                 <h2 className="card-title text-center">
                   Become a Nation3 citizen
