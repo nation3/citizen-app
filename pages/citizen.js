@@ -1,14 +1,15 @@
 import React, { useState } from 'react'
-import { useAccount, useConnect } from 'wagmi'
+import { useAccount, useBalance } from 'wagmi'
+import { useNationBalance } from '../lib/nationToken'
 import ActionNeedsAccount from '../components/ActionNeedsAccount'
+import LoadingBalance from '../components/LoadingBalance'
+
+const requiredStake = process.env.NEXT_PUBLIC_NATION_REQUIRED_STAKE
 
 export default function Citizen() {
-  const [{ data: connectData, error: connectError }, connect] = useConnect()
-  const [{ data: accountData }, disconnect] = useAccount({
-    fetchEns: true,
-  })
+  const [{ data: accountData }] = useAccount()
+  const { balanceData, balanceLoading } = useNationBalance(accountData?.address)
 
-  const [activeTab, setActiveTab] = useState(0)
   return (
     <>
       <div className="hero bg-gradient-to-r from-n3blue-100 to-n3green-100 flex-auto overflow-auto">
@@ -25,29 +26,38 @@ export default function Citizen() {
                 </ul>
                 <p>
                   To become a citizen, you need to mint a passport NFT by
-                  locking up 10 $NATION for a year. This is to make sure all
-                  citizens are economically aligned.
+                  locking up {requiredStake} $NATION for a year and renewing
+                  your stake over time. This is to make sure all citizens are
+                  economically aligned.
                 </p>
 
                 <div className="stats stats-vertical lg:stats-horizontal shadow my-4">
                   <div className="stat">
                     <div className="stat-title">Needed balance</div>
-                    <div className="stat-value">10</div>
+                    <div className="stat-value">{requiredStake}</div>
                     <div className="stat-desc">$NATION</div>
                   </div>
 
                   <div className="stat">
                     <div className="stat-title">Your balance</div>
-                    <div className="stat-value">5</div>
+                    <div className="stat-value">
+                      <LoadingBalance
+                        balanceLoading={balanceLoading}
+                        balanceData={balanceData}
+                      />
+                    </div>
                     <div className="stat-desc">$NATION</div>
                   </div>
                 </div>
-                <ActionNeedsAccount className="btn btn-primary grow">
-                  Buy $NATION
-                </ActionNeedsAccount>
-                <ActionNeedsAccount className="btn btn-primary btn-disabled grow">
-                  Stake and mint
-                </ActionNeedsAccount>
+                {balanceData?.value < requiredStake ? (
+                  <ActionNeedsAccount className="btn btn-primary grow">
+                    Buy $NATION
+                  </ActionNeedsAccount>
+                ) : (
+                  <ActionNeedsAccount className="btn btn-primary grow">
+                    Stake and mint
+                  </ActionNeedsAccount>
+                )}
               </div>
             </div>
           </div>

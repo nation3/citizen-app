@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
-import { useAccount, useConnect } from 'wagmi'
+import { useAccount } from 'wagmi'
+import { useNationBalance } from '../lib/nationToken'
 import ActionNeedsAccount from '../components/ActionNeedsAccount'
+import LoadingBalance from '../components/LoadingBalance'
 
 export default function Liquidity() {
-  const [{ data: connectData, error: connectError }, connect] = useConnect()
-  const [{ data: accountData }, disconnect] = useAccount({
-    fetchEns: true,
-  })
+  const [{ data: accountData }] = useAccount()
+  const { balanceData, balanceLoading } = useNationBalance(accountData?.address)
 
   const [activeTab, setActiveTab] = useState(0)
   return (
@@ -71,7 +71,14 @@ export default function Liquidity() {
                     <div className="form-control">
                       {activeTab === 0 ? (
                         <>
-                          <p className="mb-4">Available to stake: 0 NATION</p>
+                          <p className="mb-4">
+                            Available to stake:{' '}
+                            <LoadingBalance
+                              balanceLoading={balanceLoading}
+                              balanceData={balanceData}
+                            />{' '}
+                            NATION
+                          </p>
                           <div className="input-group">
                             <input
                               type="text"

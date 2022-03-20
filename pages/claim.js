@@ -1,13 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react'
 import Confetti from 'react-confetti'
-import { useWindowSize, useTimeout } from 'react-use'
-import { useAccount, useConnect } from 'wagmi'
+import { useTimeout } from 'react-use'
+import { useAccount, useBalance } from 'wagmi'
 import ActionNeedsAccount from '../components/ActionNeedsAccount'
 
 export default function Claim() {
-  const [{ data: connectData, error: connectError }, connect] = useConnect()
-  const [{ data: accountData }, disconnect] = useAccount({
-    fetchEns: true,
+  const [{ data: accountData }] = useAccount()
+  const [{ data: balanceData, error, loading }, getBalance] = useBalance({
+    addressOrName: accountData?.address,
+    token: process.env.NEXT_PUBLIC_NATION_ADDRESS,
+    watch: true,
   })
 
   const [claimed, setClaimed] = useState(false)
@@ -51,7 +53,9 @@ export default function Claim() {
                       </ActionNeedsAccount>
                     </div>
                     <div className="stat-title">Your claimable</div>
-                    <div className="stat-value">5</div>
+                    <div className="stat-value">
+                      {balanceData ? balanceData.formatted : 0}
+                    </div>
                     <div className="stat-desc">NATION tokens</div>
                   </div>
                 </div>
