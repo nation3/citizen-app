@@ -8,7 +8,9 @@ const requiredStake = process.env.NEXT_PUBLIC_NATION_REQUIRED_STAKE
 
 export default function Citizen() {
   const [{ data: accountData }] = useAccount()
-  const { balanceData, balanceLoading } = useNationBalance(accountData?.address)
+  const [{ balanceData, balanceLoading }] = useNationBalance(
+    accountData?.address
+  )
 
   return (
     <>

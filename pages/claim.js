@@ -1,12 +1,14 @@
+import { parseBalanceMap } from '@uniswap/merkle-distributor/parse-balance-map'
 import React, { useState, useEffect, useRef } from 'react'
 import Confetti from 'react-confetti'
 import { useTimeout } from 'react-use'
 import { useAccount, useBalance } from 'wagmi'
 import ActionNeedsAccount from '../components/ActionNeedsAccount'
+import LoadingBalance from '../components/LoadingBalance'
 
 export default function Claim() {
   const [{ data: accountData }] = useAccount()
-  const [{ data: balanceData, error, loading }, getBalance] = useBalance({
+  const [{ data: balanceData, loading: balanceLoading }] = useBalance({
     addressOrName: accountData?.address,
     token: process.env.NEXT_PUBLIC_NATION_ADDRESS,
     watch: true,
@@ -54,7 +56,10 @@ export default function Claim() {
                     </div>
                     <div className="stat-title">Your claimable</div>
                     <div className="stat-value">
-                      {balanceData ? balanceData.formatted : 0}
+                      <LoadingBalance
+                        balanceLoading={balanceLoading}
+                        balanceData={balanceData}
+                      />
                     </div>
                     <div className="stat-desc">NATION tokens</div>
                   </div>

@@ -3,13 +3,15 @@ export default function LoadingBalance({
   balanceData,
   prefix = '',
   suffix = '',
+  decimals = 2,
 }) {
+  console.log(balanceData)
   return (
     <>
       {balanceLoading ? (
         <button className="btn btn-square btn-ghost btn-disabled loading"></button>
       ) : balanceData ? (
-        `${prefix}${balanceData.formatted}${suffix}`
+        `${prefix}${Number(balanceData.formatted).toFixed(decimals)}${suffix}`
       ) : (
         0
       )}

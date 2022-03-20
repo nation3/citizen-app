@@ -1,42 +1,27 @@
 import { ethers } from 'ethers'
 import React, { useState, useEffect } from 'react'
-import { useAccount } from 'wagmi'
-import { useContractRead } from 'wagmi'
-import { useNationBalance } from '../lib/nationToken'
+import { useAccount, useContractRead } from 'wagmi'
+import { useBalancerPool } from '../lib/balancer'
+import { useLiquidityRewards } from '../lib/liquidityRewards'
+import { useNationBalance, usePoolTokenBalance } from '../lib/nationToken'
 import ActionNeedsAccount from '../components/ActionNeedsAccount'
 import LoadingBalance from '../components/LoadingBalance'
-import balancerVaultABI from '../contracts/externalABIs/balancerVault.json'
 
 export default function Liquidity() {
   const [{ data: accountData }] = useAccount()
-  const { balanceData, balanceLoading } = useNationBalance(accountData?.address)
-  const [
-    { data: balancerPoolData, error, loading: balancerPoolTokensLoading },
-  ] = useContractRead(
-    {
-      addressOrName: process.env.NEXT_PUBLIC_BALANCER_VAULT_ADDRESS,
-      contractInterface: balancerVaultABI,
-    },
-    'getPoolTokens',
-    {
-      args: process.env.NEXT_PUBLIC_BALANCER_NATION_ETH_POOL_ID,
-    }
+  const [{ balanceData, balanceLoading }] = useNationBalance(
+    accountData?.address
   )
 
-  const [poolValue, setPoolValue] = useState(0)
+  const [{ poolValue, nationPrice, stakingBalanceData, loadingPool }] =
+    useBalancerPool(process.env.NEXT_PUBLIC_BALANCER_NATION_ETH_POOL_ID)
 
-  useEffect(() => {
-    const wethBalance = balancerPoolData?.balances[1]
-    const ethPrice = 2837
-    console.log(wethBalance)
-    if (wethBalance) {
-      const ethValue = wethBalance.mul(ethPrice)
-      const nationValue = ethValue.mul(4)
-      const totalValue = ethers.utils.formatEther(ethValue.add(nationValue))
-      setPoolValue({ formatted: Math.round((totalValue * 10) / 1000000) / 10 })
-    }
-    // ethers.utils.formatEther(wethBalance?.mul(ethPrice).mul(5))
-  }, [balancerPoolTokensLoading])
+  /*const [{ poolTokenBalanceData, poolTokenBalanceLoading }] = usePoolTokenBalance(
+    accountData?.address
+  )*/
+
+  /* const [{ liquidityRewardsAPY, loadingLiquidityRewards }] =
+    useLiquidityRewards({ nationPrice, poolValue })*/
 
   const [activeTab, setActiveTab] = useState(0)
   return (
@@ -64,10 +49,11 @@ export default function Liquidity() {
                     <div className="stat-title">Total liquidity</div>
                     <div className="stat-value">
                       <LoadingBalance
-                        balanceLoading={balancerPoolTokensLoading}
+                        balanceLoading={loadingPool}
                         balanceData={poolValue}
                         prefix="$"
                         suffix="M"
+                        decimals={2}
                       />
                     </div>
                   </div>
@@ -132,7 +118,9 @@ export default function Liquidity() {
                         </>
                       ) : (
                         <>
-                          <p className="mb-4">Available to unstake: 0 NATION</p>
+                          <p className="mb-4">
+                            Available to unstake: 0 pool tokens
+                          </p>
                           <div className="input-group">
                             <input
                               type="text"
