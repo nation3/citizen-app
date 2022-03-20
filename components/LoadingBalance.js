@@ -1,10 +1,15 @@
-export default function LoadingBalance({ balanceLoading, balanceData }) {
+export default function LoadingBalance({
+  balanceLoading,
+  balanceData,
+  prefix = '',
+  suffix = '',
+}) {
   return (
     <>
       {balanceLoading ? (
-        <button class="btn btn-square btn-ghost btn-disabled loading"></button>
+        <button className="btn btn-square btn-ghost btn-disabled loading"></button>
       ) : balanceData ? (
-        balanceData.formatted
+        `${prefix}${balanceData.formatted}${suffix}`
       ) : (
         0
       )}

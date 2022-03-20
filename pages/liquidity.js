@@ -1,12 +1,42 @@
-import React, { useState } from 'react'
+import { ethers } from 'ethers'
+import React, { useState, useEffect } from 'react'
 import { useAccount } from 'wagmi'
+import { useContractRead } from 'wagmi'
 import { useNationBalance } from '../lib/nationToken'
 import ActionNeedsAccount from '../components/ActionNeedsAccount'
 import LoadingBalance from '../components/LoadingBalance'
+import balancerVaultABI from '../contracts/externalABIs/balancerVault.json'
 
 export default function Liquidity() {
   const [{ data: accountData }] = useAccount()
   const { balanceData, balanceLoading } = useNationBalance(accountData?.address)
+  const [
+    { data: balancerPoolData, error, loading: balancerPoolTokensLoading },
+  ] = useContractRead(
+    {
+      addressOrName: process.env.NEXT_PUBLIC_BALANCER_VAULT_ADDRESS,
+      contractInterface: balancerVaultABI,
+    },
+    'getPoolTokens',
+    {
+      args: process.env.NEXT_PUBLIC_BALANCER_NATION_ETH_POOL_ID,
+    }
+  )
+
+  const [poolValue, setPoolValue] = useState(0)
+
+  useEffect(() => {
+    const wethBalance = balancerPoolData?.balances[1]
+    const ethPrice = 2837
+    console.log(wethBalance)
+    if (wethBalance) {
+      const ethValue = wethBalance.mul(ethPrice)
+      const nationValue = ethValue.mul(4)
+      const totalValue = ethers.utils.formatEther(ethValue.add(nationValue))
+      setPoolValue({ formatted: Math.round((totalValue * 10) / 1000000) / 10 })
+    }
+    // ethers.utils.formatEther(wethBalance?.mul(ethPrice).mul(5))
+  }, [balancerPoolTokensLoading])
 
   const [activeTab, setActiveTab] = useState(0)
   return (
@@ -32,7 +62,14 @@ export default function Liquidity() {
 
                   <div className="stat">
                     <div className="stat-title">Total liquidity</div>
-                    <div className="stat-value">$5M</div>
+                    <div className="stat-value">
+                      <LoadingBalance
+                        balanceLoading={balancerPoolTokensLoading}
+                        balanceData={poolValue}
+                        prefix="$"
+                        suffix="M"
+                      />
+                    </div>
                   </div>
                 </div>
                 <div className="stats stats-vertical lg:stats-horizontal shadow mb-4">
