@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
-import React, { useState, useEffect } from 'react'
-import { useAccount, useBalance } from 'wagmi'
+import React, { useEffect } from 'react'
+import { useAccount } from 'wagmi'
 import { useNationBalance } from '../lib/nation-token'
 import ActionNeedsAccount from '../components/ActionNeedsAccount'
 import LoadingBalance from '../components/LoadingBalance'
@@ -14,9 +14,8 @@ export default function Join() {
   )
   const router = useRouter()
   useEffect(() => {
-    console.log(balanceData)
     if (!balanceLoading && balanceData) {
-      router.push('/citizen')
+      window.location.replace('/citizen')
     }
   }, [balanceData, balanceLoading])
 

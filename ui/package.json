@@ -15,6 +15,7 @@
     "ethers": "^5.6.0",
     "next": "12.0.7",
     "react": "17.0.2",
+    "react-animated-3d-card": "^1.0.2",
     "react-blockies": "^1.4.1",
     "react-confetti": "^6.0.1",
     "react-dom": "17.0.2",

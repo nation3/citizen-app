@@ -13,11 +13,43 @@ import {
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
 import Blockies from 'react-blockies'
 import { useAccount, useConnect } from 'wagmi'
 import { connectorIcons } from '../lib/connectors'
 import { useNationBalance } from '../lib/nation-token'
 import Logo from '../public/logo.svg'
+
+const navigation = [
+  {
+    name: 'Become a citizen',
+    href: '/join',
+    icon: <UserAddIcon className="h-5 w-5" />,
+  },
+  {
+    name: 'Claim airdrop',
+    href: '/claim',
+    icon: <SparklesIcon className="h-5 w-5" />,
+  },
+  {
+    name: 'Liquidity rewards',
+    href: '/liquidity',
+    icon: <CurrencyDollarIcon className="h-5 w-5" />,
+  },
+  {
+    name: 'Divider',
+  },
+  {
+    name: 'Homepage',
+    href: 'https://nation3.org',
+    icon: <HomeIcon className="h-5 w-5" />,
+  },
+  {
+    name: 'Wiki',
+    href: 'https://wiki.nation3.org',
+    icon: <NewspaperIcon className="h-5 w-5" />,
+  },
+]
 
 export default function Layout({ children }) {
   const router = useRouter()
@@ -29,36 +61,15 @@ export default function Layout({ children }) {
     accountData?.address
   )
 
-  const navigation = [
-    {
-      name: balanceData ? 'Welcome citizen' : 'Become a citizen',
-      href: '/join',
-      icon: <UserAddIcon className="h-5 w-5" />,
-    },
-    {
-      name: 'Claim airdrop',
-      href: '/claim',
-      icon: <SparklesIcon className="h-5 w-5" />,
-    },
-    {
-      name: 'Liquidity rewards',
-      href: '/liquidity',
-      icon: <CurrencyDollarIcon className="h-5 w-5" />,
-    },
-    {
-      name: 'Divider',
-    },
-    {
-      name: 'Homepage',
-      href: 'https://nation3.org',
-      icon: <HomeIcon className="h-5 w-5" />,
-    },
-    {
-      name: 'Wiki',
-      href: 'https://wiki.nation3.org',
-      icon: <NewspaperIcon className="h-5 w-5" />,
-    },
-  ]
+  const [nav, setNav] = useState(navigation)
+
+  useEffect(() => {
+    if (!balanceLoading && balanceData) {
+      navigation[0].name = 'Welcome citizen'
+      navigation[0].href = '/citizen'
+      setNav(navigation)
+    }
+  }, [balanceData, balanceLoading])
 
   return (
     <div className="mx-auto">
