@@ -1,9 +1,9 @@
 import { ethers } from 'ethers'
 import { useState, useEffect } from 'react'
-import { useBalance, useContractRead } from 'wagmi'
+import { useBalance } from 'wagmi'
 import { nationRewardsContract, balancerLPToken } from '../lib/config'
 import rewardsContractABI from '../abis/LiquidityRewardsDistributor.json'
-import { useContractWrite } from './working-use-contract-write'
+import { useContractRead, useContractWrite } from './use-contract'
 
 const formatNumber = (number) => {
   if (number) {

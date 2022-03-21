@@ -27,8 +27,6 @@ export default function Liquidity() {
   const [{ data: poolTokenBalanceData, loading: poolTokenBalanceLoading }] =
     usePoolTokenBalance(accountData?.address)
 
-  const errorContext = useErrorContext()
-
   const [
     {
       liquidityRewardsAPY,
@@ -52,7 +50,7 @@ export default function Liquidity() {
   const [{ error: claimError }, claimRewards] =
     useClaimRewards(unclaimedRewards)
   const [activeTab, setActiveTab] = useState(0)
-  handleErrors(errorContext, [error])
+  //handleErrors(errorContext, [error])
 
   return (
     <>

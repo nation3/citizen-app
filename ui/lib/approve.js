@@ -1,6 +1,6 @@
 import { useContractRead } from 'wagmi'
-import { useContractWrite } from '../lib/working-use-contract-write'
 import ERC20ABI from '../abis/ERC20.json'
+import { useContractWrite } from './use-contract'
 
 export function useTokenAllowance({ token, address, spender }) {
   return useContractRead(

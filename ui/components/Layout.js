@@ -252,7 +252,7 @@ export default function Layout({ children }) {
         <div className="fixed right-8 bottom-8">
           <div class="stack">
             {errorContext.errors.map((error) => (
-              <ErrorCard error={error} key={error?.data.message} />
+              <ErrorCard error={error} key={error?.data?.message} />
             ))}
           </div>
         </div>
