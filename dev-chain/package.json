@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "hardhat": "^2.9.1"
+  },
+  "name": "dev-chain",
+  "version": "1.0.0",
+  "license": "MIT"
+}
