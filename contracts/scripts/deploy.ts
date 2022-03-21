@@ -20,28 +20,47 @@ async function main() {
   // manually to make sure everything is compiled
   // await hre.run('compile');
 
-  // We get the contract to deploy
   const WETH_SUPPLY = ethers.BigNumber.from(dec(100000000, 18));
   const NATION_SUPPLY = ethers.BigNumber.from(dec(42096000, 18));
   const LPTOKEN_SUPPLY = ethers.BigNumber.from(dec(3140, 18));
+  const LP_REWARDS = NATION_SUPPLY.mul(3).div(100);
+  const PASS_LOCKING_AMOUNT = ethers.BigNumber.from(dec(10, 18));
+  const LOCKING_DURATION = 13 * 3600 * 24 * 365;
+
+  // We get the contract to deploy
   const ERC20Mock = await ethers.getContractFactory("ERC20Mock");
   const LiquidityRewardsDistributor = await ethers.getContractFactory("LiquidityRewardsDistributor");
   const BalancerPoolsMock = await ethers.getContractFactory("BalancerPoolsMock");
+  const PassportNFT = await ethers.getContractFactory("PassportNFT");
+  const PassportIssuer = await ethers.getContractFactory("PassportIssuer");
 
+  // Deploy contracts
   const NATION = await ERC20Mock.deploy("Nation3 Token", "NATION", NATION_SUPPLY);
   const WETH = await ERC20Mock.deploy("Wrapped Eth", "ETH", WETH_SUPPLY);
   const LpToken = await ERC20Mock.deploy("Balancer ETH/NATION Pair", "ETHNATION", LPTOKEN_SUPPLY);
   const balancerPool = await BalancerPoolsMock.deploy()
   const rewardsDistributor = await LiquidityRewardsDistributor.deploy(); 
+  const passportNFT = await PassportNFT.deploy();
+  const passportIssuer = await PassportIssuer.deploy();
 
   await NATION.deployed();
   await WETH.deployed();
   await LpToken.deployed();
   await balancerPool.deployed();
   await rewardsDistributor.deployed();
+  await passportNFT.deployed();
+  await passportIssuer.deployed();
 
+  // Connect contracts
   await balancerPool.setTokens(NATION.address, WETH.address);
   await rewardsDistributor.initialize(NATION.address, LpToken.address);
+  await passportIssuer.initialize(NATION.address, passportNFT.address);
+  await passportNFT.transferOwnership(passportIssuer.address);
+
+  // Dev setup
+  await NATION.transfer(rewardsDistributor.address, LP_REWARDS);
+  await rewardsDistributor.setRewards(LP_REWARDS, 300);
+  await passportIssuer.setLockingParams(PASS_LOCKING_AMOUNT, LOCKING_DURATION);
 
   const deployment = {
       "weth": WETH.address,
@@ -49,6 +68,8 @@ async function main() {
       "balancerPair": LpToken.address,
       "balancerPool": balancerPool.address,
       "rewardsDistributor": rewardsDistributor.address,
+      "passportNFT": passportNFT.address,
+      "passportIssuer": passportIssuer.address,
   }
 
   console.log(deployment);
