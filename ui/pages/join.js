@@ -2,7 +2,7 @@ import { useRouter } from 'next/router'
 import React, { useEffect } from 'react'
 import { useAccount } from 'wagmi'
 import { useNationBalance } from '../lib/nation-token'
-import ActionNeedsAccount from '../components/ActionNeedsAccount'
+import ActionButton from '../components/ActionButton'
 import LoadingBalance from '../components/LoadingBalance'
 
 const requiredStake = process.env.NEXT_PUBLIC_NATION_REQUIRED_STAKE
@@ -59,13 +59,13 @@ export default function Join() {
                   </div>
                 </div>
                 {balanceData?.value < requiredStake ? (
-                  <ActionNeedsAccount className="btn btn-primary grow">
+                  <ActionButton className="btn btn-primary grow">
                     Buy $NATION
-                  </ActionNeedsAccount>
+                  </ActionButton>
                 ) : (
-                  <ActionNeedsAccount className="btn btn-primary grow">
+                  <ActionButton className="btn btn-primary grow">
                     Stake and mint
-                  </ActionNeedsAccount>
+                  </ActionButton>
                 )}
               </div>
             </div>

@@ -1,6 +1,8 @@
 import { ethers } from 'ethers'
+import { createContext } from 'react'
 import { Provider } from 'wagmi'
 import { connectors } from '../lib/connectors'
+import { ErrorProvider } from '../components/ErrorProvider'
 import Layout from '../components/Layout'
 import '../styles/globals.css'
 
@@ -14,11 +16,13 @@ if (process.env.NEXT_PUBLIC_DEV) {
 
 function App({ Component, pageProps }) {
   return (
-    <Provider autoConnect connectors={connectors} provider={provider}>
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
-    </Provider>
+    <ErrorProvider>
+      <Provider autoConnect connectors={connectors} provider={provider}>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </Provider>
+    </ErrorProvider>
   )
 }
 

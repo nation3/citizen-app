@@ -1,7 +1,6 @@
 import { ethers } from 'ethers'
-import { useState, useMemo } from 'react'
-import { useEffectOnce } from 'react-use'
-import { useAccount, useContract, useSigner } from 'wagmi'
+import { useState } from 'react'
+import { useAccount } from 'wagmi'
 import { useBalancerPool } from '../lib/balancer'
 import {
   balancerPoolId,
@@ -16,11 +15,9 @@ import {
   useWithdrawAndClaim,
   useClaimRewards,
 } from '../lib/liquidity-rewards'
-import { useContractWrite } from '../lib/working-use-contract-write'
-import ActionNeedsAccount from '../components/ActionNeedsAccount'
-import ActionNeedsTokenApproval from '../components/ActionNeedsTokenApproval'
+import ActionButton from '../components/ActionButton'
+import { useErrorContext } from '../components/ErrorProvider'
 import LoadingBalance from '../components/LoadingBalance'
-import rewardsContractABI from '../abis/LiquidityRewardsDistributor.json'
 
 export default function Liquidity() {
   const [{ data: accountData }] = useAccount()
@@ -29,6 +26,8 @@ export default function Liquidity() {
     useBalancerPool(balancerPoolId)
   const [{ data: poolTokenBalanceData, loading: poolTokenBalanceLoading }] =
     usePoolTokenBalance(accountData?.address)
+
+  const errorContext = useErrorContext()
 
   const [
     {
@@ -50,6 +49,7 @@ export default function Liquidity() {
   const [{ data, error, loading }, deposit] = useDeposit(
     ethers.utils.parseEther(depositValue ? depositValue.toString() : '0')
   )
+  errorContext.addError(error)
   const [, withdraw] = useWithdraw(
     ethers.utils.parseEther(withdrawalValue ? withdrawalValue.toString() : '0')
   )
@@ -100,12 +100,12 @@ export default function Liquidity() {
                 <div className="stats stats-vertical lg:stats-horizontal shadow mb-4">
                   <div className="stat">
                     <div className="stat-figure text-secondary">
-                      <ActionNeedsAccount
+                      <ActionButton
                         className="btn btn-primary grow"
                         onClick={claimRewards}
                       >
                         Claim
-                      </ActionNeedsAccount>
+                      </ActionButton>
                     </div>
                     <div className="stat-title">Your rewards</div>
                     <div className="stat-value">
@@ -170,16 +170,18 @@ export default function Liquidity() {
                             </button>
                           </div>
                           <div className="card-actions mt-4">
-                            <ActionNeedsTokenApproval
-                              amountNeeded={poolTokenBalanceData}
-                              token={balancerLPToken}
-                              spender={nationRewardsContract}
+                            <ActionButton
                               className="btn btn-primary w-full"
-                              approveText={'Approve LP token'}
                               onClick={deposit}
+                              approval={{
+                                token: balancerLPToken,
+                                spender: nationRewardsContract,
+                                amountNeeded: poolTokenBalanceData,
+                                approveText: 'Approve LP token',
+                              }}
                             >
                               Deposit
-                            </ActionNeedsTokenApproval>
+                            </ActionButton>
                             {error?.message}
                           </div>
                         </>
@@ -211,12 +213,12 @@ export default function Liquidity() {
                             </button>
                           </div>
                           <div className="card-actions mt-4">
-                            <ActionNeedsAccount
+                            <ActionButton
                               className="btn btn-primary w-full"
                               onClick={withdraw}
                             >
                               Unstake
-                            </ActionNeedsAccount>
+                            </ActionButton>
                           </div>
                         </>
                       )}

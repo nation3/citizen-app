@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { useAccount } from 'wagmi'
 import { useNationBalance } from '../lib/nation-token'
-import ActionNeedsAccount from '../components/ActionNeedsAccount'
+import ActionButton from '../components/ActionButton'
 import Confetti from '../components/Confetti'
 import LoadingBalance from '../components/LoadingBalance'
 
@@ -34,12 +34,12 @@ export default function Claim() {
                 <div className="stats stats-vertical lg:stats-horizontal shadow my-4">
                   <div className="stat">
                     <div className="stat-figure text-secondary">
-                      <ActionNeedsAccount
+                      <ActionButton
                         className="btn btn-primary grow"
                         onClick={() => setClaimed(true)}
                       >
                         Claim
-                      </ActionNeedsAccount>
+                      </ActionButton>
                     </div>
                     <div className="stat-title">Your claimable</div>
                     <div className="stat-value">
