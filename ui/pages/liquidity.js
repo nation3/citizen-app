@@ -1,5 +1,5 @@
 import { ethers } from 'ethers'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAccount } from 'wagmi'
 import { useBalancerPool } from '../lib/balancer'
 import {
@@ -16,7 +16,7 @@ import {
   useClaimRewards,
 } from '../lib/liquidity-rewards'
 import ActionButton from '../components/ActionButton'
-import { useErrorContext } from '../components/ErrorProvider'
+import { useErrorContext, handleErrors } from '../components/ErrorProvider'
 import LoadingBalance from '../components/LoadingBalance'
 
 export default function Liquidity() {
@@ -41,20 +41,18 @@ export default function Liquidity() {
     poolValue,
     address: accountData?.address,
   })
-  console.log(poolTokenBalanceData)
-  console.log(stakingBalance)
-  console.log(unclaimedRewards)
   const [depositValue, setDepositValue] = useState(0)
   const [withdrawalValue, setWithdrawalValue] = useState(0)
   const [{ data, error, loading }, deposit] = useDeposit(
     ethers.utils.parseEther(depositValue ? depositValue.toString() : '0')
   )
-  errorContext.addError(error)
   const [, withdraw] = useWithdraw(
     ethers.utils.parseEther(withdrawalValue ? withdrawalValue.toString() : '0')
   )
-  const [, claimRewards] = useClaimRewards(unclaimedRewards)
+  const [{ error: claimError }, claimRewards] =
+    useClaimRewards(unclaimedRewards)
   const [activeTab, setActiveTab] = useState(0)
+  handleErrors(errorContext, [error])
 
   return (
     <>
@@ -182,7 +180,6 @@ export default function Liquidity() {
                             >
                               Deposit
                             </ActionButton>
-                            {error?.message}
                           </div>
                         </>
                       ) : (

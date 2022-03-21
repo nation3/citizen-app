@@ -31,9 +31,6 @@ export default function ActionNeedsTokenApproval({
     token,
     spender,
   })
-  console.log(tokenAllowance?.toString())
-  console.log(weiAmountNeeded?.toString())
-  console.log(tokenApprovalLoading)
   return (
     <>
       {!tokenAllowanceLoading && !tokenApprovalLoading ? (

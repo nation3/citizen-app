@@ -30,11 +30,13 @@ export function useBalancerPool(id) {
     if (nationBalance && wethBalance) {
       const ethValue = wethBalance.mul(Math.round(ethPrice.usd))
       const nationValue = ethValue.mul(4)
-      //const totalValue = ethers.utils.formatEther(ethValue.add(nationValue))
       const totalValue = ethValue.add(nationValue)
       setPoolValue(totalValue.toNumber() / 1000000)
       const bigPrice = nationValue.mul(10 ^ 2).div(nationBalance)
-      setNationPrice(bigPrice.toNumber() / (10 ^ 2))
+      //setNationPrice(bigPrice.toNumber() / (10 ^ 2))
+      setNationPrice(
+        nationValue.toString() / ethers.utils.formatEther(nationBalance)
+      )
     }
   }, [loadingPool])
   return [{ poolValue, nationPrice, loadingPool }]

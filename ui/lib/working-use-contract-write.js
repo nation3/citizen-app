@@ -21,7 +21,12 @@ export function useContractWrite(config, method, argsAndOverrides) {
     contract.connect(signer)
     try {
       setLoading(true)
-      const data = await contract[method](...argsAndOverrides.args)
+      let data
+      if (argsAndOverrides) {
+        data = await contract[method](...argsAndOverrides.args)
+      } else {
+        data = await contract[method]()
+      }
       setData(data)
       setLoading(false)
     } catch (error) {

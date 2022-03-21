@@ -13,8 +13,6 @@ const formatNumber = (number) => {
 }
 
 export function useLiquidityRewards({ nationPrice, poolValue, address }) {
-  console.log(nationRewardsContract)
-  console.log(address)
   const [{ data: totalRewards, loading: totalRewardsLoading }] =
     useContractRead(
       {
@@ -36,10 +34,6 @@ export function useLiquidityRewards({ nationPrice, poolValue, address }) {
         watch: true,
       }
     )
-  console.log(error)
-  console.log(nationRewardsContract)
-  console.log(rewardsContractABI)
-  console.log(address)
   const [
     {
       data: stakingBalance,
@@ -57,12 +51,16 @@ export function useLiquidityRewards({ nationPrice, poolValue, address }) {
       watch: true,
     }
   )
-  console.log(stakingBalanceError)
   const [liquidityRewardsAPY, setLiquidityRewardsAPY] = useState(0)
 
   useEffect(() => {
-    setLiquidityRewardsAPY((totalRewards * nationPrice) / poolValue)
-  }, [totalRewardsLoading, unclaimedRewardsLoading, stakingBalanceLoading])
+    if (totalRewards) {
+      setLiquidityRewardsAPY(
+        (ethers.utils.formatEther(totalRewards) * nationPrice * 100) /
+          (poolValue * 1000000)
+      )
+    }
+  }, [totalRewardsLoading])
 
   return [
     {

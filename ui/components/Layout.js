@@ -19,6 +19,7 @@ import { useAccount, useConnect } from 'wagmi'
 import { connectorIcons } from '../lib/connectors'
 import { useNationBalance } from '../lib/nation-token'
 import Logo from '../public/logo.svg'
+import ErrorCard from './ErrorCard'
 import { useErrorContext } from './ErrorProvider'
 
 const navigation = [
@@ -251,15 +252,7 @@ export default function Layout({ children }) {
         <div className="fixed right-8 bottom-8">
           <div class="stack">
             {errorContext.errors.map((error) => (
-              <div
-                class="card shadow-md bg-error text-primary-content"
-                key={error?.message}
-              >
-                <div class="card-body">
-                  <h2 class="card-title">Oopsie</h2>
-                  <p>{error?.message}</p>
-                </div>
-              </div>
+              <ErrorCard error={error} key={error?.data.message} />
             ))}
           </div>
         </div>
