@@ -4,6 +4,8 @@ coverage
 coverage.json
 typechain
 
-#Hardhat files
+#Artifacts files
+libs
 cache
 artifacts
+deployment.json

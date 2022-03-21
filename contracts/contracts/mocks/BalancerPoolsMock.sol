@@ -16,7 +16,7 @@ contract BalancerPoolsMock {
 
         poolTokensBalances = new uint256[](2);
         poolTokensBalances[0] = 800000 * 1e18;
-        poolTokensBalances[1] = 200;
+        poolTokensBalances[1] = 200 * 1e18;
 
         _lastChangeBlock = block.number;
     }
