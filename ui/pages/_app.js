@@ -4,9 +4,13 @@ import { connectors } from '../lib/connectors'
 import Layout from '../components/Layout'
 import '../styles/globals.css'
 
-const provider = ethers.getDefaultProvider(null, {
+let provider = ethers.getDefaultProvider(null, {
   infura: process.env.NEXT_PUBLIC_INFURA_ID,
 })
+
+if (process.env.NEXT_PUBLIC_DEV) {
+  provider = new ethers.providers.JsonRpcProvider('http://localhost:8545')
+}
 
 function App({ Component, pageProps }) {
   return (

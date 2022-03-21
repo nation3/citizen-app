@@ -1,4 +1,4 @@
-import { chain, defaultChains } from 'wagmi'
+import { chain, defaultChains, developmentChains } from 'wagmi'
 import { InjectedConnector } from 'wagmi/connectors/injected'
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
 import { WalletLinkConnector } from 'wagmi/connectors/walletLink'
@@ -9,13 +9,15 @@ import WalletConnectIcon from '../public/icons/connectors/walletconnect.svg'
 
 const infuraId = process.env.NEXT_PUBLIC_INFURA_ID
 
+const chains = !process.env.NEXT_PUBLIC_DEV ? defaultChains : developmentChains
+
 export function connectors({ chainId }) {
   const rpcUrl =
     defaultChains.find((x) => x.id === chainId)?.rpcUrls?.[0] ??
     chain.mainnet.rpcUrls[0]
   return [
     new InjectedConnector({
-      defaultChains,
+      chains,
       options: { shimDisconnect: true },
     }),
     new WalletConnectConnector({

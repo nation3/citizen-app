@@ -3,4 +3,9 @@
  */
 module.exports = {
   solidity: "0.8.11",
+  networks: {
+    hardhat: {
+      chainId: 1337,
+    },
+  },
 };

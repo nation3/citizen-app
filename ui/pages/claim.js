@@ -1,16 +1,15 @@
 import { useRef, useState } from 'react'
-import { useAccount, useBalance } from 'wagmi'
+import { useAccount } from 'wagmi'
+import { useNationBalance } from '../lib/nation-token'
 import ActionNeedsAccount from '../components/ActionNeedsAccount'
 import Confetti from '../components/Confetti'
 import LoadingBalance from '../components/LoadingBalance'
 
 export default function Claim() {
   const [{ data: accountData }] = useAccount()
-  const [{ data: balanceData, loading: balanceLoading }] = useBalance({
-    addressOrName: accountData?.address,
-    token: process.env.NEXT_PUBLIC_NATION_ADDRESS,
-    watch: true,
-  })
+  const [{ balanceData, balanceLoading }] = useNationBalance(
+    accountData?.address
+  )
   const [claimed, setClaimed] = useState(false)
 
   const elementRef = useRef()
@@ -46,7 +45,7 @@ export default function Claim() {
                     <div className="stat-value">
                       <LoadingBalance
                         balanceLoading={balanceLoading}
-                        balanceData={balanceData}
+                        balanceData={balanceData?.formatted}
                       />
                     </div>
                     <div className="stat-desc">NATION tokens</div>

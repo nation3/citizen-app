@@ -1,9 +1,5 @@
-import { useRouter } from 'next/router'
-import { useEffect } from 'react'
 import { useAccount } from 'wagmi'
 import { useNationBalance } from '../lib/nation-token'
-import ActionNeedsAccount from '../components/ActionNeedsAccount'
-import LoadingBalance from '../components/LoadingBalance'
 import Passport from '../components/Passport'
 
 const requiredStake = process.env.NEXT_PUBLIC_NATION_REQUIRED_STAKE

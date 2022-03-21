@@ -52,7 +52,7 @@ export default function Join() {
                     <div className="stat-value">
                       <LoadingBalance
                         balanceLoading={balanceLoading}
-                        balanceData={balanceData}
+                        balanceData={balanceData?.formatted}
                       />
                     </div>
                     <div className="stat-desc">$NATION</div>

@@ -1,27 +1,34 @@
-import { ethers } from 'ethers'
-import React, { useState, useEffect } from 'react'
-import { useAccount, useContractRead } from 'wagmi'
+import { useState } from 'react'
+import { useAccount, useContractWrite } from 'wagmi'
 import { useBalancerPool } from '../lib/balancer'
-import { useLiquidityRewards } from '../lib/liquidity-rewards'
-import { useNationBalance, usePoolTokenBalance } from '../lib/nation-token'
+import {
+  useLiquidityRewards,
+  usePoolTokenBalance,
+  useDeposit,
+  useWithdraw,
+  useWithdrawAndClaim,
+} from '../lib/liquidity-rewards'
 import ActionNeedsAccount from '../components/ActionNeedsAccount'
+import ActionNeedsTokenApproval from '../components/ActionNeedsTokenApproval'
 import LoadingBalance from '../components/LoadingBalance'
 
 export default function Liquidity() {
   const [{ data: accountData }] = useAccount()
-  const [{ balanceData, balanceLoading }] = useNationBalance(
-    accountData?.address
+
+  const [{ poolValue, nationPrice, loadingPool }] = useBalancerPool(
+    process.env.NEXT_PUBLIC_BALANCER_NATION_ETH_POOL_ID
   )
+  const [{ data: poolTokenBalanceData, loading: poolTokenBalanceLoading }] =
+    usePoolTokenBalance(accountData?.address)
 
-  const [{ poolValue, nationPrice, stakingBalanceData, loadingPool }] =
-    useBalancerPool(process.env.NEXT_PUBLIC_BALANCER_NATION_ETH_POOL_ID)
-
-  /*const [{ poolTokenBalanceData, poolTokenBalanceLoading }] = usePoolTokenBalance(
-    accountData?.address
-  )*/
-
-  /* const [{ liquidityRewardsAPY, loadingLiquidityRewards }] =
-    useLiquidityRewards({ nationPrice, poolValue })*/
+  const [
+    {
+      liquidityRewardsAPY,
+      unclaimedRewardsData,
+      stakingBalanceData,
+      loadingLiquidityRewards,
+    },
+  ] = useLiquidityRewards({ nationPrice, poolValue })
 
   const [activeTab, setActiveTab] = useState(0)
   return (
@@ -42,7 +49,14 @@ export default function Liquidity() {
                 <div className="stats stats-vertical lg:stats-horizontal shadow my-4">
                   <div className="stat">
                     <div className="stat-title">Current APY</div>
-                    <div className="stat-value">500%</div>
+                    <div className="stat-value">
+                      <LoadingBalance
+                        balanceLoading={loadingLiquidityRewards}
+                        balanceData={liquidityRewardsAPY}
+                        suffix="%"
+                        decimals={0}
+                      />
+                    </div>
                   </div>
 
                   <div className="stat">
@@ -66,7 +80,13 @@ export default function Liquidity() {
                       </ActionNeedsAccount>
                     </div>
                     <div className="stat-title">Your rewards</div>
-                    <div className="stat-value">203030</div>
+                    <div className="stat-value">
+                      <LoadingBalance
+                        balanceLoading={false}
+                        balanceData={unclaimedRewardsData}
+                        decimals={2}
+                      />
+                    </div>
                     <div className="stat-desc">NATION tokens</div>
                   </div>
                 </div>
@@ -97,8 +117,8 @@ export default function Liquidity() {
                           <p className="mb-4">
                             Available to stake:{' '}
                             <LoadingBalance
-                              balanceLoading={balanceLoading}
-                              balanceData={balanceData}
+                              balanceLoading={poolTokenBalanceLoading}
+                              balanceData={poolTokenBalanceData?.formatted}
                             />{' '}
                             LP tokens
                           </p>
@@ -111,9 +131,18 @@ export default function Liquidity() {
                             <button className="btn btn-outline">Max</button>
                           </div>
                           <div className="card-actions mt-4">
-                            <ActionNeedsAccount className="btn btn-primary w-full">
+                            <ActionNeedsTokenApproval
+                              amountNeeded={10000000}
+                              token={
+                                '0xe7f1725e7734ce288f8367e1bb143e90bb3f0512'
+                              }
+                              spender={
+                                '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266'
+                              }
+                              className="btn btn-primary w-full"
+                            >
                               Stake
-                            </ActionNeedsAccount>
+                            </ActionNeedsTokenApproval>
                           </div>
                         </>
                       ) : (
