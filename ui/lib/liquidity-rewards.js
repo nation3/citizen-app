@@ -1,74 +1,86 @@
+import { ethers } from 'ethers'
 import { useState, useEffect } from 'react'
-import {
-  useContractRead,
-  useContractWrite,
-  useBalance,
-  developmentChains,
-} from 'wagmi'
+import { useBalance, useContractRead } from 'wagmi'
+import { nationRewardsContract, balancerLPToken } from '../lib/config'
+import rewardsContractABI from '../abis/LiquidityRewardsDistributor.json'
+import { useContractWrite } from './working-use-contract-write'
 
-// import rewardsContractABI from '../abis/LiquidityRewardsDistributor.json'
+const formatNumber = (number) => {
+  if (number) {
+    return ethers.utils.formatEther(number)
+  }
+  return number
+}
 
 export function useLiquidityRewards({ nationPrice, poolValue, address }) {
-  /*const [{ data: totalRewardsData, loading: totalRewardsLoading }] =
+  console.log(nationRewardsContract)
+  console.log(address)
+  const [{ data: totalRewards, loading: totalRewardsLoading }] =
     useContractRead(
       {
-        addressOrName:
-          process.env.NEXT_PUBLIC_BALANCER_NATION_REWARDS_CONTRACT_ADDRESS,
+        addressOrName: nationRewardsContract,
         contractInterface: rewardsContractABI,
       },
       'totalRewards'
     )
 
-  const [{ data: unclaimedRewardsData, loading: unclaimedRewardsLoading }] =
+  const [{ data: unclaimedRewards, error, loading: unclaimedRewardsLoading }] =
     useContractRead(
       {
-        addressOrName:
-          process.env.NEXT_PUBLIC_BALANCER_NATION_REWARDS_CONTRACT_ADDRESS,
+        addressOrName: nationRewardsContract,
         contractInterface: rewardsContractABI,
       },
       'getUnclaimedRewards',
       {
-        args: address,
+        args: [address],
+        watch: true,
       }
     )
-
-  const [{ data: stakingBalanceData, loading: stakingBalanceLoading }] =
-    useContractRead(
-      {
-        addressOrName:
-          process.env.NEXT_PUBLIC_BALANCER_NATION_REWARDS_CONTRACT_ADDRESS,
-        contractInterface: rewardsContractABI,
-      },
-      'getStakingBalance',
-      {
-        args: address,
-      }
-    )*/
-
+  console.log(error)
+  console.log(nationRewardsContract)
+  console.log(rewardsContractABI)
+  console.log(address)
+  const [
+    {
+      data: stakingBalance,
+      error: stakingBalanceError,
+      loading: stakingBalanceLoading,
+    },
+  ] = useContractRead(
+    {
+      addressOrName: nationRewardsContract,
+      contractInterface: rewardsContractABI,
+    },
+    'getStakingBalance',
+    {
+      args: [address],
+      watch: true,
+    }
+  )
+  console.log(stakingBalanceError)
   const [liquidityRewardsAPY, setLiquidityRewardsAPY] = useState(0)
 
-  /*useEffect(() => {
-    setLiquidityRewardsAPY((totalRewardsData * nationPrice) / poolValue)
-  }, [totalRewardsLoading, unclaimedRewardsLoading, stakingBalanceLoading])*/
   useEffect(() => {
-    setLiquidityRewardsAPY(100)
-  })
+    setLiquidityRewardsAPY((totalRewards * nationPrice) / poolValue)
+  }, [totalRewardsLoading, unclaimedRewardsLoading, stakingBalanceLoading])
 
-  const unclaimedRewardsData = 10000
-  const stakingBalanceData = 100
-  return [{ liquidityRewardsAPY, unclaimedRewardsData, stakingBalanceData }]
+  return [
+    {
+      liquidityRewardsAPY,
+      unclaimedRewards: formatNumber(unclaimedRewards),
+      stakingBalance: formatNumber(stakingBalance),
+      loading:
+        totalRewardsLoading || unclaimedRewardsLoading || stakingBalanceLoading,
+    },
+  ]
 }
 
 export function usePoolTokenBalance(address) {
   const [{ data, loading }] = useBalance({
     addressOrName: address,
-    token:
-      '0xe7f1725e7734ce288f8367e1bb143e90bb3f0512' ||
-      process.env.BALANCER_NATION_ETH_POOL_TOKEN,
+    token: balancerLPToken,
     watch: true,
   })
-
-  console.log(data)
 
   return [{ data, loading }]
 }
@@ -76,21 +88,21 @@ export function usePoolTokenBalance(address) {
 export function useClaimRewards() {
   return useContractWrite(
     {
-      addressOrName: '0xe7f1725e7734ce288f8367e1bb143e90bb3f0512',
+      addressOrName: nationRewardsContract,
       contractInterface: rewardsContractABI,
     },
     'claimRewards'
   )
 }
 
-function depositOrWithdraw(action) {
+function depositOrWithdraw(action, amount) {
   return useContractWrite(
     {
-      addressOrName: '0xe7f1725e7734ce288f8367e1bb143e90bb3f0512',
+      addressOrName: nationRewardsContract,
       contractInterface: rewardsContractABI,
     },
-    'deposit',
-    { args: amount }
+    action,
+    { args: [amount] }
   )
 }
 
@@ -105,7 +117,7 @@ export function useWithdraw(amount) {
 export function useWithdrawAndClaim(amount) {
   return useContractWrite(
     {
-      addressOrName: '0xe7f1725e7734ce288f8367e1bb143e90bb3f0512',
+      addressOrName: nationRewardsContract,
       contractInterface: rewardsContractABI,
     },
     'withdrawAndClaim'

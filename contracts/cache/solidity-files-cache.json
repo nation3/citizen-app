@@ -334,10 +334,10 @@
         "ERC20"
       ]
     },
-    "/Users/g/Nation3/DAO/app/contracts/contracts/Token.sol": {
-      "lastModificationDate": 1647829620772,
-      "contentHash": "e3924d5c765ac7df632701434771f87e",
-      "sourceName": "contracts/Token.sol",
+    "/Users/g/Nation3/DAO/app/contracts/contracts/mocks/ERC20Mock.sol": {
+      "lastModificationDate": 1647870025747,
+      "contentHash": "833df141bf635763f5e13be914eae7c4",
+      "sourceName": "contracts/mocks/ERC20Mock.sol",
       "solcConfig": {
         "version": "0.8.10",
         "settings": {
@@ -368,7 +368,44 @@
         "0.8.10"
       ],
       "artifacts": [
-        "Token"
+        "ERC20Mock"
+      ]
+    },
+    "/Users/g/Nation3/DAO/app/contracts/contracts/mocks/BalancerPoolsMock.sol": {
+      "lastModificationDate": 1647870025747,
+      "contentHash": "0abd24a8bec3a8f5aefa56bf46cce971",
+      "sourceName": "contracts/mocks/BalancerPoolsMock.sol",
+      "solcConfig": {
+        "version": "0.8.10",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/IERC20.sol"
+      ],
+      "versionPragmas": [
+        "0.8.10"
+      ],
+      "artifacts": [
+        "BalancerPoolsMock"
       ]
     }
   }

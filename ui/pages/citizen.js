@@ -1,8 +1,7 @@
 import { useAccount } from 'wagmi'
+import { nationRequiredStake } from '../lib/config'
 import { useNationBalance } from '../lib/nation-token'
 import Passport from '../components/Passport'
-
-const requiredStake = process.env.NEXT_PUBLIC_NATION_REQUIRED_STAKE
 
 export default function Citizen() {
   const [{ data: accountData }] = useAccount()
@@ -31,9 +30,9 @@ export default function Citizen() {
                   </ul>
                   <p>
                     To become a citizen, you need to mint a passport NFT by
-                    locking up {requiredStake} $NATION for a year and renewing
-                    your stake over time. This is to make sure all citizens are
-                    economically aligned.
+                    locking up {nationRequiredStake} $NATION for a year and
+                    renewing your stake over time. This is to make sure all
+                    citizens are economically aligned.
                   </p>
                 </div>
               </div>

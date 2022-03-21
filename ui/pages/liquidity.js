@@ -1,36 +1,61 @@
-import { useState } from 'react'
-import { useAccount, useContractWrite } from 'wagmi'
+import { ethers } from 'ethers'
+import { useState, useMemo } from 'react'
+import { useEffectOnce } from 'react-use'
+import { useAccount, useContract, useSigner } from 'wagmi'
 import { useBalancerPool } from '../lib/balancer'
+import {
+  balancerPoolId,
+  balancerLPToken,
+  nationRewardsContract,
+} from '../lib/config'
 import {
   useLiquidityRewards,
   usePoolTokenBalance,
   useDeposit,
   useWithdraw,
   useWithdrawAndClaim,
+  useClaimRewards,
 } from '../lib/liquidity-rewards'
+import { useContractWrite } from '../lib/working-use-contract-write'
 import ActionNeedsAccount from '../components/ActionNeedsAccount'
 import ActionNeedsTokenApproval from '../components/ActionNeedsTokenApproval'
 import LoadingBalance from '../components/LoadingBalance'
+import rewardsContractABI from '../abis/LiquidityRewardsDistributor.json'
 
 export default function Liquidity() {
   const [{ data: accountData }] = useAccount()
 
-  const [{ poolValue, nationPrice, loadingPool }] = useBalancerPool(
-    process.env.NEXT_PUBLIC_BALANCER_NATION_ETH_POOL_ID
-  )
+  const [{ poolValue, nationPrice, loadingPool }] =
+    useBalancerPool(balancerPoolId)
   const [{ data: poolTokenBalanceData, loading: poolTokenBalanceLoading }] =
     usePoolTokenBalance(accountData?.address)
 
   const [
     {
       liquidityRewardsAPY,
-      unclaimedRewardsData,
-      stakingBalanceData,
-      loadingLiquidityRewards,
+      unclaimedRewards,
+      stakingBalance,
+      loading: loadingLiquidityRewards,
     },
-  ] = useLiquidityRewards({ nationPrice, poolValue })
-
+  ] = useLiquidityRewards({
+    nationPrice,
+    poolValue,
+    address: accountData?.address,
+  })
+  console.log(poolTokenBalanceData)
+  console.log(stakingBalance)
+  console.log(unclaimedRewards)
+  const [depositValue, setDepositValue] = useState(0)
+  const [withdrawalValue, setWithdrawalValue] = useState(0)
+  const [{ data, error, loading }, deposit] = useDeposit(
+    ethers.utils.parseEther(depositValue ? depositValue.toString() : '0')
+  )
+  const [, withdraw] = useWithdraw(
+    ethers.utils.parseEther(withdrawalValue ? withdrawalValue.toString() : '0')
+  )
+  const [, claimRewards] = useClaimRewards(unclaimedRewards)
   const [activeTab, setActiveTab] = useState(0)
+
   return (
     <>
       <div className="hero bg-gradient-to-r from-n3blue-100 to-n3green-100 flex-auto overflow-auto">
@@ -52,7 +77,7 @@ export default function Liquidity() {
                     <div className="stat-value">
                       <LoadingBalance
                         balanceLoading={loadingLiquidityRewards}
-                        balanceData={liquidityRewardsAPY}
+                        balance={liquidityRewardsAPY}
                         suffix="%"
                         decimals={0}
                       />
@@ -64,7 +89,7 @@ export default function Liquidity() {
                     <div className="stat-value">
                       <LoadingBalance
                         balanceLoading={loadingPool}
-                        balanceData={poolValue}
+                        balance={poolValue}
                         prefix="$"
                         suffix="M"
                         decimals={2}
@@ -75,15 +100,18 @@ export default function Liquidity() {
                 <div className="stats stats-vertical lg:stats-horizontal shadow mb-4">
                   <div className="stat">
                     <div className="stat-figure text-secondary">
-                      <ActionNeedsAccount className="btn btn-primary grow">
+                      <ActionNeedsAccount
+                        className="btn btn-primary grow"
+                        onClick={claimRewards}
+                      >
                         Claim
                       </ActionNeedsAccount>
                     </div>
                     <div className="stat-title">Your rewards</div>
                     <div className="stat-value">
                       <LoadingBalance
-                        balanceLoading={false}
-                        balanceData={unclaimedRewardsData}
+                        balanceLoading={loadingLiquidityRewards}
+                        balance={unclaimedRewards}
                         decimals={2}
                       />
                     </div>
@@ -115,10 +143,10 @@ export default function Liquidity() {
                       {activeTab === 0 ? (
                         <>
                           <p className="mb-4">
-                            Available to stake:{' '}
+                            Available to deposit:{' '}
                             <LoadingBalance
                               balanceLoading={poolTokenBalanceLoading}
-                              balanceData={poolTokenBalanceData?.formatted}
+                              balance={poolTokenBalanceData?.formatted}
                             />{' '}
                             LP tokens
                           </p>
@@ -127,39 +155,66 @@ export default function Liquidity() {
                               type="text"
                               placeholder="Amount"
                               className="input input-bordered w-full"
+                              value={depositValue}
+                              onChange={(e) => {
+                                setDepositValue(e.target.value)
+                              }}
                             />
-                            <button className="btn btn-outline">Max</button>
+                            <button
+                              className="btn btn-outline"
+                              onClick={() =>
+                                setDepositValue(poolTokenBalanceData?.formatted)
+                              }
+                            >
+                              Max
+                            </button>
                           </div>
                           <div className="card-actions mt-4">
                             <ActionNeedsTokenApproval
-                              amountNeeded={10000000}
-                              token={
-                                '0xe7f1725e7734ce288f8367e1bb143e90bb3f0512'
-                              }
-                              spender={
-                                '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266'
-                              }
+                              amountNeeded={poolTokenBalanceData}
+                              token={balancerLPToken}
+                              spender={nationRewardsContract}
                               className="btn btn-primary w-full"
+                              approveText={'Approve LP token'}
+                              onClick={deposit}
                             >
-                              Stake
+                              Deposit
                             </ActionNeedsTokenApproval>
+                            {error?.message}
                           </div>
                         </>
                       ) : (
                         <>
                           <p className="mb-4">
-                            Available to unstake: 0 LP tokens
+                            Available to withdraw:{' '}
+                            <LoadingBalance
+                              balanceLoading={loadingLiquidityRewards}
+                              balance={stakingBalance?.toString()}
+                            />{' '}
+                            LP tokens
                           </p>
                           <div className="input-group">
                             <input
                               type="text"
                               placeholder="Amount"
                               className="input input-bordered w-full"
+                              value={withdrawalValue}
+                              onChange={(e) => {
+                                setWithdrawalValue(e.target.value)
+                              }}
                             />
-                            <button className="btn btn-outline">Max</button>
+                            <button
+                              className="btn btn-outline"
+                              onClick={() => setWithdrawalValue(stakingBalance)}
+                            >
+                              Max
+                            </button>
                           </div>
                           <div className="card-actions mt-4">
-                            <ActionNeedsAccount className="btn btn-primary w-full">
+                            <ActionNeedsAccount
+                              className="btn btn-primary w-full"
+                              onClick={withdraw}
+                            >
                               Unstake
                             </ActionNeedsAccount>
                           </div>

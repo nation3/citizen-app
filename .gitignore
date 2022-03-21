@@ -1,3 +1,7 @@
 contracts/cache/
 contracts/out/
-*/node_modules/
+*node_modules/
+contracts/cache/solidity-files-cache.json
+.DS_Store
+contracts/deployment.json
+contracts/lib

@@ -1,6 +1,5 @@
-import { ethers } from 'ethers'
-import { useEffect } from 'react'
-import { useContractRead, useContractWrite } from 'wagmi'
+import { useContractRead } from 'wagmi'
+import { useContractWrite } from '../lib/working-use-contract-write'
 import ERC20ABI from '../abis/ERC20.json'
 
 export function useTokenAllowance({ token, address, spender }) {
@@ -10,19 +9,17 @@ export function useTokenAllowance({ token, address, spender }) {
       contractInterface: ERC20ABI,
     },
     'allowance',
-    { args: [address, spender] }
+    { args: [address, spender], watch: true }
   )
 }
 
 export function useTokenApproval({ amountNeeded, token, spender }) {
-  console.log(spender)
-  console.log(ethers.BigNumber.from(amountNeeded))
   return useContractWrite(
     {
       addressOrName: token,
       contractInterface: ERC20ABI,
     },
     'approve',
-    { args: [spender, ethers.BigNumber.from(amountNeeded)] }
+    { args: [spender, amountNeeded] }
   )
 }

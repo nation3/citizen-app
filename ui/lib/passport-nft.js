@@ -1,11 +1,12 @@
 import { getDefaultProvider } from 'ethers'
 import { NftProvider, useNft } from 'use-nft'
 import { useContract } from 'wagmi'
+import { nationPassportNFT } from '../lib/config'
 
 export function useHasPassport(address) {
   const [{ data, loading }] = useContract(
     {
-      addressOrName: process.env.NEXT_PUBLIC_BALANCER_PASSPORT_NFT_ADDRESS,
+      addressOrName: nationPassportNFT,
       contractInterface: ensRegistryABI,
     },
     'balanceOf',

@@ -1,6 +1,6 @@
 export default function LoadingBalance({
   balanceLoading,
-  balanceData,
+  balance,
   prefix = '',
   suffix = '',
   decimals = 2,
@@ -9,8 +9,8 @@ export default function LoadingBalance({
     <>
       {balanceLoading ? (
         <button className="btn btn-square btn-ghost btn-disabled loading"></button>
-      ) : balanceData ? (
-        `${prefix}${Number(balanceData).toFixed(decimals)}${suffix}`
+      ) : balance ? (
+        `${prefix}${Number(balance).toFixed(decimals)}${suffix}`
       ) : (
         0
       )}
