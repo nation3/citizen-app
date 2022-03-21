@@ -53,8 +53,9 @@ async function main() {
   await rewardsDistributor.initialize(NATION.address, LpToken.address);
 
   const deployment = {
+      "weth": WETH.address,
       "nation": NATION.address,
-      "balancerPair": NATION.address,
+      "balancerPair": LpToken.address,
       "balancerPool": balancerPool.address,
       "rewardsDistributor": rewardsDistributor.address,
   }
