@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useContractRead } from 'wagmi'
-import rewardsContractABI from '../../contracts/externalABIs/balancerVault.json'
+import rewardsContractABI from '../abis/LiquidityRewardsDistributor.json'
 
 export function useLiquidityRewards({ nationPrice, poolValue, address }) {
   const [{ data: totalRewardsData, loading: totalRewardsLoading }] =

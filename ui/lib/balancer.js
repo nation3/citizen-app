@@ -1,7 +1,7 @@
 import { ethers } from 'ethers'
 import { useState, useEffect } from 'react'
 import { useContractRead } from 'wagmi'
-import balancerVaultABI from '../../contracts/externalABIs/balancerVault.json'
+import balancerVaultABI from '../abis/BalancerVault.json'
 
 export function useBalancerPool(id) {
   const [{ data: balancerPoolData, loading: balancerPoolTokensLoading }] =
