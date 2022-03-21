@@ -4,15 +4,22 @@
 // When running the script with `npx hardhat run <script>` you'll find the Hardhat
 // Runtime Environment's members available in the global scope.
 import { ethers } from "hardhat";
+import fs from "fs";
 
+// Deployment helpers
 const dec = (val: number, scale: number) => {
-    const zerosCount = scale
+    const zerosCount = scale;
 
-    const strVal = val.toString()
-    const strZeros = ('0').repeat(zerosCount)
+    const strVal = val.toString();
+    const strZeros = ('0').repeat(zerosCount);
 
-    return strVal.concat(strZeros)
+    return strVal.concat(strZeros);
   }
+
+const saveDeployment = (info: object, path: string) => {
+    const content = JSON.stringify(info, null, 1);
+    return fs.writeFile(path, content, { encoding: "utf-8"}, (err) => { if(err) console.log(err); })
+}
 
 async function main() {
   // Hardhat always runs the compile task when running scripts with its command
@@ -45,6 +52,7 @@ async function main() {
   }
 
   console.log(deployment);
+  saveDeployment(deployment, "deployment.json")
 }
 
 // We recommend this pattern to be able to use async/await everywhere
