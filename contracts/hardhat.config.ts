@@ -6,6 +6,8 @@ import "@nomiclabs/hardhat-waffle";
 import "@typechain/hardhat";
 import "hardhat-gas-reporter";
 import "solidity-coverage";
+import { dec } from "./utils/deploymentHelpers";
+import devDeployment from "./deployment.json";
 
 dotenv.config();
 
@@ -17,6 +19,23 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
   for (const account of accounts) {
     console.log(account.address);
   }
+});
+
+task("setupRewards", "Set rewards").setAction(async (taskArgs, hre) => {
+    const rewardsAmount = process.env.REWARDS_AMOUNT || hre.ethers.BigNumber.from(dec(1337000, 18));
+    const NATION = await hre.ethers.getContractAt("ERC20Mock", devDeployment.nation);
+    const rewardsDistributor = await hre.ethers.getContractAt("LiquidityRewardsDistributor", devDeployment.rewardsDistributor);
+
+    const rewardsDistributorBalance = await NATION.balanceOf(rewardsDistributor.address);
+    if (rewardsDistributorBalance < rewardsAmount) {
+        await NATION.transfer(rewardsDistributor.address, rewardsAmount);
+    }
+    await rewardsDistributor.setRewards(rewardsAmount, 314);
+    
+    const totalRewards = await rewardsDistributor.totalRewards();
+    const rewardsEnd = await rewardsDistributor.distributionEndBlock();
+    console.log(`Address: ${rewardsDistributor.address}`);
+    console.log(`Total Rewards: ${totalRewards} End: ${rewardsEnd}`);
 });
 
 // You need to export an object to set up your config

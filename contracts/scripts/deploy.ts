@@ -5,16 +5,7 @@
 // Runtime Environment's members available in the global scope.
 import { ethers } from "hardhat";
 import fs from "fs";
-
-// Deployment helpers
-const dec = (val: number, scale: number) => {
-    const zerosCount = scale;
-
-    const strVal = val.toString();
-    const strZeros = ('0').repeat(zerosCount);
-
-    return strVal.concat(strZeros);
-  }
+import { dec } from "../utils/deploymentHelpers";
 
 const saveDeployment = (info: object, path: string) => {
     const content = JSON.stringify(info, null, 1);
