@@ -14,7 +14,6 @@ import {
   useWithdrawAndClaim,
   useClaimRewards,
 } from '../lib/liquidity-rewards'
-import { useHandleError } from '../lib/use-handle-error'
 import { useAccount } from '../lib/use-wagmi'
 import ActionButton from '../components/ActionButton'
 import LoadingBalance from '../components/LoadingBalance'
@@ -41,7 +40,7 @@ export default function Liquidity() {
   })
   const [depositValue, setDepositValue] = useState(0)
   const [withdrawalValue, setWithdrawalValue] = useState(0)
-  const [{ data, loading }, deposit] = useDeposit(
+  const [, deposit] = useDeposit(
     ethers.utils.parseEther(depositValue ? depositValue.toString() : '0')
   )
   const [, withdraw] = useWithdraw(

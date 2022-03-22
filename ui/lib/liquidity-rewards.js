@@ -18,7 +18,10 @@ export function useLiquidityRewards({ nationPrice, poolValue, address }) {
         addressOrName: nationRewardsContract,
         contractInterface: rewardsContractABI,
       },
-      'totalRewards'
+      'totalRewards',
+      {
+        skip: !nationRewardsContract,
+      }
     )
 
   const [{ data: unclaimedRewards, error, loading: unclaimedRewardsLoading }] =
@@ -31,8 +34,10 @@ export function useLiquidityRewards({ nationPrice, poolValue, address }) {
       {
         args: [address],
         watch: true,
+        skip: !nationRewardsContract,
       }
     )
+
   const [
     {
       data: stakingBalance,
@@ -48,6 +53,7 @@ export function useLiquidityRewards({ nationPrice, poolValue, address }) {
     {
       args: [address],
       watch: true,
+      skip: !nationRewardsContract,
     }
   )
   const [liquidityRewardsAPY, setLiquidityRewardsAPY] = useState(0)
@@ -77,6 +83,7 @@ export function usePoolTokenBalance(address) {
     addressOrName: address,
     token: balancerLPToken,
     watch: true,
+    skip: !address,
   })
 
   return [{ data, loading }]

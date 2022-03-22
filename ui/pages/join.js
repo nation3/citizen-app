@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router'
 import React, { useEffect } from 'react'
+import { nationToken } from '../lib/config'
 import { useNationBalance } from '../lib/nation-token'
 import { useAccount } from '../lib/use-wagmi'
 import ActionButton from '../components/ActionButton'
@@ -63,7 +64,15 @@ export default function Join() {
                     Buy $NATION
                   </ActionButton>
                 ) : (
-                  <ActionButton className="btn btn-primary grow">
+                  <ActionButton
+                    className="btn btn-primary grow"
+                    approval={{
+                      token: nationToken,
+                      spender: nationToken,
+                      amountNeeded: { formatted: '1000' },
+                      approveText: 'Approve LP token',
+                    }}
+                  >
                     Stake and mint
                   </ActionButton>
                 )}

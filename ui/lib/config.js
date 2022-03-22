@@ -13,7 +13,7 @@ let config = {
   nationPassportNFT: process.env.NEXT_PUBLIC_BALANCER_PASSPORT_NFT_ADDRESS,
 }
 
-if (process.env.NEXT_PUBLIC_DEV) {
+if (process.env.NEXT_PUBLIC_DEV === 'true') {
   const devConfig = {
     nationToken: devDeployments.nation,
     balancerLPToken: devDeployments.balancerPair,
@@ -22,6 +22,7 @@ if (process.env.NEXT_PUBLIC_DEV) {
   }
   config = { ...config, ...devConfig }
 }
+
 console.log(config)
 
 export const {

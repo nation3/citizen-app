@@ -9,7 +9,8 @@ import WalletConnectIcon from '../public/icons/connectors/walletconnect.svg'
 
 const infuraId = process.env.NEXT_PUBLIC_INFURA_ID
 
-const chains = !process.env.NEXT_PUBLIC_DEV ? defaultChains : developmentChains
+const chains =
+  process.env.NEXT_PUBLIC_DEV !== 'true' ? defaultChains : developmentChains
 
 export function connectors({ chainId }) {
   const rpcUrl =

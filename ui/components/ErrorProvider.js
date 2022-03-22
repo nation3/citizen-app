@@ -8,6 +8,11 @@ function ErrorProvider({ children }) {
   const addError = (newErrors) => {
     if (newErrors && newErrors[0]) {
       for (const error of newErrors) {
+        if (error instanceof Error) {
+          error = JSON.parse(
+            JSON.stringify(error, Object.getOwnPropertyNames(error))
+          )
+        }
         setErrors([{ key: count, ...error }, ...errors])
         setCount(++count)
       }

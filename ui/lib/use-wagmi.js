@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import {
   useConnect as _useConnect,
   useAccount as _useAccount,
@@ -41,7 +41,7 @@ function _useContractWrite(config, method, argsAndOverrides) {
   const [
     { data: signerData, error: signerError, loading: signerLoading },
     getSigner,
-  ] = useSigner({ skip: true })
+  ] = useSigner()
   const contract = useContract({
     ...config,
     signerOrProvider: signerData,
