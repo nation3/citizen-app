@@ -1,19 +1,23 @@
-import { getDefaultProvider } from 'ethers'
+import { useState, useEffect } from 'react'
 import { NftProvider, useNft } from 'use-nft'
 import { nationPassportNFT } from '../lib/config'
+import ERC721ABI from '../abis/ERC721.json'
 import { useContractRead } from './use-wagmi'
 
 export function useHasPassport(address) {
-  const [{ data, loading }] = useContractRead(
+  const [hasPassport, setHasPassport] = useState(false)
+  const [{ data, loading, error }] = useContractRead(
     {
       addressOrName: nationPassportNFT,
-      contractInterface: ensRegistryABI,
+      contractInterface: ERC721ABI,
     },
     'balanceOf',
-    { args: address }
+    { args: address, skip: !address }
   )
-
-  return [{ data, loading }]
+  useEffect(() => {
+    setHasPassport(data && data.gt(0))
+  }, [loading])
+  return [{ data: hasPassport, loading, error }]
 }
 
 /*const ethersConfig = {

@@ -1,8 +1,8 @@
-import { useRouter } from 'next/router'
 import React, { useEffect } from 'react'
-import { nationToken } from '../lib/config'
+import { nationToken, nationPassportNFTIssuer } from '../lib/config'
 import { useNationBalance } from '../lib/nation-token'
-import { useAccount } from '../lib/use-wagmi'
+import { useHasPassport } from '../lib/passport-nft'
+import { useAccount, useContractWrite } from '../lib/use-wagmi'
 import ActionButton from '../components/ActionButton'
 import LoadingBalance from '../components/LoadingBalance'
 
@@ -13,12 +13,23 @@ export default function Join() {
   const [{ balanceData, balanceLoading }] = useNationBalance(
     accountData?.address
   )
-  const router = useRouter()
+  const [{ data: hasPassport, loading: hasPassportLoading }] = useHasPassport(
+    accountData?.address
+  )
+
+  const [{ data, loading, error }] = useContractWrite(
+    {
+      addressOrName: nationPassportNFTIssuer,
+      contractInterface: ERC721ABI,
+    },
+    'secure'
+  )
+
   useEffect(() => {
-    if (!balanceLoading && balanceData) {
+    if (hasPassport) {
       window.location.replace('/citizen')
     }
-  }, [balanceData, balanceLoading])
+  }, [hasPassportLoading])
 
   return (
     <>
@@ -68,8 +79,8 @@ export default function Join() {
                     className="btn btn-primary grow"
                     approval={{
                       token: nationToken,
-                      spender: nationToken,
-                      amountNeeded: { formatted: '1000' },
+                      spender: nationPassportNFTIssuer,
+                      amountNeeded: { formatted: '10' },
                       approveText: 'Approve LP token',
                     }}
                   >

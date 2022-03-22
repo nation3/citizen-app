@@ -19,6 +19,8 @@ if (process.env.NEXT_PUBLIC_DEV === 'true') {
     balancerLPToken: devDeployments.balancerPair,
     balancerVault: devDeployments.balancerPool,
     nationRewardsContract: devDeployments.rewardsDistributor,
+    nationPassportNFT: devDeployments.passportNFT,
+    nationPassportNFTIssuer: devDeployments.passportIssuer,
   }
   config = { ...config, ...devConfig }
 }
@@ -34,4 +36,5 @@ export const {
   nationRewardsContract,
   nationDropContract,
   nationPassportNFT,
+  nationPassportNFTIssuer,
 } = config

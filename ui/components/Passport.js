@@ -60,7 +60,6 @@ export default function Passport() {
               fontSize: '30px',
               color: 'white',
             }}
-            onClick={console.log('prova')}
           >
             <label>Nation3 Passport</label>
           </div>

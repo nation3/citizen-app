@@ -1,13 +1,14 @@
 import { nationRequiredStake } from '../lib/config'
-import { useNationBalance } from '../lib/nation-token'
+import { useHasPassport } from '../lib/passport-nft'
 import { useAccount } from '../lib/use-wagmi'
 import Passport from '../components/Passport'
 
 export default function Citizen() {
   const [{ data: accountData }] = useAccount()
-  const [{ balanceData, balanceLoading }] = useNationBalance(
+  const [{ data: balanceData, loading: balanceLoading }] = useHasPassport(
     accountData?.address
   )
+  console.log(balanceData)
 
   return (
     <>
