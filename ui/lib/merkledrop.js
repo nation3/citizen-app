@@ -1,7 +1,7 @@
 import { ethers } from 'ethers'
 import { useState, useEffect } from 'react'
-import { useContractRead } from 'wagmi'
 import balancerVaultABI from '../abis/BalancerVault.json'
+import { useContractRead } from './use-wagmi'
 
 // https://github.com/Uniswap/merkle-distributor/blob/master/scripts/to-kv-input.ts
 // https://github.com/Uniswap/interface/blob/3acd993ec0fbc49cdac5df8bdaac84433a5bbe32/src/state/claim/hooks.ts#L104

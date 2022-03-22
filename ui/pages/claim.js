@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
-import { useAccount } from 'wagmi'
 import { useNationBalance } from '../lib/nation-token'
+import { useAccount } from '../lib/use-wagmi'
 import ActionButton from '../components/ActionButton'
 import Confetti from '../components/Confetti'
 import LoadingBalance from '../components/LoadingBalance'

@@ -1,6 +1,5 @@
 import { ethers } from 'ethers'
 import { useState, useEffect } from 'react'
-import { useAccount } from 'wagmi'
 import { useBalancerPool } from '../lib/balancer'
 import {
   balancerPoolId,
@@ -15,6 +14,8 @@ import {
   useWithdrawAndClaim,
   useClaimRewards,
 } from '../lib/liquidity-rewards'
+import { useHandleError } from '../lib/use-handle-error'
+import { useAccount } from '../lib/use-wagmi'
 import ActionButton from '../components/ActionButton'
 import LoadingBalance from '../components/LoadingBalance'
 

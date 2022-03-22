@@ -1,4 +1,4 @@
-import { useAccount } from 'wagmi'
+import { useAccount } from '../lib/use-wagmi'
 import ActionNeedsTokenApproval from './ActionNeedsTokenApproval'
 
 export default function ActionButton({

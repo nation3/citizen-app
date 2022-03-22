@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
 import React, { useEffect } from 'react'
-import { useAccount } from 'wagmi'
 import { useNationBalance } from '../lib/nation-token'
+import { useAccount } from '../lib/use-wagmi'
 import ActionButton from '../components/ActionButton'
 import LoadingBalance from '../components/LoadingBalance'
 

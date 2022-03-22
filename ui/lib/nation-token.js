@@ -1,4 +1,4 @@
-import { useBalance } from 'wagmi'
+import { useBalance } from './use-wagmi'
 
 export function useNationBalance(address) {
   const [{ data: balanceData, loading: balanceLoading }] = useBalance({

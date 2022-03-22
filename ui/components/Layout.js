@@ -15,9 +15,11 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import Blockies from 'react-blockies'
-import { useAccount, useConnect } from 'wagmi'
+import { useConnect } from 'wagmi'
 import { connectorIcons } from '../lib/connectors'
 import { useNationBalance } from '../lib/nation-token'
+import { useHandleError } from '../lib/use-handle-error'
+import { useAccount } from '../lib/use-wagmi'
 import Logo from '../public/logo.svg'
 import ErrorCard from './ErrorCard'
 import { useErrorContext } from './ErrorProvider'
@@ -56,9 +58,11 @@ const navigation = [
 export default function Layout({ children }) {
   const router = useRouter()
   const [{ data: connectData, error: connectError }, connect] = useConnect()
-  const [{ data: accountData }, disconnect] = useAccount({
-    fetchEns: true,
-  })
+  const [{ data: accountData }, disconnect] = useHandleError(
+    useAccount({
+      fetchEns: true,
+    })
+  )
   const [{ balanceData, balanceLoading }] = useNationBalance(
     accountData?.address
   )

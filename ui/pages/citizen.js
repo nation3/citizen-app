@@ -1,6 +1,6 @@
-import { useAccount } from 'wagmi'
 import { nationRequiredStake } from '../lib/config'
 import { useNationBalance } from '../lib/nation-token'
+import { useAccount } from '../lib/use-wagmi'
 import Passport from '../components/Passport'
 
 export default function Citizen() {

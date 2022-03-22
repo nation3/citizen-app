@@ -1,7 +1,7 @@
 import { ethers } from 'ethers'
 import { useEffect } from 'react'
-import { useAccount } from 'wagmi'
 import { useTokenAllowance, useTokenApproval } from '../lib/approve'
+import { useAccount } from '../lib/use-wagmi'
 
 export default function ActionNeedsTokenApproval({
   amountNeeded,

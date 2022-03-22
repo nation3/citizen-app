@@ -1,8 +1,8 @@
 import { ethers } from 'ethers'
 import { useState, useEffect } from 'react'
-import { useContractRead } from 'wagmi'
 import balancerVaultABI from '../abis/BalancerVault.json'
 import { balancerVault } from './config'
+import { useContractRead } from './use-wagmi'
 
 export function useBalancerPool(id) {
   const [{ data: poolData, loading: loadingPool }] = useContractRead(
