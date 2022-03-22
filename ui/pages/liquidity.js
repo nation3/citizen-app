@@ -16,7 +16,6 @@ import {
   useClaimRewards,
 } from '../lib/liquidity-rewards'
 import ActionButton from '../components/ActionButton'
-import { useErrorContext, handleErrors } from '../components/ErrorProvider'
 import LoadingBalance from '../components/LoadingBalance'
 
 export default function Liquidity() {
@@ -41,16 +40,14 @@ export default function Liquidity() {
   })
   const [depositValue, setDepositValue] = useState(0)
   const [withdrawalValue, setWithdrawalValue] = useState(0)
-  const [{ data, error, loading }, deposit] = useDeposit(
+  const [{ data, loading }, deposit] = useDeposit(
     ethers.utils.parseEther(depositValue ? depositValue.toString() : '0')
   )
   const [, withdraw] = useWithdraw(
     ethers.utils.parseEther(withdrawalValue ? withdrawalValue.toString() : '0')
   )
-  const [{ error: claimError }, claimRewards] =
-    useClaimRewards(unclaimedRewards)
+  const [, claimRewards] = useClaimRewards(unclaimedRewards)
   const [activeTab, setActiveTab] = useState(0)
-  //handleErrors(errorContext, [error])
 
   return (
     <>

@@ -4,11 +4,24 @@ const ErrorContext = createContext([])
 
 function ErrorProvider({ children }) {
   const [errors, setErrors] = useState([])
+  const [count, setCount] = useState([])
   const addError = (newErrors) => {
-    if (newErrors && newErrors[0]) setErrors(newErrors.concat(errors))
+    if (newErrors && newErrors[0]) {
+      for (const error of newErrors) {
+        setErrors([{ key: count, ...error }, ...errors])
+        setCount(++count)
+      }
+    }
   }
 
-  const context = { errors, setErrors, addError }
+  const removeError = (key) => {
+    if (key > -1) {
+      setErrors(errors.filter((error) => error.key !== key))
+      setCount(--count)
+    }
+  }
+
+  const context = { errors, addError, removeError }
   return (
     <ErrorContext.Provider value={context}>{children}</ErrorContext.Provider>
   )

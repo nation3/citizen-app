@@ -22,7 +22,7 @@ export default function Passport() {
               height: '50px',
             }}
             src="https://raw.githubusercontent.com/muhammederdem/credit-card-form/master/src/assets/images/chip.png"
-            class="card-item__chip"
+            className="card-item__chip"
             alt="credit card chip"
           ></img>
           <div
@@ -42,7 +42,7 @@ export default function Passport() {
               width={50}
               height={50}
               src={MinimalOrb}
-              class="card-item__chip"
+              className="card-item__chip"
               alt="credit card chip"
             />
           </div>

@@ -1,24 +1,20 @@
-import { useState } from 'react'
+import { useErrorContext } from './ErrorProvider'
 
 export default function ErrorCard({ error }) {
-  const [visible, setVisible] = useState(true)
-
-  setTimeout(() => {
-    setVisible(false)
-  }, 5000)
+  const { removeError } = useErrorContext()
 
   return (
-    <>
-      {visible ? (
-        <div class="card shadow-md bg-error text-primary-content">
-          <div class="card-body">
-            <h2 class="card-title">{error?.message}</h2>
-            <p>{error?.data?.message}</p>
-          </div>
-        </div>
-      ) : (
-        ''
-      )}
-    </>
+    <div className="card shadow-md bg-error text-primary-content">
+      <div className="card-body">
+        <h2 className="card-title">Error: {error?.message || error?.reason}</h2>
+        <p>{error?.data?.message}</p>
+      </div>
+      <div
+        className="btn btn-sm btn-circle btn-ghost absolute right-6 top-5"
+        onClick={() => removeError(error.key)}
+      >
+        ✕
+      </div>
+    </div>
   )
 }

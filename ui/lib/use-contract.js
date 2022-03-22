@@ -6,7 +6,7 @@ import {
   useSigner,
   useProvider,
 } from 'wagmi'
-import { useErrorContext, handleErrors } from '../components/ErrorProvider'
+import { useErrorContext } from '../components/ErrorProvider'
 
 export function useContractRead(config, method, argsAndOverrides) {
   const errorContext = useErrorContext()
@@ -52,6 +52,10 @@ export function useContractWrite(config, method, argsAndOverrides) {
       setLoading(false)
     } catch (error) {
       setError(error)
+      console.error(
+        `Error in ${config.addressOrName}.${method}(${argsAndOverrides?.args})`
+      )
+      console.error(error)
       errorContext.addError([error])
     }
   }

@@ -29,7 +29,7 @@ function App() {
 }
 
 function Nft() {
-  const { loading, error, nft } = useNft(
+  const { loading, nft } = useNft(
     process.env.NEXT_PUBLIC_BALANCER_PASSPORT_NFT_ADDRESS,
     "90473"
   )
