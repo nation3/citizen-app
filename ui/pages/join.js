@@ -46,7 +46,7 @@ export default function Join() {
         {hasPassport && <Confetti elementRef={elementRef} />}
         <div className="hero-content">
           <div className="max-w-md">
-            <div className="card md:w-96 bg-base-100 shadow-xl">
+            <div className="card w-80 md:w-96 bg-base-100 shadow-xl">
               <div className="card-body items-stretch items-center">
                 <h2 className="card-title text-center">
                   Become a Nation3 citizen

@@ -262,7 +262,7 @@ export default function Layout({ children }) {
         </label>
       </label>
       {errorContext?.errors ? (
-        <div className="fixed right-8 bottom-8">
+        <div className="fixed md:right-8 md:bottom-8 bottom-0 left-0 right-0">
           <div className="stack max-w-sm">
             {errorContext.errors.map((error) => (
               <ErrorCard error={error} key={error?.data?.message} />

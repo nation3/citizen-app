@@ -54,7 +54,7 @@ export default function Liquidity() {
       <div className="hero bg-gradient-to-r from-n3blue-100 to-n3green-100 flex-auto overflow-auto">
         <div className="hero-content">
           <div className="max-w-md">
-            <div className="card md:w-96 bg-base-100 shadow-xl">
+            <div className="card w-80 md:w-96 bg-base-100 shadow-xl">
               <div className="card-body items-stretch items-center">
                 <h2 className="card-title text-center">
                   $NATION liquidity rewards

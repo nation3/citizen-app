@@ -23,7 +23,7 @@ export default function Claim() {
         {claimed && <Confetti elementRef={elementRef} />}
         <div className="hero-content">
           <div className="max-w-md">
-            <div className="card md:w-96 bg-base-100 shadow-xl">
+            <div className="card w-80 md:w-96 bg-base-100 shadow-xl">
               <div className="card-body items-stretch items-center">
                 <h2 className="card-title text-center">$NATION tweetdrop</h2>
                 <p>
@@ -42,13 +42,8 @@ export default function Claim() {
                       </ActionButton>
                     </div>
                     <div className="stat-title">Your claimable</div>
-                    <div className="stat-value">
-                      <LoadingBalance
-                        balanceLoading={balanceLoading}
-                        balance={balance?.formatted}
-                      />
-                    </div>
-                    <div className="stat-desc">NATION tokens</div>
+                    <div className="stat-value">5</div>
+                    <div className="stat-desc">$NATION</div>
                   </div>
                 </div>
               </div>

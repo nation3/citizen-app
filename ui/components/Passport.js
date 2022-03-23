@@ -9,7 +9,7 @@ export default function Passport({ holder }) {
   return (
     <Card
       style={{
-        width: '390px',
+        width: window.innerWidth > 390 ? '390px' : '320px',
         height: '500px',
         cursor: 'pointer',
         position: 'relative',
