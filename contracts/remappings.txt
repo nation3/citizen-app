@@ -1,0 +1,4 @@
+hardhat/=node_modules/hardhat/
+@openzeppelin/=node_modules/@openzeppelin/
+eth-gas-reporter/=node_modules/eth-gas-reporter/
+@ensdomains/=node_modules/@ensdomains/

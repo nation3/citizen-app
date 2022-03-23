@@ -1,0 +1,5 @@
+[default]
+src = "contracts"
+out = "artifacts/contracts"
+libs = ["node_modules"]
+eth-rpc-url = "http://127.0.0.1:8545"
