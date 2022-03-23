@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import { usePassport } from '../lib/passport-nft'
 import { useAccount, useContractRead } from '../lib/use-wagmi'
+import Head from '../components/Head'
 import Passport from '../components/Passport'
 import AddToWallet from '../public/passport/wallet.svg'
 
@@ -11,6 +12,7 @@ export default function Citizen() {
 
   return (
     <>
+      <Head title="Welcome, citizen" />
       <div className="hero bg-gradient-to-r from-n3blue-100 to-n3green-100 flex-auto items-center overflow-auto">
         {account ? (
           <div className="flex flex-col">

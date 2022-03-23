@@ -7,6 +7,7 @@ import { useHasPassport } from '../lib/passport-nft'
 import { useAccount } from '../lib/use-wagmi'
 import ActionButton from '../components/ActionButton'
 import Confetti from '../components/Confetti'
+import Head from '../components/Head'
 import LoadingBalance from '../components/LoadingBalance'
 
 const requiredStake = process.env.NEXT_PUBLIC_NATION_REQUIRED_STAKE
@@ -39,6 +40,7 @@ export default function Join() {
 
   return (
     <>
+      <Head title="Become a citizen" />
       <div
         ref={elementRef}
         className="hero bg-gradient-to-r from-n3blue-100 to-n3green-100 flex-auto overflow-auto relative"

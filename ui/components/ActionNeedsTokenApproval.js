@@ -23,10 +23,7 @@ export default function ActionNeedsTokenApproval({
   const weiAmountNeeded = amountNeeded
     ? ethers.utils.parseEther(amountNeeded.formatted)
     : 0
-  const [
-    { data: tokenApprovalData, error, loading: tokenApprovalLoading },
-    approve,
-  ] = useTokenApproval({
+  const [{ loading: tokenApprovalLoading }, approve] = useTokenApproval({
     amountNeeded: weiAmountNeeded,
     token,
     spender,

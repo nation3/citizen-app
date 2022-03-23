@@ -3,7 +3,7 @@ import Head from 'next/head'
 export default function WebsiteHead({ title, description, image, type }) {
   return (
     <Head>
-      <title>Nation3 {title}</title>
+      <title>Nation3 | {title}</title>
       <meta name="description" content={description} />
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />

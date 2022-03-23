@@ -16,6 +16,7 @@ import {
 } from '../lib/liquidity-rewards'
 import { useAccount } from '../lib/use-wagmi'
 import ActionButton from '../components/ActionButton'
+import Head from '../components/Head'
 import LoadingBalance from '../components/LoadingBalance'
 
 export default function Liquidity() {
@@ -51,6 +52,7 @@ export default function Liquidity() {
 
   return (
     <>
+      <Head title="$NATION liquidity rewards" />
       <div className="hero bg-gradient-to-r from-n3blue-100 to-n3green-100 flex-auto overflow-auto">
         <div className="hero-content">
           <div className="max-w-md">

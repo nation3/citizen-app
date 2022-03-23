@@ -3,6 +3,7 @@ import { useNationBalance } from '../lib/nation-token'
 import { useAccount } from '../lib/use-wagmi'
 import ActionButton from '../components/ActionButton'
 import Confetti from '../components/Confetti'
+import Head from '../components/Head'
 import LoadingBalance from '../components/LoadingBalance'
 
 export default function Claim() {
@@ -16,6 +17,7 @@ export default function Claim() {
 
   return (
     <>
+      <Head title="Claim your $NATION" />
       <div
         ref={elementRef}
         className="hero bg-gradient-to-r from-n3blue-100 to-n3green-100 flex-auto overflow-auto relative"
