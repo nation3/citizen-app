@@ -19,12 +19,12 @@ import ActionButton from '../components/ActionButton'
 import LoadingBalance from '../components/LoadingBalance'
 
 export default function Liquidity() {
-  const [{ data: accountData }] = useAccount()
+  const [{ data: account }] = useAccount()
 
   const [{ poolValue, nationPrice, loadingPool }] =
     useBalancerPool(balancerPoolId)
-  const [{ data: poolTokenBalanceData, loading: poolTokenBalanceLoading }] =
-    usePoolTokenBalance(accountData?.address)
+  const [{ data: poolTokenBalance, loading: poolTokenBalanceLoading }] =
+    usePoolTokenBalance(account?.address)
 
   const [
     {
@@ -36,7 +36,7 @@ export default function Liquidity() {
   ] = useLiquidityRewards({
     nationPrice,
     poolValue,
-    address: accountData?.address,
+    address: account?.address,
   })
   const [depositValue, setDepositValue] = useState(0)
   const [withdrawalValue, setWithdrawalValue] = useState(0)
@@ -139,7 +139,7 @@ export default function Liquidity() {
                             Available to deposit:{' '}
                             <LoadingBalance
                               balanceLoading={poolTokenBalanceLoading}
-                              balance={poolTokenBalanceData?.formatted}
+                              balance={poolTokenBalance?.formatted}
                             />{' '}
                             LP tokens
                           </p>
@@ -156,7 +156,7 @@ export default function Liquidity() {
                             <button
                               className="btn btn-outline"
                               onClick={() =>
-                                setDepositValue(poolTokenBalanceData?.formatted)
+                                setDepositValue(poolTokenBalance?.formatted)
                               }
                             >
                               Max
@@ -169,7 +169,7 @@ export default function Liquidity() {
                               approval={{
                                 token: balancerLPToken,
                                 spender: nationRewardsContract,
-                                amountNeeded: poolTokenBalanceData,
+                                amountNeeded: poolTokenBalance,
                                 approveText: 'Approve LP token',
                               }}
                             >

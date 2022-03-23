@@ -17,7 +17,7 @@ import { useEffect, useState } from 'react'
 import Blockies from 'react-blockies'
 import { useConnect } from 'wagmi'
 import { connectorIcons } from '../lib/connectors'
-import { useNationBalance } from '../lib/nation-token'
+import { useHasPassport } from '../lib/passport-nft'
 import { useHandleError } from '../lib/use-handle-error'
 import { useAccount } from '../lib/use-wagmi'
 import Logo from '../public/logo.svg'
@@ -58,13 +58,13 @@ const navigation = [
 export default function Layout({ children }) {
   const router = useRouter()
   const [{ data: connectData, error: connectError }, connect] = useConnect()
-  const [{ data: accountData }, disconnect] = useHandleError(
+  const [{ data: account }, disconnect] = useHandleError(
     useAccount({
       fetchEns: true,
     })
   )
-  const [{ balanceData, balanceLoading }] = useNationBalance(
-    accountData?.address
+  const [{ data: balance, loading: balanceLoading }] = useHasPassport(
+    account?.address
   )
 
   const [nav, setNav] = useState(navigation)
@@ -72,12 +72,21 @@ export default function Layout({ children }) {
   const errorContext = useErrorContext()
 
   useEffect(() => {
-    if (!balanceLoading && balanceData) {
-      navigation[0].name = 'Welcome citizen'
-      navigation[0].href = '/citizen'
-      setNav(navigation)
+    if (!balanceLoading) {
+      if (balance) {
+        navigation[0].name = 'Welcome citizen'
+        navigation[0].href = '/citizen'
+        setNav(navigation)
+        if (router.pathname === '/join') {
+          router.push('/citizen')
+        }
+      } else {
+        if (router.pathname === '/citizen') {
+          router.push('/join')
+        }
+      }
     }
-  }, [balanceData, balanceLoading])
+  }, [balance, balanceLoading])
 
   return (
     <div className="mx-auto">
@@ -103,12 +112,12 @@ export default function Layout({ children }) {
             </div>
           </div>
           <div className="navbar-end pr-4">
-            {accountData ? (
+            {account ? (
               <label
                 htmlFor="web3-modal"
                 className="mask mask-circle cursor-pointer"
               >
-                <Blockies seed={accountData?.address} size={12} />
+                <Blockies seed={account?.address} size={12} />
               </label>
             ) : (
               <label
@@ -130,7 +139,7 @@ export default function Layout({ children }) {
               className="drawer-overlay z-10"
             ></label>
             <ul className="menu p-4 overflow-y-auto w-80 text-base-content bg-white">
-              {navigation.map((item) => (
+              {nav.map((item) => (
                 <>
                   {item.name !== 'Divider' ? (
                     <li
@@ -173,24 +182,24 @@ export default function Layout({ children }) {
             ✕
           </label>
 
-          {accountData ? (
+          {account ? (
             <>
               <h3 className="text-lg font-bold px-4">Account</h3>
-              <p className="p-4">Connected to {accountData.connector.name}</p>
+              <p className="p-4">Connected to {account.connector.name}</p>
               <ul className="menu bg-base-100 p-2 -m-2 rounded-box">
                 <li>
                   <a
-                    href={`https://etherscan.io/address/${accountData.address}`}
+                    href={`https://etherscan.io/address/${account.address}`}
                     rel="noreferrer noopener"
                     target="_blank"
                   >
                     <UserIcon className="h-5 w-5" />
-                    {accountData.ens?.name
-                      ? accountData.ens?.name
-                      : `${accountData.address.substring(
+                    {account.ens?.name
+                      ? account.ens?.name
+                      : `${account.address.substring(
                           0,
                           6
-                        )}...${accountData.address.slice(-4)}`}
+                        )}...${account.address.slice(-4)}`}
                   </a>
                 </li>
                 <li>

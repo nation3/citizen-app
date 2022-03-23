@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { nationToken, nationPassportNFTIssuer } from '../lib/config'
 import { useNationBalance } from '../lib/nation-token'
-import { useHasPassport } from '../lib/passport-nft'
+import { useMintPassport } from '../lib/passport-nft'
 import { useAccount, useContractWrite } from '../lib/use-wagmi'
 import ActionButton from '../components/ActionButton'
 import LoadingBalance from '../components/LoadingBalance'
@@ -9,27 +9,12 @@ import LoadingBalance from '../components/LoadingBalance'
 const requiredStake = process.env.NEXT_PUBLIC_NATION_REQUIRED_STAKE
 
 export default function Join() {
-  const [{ data: accountData }] = useAccount()
-  const [{ balanceData, balanceLoading }] = useNationBalance(
-    accountData?.address
-  )
-  const [{ data: hasPassport, loading: hasPassportLoading }] = useHasPassport(
-    accountData?.address
+  const [{ data: account }] = useAccount()
+  const [{ data: balance, loading: balanceLoading }] = useNationBalance(
+    account?.address
   )
 
-  const [{ data, loading, error }] = useContractWrite(
-    {
-      addressOrName: nationPassportNFTIssuer,
-      contractInterface: ERC721ABI,
-    },
-    'secure'
-  )
-
-  useEffect(() => {
-    if (hasPassport) {
-      window.location.replace('/citizen')
-    }
-  }, [hasPassportLoading])
+  const [, mint] = useMintPassport()
 
   return (
     <>
@@ -64,24 +49,25 @@ export default function Join() {
                     <div className="stat-value">
                       <LoadingBalance
                         balanceLoading={balanceLoading}
-                        balanceData={balanceData?.formatted}
+                        balance={balance?.formatted}
                       />
                     </div>
                     <div className="stat-desc">$NATION</div>
                   </div>
                 </div>
-                {balanceData?.value < requiredStake ? (
+                {balance?.value < requiredStake ? (
                   <ActionButton className="btn btn-primary grow">
                     Buy $NATION
                   </ActionButton>
                 ) : (
                   <ActionButton
                     className="btn btn-primary grow"
+                    onClick={mint}
                     approval={{
                       token: nationToken,
                       spender: nationPassportNFTIssuer,
                       amountNeeded: { formatted: '10' },
-                      approveText: 'Approve LP token',
+                      approveText: 'Approve $NATION',
                     }}
                   >
                     Stake and mint

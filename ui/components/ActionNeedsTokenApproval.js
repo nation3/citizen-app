@@ -12,14 +12,14 @@ export default function ActionNeedsTokenApproval({
   approveText,
   children,
 }) {
-  const [{ data: accountData }] = useAccount()
+  const [{ data: account }] = useAccount()
   const [
     {
       data: tokenAllowance,
       loading: tokenAllowanceLoading,
       error: allowanceError,
     },
-  ] = useTokenAllowance({ token, address: accountData?.address, spender })
+  ] = useTokenAllowance({ token, address: account?.address, spender })
   const weiAmountNeeded = amountNeeded
     ? ethers.utils.parseEther(amountNeeded.formatted)
     : 0

@@ -7,10 +7,10 @@ export default function ActionButton({
   children,
   approval,
 }) {
-  const [{ data: accountData }] = useAccount()
+  const [{ data: account }] = useAccount()
   return (
     <>
-      {!accountData ? (
+      {!account ? (
         <label htmlFor="web3-modal" className={`${className} modal-button`}>
           {children}
         </label>

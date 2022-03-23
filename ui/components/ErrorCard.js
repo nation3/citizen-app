@@ -6,8 +6,13 @@ export default function ErrorCard({ error }) {
   return (
     <div className="card shadow-md bg-error text-primary-content">
       <div className="card-body">
-        <h2 className="card-title">Error: {error?.message || error?.reason}</h2>
-        <p>{error?.data?.message}</p>
+        <h2 className="card-title">Oopsie</h2>
+        <p>
+          {error?.message ||
+            error?.reason ||
+            error?.data?.message ||
+            'Unknown error'}
+        </p>
       </div>
       <div
         className="btn btn-sm btn-circle btn-ghost absolute right-6 top-5"

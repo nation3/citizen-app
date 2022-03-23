@@ -6,9 +6,9 @@ import Confetti from '../components/Confetti'
 import LoadingBalance from '../components/LoadingBalance'
 
 export default function Claim() {
-  const [{ data: accountData }] = useAccount()
-  const [{ balanceData, balanceLoading }] = useNationBalance(
-    accountData?.address
+  const [{ data: account }] = useAccount()
+  const [{ data: balance, loading: balanceLoading }] = useNationBalance(
+    account?.address
   )
   const [claimed, setClaimed] = useState(false)
 
@@ -45,7 +45,7 @@ export default function Claim() {
                     <div className="stat-value">
                       <LoadingBalance
                         balanceLoading={balanceLoading}
-                        balanceData={balanceData?.formatted}
+                        balance={balance?.formatted}
                       />
                     </div>
                     <div className="stat-desc">NATION tokens</div>

@@ -55,10 +55,11 @@ function _useContractWrite(config, method, argsAndOverrides) {
       setLoading(true)
       let data
       if (argsAndOverrides) {
-        console.log('calling')
+        console.log('contract')
         contract.connect(signer)
         data = await contract[method](...argsAndOverrides.args)
       } else {
+        console.log(contract)
         data = await contract[method]()
       }
       setData(data)
