@@ -33,38 +33,17 @@ export function useMintPassport() {
   )
 }
 
-export function usePassport() {
-  return useContract({
-    addressOrName: nationPassportNFT,
-    contractInterface: PassportABI,
-  })
-}
-
-/*const ethersConfig = {
-  provider: getDefaultProvider('mainnet'),
-}
-
-function App() {
-  return (
-    <NftProvider fetcher={["ethers", ethersConfig]}>
-      <Nft />
-    </NftProvider>
+export function usePassport(address) {
+  const [{ data: id, loading: loadingId }] = useContractRead(
+    {
+      addressOrName: nationPassportNFT,
+      contractInterface: PassportABI,
+    },
+    'balanceOf',
+    { args: address, skip: !address }
   )
+  console.log(`Passport ID ${id}`)
+  const { nft, loading } = useNft(nationPassportNFT, id?.toString())
+  console.log(nft)
+  return [{ data: nft, loading }]
 }
-
-function Nft() {
-  const { loading, nft } = useNft(
-    process.env.NEXT_PUBLIC_BALANCER_PASSPORT_NFT_ADDRESS,
-    "90473"
-  )
-
-  return (
-    <section>
-      <h1>{nft.name}</h1>
-      <img src={nft.image} alt="" />
-      <p>{nft.description}</p>
-      <p>Owner: {nft.owner}</p>
-      <p>Metadata URL: {nft.metadataUrl}</p>
-    </section>
-  )
-}*/

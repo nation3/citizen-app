@@ -1,4 +1,5 @@
 import { ethers } from 'ethers'
+import { NftProvider } from 'use-nft'
 import { WagmiProvider } from 'wagmi'
 import { connectors } from '../lib/connectors'
 import { ErrorProvider } from '../components/ErrorProvider'
@@ -18,9 +19,11 @@ function App({ Component, pageProps }) {
   return (
     <ErrorProvider>
       <WagmiProvider autoConnect connectors={connectors} provider={provider}>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
+        <NftProvider fetcher={['ethers', { provider }]}>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </NftProvider>
       </WagmiProvider>
     </ErrorProvider>
   )
