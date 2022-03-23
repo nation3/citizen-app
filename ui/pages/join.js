@@ -20,14 +20,14 @@ export default function Join() {
   const [{ data: hasPassport, loading: hasPassportLoading }] = useHasPassport(
     account?.address
   )
-  const [, mintPassport] = useMintPassport()
+  const mint = useMintPassport()
 
-  const mint = () => {
-    mintPassport()
+  const router = useRouter()
+
+  const changeUrl = () => {
     router.replace('/join?mintingPassport=1', undefined, { shallow: true })
   }
 
-  const router = useRouter()
   useEffect(() => {
     if (hasPassport) {
       setTimeout(() => {
@@ -96,7 +96,8 @@ export default function Join() {
                     ) : (
                       <ActionButton
                         className="btn btn-primary grow"
-                        onClick={mint}
+                        action={mint}
+                        preAction={changeUrl}
                         approval={{
                           token: nationToken,
                           spender: nationPassportNFTIssuer,

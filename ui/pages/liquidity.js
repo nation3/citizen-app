@@ -41,13 +41,13 @@ export default function Liquidity() {
   })
   const [depositValue, setDepositValue] = useState(0)
   const [withdrawalValue, setWithdrawalValue] = useState(0)
-  const [, deposit] = useDeposit(
+  const deposit = useDeposit(
     ethers.utils.parseEther(depositValue ? depositValue.toString() : '0')
   )
-  const [, withdraw] = useWithdraw(
+  const withdraw = useWithdraw(
     ethers.utils.parseEther(withdrawalValue ? withdrawalValue.toString() : '0')
   )
-  const [, claimRewards] = useClaimRewards(unclaimedRewards)
+  const claimRewards = useClaimRewards(unclaimedRewards)
   const [activeTab, setActiveTab] = useState(0)
 
   return (
@@ -97,7 +97,7 @@ export default function Liquidity() {
                     <div className="stat-figure text-secondary">
                       <ActionButton
                         className="btn btn-primary grow"
-                        onClick={claimRewards}
+                        action={claimRewards}
                       >
                         Claim
                       </ActionButton>
@@ -167,7 +167,7 @@ export default function Liquidity() {
                           <div className="card-actions mt-4">
                             <ActionButton
                               className="btn btn-primary w-full"
-                              onClick={deposit}
+                              action={deposit}
                               approval={{
                                 token: balancerLPToken,
                                 spender: nationRewardsContract,
@@ -209,7 +209,7 @@ export default function Liquidity() {
                           <div className="card-actions mt-4">
                             <ActionButton
                               className="btn btn-primary w-full"
-                              onClick={withdraw}
+                              action={withdraw}
                             >
                               Unstake
                             </ActionButton>

@@ -2,15 +2,17 @@ import { ethers } from 'ethers'
 import { useEffect } from 'react'
 import { useTokenAllowance, useTokenApproval } from '../lib/approve'
 import { useAccount } from '../lib/use-wagmi'
+import ActionButton from './ActionButton'
 
 export default function ActionNeedsTokenApproval({
+  className,
+  children,
   amountNeeded,
   token,
   spender,
-  onClick,
-  className,
   approveText,
-  children,
+  action,
+  preAction,
 }) {
   const [{ data: account }] = useAccount()
   const [
@@ -23,22 +25,26 @@ export default function ActionNeedsTokenApproval({
   const weiAmountNeeded = amountNeeded
     ? ethers.utils.parseEther(amountNeeded.formatted)
     : 0
-  const [{ loading: tokenApprovalLoading }, approve] = useTokenApproval({
+  const approve = useTokenApproval({
     amountNeeded: weiAmountNeeded,
     token,
     spender,
   })
   return (
     <>
-      {!tokenAllowanceLoading && !tokenApprovalLoading ? (
+      {!tokenAllowanceLoading && !approve?.loading ? (
         tokenAllowance?.gte(weiAmountNeeded) ? (
-          <div className={className} onClick={onClick}>
+          <ActionButton
+            className={className}
+            action={action}
+            preAction={preAction}
+          >
             {children}
-          </div>
+          </ActionButton>
         ) : (
-          <div className={className} onClick={approve}>
+          <ActionButton className={className} action={approve}>
             {approveText}
-          </div>
+          </ActionButton>
         )
       ) : (
         <div className={className}>
