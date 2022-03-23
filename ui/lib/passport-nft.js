@@ -15,7 +15,7 @@ export function useHasPassport(address) {
       contractInterface: PassportABI,
     },
     'balanceOf',
-    { args: address, skip: !address }
+    { args: address, skip: !address, watch: true }
   )
   useEffect(() => {
     setHasPassport(data && data.gt(0))

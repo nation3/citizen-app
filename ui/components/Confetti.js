@@ -8,9 +8,9 @@ export default function ConfettiComponent({ elementRef }) {
   const [isComplete] = useTimeout(5000)
 
   useEffect(() => {
-    setWidth(elementRef.current.offsetWidth)
-    setHeight(elementRef.current.offsetHeight)
-  }, [])
+    setWidth(elementRef?.current.offsetWidth)
+    setHeight(elementRef?.current.offsetHeight)
+  }, [elementRef])
 
   return (
     <Confetti width={width} height={height} recycle={!isComplete()} className />

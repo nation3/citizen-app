@@ -40,7 +40,7 @@ async function main() {
   const LpToken = await ERC20Mock.deploy("Balancer ETH/NATION Pair", "ETHNATION", LPTOKEN_SUPPLY);
   const balancerPool = await BalancerPoolsMock.deploy()
   const rewardsDistributor = await LiquidityRewardsDistributor.deploy(); 
-  const passportNFT = await PassportNFT.deploy();
+  const passportNFT = await PassportNFT.deploy("Nation3 Founding Citizen Passport", "GENESIS-PASSPORT");
   const passportIssuer = await PassportIssuer.deploy();
 
   await NATION.deployed();

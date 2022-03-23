@@ -63,7 +63,7 @@ export default function Layout({ children }) {
       fetchEns: true,
     })
   )
-  const [{ data: balance, loading: balanceLoading }] = useHasPassport(
+  const [{ data: hasPassport, loading: hasPassportLoading }] = useHasPassport(
     account?.address
   )
 
@@ -72,12 +72,12 @@ export default function Layout({ children }) {
   const errorContext = useErrorContext()
 
   useEffect(() => {
-    if (!balanceLoading) {
-      if (balance) {
+    if (!hasPassportLoading) {
+      if (hasPassport) {
         navigation[0].name = 'Welcome citizen'
         navigation[0].href = '/citizen'
         setNav(navigation)
-        if (router.pathname === '/join') {
+        if (router.pathname === '/join' && !router.query.mintingPassport) {
           router.push('/citizen')
         }
       } else {
@@ -86,7 +86,7 @@ export default function Layout({ children }) {
         }
       }
     }
-  }, [balance, balanceLoading])
+  }, [hasPassport, hasPassportLoading, router.pathname])
 
   return (
     <div className="mx-auto">
