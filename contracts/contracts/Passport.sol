@@ -23,8 +23,8 @@ contract PassportNFT is Ownable {
     event Approval(address indexed owner, address indexed spender, uint256 indexed id);
     event ApprovalForAll(address indexed owner, address indexed operator, bool approved);
 
-    string public name = "Nation3 Passport";
-    string public symbol = "N3PASS";
+    string public name;
+    string public symbol;
     string public baseURI;
     uint256 public totalSupply;
 
@@ -35,6 +35,11 @@ contract PassportNFT is Ownable {
     mapping(uint256 => address) public ownerOf;
     mapping(uint256 => address) public getApproved;
     mapping(address => mapping(address => bool)) public isApprovedForAll;
+
+    constructor(string memory _name, string memory _symbol) {
+        name = _name;
+        symbol = _symbol;
+    }
     
     function approve(address spender, uint256 id) public virtual onlyOwner {
         address owner = ownerOf[id];
