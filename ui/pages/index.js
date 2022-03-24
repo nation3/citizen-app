@@ -15,9 +15,7 @@ export default function Home() {
                 <div className="stats stats-vertical lg:stats-horizontal shadow my-4">
                   <div className="stat">
                     <div className="stat-figure text-secondary">
-                      <button className="btn btn-primary grow" onClick={write}>
-                        Claim
-                      </button>
+                      <button className="btn btn-primary grow">Claim</button>
                     </div>
                     <div className="stat-title">Your claimable</div>
                     <div className="stat-value">5</div>

@@ -99,23 +99,26 @@ export function useClaimRewards() {
   )
 }
 
-function depositOrWithdraw(action, amount) {
+export function useDeposit(amount) {
   return useContractWrite(
     {
       addressOrName: nationRewardsContract,
       contractInterface: rewardsContractABI,
     },
-    action,
+    'deposit',
     { args: [amount] }
   )
 }
 
-export function useDeposit(amount) {
-  return depositOrWithdraw('deposit', amount)
-}
-
 export function useWithdraw(amount) {
-  return depositOrWithdraw('withdraw', amount)
+  return useContractWrite(
+    {
+      addressOrName: nationRewardsContract,
+      contractInterface: rewardsContractABI,
+    },
+    'withdraw',
+    { args: [amount] }
+  )
 }
 
 export function useWithdrawAndClaim(amount) {

@@ -36,12 +36,12 @@ export default function Claim() {
                 <div className="stats stats-vertical lg:stats-horizontal shadow my-4">
                   <div className="stat">
                     <div className="stat-figure text-secondary">
-                      <ActionButton
+                      <div
                         className="btn btn-primary grow"
                         onClick={() => setClaimed(true)}
                       >
                         Claim
-                      </ActionButton>
+                      </div>
                     </div>
                     <div className="stat-title">Your claimable</div>
                     <div className="stat-value">5</div>

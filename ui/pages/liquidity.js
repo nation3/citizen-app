@@ -39,8 +39,8 @@ export default function Liquidity() {
     poolValue,
     address: account?.address,
   })
-  const [depositValue, setDepositValue] = useState(0)
-  const [withdrawalValue, setWithdrawalValue] = useState(0)
+  const [depositValue, setDepositValue] = useState()
+  const [withdrawalValue, setWithdrawalValue] = useState()
   const deposit = useDeposit(
     ethers.utils.parseEther(depositValue ? depositValue.toString() : '0')
   )
@@ -147,7 +147,7 @@ export default function Liquidity() {
                           </p>
                           <div className="input-group">
                             <input
-                              type="text"
+                              type="number"
                               placeholder="Amount"
                               className="input input-bordered w-full"
                               value={depositValue}
@@ -158,6 +158,7 @@ export default function Liquidity() {
                             <button
                               className="btn btn-outline"
                               onClick={() =>
+                                poolTokenBalance &&
                                 setDepositValue(poolTokenBalance?.formatted)
                               }
                             >
@@ -191,7 +192,7 @@ export default function Liquidity() {
                           </p>
                           <div className="input-group">
                             <input
-                              type="text"
+                              type="number"
                               placeholder="Amount"
                               className="input input-bordered w-full"
                               value={withdrawalValue}
@@ -201,7 +202,10 @@ export default function Liquidity() {
                             />
                             <button
                               className="btn btn-outline"
-                              onClick={() => setWithdrawalValue(stakingBalance)}
+                              onClick={() =>
+                                stakingBalance &&
+                                setWithdrawalValue(stakingBalance)
+                              }
                             >
                               Max
                             </button>

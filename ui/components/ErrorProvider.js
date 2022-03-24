@@ -40,10 +40,4 @@ function useErrorContext() {
   return errors
 }
 
-function handleErrors(context, errors) {
-  useEffect(() => {
-    context.addError(errors)
-  }, errors)
-}
-
-export { ErrorProvider, useErrorContext, handleErrors }
+export { ErrorProvider, useErrorContext }
