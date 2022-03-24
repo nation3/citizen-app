@@ -7,7 +7,7 @@ import "@typechain/hardhat";
 import "hardhat-gas-reporter";
 import "solidity-coverage";
 import { dec } from "./utils/deploymentHelpers";
-import devDeployment from "./deployment.json";
+import devDeployment from "./devDeployment.json";
 
 dotenv.config();
 
@@ -31,11 +31,26 @@ task("setupRewards", "Set rewards").setAction(async (taskArgs, hre) => {
         await NATION.transfer(rewardsDistributor.address, rewardsAmount);
     }
     await rewardsDistributor.setRewards(rewardsAmount, 314);
+    await NATION.transfer(rewardsDistributor.address, rewardsAmount);
     
     const totalRewards = await rewardsDistributor.totalRewards();
     const rewardsEnd = await rewardsDistributor.distributionEndBlock();
     console.log(`Address: ${rewardsDistributor.address}`);
     console.log(`Total Rewards: ${totalRewards} End: ${rewardsEnd}`);
+});
+
+task("setupAirdrop", "Set rewards").setAction(async (taskArgs, hre) => {
+  const dropAmount = process.env.DROP_AMOUNT || hre.ethers.BigNumber.from(dec(1337, 18));
+  const NATION = await hre.ethers.getContractAt("ERC20Mock", devDeployment.nation);
+  const dropDistributor = await hre.ethers.getContractAt("MerkleDistributor", devDeployment.airdropDistributor);
+
+  const dropDistributorBalance = await NATION.balanceOf(dropDistributor.address);
+  if (dropDistributorBalance < dropAmount) {
+      await NATION.transfer(dropDistributor.address, dropAmount);
+  }
+  await NATION.transfer(dropDistributor.address, dropAmount);
+  
+  console.log(`Address: ${dropDistributor.address}`);
 });
 
 // You need to export an object to set up your config

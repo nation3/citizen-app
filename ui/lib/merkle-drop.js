@@ -1,6 +1,6 @@
 import { ethers } from 'ethers'
 import { useState, useMemo } from 'react'
-import balancerVaultABI from '../abis/BalancerVault.json'
+import MerkleDistributorABI from '../abis/MerkleDistributor.json'
 import { nationDropContract } from './config'
 import { useContractRead, useContractWrite } from './use-wagmi'
 
@@ -49,7 +49,7 @@ export function useIsClaimed(index) {
   return useContractRead(
     {
       addressOrName: nationDropContract,
-      contractInterface: nationDropContractABI,
+      contractInterface: MerkleDistributorABI,
     },
     'isClaimed',
     {
@@ -64,15 +64,16 @@ export function getClaimIndex(claims, address) {
   return claims[address]?.index
 }
 
-export function useClaimDrop({ index, account, amount, merkleProof }) {
+export function useClaimDrop({ index, account, amount, proof }) {
   return useContractWrite(
     {
       addressOrName: nationDropContract,
-      contractInterface: nationDropContractABI,
+      contractInterface: MerkleDistributorABI,
     },
     'claim',
     {
-      args: [index, account, amount, merkleProof],
+      args: [index, account, amount, proof],
+      skip: !index || !account | !amount || !proof,
     }
   )
 }

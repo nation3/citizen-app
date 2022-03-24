@@ -27,8 +27,8 @@ async function main() {
   const LP_REWARDS = NATION_SUPPLY.mul(3).div(100);
   const LP_REWARDS_DURATION = 300 // Blocks
 
-  const AIRDROP_ROOT = "0x5cdea970c9f23ca3ad7c3d706650a7d1a1cf0269632e0059c9dcfcb544d3a5c8";
-  const AIRDROP_AMOUNT = 180;
+  const AIRDROP_ROOT = "0xed145aa219b18aa3f2dc56afb2c4e0b148e429ca93b9c5f2c7a29d2101685aee";
+  const AIRDROP_AMOUNT = ethers.BigNumber.from(dec(1000, 18));
 
   const PASS_LOCKING_AMOUNT = ethers.BigNumber.from(dec(10, 18));
   const LOCKING_DURATION = 13 * 3600 * 24 * 365;

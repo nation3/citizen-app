@@ -5,10 +5,11 @@ let config = {
   balancerPoolId: process.env.NEXT_PUBLIC_BALANCER_NATION_ETH_POOL_ID,
   balancerLPToken: process.env.NEXT_PUBLIC_BALANCER_NATION_ETH_POOL_TOKEN,
   nationRewardsContract:
-    process.env.NEXT_PUBLIC_BALANCER_NATION_REWARDS_CONTRACT_ADDRESS,
-  nationPassportNFT: process.env.NEXT_PUBLIC_BALANCER_PASSPORT_NFT_ADDRESS,
+    process.env.NEXT_PUBLIC_NATION_REWARDS_CONTRACT_ADDRESS,
+  nationPassportNFT: process.env.NEXT_PUBLIC_PASSPORT_NFT_ADDRESS,
   nationDropContract:
-    process.env.NEXT_PUBLIC_BALANCER_NATION_DISTRIBUTOR_CONTRACT_ADDRESS,
+    process.env.NEXT_PUBLIC_NATION_DISTRIBUTOR_CONTRACT_ADDRESS,
+  nationDropAmount: process.env.NEXT_PUBLIC_NATION_DISTRIBUTOR_DROP_AMOUNT,
 }
 
 if (process.env.NEXT_PUBLIC_DEV === 'true') {
@@ -20,7 +21,7 @@ if (process.env.NEXT_PUBLIC_DEV === 'true') {
     nationRewardsContract: devDeployments.rewardsDistributor,
     nationPassportNFT: devDeployments.passportNFT,
     nationPassportNFTIssuer: devDeployments.passportIssuer,
-    nationDropContract: devDeployments.passportIssuer,
+    nationDropContract: devDeployments.airdropDistributor,
   }
   config = { ...config, ...devConfig }
 }
@@ -34,7 +35,8 @@ export const {
   balancerPoolId,
   balancerLPToken,
   nationRewardsContract,
-  nationDropContract,
   nationPassportNFT,
   nationPassportNFTIssuer,
+  nationDropContract,
+  nationDropAmount,
 } = config

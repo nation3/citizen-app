@@ -57,6 +57,7 @@ function _useContractWrite(config, method, argsAndOverrides) {
       setData(data)
       await data.wait()
       setLoading(false)
+      return data
     } catch (error) {
       setError(error)
       setLoading(false)
@@ -65,6 +66,7 @@ function _useContractWrite(config, method, argsAndOverrides) {
       )
       console.error(error)
       errorContext.addError([error])
+      return error
     }
   }, [config, signerData, signerLoading, argsAndOverrides])
   errorContext.addError([signerError])

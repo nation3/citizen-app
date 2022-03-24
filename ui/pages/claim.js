@@ -1,4 +1,6 @@
+import { ethers } from 'ethers'
 import { useRef, useState, useEffect } from 'react'
+import { nationDropAmount } from '../lib/config'
 import { useClaimsFile, useIsClaimed, useClaimDrop } from '../lib/merkle-drop'
 import { useNationBalance } from '../lib/nation-token'
 import { useHandleError } from '../lib/use-handle-error'
@@ -9,23 +11,27 @@ import Head from '../components/Head'
 
 export default function Claim() {
   const [{ data: account }] = useAccount()
-  const [{ data: balance, loading: balanceLoading }] = useNationBalance(
-    account?.address
-  )
   const [canClaim, setCanClaim] = useState(false)
   const [proofIndex, setProofIndex] = useState()
-  const [claimed, setClaimed] = useState(false)
+  const [justClaimed, setJustClaimed] = useState(false)
 
   const [{ data: claimsFile }] = useHandleError(useClaimsFile())
   const [{ data: isClaimed }] = useIsClaimed(proofIndex)
   useEffect(() => {
     if (claimsFile && account) {
       if (claimsFile.claims[account.address]) {
-        setCanClaim(true)
         setProofIndex(claimsFile.claims[account.address].index)
+        setCanClaim(!isClaimed)
       }
     }
-  }, [account, claimsFile])
+  }, [account, claimsFile, isClaimed])
+
+  const claimDrop = useClaimDrop({
+    index: proofIndex,
+    account: account?.address,
+    amount: ethers.utils.parseEther(nationDropAmount),
+    proof: canClaim ? claimsFile?.claims[account?.address].proof : {},
+  })
 
   const elementRef = useRef()
 
@@ -36,7 +42,7 @@ export default function Claim() {
         ref={elementRef}
         className="hero bg-gradient-to-r from-n3blue-100 to-n3green-100 flex-auto overflow-auto relative"
       >
-        {claimed && <Confetti elementRef={elementRef} />}
+        {justClaimed && <Confetti elementRef={elementRef} />}
         <div className="hero-content">
           <div className="max-w-md">
             <div className="card w-80 md:w-96 bg-base-100 shadow-xl">
@@ -51,18 +57,21 @@ export default function Claim() {
                   <div className="stat">
                     <div className="stat-figure text-secondary">
                       {canClaim ? (
-                        <div
+                        <ActionButton
                           className="btn btn-primary grow"
-                          onClick={() => setClaimed(true)}
+                          action={claimDrop}
+                          postAction={() => setJustClaimed(true)}
                         >
                           Claim
-                        </div>
+                        </ActionButton>
                       ) : (
                         <a className="btn btn-primary grow">Buy $NATION</a>
                       )}
                     </div>
                     <div className="stat-title">Your claimable</div>
-                    <div className="stat-value">{canClaim ? 5 : 0}</div>
+                    <div className="stat-value">
+                      {canClaim ? nationDropAmount : 0}
+                    </div>
                     <div className="stat-desc">$NATION</div>
                   </div>
                 </div>
