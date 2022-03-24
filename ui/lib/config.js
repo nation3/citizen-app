@@ -1,5 +1,3 @@
-import devDeployments from '../../contracts/deployment.json'
-
 let config = {
   nationToken: process.env.NEXT_PUBLIC_NATION_ADDRESS,
   nationRequiredStake: process.env.NEXT_PUBLIC_NATION_REQUIRED_STAKE,
@@ -14,6 +12,7 @@ let config = {
 }
 
 if (process.env.NEXT_PUBLIC_DEV === 'true') {
+  const devDeployments = require('../../contracts/devDeployment.json')
   const devConfig = {
     nationToken: devDeployments.nation,
     balancerLPToken: devDeployments.balancerPair,

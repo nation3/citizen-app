@@ -73,7 +73,7 @@ async function main() {
   }
 
   console.log(deployment);
-  saveDeployment(deployment, "deployment.json")
+  saveDeployment(deployment, "./devDeployment.json")
 }
 
 // We recommend this pattern to be able to use async/await everywhere

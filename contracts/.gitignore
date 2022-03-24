@@ -8,4 +8,4 @@ typechain
 libs
 cache
 artifacts
-deployment.json
+devDeployment.json

@@ -48,6 +48,7 @@ export default function Liquidity() {
     ethers.utils.parseEther(withdrawalValue ? withdrawalValue.toString() : '0')
   )
   const claimRewards = useClaimRewards(unclaimedRewards)
+  const withdrawAndClaimRewards = useWithdrawAndClaim()
   const [activeTab, setActiveTab] = useState(0)
 
   return (
@@ -215,7 +216,13 @@ export default function Liquidity() {
                               className="btn btn-primary w-full"
                               action={withdraw}
                             >
-                              Unstake
+                              Withdraw
+                            </ActionButton>
+                            <ActionButton
+                              className="btn btn-primary w-full"
+                              action={withdrawAndClaimRewards}
+                            >
+                              Withdraw all and claim
                             </ActionButton>
                           </div>
                         </>
