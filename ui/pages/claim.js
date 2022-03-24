@@ -45,36 +45,59 @@ export default function Claim() {
         {justClaimed && <Confetti elementRef={elementRef} />}
         <div className="hero-content">
           <div className="max-w-md">
-            <div className="card w-80 md:w-96 bg-base-100 shadow-xl">
+            <div
+              className={`card w-80 md:w-96 bg-base-100 shadow-xl ${
+                justClaimed && 'bg-gradient-to-r from-n3blue to-n3green'
+              }`}
+            >
               <div className="card-body items-stretch items-center">
-                <h2 className="card-title text-center">$NATION tweetdrop</h2>
-                <p>
-                  If you have participated in the $NATION tweetdrop, you can
-                  claim here. If not, you can buy $NATION.
-                </p>
+                {!justClaimed ? (
+                  <>
+                    <h2 className="card-title text-center">
+                      $NATION tweetdrop
+                    </h2>
+                    <p>
+                      If you have participated in the $NATION tweetdrop, you can
+                      claim here. If not, you can buy $NATION.
+                    </p>
 
-                <div className="stats stats-vertical lg:stats-horizontal shadow my-4">
-                  <div className="stat">
-                    <div className="stat-figure text-secondary">
-                      {canClaim ? (
-                        <ActionButton
-                          className="btn btn-primary grow"
-                          action={claimDrop}
-                          postAction={() => setJustClaimed(true)}
-                        >
-                          Claim
-                        </ActionButton>
-                      ) : (
-                        <a className="btn btn-primary grow">Buy $NATION</a>
-                      )}
+                    <div className="stats stats-vertical lg:stats-horizontal shadow my-4">
+                      <div className="stat">
+                        <div className="stat-figure text-secondary">
+                          {canClaim ? (
+                            <ActionButton
+                              className="btn btn-primary grow"
+                              action={claimDrop}
+                              postAction={() => setJustClaimed(true)}
+                            >
+                              Claim
+                            </ActionButton>
+                          ) : (
+                            <a className="btn btn-primary grow">Buy $NATION</a>
+                          )}
+                        </div>
+                        <div className="stat-title">Your claimable</div>
+                        <div className="stat-value">
+                          {canClaim ? nationDropAmount : 0}
+                        </div>
+                        <div className="stat-desc">$NATION</div>
+                      </div>
                     </div>
-                    <div className="stat-title">Your claimable</div>
-                    <div className="stat-value">
-                      {canClaim ? nationDropAmount : 0}
-                    </div>
-                    <div className="stat-desc">$NATION</div>
-                  </div>
-                </div>
+                  </>
+                ) : (
+                  <>
+                    <h2 className="card-title text-center text-white">
+                      Welcome new $NATION holder!
+                    </h2>
+                    <p className="text-white">
+                      Your $NATION was claimed successfully.
+                    </p>
+                    <p className="text-white">
+                      Go mint yourself a passport and become a citizen of
+                      Nation3!
+                    </p>
+                  </>
+                )}
               </div>
             </div>
           </div>
