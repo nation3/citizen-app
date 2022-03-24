@@ -90,9 +90,7 @@ export default function Join() {
                       </div>
                     </div>
                     {balance?.value < requiredStake ? (
-                      <ActionButton className="btn btn-primary grow">
-                        Buy $NATION
-                      </ActionButton>
+                      <a className="btn btn-primary grow">Buy $NATION</a>
                     ) : (
                       <ActionButton
                         className="btn btn-primary grow"

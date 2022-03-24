@@ -20,10 +20,7 @@ export default function Claim() {
   useEffect(() => {
     claimsFile &&
       account &&
-      setCanClaim(claimsFile.claims[account.address]?.index || false)
-    console.log(account.address)
-    console.log(claimsFile?.claims)
-    console.log(claimsFile?.claims[parseFloat(account?.address.toLowerCase())])
+      setCanClaim(claimsFile.claims[account.address] !== undefined)
     console.log(canClaim)
   }, [account, claimsFile])
 
@@ -50,15 +47,19 @@ export default function Claim() {
                 <div className="stats stats-vertical lg:stats-horizontal shadow my-4">
                   <div className="stat">
                     <div className="stat-figure text-secondary">
-                      <div
-                        className="btn btn-primary grow"
-                        onClick={() => setClaimed(true)}
-                      >
-                        Claim
-                      </div>
+                      {canClaim ? (
+                        <div
+                          className="btn btn-primary grow"
+                          onClick={() => setClaimed(true)}
+                        >
+                          Claim
+                        </div>
+                      ) : (
+                        <a className="btn btn-primary grow">Buy $NATION</a>
+                      )}
                     </div>
                     <div className="stat-title">Your claimable</div>
-                    <div className="stat-value">5</div>
+                    <div className="stat-value">{canClaim ? 5 : 0}</div>
                     <div className="stat-desc">$NATION</div>
                   </div>
                 </div>
