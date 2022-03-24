@@ -84,7 +84,7 @@ export default function Liquidity() {
                     <div className="stat-value">
                       <LoadingBalance
                         balanceLoading={loadingPool}
-                        balance={poolValue}
+                        balance={poolValue / 1000000}
                         prefix="$"
                         suffix="M"
                         decimals={2}

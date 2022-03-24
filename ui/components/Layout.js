@@ -73,6 +73,7 @@ export default function Layout({ children }) {
 
   useEffect(() => {
     if (!hasPassportLoading) {
+      console.log(hasPassport)
       if (hasPassport) {
         navigation[0].name = 'Welcome citizen'
         navigation[0].href = '/citizen'

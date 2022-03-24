@@ -61,8 +61,7 @@ export function useLiquidityRewards({ nationPrice, poolValue, address }) {
   useEffect(() => {
     if (totalRewards) {
       setLiquidityRewardsAPY(
-        (ethers.utils.formatEther(totalRewards) * nationPrice * 100) /
-          (poolValue * 1000000)
+        (ethers.utils.formatEther(totalRewards) * nationPrice * 100) / poolValue
       )
     }
   }, [totalRewardsLoading])

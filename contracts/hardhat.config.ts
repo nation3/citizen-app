@@ -22,7 +22,7 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 });
 
 task("setupRewards", "Set rewards").setAction(async (taskArgs, hre) => {
-    const rewardsAmount = process.env.REWARDS_AMOUNT || hre.ethers.BigNumber.from(dec(1337000, 18));
+    const rewardsAmount = process.env.REWARDS_AMOUNT || hre.ethers.BigNumber.from(dec(1337, 18));
     const NATION = await hre.ethers.getContractAt("ERC20Mock", devDeployment.nation);
     const rewardsDistributor = await hre.ethers.getContractAt("LiquidityRewardsDistributor", devDeployment.rewardsDistributor);
 

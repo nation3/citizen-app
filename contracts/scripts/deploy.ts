@@ -20,8 +20,8 @@ async function main() {
   // manually to make sure everything is compiled
   // await hre.run('compile');
 
-  const WETH_SUPPLY = ethers.BigNumber.from(dec(100000000, 18));
-  const NATION_SUPPLY = ethers.BigNumber.from(dec(42096000, 18));
+  const WETH_SUPPLY = ethers.BigNumber.from(dec(10000, 18));
+  const NATION_SUPPLY = ethers.BigNumber.from(dec(42069, 18));
   const LPTOKEN_SUPPLY = ethers.BigNumber.from(dec(3140, 18));
   const LP_REWARDS = NATION_SUPPLY.mul(3).div(100);
   const PASS_LOCKING_AMOUNT = ethers.BigNumber.from(dec(10, 18));
