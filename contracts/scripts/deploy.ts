@@ -33,7 +33,9 @@ async function main() {
   const PASS_LOCKING_AMOUNT = ethers.BigNumber.from(dec(10, 18));
   const LOCKING_DURATION = 13 * 3600 * 24 * 365;
 
-  // We get the contract to deploy
+  const [deployer] = await ethers.getSigners();
+
+  // Get the contracts to deploy
   const ERC20Mock = await ethers.getContractFactory("ERC20Mock");
   const MerkleDistributor = await ethers.getContractFactory("MerkleDistributor");
   const LiquidityRewardsDistributor = await ethers.getContractFactory("LiquidityRewardsDistributor");
@@ -53,7 +55,7 @@ async function main() {
   // Deploy distributors
   const balancerPool = await BalancerPoolsMock.deploy();
   const rewardsDistributor = await LiquidityRewardsDistributor.deploy(); 
-  const airdropDistributor = await MerkleDistributor.deploy(NATION.address, AIRDROP_ROOT);
+  const airdropDistributor = await MerkleDistributor.deploy(deployer.address, NATION.address, AIRDROP_ROOT);
 
   await rewardsDistributor.deployed();
   await airdropDistributor.deployed();
@@ -74,7 +76,7 @@ async function main() {
 
   // Dev setup
   await NATION.transfer(rewardsDistributor.address, LP_REWARDS);
-  await NATION.transfer(airdropDistributor.address, AIRDROP_AMOUNT);
+  await NATION.approve(airdropDistributor.address, AIRDROP_AMOUNT);
   await rewardsDistributor.setRewards(LP_REWARDS, LP_REWARDS_DURATION);
   await passportIssuer.setLockingParams(PASS_LOCKING_AMOUNT, LOCKING_DURATION);
 
