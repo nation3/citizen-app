@@ -1,7 +1,10 @@
 import { ethers } from 'ethers'
-import { useState, useEffect } from 'react'
+import { useState, useMemo } from 'react'
 import balancerVaultABI from '../abis/BalancerVault.json'
-import { useContractRead } from './use-wagmi'
+import { nationDropContract } from './config'
+import { useContractWrite } from './use-wagmi'
+
+// import { nationDropContractABI } from './config'
 
 // https://github.com/Uniswap/merkle-distributor/blob/master/scripts/to-kv-input.ts
 // https://github.com/Uniswap/interface/blob/3acd993ec0fbc49cdac5df8bdaac84433a5bbe32/src/state/claim/hooks.ts#L104
@@ -28,11 +31,48 @@ async function fetchClaim(address) {
   return false
 }
 
-async function fetchClaimFile(key) {
-  const res = await fetch(
-    `https://raw.githubusercontent.com/Uniswap/mrkl-drop-data-chunks/final/chunks/${key}.json`
+export function useClaimsFile() {
+  const [data, setData] = useState({ loading: true })
+  useMemo(async () => {
+    try {
+      const res = await fetch('/merkle-test/claims.json')
+      const claims = await res.json()
+      setData({ data: claims, loading: false })
+    } catch (error) {
+      setData({ error, loading: false })
+    }
+  }, [])
+  return [data]
+}
+
+export function useIsClaimed(index) {
+  return useContractRead(
+    {
+      addressOrName: nationDropContract,
+      contractInterface: nationDropContractABI,
+    },
+    'isClaimed',
+    {
+      args: [index],
+    }
   )
-  return res.json()
+}
+
+export function getClaimIndex(claims, address) {
+  return claims[address]?.index
+}
+
+export function useClaimDrop({ index, account, amount, merkleProof }) {
+  return useContractWrite(
+    {
+      addressOrName: nationDropContract,
+      contractInterface: nationDropContractABI,
+    },
+    'claim',
+    {
+      args: [index, account, amount, merkleProof],
+    }
+  )
 }
 
 export async function useUserHasAvailableClaim(account) {

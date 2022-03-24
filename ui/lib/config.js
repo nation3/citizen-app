@@ -6,20 +6,21 @@ let config = {
   balancerLPToken: process.env.NEXT_PUBLIC_BALANCER_NATION_ETH_POOL_TOKEN,
   nationRewardsContract:
     process.env.NEXT_PUBLIC_BALANCER_NATION_REWARDS_CONTRACT_ADDRESS,
+  nationPassportNFT: process.env.NEXT_PUBLIC_BALANCER_PASSPORT_NFT_ADDRESS,
   nationDropContract:
     process.env.NEXT_PUBLIC_BALANCER_NATION_DISTRIBUTOR_CONTRACT_ADDRESS,
-  nationPassportNFT: process.env.NEXT_PUBLIC_BALANCER_PASSPORT_NFT_ADDRESS,
 }
 
 if (process.env.NEXT_PUBLIC_DEV === 'true') {
   const devDeployments = require('../../contracts/devDeployment.json')
   const devConfig = {
     nationToken: devDeployments.nation,
-    balancerLPToken: devDeployments.balancerPair,
     balancerVault: devDeployments.balancerPool,
+    balancerLPToken: devDeployments.balancerPair,
     nationRewardsContract: devDeployments.rewardsDistributor,
     nationPassportNFT: devDeployments.passportNFT,
     nationPassportNFTIssuer: devDeployments.passportIssuer,
+    nationDropContract: devDeployments.passportIssuer,
   }
   config = { ...config, ...devConfig }
 }

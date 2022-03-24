@@ -1,5 +1,7 @@
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
+import { useClaimsFile, useIsClaimed, useClaimDrop } from '../lib/merkle-drop'
 import { useNationBalance } from '../lib/nation-token'
+import { useHandleError } from '../lib/use-handle-error'
 import { useAccount } from '../lib/use-wagmi'
 import ActionButton from '../components/ActionButton'
 import Confetti from '../components/Confetti'
@@ -11,7 +13,19 @@ export default function Claim() {
   const [{ data: balance, loading: balanceLoading }] = useNationBalance(
     account?.address
   )
+  const [canClaim, setCanClaim] = useState(false)
   const [claimed, setClaimed] = useState(false)
+
+  const [{ data: claimsFile }] = useHandleError(useClaimsFile())
+  useEffect(() => {
+    claimsFile &&
+      account &&
+      setCanClaim(claimsFile.claims[account.address]?.index || false)
+    console.log(account.address)
+    console.log(claimsFile?.claims)
+    console.log(claimsFile?.claims[parseFloat(account?.address.toLowerCase())])
+    console.log(canClaim)
+  }, [account, claimsFile])
 
   const elementRef = useRef()
 
