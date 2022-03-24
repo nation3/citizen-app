@@ -23,31 +23,46 @@ async function main() {
   const WETH_SUPPLY = ethers.BigNumber.from(dec(10000, 18));
   const NATION_SUPPLY = ethers.BigNumber.from(dec(42069, 18));
   const LPTOKEN_SUPPLY = ethers.BigNumber.from(dec(3140, 18));
+
   const LP_REWARDS = NATION_SUPPLY.mul(3).div(100);
+  const LP_REWARDS_DURATION = 300 // Blocks
+
+  const AIRDROP_ROOT = "0x5cdea970c9f23ca3ad7c3d706650a7d1a1cf0269632e0059c9dcfcb544d3a5c8";
+  const AIRDROP_AMOUNT = 180;
+
   const PASS_LOCKING_AMOUNT = ethers.BigNumber.from(dec(10, 18));
   const LOCKING_DURATION = 13 * 3600 * 24 * 365;
 
   // We get the contract to deploy
   const ERC20Mock = await ethers.getContractFactory("ERC20Mock");
+  const MerkleDistributor = await ethers.getContractFactory("MerkleDistributor");
   const LiquidityRewardsDistributor = await ethers.getContractFactory("LiquidityRewardsDistributor");
   const BalancerPoolsMock = await ethers.getContractFactory("BalancerPoolsMock");
   const PassportNFT = await ethers.getContractFactory("PassportNFT");
   const PassportIssuer = await ethers.getContractFactory("PassportIssuer");
 
-  // Deploy contracts
+  // Deploy tokens
   const NATION = await ERC20Mock.deploy("Nation3 Token", "NATION", NATION_SUPPLY);
   const WETH = await ERC20Mock.deploy("Wrapped Eth", "ETH", WETH_SUPPLY);
   const LpToken = await ERC20Mock.deploy("Balancer ETH/NATION Pair", "ETHNATION", LPTOKEN_SUPPLY);
-  const balancerPool = await BalancerPoolsMock.deploy()
-  const rewardsDistributor = await LiquidityRewardsDistributor.deploy(); 
-  const passportNFT = await PassportNFT.deploy("Nation3 Founding Citizen Passport", "GENESIS-PASSPORT");
-  const passportIssuer = await PassportIssuer.deploy();
 
   await NATION.deployed();
   await WETH.deployed();
   await LpToken.deployed();
-  await balancerPool.deployed();
+
+  // Deploy distributors
+  const balancerPool = await BalancerPoolsMock.deploy();
+  const rewardsDistributor = await LiquidityRewardsDistributor.deploy(); 
+  const airdropDistributor = await MerkleDistributor.deploy(NATION.address, AIRDROP_ROOT);
+
   await rewardsDistributor.deployed();
+  await airdropDistributor.deployed();
+  await balancerPool.deployed();
+
+  // Deploy passport contracts
+  const passportNFT = await PassportNFT.deploy("Nation3 Founding Citizen Passport", "GENESIS-PASSPORT");
+  const passportIssuer = await PassportIssuer.deploy();
+
   await passportNFT.deployed();
   await passportIssuer.deployed();
 
@@ -59,7 +74,8 @@ async function main() {
 
   // Dev setup
   await NATION.transfer(rewardsDistributor.address, LP_REWARDS);
-  await rewardsDistributor.setRewards(LP_REWARDS, 300);
+  await NATION.transfer(airdropDistributor.address, AIRDROP_AMOUNT);
+  await rewardsDistributor.setRewards(LP_REWARDS, LP_REWARDS_DURATION);
   await passportIssuer.setLockingParams(PASS_LOCKING_AMOUNT, LOCKING_DURATION);
 
   const deployment = {
@@ -68,6 +84,7 @@ async function main() {
       "balancerPair": LpToken.address,
       "balancerPool": balancerPool.address,
       "rewardsDistributor": rewardsDistributor.address,
+      "airdropDistributor": airdropDistributor.address,
       "passportNFT": passportNFT.address,
       "passportIssuer": passportIssuer.address,
   }
