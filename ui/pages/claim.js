@@ -6,7 +6,6 @@ import { useAccount } from '../lib/use-wagmi'
 import ActionButton from '../components/ActionButton'
 import Confetti from '../components/Confetti'
 import Head from '../components/Head'
-import LoadingBalance from '../components/LoadingBalance'
 
 export default function Claim() {
   const [{ data: account }] = useAccount()
@@ -14,14 +13,18 @@ export default function Claim() {
     account?.address
   )
   const [canClaim, setCanClaim] = useState(false)
+  const [proofIndex, setProofIndex] = useState()
   const [claimed, setClaimed] = useState(false)
 
   const [{ data: claimsFile }] = useHandleError(useClaimsFile())
+  const [{ data: isClaimed }] = useIsClaimed(proofIndex)
   useEffect(() => {
-    claimsFile &&
-      account &&
-      setCanClaim(claimsFile.claims[account.address] !== undefined)
-    console.log(canClaim)
+    if (claimsFile && account) {
+      if (claimsFile.claims[account.address]) {
+        setCanClaim(true)
+        setProofIndex(claimsFile.claims[account.address].index)
+      }
+    }
   }, [account, claimsFile])
 
   const elementRef = useRef()
