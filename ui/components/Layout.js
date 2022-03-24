@@ -73,16 +73,18 @@ export default function Layout({ children }) {
 
   useEffect(() => {
     if (!hasPassportLoading) {
-      console.log(hasPassport)
       if (hasPassport) {
         navigation[0].name = 'Welcome citizen'
         navigation[0].href = '/citizen'
         setNav(navigation)
-        if (router.pathname === '/join' && !router.query.mintingPassport) {
+        if (
+          (router.pathname === '/join' && !router.query.mintingPassport) ||
+          router.pathname == '/'
+        ) {
           router.push('/citizen')
         }
       } else {
-        if (router.pathname === '/citizen') {
+        if (router.pathname === '/citizen' || router.pathname == '/') {
           router.push('/join')
         }
       }

@@ -64,7 +64,7 @@ export function useLiquidityRewards({ nationPrice, poolValue, address }) {
         (ethers.utils.formatEther(totalRewards) * nationPrice * 100) / poolValue
       )
     }
-  }, [totalRewardsLoading])
+  }, [totalRewards, totalRewardsLoading])
 
   return [
     {

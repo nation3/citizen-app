@@ -63,12 +63,11 @@ function _useContractWrite(config, method, argsAndOverrides) {
         data = await contract[method]()
       }
       setData(data)
-      console.log('waiting')
       await data.wait()
-      console.log('waitingsss')
       setLoading(false)
     } catch (error) {
       setError(error)
+      setLoading(false)
       console.error(
         `Error in ${config.addressOrName}.${method}(${argsAndOverrides?.args})`
       )
