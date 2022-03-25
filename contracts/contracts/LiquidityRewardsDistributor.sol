@@ -5,6 +5,8 @@ import {Initializable} from "@openzeppelin/contracts/proxy/utils/Initializable.s
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
+import {DSTestPlus} from "./test/utils/DSTestPlus.sol";
+
 error InvalidEndBlock();
 error InvalidRewardsAmount();
 error InsufficientRewardsBalance();
@@ -13,7 +15,7 @@ error InsufficientStakeBalance();
 /// @notice Distributes rewards to LP providers
 /// @author Nation3 (https://github.com/nation3)
 /// Adapted from https://github.com/Rari-Capital/rari-governance-contracts/blob/master/contracts/RariGovernanceTokenUniswapDistributor.sol
-contract LiquidityRewardsDistributor is Initializable, Ownable {
+contract LiquidityRewardsDistributor is Initializable, Ownable, DSTestPlus {
     // TODO: Add events
 
     using SafeERC20 for IERC20;
@@ -164,7 +166,7 @@ contract LiquidityRewardsDistributor is Initializable, Ownable {
 
         _updateRewardsdistribution();
 
-        uint256 undistributedRewards = holderStake * (_lastLpTokenRewards - _accountLastLpTokenRewards[holder]);
+        uint256 undistributedRewards = holderStake * (_lastLpTokenRewards - _accountLastLpTokenRewards[holder]) / 1e21;
         if (undistributedRewards <= 0) return 0;
 
         _accountLastLpTokenRewards[holder] = _lastLpTokenRewards;
@@ -180,11 +182,12 @@ contract LiquidityRewardsDistributor is Initializable, Ownable {
         uint256 distributedRewards = totalRewards * blocksSinceStart / _currentDistributionDuration;
         // Rewards to distribute since last distribution
         uint256 rewardsToDistribute = distributedRewards - _lastDistributedRewards;
+
         if (rewardsToDistribute <= 0) return;
 
         _lastDistributedRewards = distributedRewards;
 
         // Update rewards per LP token only if there are staked tokens
-        if (totalStaked > 0) _lastLpTokenRewards = _lastLpTokenRewards + rewardsToDistribute / totalStaked;
+        if (totalStaked > 0) _lastLpTokenRewards = _lastLpTokenRewards + rewardsToDistribute * 1e21 / totalStaked;
     }
 }
