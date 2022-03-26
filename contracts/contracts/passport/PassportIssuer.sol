@@ -83,7 +83,5 @@ contract PassportIssuer is Initializable, Ownable {
         passToken.mint(to);
     }
 
-    function _revokeMembership(address from) internal virtual {
-        passToken.burnFromOwner(from);
-    }
+    function _revokeMembership(address from) internal virtual {}
 }
