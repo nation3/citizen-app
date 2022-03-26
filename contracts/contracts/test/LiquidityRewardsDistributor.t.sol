@@ -2,17 +2,19 @@
 pragma solidity 0.8.10;
 
 import {DSTestPlus} from "./utils/DSTestPlus.sol";
+import {Selectors as sel} from "./utils/Selectors.sol";
 import {Hevm} from "./utils/evm.sol";
 import {ERC20Mock} from "../mocks/ERC20Mock.sol";
 import {
     LiquidityRewardsDistributor,
     InvalidStartBlock,
     InvalidEndBlock,
-    InsufficientRewardsBalance,
+    // InsufficientRewardsBalance,
     InvalidRewardsAmount
-} from "../LiquidityRewardsDistributor.sol";
+} from "../distributors/LiquidityRewardsDistributor.sol";
 
 contract RewardsDistributorTest is DSTestPlus {
+
     Hevm evm = Hevm(HEVM_ADDRESS);
 
     ERC20Mock rewardsToken;
@@ -52,7 +54,7 @@ contract RewardsDistributorTest is DSTestPlus {
         uint256 startBlock = block.number + 5;
         uint256 endBlock = startBlock + rewardsPeriod;
 
-        evm.expectRevert(InsufficientRewardsBalance.selector);
+        evm.expectRevert(sel.select("InsufficientRewardsBalance()"));
         distributor.setRewards(totalRewards, startBlock, endBlock);
     }
 

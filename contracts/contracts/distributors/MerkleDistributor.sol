@@ -10,9 +10,9 @@ error InvalidProof();
 error AlreadyClaimed();
 
 /// @notice Distributes ERC20 tokens based on a Merkle Tree.
-/// Based on ENS Airdrop (https://github.com/ensdomains/governance/blob/master/contracts/MerkleAirdrop.sol)
+/// @dev Adapted from ENS Airdrop (https://github.com/ensdomains/governance/blob/master/contracts/MerkleAirdrop.sol)
 /// & Uniswap Merkle distributor (https://github.com/Uniswap/merkle-distributor/blob/master/contracts/MerkleDistributor.sol).
-/// @dev Instead of sending the tokens for the airdrop to the contract approve this contract to transfer the tokens from DAO account.
+/// @dev Instead of sending the tokens for the airdrop to the contract allow this contract to transfer the tokens from DAO account.
 contract MerkleDistributor {
 
     using SafeERC20 for IERC20;
@@ -24,7 +24,7 @@ contract MerkleDistributor {
     IERC20 public immutable token;
     bytes32 public immutable merkleRoot;
 
-    /// @dev This is a packed array of booleans.
+    /// @dev This is a packed array of booleans to signal that a leaf has been claimed.
     BitMaps.BitMap private claimed;
 
     /// @dev Initializes the contract.
@@ -37,7 +37,7 @@ contract MerkleDistributor {
         merkleRoot = _merkleRoot;
     }
 
-    /// @dev Claims airdropped tokens.
+    /// @notice Claims airdropped tokens.
     /// @param index The index into the merkle tree.
     /// @param recipient The account of the claim being made.
     /// @param merkleProof The merkle proof proving the claim is valid.
@@ -55,11 +55,9 @@ contract MerkleDistributor {
         emit Claimed(index, recipient, amount);
     }
 
-    /// @dev Check if the claim at the given index has already been made.
+    /// @notice Check if the claim at the given index has already been made.
     /// @param index The index into the merkle tree.
     function isClaimed(uint256 index) public view returns (bool) {
         return claimed.get(index);
     }
-
-
 }

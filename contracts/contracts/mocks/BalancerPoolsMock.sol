@@ -5,6 +5,8 @@ import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract BalancerPoolsMock {
 
+    error idError();
+
     IERC20[] poolTokens;
     uint256[] poolTokensBalances;
     uint256 internal _lastChangeBlock;
@@ -30,6 +32,8 @@ contract BalancerPoolsMock {
             uint256 lastChangeBlock
         )
     {
+        /// Remove warning
+        if (poolId == 0) revert idError();
         return (poolTokens, poolTokensBalances, _lastChangeBlock);
     }
 }

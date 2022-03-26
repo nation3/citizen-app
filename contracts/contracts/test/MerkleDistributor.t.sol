@@ -4,7 +4,7 @@ pragma solidity = 0.8.10;
 import {DSTest} from "./utils/test.sol";
 import {Hevm} from "./utils/evm.sol";
 import {ERC20Mock} from "../mocks/ERC20Mock.sol";
-import {MerkleDistributor, AlreadyClaimed, InvalidProof} from "../MerkleDistributor.sol";
+import {MerkleDistributor, AlreadyClaimed, InvalidProof} from "../distributors/MerkleDistributor.sol";
 
 contract MerkleDistributorTest is DSTest {
     Hevm evm = Hevm(HEVM_ADDRESS);
