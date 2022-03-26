@@ -6,6 +6,7 @@
 import { ethers } from "hardhat";
 import fs from "fs";
 import { dec } from "../utils/deploymentHelpers";
+import { BigNumber } from "ethers";
 
 const saveDeployment = (info: object, path: string) => {
     const content = JSON.stringify(info, null, 1);
@@ -20,18 +21,17 @@ async function main() {
   // manually to make sure everything is compiled
   // await hre.run('compile');
 
-  const WETH_SUPPLY = ethers.BigNumber.from(dec(10000, 18));
-  const NATION_SUPPLY = ethers.BigNumber.from(dec(42069, 18));
-  const LPTOKEN_SUPPLY = ethers.BigNumber.from(dec(3140, 18));
+  const WETH_SUPPLY: BigNumber = ethers.BigNumber.from(dec(10000, 18));
+  const NATION_SUPPLY: BigNumber = ethers.BigNumber.from(dec(42069, 18));
+  const LPTOKEN_SUPPLY: BigNumber = ethers.BigNumber.from(dec(3140, 18));
 
-  const LP_REWARDS = NATION_SUPPLY.mul(3).div(100);
-  const LP_REWARDS_DURATION = 300 // Blocks
+  const LP_REWARDS: BigNumber = NATION_SUPPLY.mul(3).div(100);
 
-  const AIRDROP_ROOT = "0xed145aa219b18aa3f2dc56afb2c4e0b148e429ca93b9c5f2c7a29d2101685aee";
-  const AIRDROP_AMOUNT = ethers.BigNumber.from(dec(1000, 18));
+  const AIRDROP_ROOT: string = "0xed145aa219b18aa3f2dc56afb2c4e0b148e429ca93b9c5f2c7a29d2101685aee";
+  const AIRDROP_AMOUNT: BigNumber = ethers.BigNumber.from(dec(1000, 18));
 
-  const PASS_LOCKING_AMOUNT = ethers.BigNumber.from(dec(10, 18));
-  const LOCKING_DURATION = 13 * 3600 * 24 * 365;
+  const PASS_LOCKING_AMOUNT: BigNumber = ethers.BigNumber.from(dec(10, 18));
+  const LOCKING_DURATION: number = 13 * 3600 * 24 * 365;
 
   const [deployer] = await ethers.getSigners();
 
@@ -74,11 +74,17 @@ async function main() {
   await passportIssuer.initialize(NATION.address, passportNFT.address);
   await passportNFT.transferOwnership(passportIssuer.address);
 
-  // Dev setup
-  await NATION.transfer(rewardsDistributor.address, LP_REWARDS);
   await NATION.approve(airdropDistributor.address, AIRDROP_AMOUNT);
-  await rewardsDistributor.setRewards(LP_REWARDS, LP_REWARDS_DURATION);
   await passportIssuer.setLockingParams(PASS_LOCKING_AMOUNT, LOCKING_DURATION);
+
+  // Dev setup rewards distributors
+  await NATION.transfer(rewardsDistributor.address, LP_REWARDS);
+
+  const LP_REWARDS_START: number = await ethers.provider.getBlockNumber() + 10;
+  const LP_REWARDS_END: number = LP_REWARDS_START + 300;
+
+  await rewardsDistributor.setRewards(LP_REWARDS, LP_REWARDS_START, LP_REWARDS_END);
+
 
   const deployment = {
       "weth": WETH.address,
