@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity = 0.8.10;
+pragma solidity =0.8.10;
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {ERC721} from "../utils/ERC721Extended.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
@@ -9,17 +9,16 @@ import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol
 /// @author Nation3 (https://github.com/nation3).
 /// @dev Mint, burn & transfers are restricted to owner (issuer contract).
 contract PassportNFT is ERC721, Ownable {
-
     /*///////////////////////////////////////////////////////////////
                                LIBRARIES
     //////////////////////////////////////////////////////////////*/
 
     using SafeERC20 for IERC20;
- 
+
     /*///////////////////////////////////////////////////////////////
                             STORAGE
     //////////////////////////////////////////////////////////////*/
-    
+
     /// @dev Tracks the number of tokens minted & not burned
     uint256 internal _supply;
     /// @dev Tracks the next id to mint
@@ -45,7 +44,7 @@ contract PassportNFT is ERC721, Ownable {
 
     /// @dev Sets name & symbol.
     constructor(string memory _name, string memory _symbol) ERC721(_name, _symbol) {}
- 
+
     /*///////////////////////////////////////////////////////////////
                        RESTRICTED ACTIONS
     //////////////////////////////////////////////////////////////*/
@@ -60,13 +59,13 @@ contract PassportNFT is ERC721, Ownable {
         address to,
         uint256 id
     ) public override onlyOwner {
-        if(from != ownerOf[id]) revert InvalidFrom();
-        if(to == address(0)) revert InvalidRecipient();
-        if(
-            msg.sender != from
-            && isApprovedForAll[from][msg.sender] == false
-            && msg.sender != getApproved[id]
-            && msg.sender != owner()
+        if (from != ownerOf[id]) revert InvalidFrom();
+        if (to == address(0)) revert InvalidRecipient();
+        if (
+            msg.sender != from &&
+            isApprovedForAll[from][msg.sender] == false &&
+            msg.sender != getApproved[id] &&
+            msg.sender != owner()
         ) revert NotAuthorized();
 
         unchecked {
@@ -144,7 +143,11 @@ contract PassportNFT is ERC721, Ownable {
     /// @param token Token to withdraw.
     /// @param amount Amount of tokens to withdraw.
     /// @param to Recipient address of the tokens.
-    function recoverTokens(IERC20 token, uint256 amount, address to) external virtual onlyOwner {
+    function recoverTokens(
+        IERC20 token,
+        uint256 amount,
+        address to
+    ) external virtual onlyOwner {
         token.safeTransfer(to, amount);
     }
 }

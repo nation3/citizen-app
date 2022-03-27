@@ -7,7 +7,7 @@ import "@typechain/hardhat";
 import "hardhat-gas-reporter";
 import "solidity-coverage";
 import { dec } from "./utils/deploymentHelpers";
-import devDeployment from "./devDeployment.json";
+import devDeployment from "./deployments/dev.json";
 
 dotenv.config();
 

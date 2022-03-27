@@ -29,23 +29,17 @@ contract PassportIssuer is Initializable, Ownable {
     mapping(address => uint256) public lockingBalance;
     mapping(address => uint256) public lockingEndBlock;
 
-    function initialize(
-        IERC20 _lockToken,
-        PassportNFT _passToken
-    ) public initializer {
+    function initialize(IERC20 _lockToken, PassportNFT _passToken) public initializer {
         lockToken = _lockToken;
         passToken = _passToken;
     }
 
-    modifier isEnabled {
+    modifier isEnabled() {
         if (enabled == false) revert IssuanceIsDisabled();
         _;
     }
 
-    function setLockingParams(
-        uint256 _lockingAmount,
-        uint256 _lockingPeriod
-    ) public virtual onlyOwner {
+    function setLockingParams(uint256 _lockingAmount, uint256 _lockingPeriod) public virtual onlyOwner {
         lockingAmount = _lockingAmount;
         lockingPeriod = _lockingPeriod;
     }

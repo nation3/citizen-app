@@ -7,5 +7,7 @@ typechain
 #Artifacts files
 libs
 cache
+foundry-cache
 artifacts
-devDeployment.json
+out
+deployments

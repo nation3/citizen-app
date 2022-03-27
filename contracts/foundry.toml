@@ -1,5 +1,6 @@
 [default]
 src = "contracts"
-out = "artifacts/contracts"
+out = "out"
 libs = ["node_modules"]
+cache-path = "foundry-cache"
 eth-rpc-url = "http://127.0.0.1:8545"

@@ -1,4 +1,8 @@
 {
+  "scripts": {
+      "solhint": "solhint -f table contracts/**/*.sol",
+      "prettier:solidity": "prettier --write contracts/**/*.sol"
+  },
   "dependencies": {
     "@openzeppelin/contracts": "^4.5.0"
   },
@@ -26,9 +30,10 @@
     "ethers": "^5.0.0",
     "hardhat": "^2.9.1",
     "hardhat-gas-reporter": "^1.0.4",
-    "prettier": "^2.3.2",
-    "prettier-plugin-solidity": "^1.0.0-beta.13",
-    "solhint": "^3.3.6",
+    "prettier": "^2.6.1",
+    "prettier-plugin-solidity": "^1.0.0-beta.19",
+    "solhint": "^3.3.7",
+    "solhint-plugin-prettier": "^0.0.5",
     "solidity-coverage": "^0.7.16",
     "ts-node": "^10.1.0",
     "typechain": "^5.1.2",

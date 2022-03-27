@@ -8,7 +8,6 @@ import {ERC20Mock} from "../mocks/ERC20Mock.sol";
 import {LiquidityRewardsDistributor} from "../distributors/LiquidityRewardsDistributor.sol";
 
 contract RewardsDistributorTest is DSTestPlus {
-
     Hevm evm = Hevm(HEVM_ADDRESS);
 
     ERC20Mock rewardsToken;
@@ -38,7 +37,7 @@ contract RewardsDistributorTest is DSTestPlus {
 
     function testSetRewards() public {
         (uint256 startBlock, uint256 endBlock) = setRewards();
-        
+
         assertEq(distributor.totalRewards(), totalRewards);
         assertEq(distributor.startBlock(), startBlock);
         assertEq(distributor.endBlock(), endBlock);
@@ -73,7 +72,7 @@ contract RewardsDistributorTest is DSTestPlus {
     function testSingleDepositFullTime() public {
         (uint256 startBlock, uint256 endBlock) = setRewards();
 
-        uint256 depositAmount = 1337 *1e18;
+        uint256 depositAmount = 1337 * 1e18;
         address userAccount = address(0xBABE);
 
         // Fill user account, switch to it & give approval
@@ -93,11 +92,11 @@ contract RewardsDistributorTest is DSTestPlus {
         assertApproxEq(acumRewards, totalRewards / 5, 5);
 
         // Claim 75% into rewards period
-        evm.roll(startBlock + rewardsPeriod * 3 / 4);
+        evm.roll(startBlock + (rewardsPeriod * 3) / 4);
         acumRewards = acumRewards + distributor.claimRewards();
 
         assertEq(acumRewards, rewardsToken.balanceOf(userAccount));
-        assertApproxEq(acumRewards, totalRewards * 3 / 4, 5);
+        assertApproxEq(acumRewards, (totalRewards * 3) / 4, 5);
 
         // Withdraw everything after rewards period end
         evm.roll(endBlock + 5);
@@ -116,7 +115,7 @@ contract RewardsDistributorTest is DSTestPlus {
     function testSingleDepositAfterStart() public {
         (uint256 startBlock, uint256 endBlock) = setRewards();
 
-        uint256 depositAmount = 1337 *1e18;
+        uint256 depositAmount = 1337 * 1e18;
         address userAccount = address(0xBABE);
 
         // Fill user account, switch to it & give approval
@@ -142,7 +141,7 @@ contract RewardsDistributorTest is DSTestPlus {
     function testMultiDeposit() public {
         (uint256 startBlock, uint256 endBlock) = setRewards();
 
-        uint256 depositAmount = 1337 *1e18;
+        uint256 depositAmount = 1337 * 1e18;
         address userAccountA = address(0xBABE);
         address userAccountB = address(0xBEEF);
 
@@ -173,15 +172,15 @@ contract RewardsDistributorTest is DSTestPlus {
         uint256 rewardsAccountA = distributor.claimRewards();
         // Account B withdraw and claim
         evm.prank(userAccountB);
-        (,uint256 rewardsAccountB) = distributor.withdrawAndClaim();
+        (, uint256 rewardsAccountB) = distributor.withdrawAndClaim();
 
         // Account A should have 1/4 + 1/2 * 1/4 = 3/8 of the totalRewards
-        assertApproxEq(rewardsAccountA, totalRewards * 3/8, 5);
+        assertApproxEq(rewardsAccountA, (totalRewards * 3) / 8, 5);
         // Account B should have 1/2 * 1/4 = 1/8 of the totalRewards
         assertApproxEq(rewardsAccountB, totalRewards / 8, 5);
 
         // Fastforward to 75% of rewards period
-        evm.roll(startBlock + rewardsPeriod * 3/4);
+        evm.roll(startBlock + (rewardsPeriod * 3) / 4);
 
         // Account B deposit double of the previous deposit
         evm.prank(userAccountB);
@@ -197,9 +196,9 @@ contract RewardsDistributorTest is DSTestPlus {
         rewardsAccountB = distributor.claimRewards();
 
         // Account A should have 1/4 + 1/3 * 1/4 = 1/3 of the totalRewards
-        assertApproxEq(rewardsAccountA, totalRewards * 1/3, 5);
+        assertApproxEq(rewardsAccountA, (totalRewards * 1) / 3, 5);
         // Account B should have 2/3 * 1/4 = 1/6 of the totalRewards
-        assertApproxEq(rewardsAccountB, totalRewards * 1/6, 5);
+        assertApproxEq(rewardsAccountB, (totalRewards * 1) / 6, 5);
 
         // Both accounts should add up to the totalRewards
         uint256 balanceA = rewardsToken.balanceOf(userAccountA);
@@ -209,9 +208,9 @@ contract RewardsDistributorTest is DSTestPlus {
 
     function testUpdateRewardsWhileStaking() public {
         // Set initial rewards
-        (uint256 startBlock,) = setRewards();
+        (uint256 startBlock, ) = setRewards();
 
-        uint256 depositAmount = 1337 *1e18;
+        uint256 depositAmount = 1337 * 1e18;
         address userAccount = address(0xBABE);
 
         // Fill user account, switch to it & give approval
@@ -221,7 +220,7 @@ contract RewardsDistributorTest is DSTestPlus {
 
         distributor.deposit(depositAmount);
         evm.stopPrank();
-        
+
         // Fastforward to 25% of the rewards period
         evm.roll(startBlock + rewardsPeriod / 4);
 
@@ -241,10 +240,10 @@ contract RewardsDistributorTest is DSTestPlus {
         /// First quarter -> 1/4 rewards
         /// Second quarter -> 3/4 * 1/2 (new time) = 3/8 rewards
         /// Total -> 5/8 rewards
-        assertApproxEq(userRewards, totalRewards * 5/8, 5);
+        assertApproxEq(userRewards, (totalRewards * 5) / 8, 5);
 
         // Reduce decrease pending rewards by 25%
-        distributor.setRewards(totalRewards * 3/4, block.number + 5, newEnd);
+        distributor.setRewards((totalRewards * 3) / 4, block.number + 5, newEnd);
 
         // Fastforward to end of the rewards period
         evm.roll(newEnd);
@@ -253,19 +252,18 @@ contract RewardsDistributorTest is DSTestPlus {
         userRewards = userRewards + distributor.claimRewards();
 
         // At the end user rewards should be 75% of original rewards
-        assertApproxEq(userRewards, totalRewards * 3/4, 5);
-
+        assertApproxEq(userRewards, (totalRewards * 3) / 4, 5);
     }
 
     function testCannotReduceAlreadyDistributedRewards() public {
         (uint256 startBlock, uint256 endBlock) = setRewards();
 
         // Someone deposits from the beginning
-        uint256 depositAmount = 1337 *1e18;
+        uint256 depositAmount = 1337 * 1e18;
         lpToken.approve(address(distributor), depositAmount);
         distributor.deposit(depositAmount);
 
-        evm.roll(startBlock + rewardsPeriod * 3/4);
+        evm.roll(startBlock + (rewardsPeriod * 3) / 4);
 
         // Should fail becasue 3/4 of the rewards are already distributed to the single staker
         evm.expectRevert(sig.selector("InvalidRewardsAmount()"));
@@ -298,7 +296,7 @@ contract RewardsDistributorTest is DSTestPlus {
     }
 
     function testRewardsRecovery() public {
-        (uint256 startBlock,) = setRewards();
+        (uint256 startBlock, ) = setRewards();
 
         // Someone transfer rewards tokens
         rewardsToken.transfer(address(distributor), 200 * 1e18);
@@ -310,5 +308,4 @@ contract RewardsDistributorTest is DSTestPlus {
         assertEq(tokensRecovered, 200 * 1e18);
         assertEq(rewardsToken.balanceOf(address(0xBABE)), tokensRecovered);
     }
-
 }

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity = 0.8.10;
+pragma solidity =0.8.10;
 
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 
@@ -9,7 +9,6 @@ import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 /// @dev Includes totalSupply for better compliance with indexers & aggregators.
 /// @dev Includes URI storage management for better per token metadata.
 abstract contract ERC721 {
-
     /*///////////////////////////////////////////////////////////////
                                 LIBRARIES
     //////////////////////////////////////////////////////////////*/
@@ -43,7 +42,7 @@ abstract contract ERC721 {
     string public name;
     string public symbol;
     string public baseURI;
-    
+
     /*///////////////////////////////////////////////////////////////
                             ERC721 STORAGE                        
     //////////////////////////////////////////////////////////////*/
@@ -80,7 +79,7 @@ abstract contract ERC721 {
     /*///////////////////////////////////////////////////////////////
                               ERC721 LOGIC
     //////////////////////////////////////////////////////////////*/
-    
+
     function approve(address spender, uint256 id) public virtual {
         address owner = ownerOf[id];
 
@@ -104,13 +103,10 @@ abstract contract ERC721 {
         address to,
         uint256 id
     ) public virtual {
-        if(from != ownerOf[id]) revert InvalidFrom();
-        if(to == address(0)) revert InvalidRecipient();
-        if(
-            msg.sender != from
-            && isApprovedForAll[from][msg.sender] == false
-            && msg.sender != getApproved[id]
-        ) revert NotAuthorized();
+        if (from != ownerOf[id]) revert InvalidFrom();
+        if (to == address(0)) revert InvalidRecipient();
+        if (msg.sender != from && isApprovedForAll[from][msg.sender] == false && msg.sender != getApproved[id])
+            revert NotAuthorized();
 
         // Underflow of the sender's balance is impossible because we check for
         // ownership above and the recipient's balance can't realistically overflow.
@@ -135,8 +131,8 @@ abstract contract ERC721 {
 
         if (
             to.code.length != 0 &&
-                ERC721TokenReceiver(to).onERC721Received(msg.sender, from, id, "") !=
-                ERC721TokenReceiver.onERC721Received.selector
+            ERC721TokenReceiver(to).onERC721Received(msg.sender, from, id, "") !=
+            ERC721TokenReceiver.onERC721Received.selector
         ) revert UnsafeRecipient();
     }
 
@@ -150,11 +146,11 @@ abstract contract ERC721 {
 
         if (
             to.code.length != 0 &&
-                ERC721TokenReceiver(to).onERC721Received(msg.sender, from, id, data) !=
-                ERC721TokenReceiver.onERC721Received.selector
+            ERC721TokenReceiver(to).onERC721Received(msg.sender, from, id, data) !=
+            ERC721TokenReceiver.onERC721Received.selector
         ) revert UnsafeRecipient();
     }
- 
+
     /*///////////////////////////////////////////////////////////////
                               ERC165 LOGIC
     //////////////////////////////////////////////////////////////*/
@@ -207,8 +203,8 @@ abstract contract ERC721 {
 
         if (
             to.code.length != 0 &&
-                ERC721TokenReceiver(to).onERC721Received(msg.sender, address(0), id, "") !=
-                ERC721TokenReceiver.onERC721Received.selector
+            ERC721TokenReceiver(to).onERC721Received(msg.sender, address(0), id, "") !=
+            ERC721TokenReceiver.onERC721Received.selector
         ) revert UnsafeRecipient();
     }
 
@@ -221,8 +217,8 @@ abstract contract ERC721 {
 
         if (
             to.code.length != 0 ||
-                ERC721TokenReceiver(to).onERC721Received(msg.sender, address(0), id, data) !=
-                ERC721TokenReceiver.onERC721Received.selector
+            ERC721TokenReceiver(to).onERC721Received(msg.sender, address(0), id, data) !=
+            ERC721TokenReceiver.onERC721Received.selector
         ) revert UnsafeRecipient();
     }
 }

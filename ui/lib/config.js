@@ -13,7 +13,7 @@ let config = {
 }
 
 if (process.env.NEXT_PUBLIC_DEV === 'true') {
-  const devDeployments = require('../../contracts/devDeployment.json')
+  const devDeployments = require('../../contracts/deployments/dev.json')
   const devConfig = {
     nationToken: devDeployments.nation,
     balancerVault: devDeployments.balancerPool,

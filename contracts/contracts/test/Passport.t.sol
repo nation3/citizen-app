@@ -8,7 +8,6 @@ import {Signatures as sig} from "./utils/Signatures.sol";
 import {ERC20Mock} from "../mocks/ERC20Mock.sol";
 
 contract PassportTest is DSTestPlus {
-
     Hevm evm = Hevm(HEVM_ADDRESS);
 
     PassportNFT pass;
@@ -45,7 +44,7 @@ contract PassportTest is DSTestPlus {
 
         // Mint token under default contract owner
         pass.mint(citiz3nA);
-        
+
         // Transfer contract ownership
         pass.transferOwnership(newOwner);
         evm.startPrank(newOwner);
@@ -92,20 +91,20 @@ contract PassportTest is DSTestPlus {
     }
 
     function testTokenRecovery() public {
-        ERC20Mock token = new ERC20Mock("Token", "TKN", 100*1e18);
-        token.transfer(address(pass), 100*1e18);
+        ERC20Mock token = new ERC20Mock("Token", "TKN", 100 * 1e18);
+        token.transfer(address(pass), 100 * 1e18);
 
         // Valid recovery
-        pass.recoverTokens(token, 50*1e18, address(0xBABE));
-        assertEq(token.balanceOf(address(0xBABE)), 50*1e18);
+        pass.recoverTokens(token, 50 * 1e18, address(0xBABE));
+        assertEq(token.balanceOf(address(0xBABE)), 50 * 1e18);
 
         // Exceeding amount should fail
         evm.expectRevert("ERC20: transfer amount exceeds balance");
-        pass.recoverTokens(token, 100*1e18, address(0xBABE));
+        pass.recoverTokens(token, 100 * 1e18, address(0xBABE));
 
         // Only owner should be able to execute
         evm.prank(address(0xBABE));
         evm.expectRevert("Ownable: caller is not the owner");
-        pass.recoverTokens(token, 50*1e18, address(0xBABE));
+        pass.recoverTokens(token, 50 * 1e18, address(0xBABE));
     }
 }

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity = 0.8.10;
+pragma solidity =0.8.10;
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
@@ -11,7 +11,6 @@ import {BitMaps} from "@openzeppelin/contracts/utils/structs/BitMaps.sol";
 /// & Uniswap Merkle distributor (https://github.com/Uniswap/merkle-distributor/blob/master/contracts/MerkleDistributor.sol).
 /// @dev Instead of sending the tokens for the airdrop to the contract allow this contract to transfer the tokens from DAO account.
 contract MerkleDistributor {
-
     using SafeERC20 for IERC20;
     using BitMaps for BitMaps.BitMap;
 
@@ -31,7 +30,11 @@ contract MerkleDistributor {
     /// @param _sender The account to send airdrop tokens from.
     /// @param _token The token to airdrop.
     /// @param _merkleRoot The root of the merkle tree.
-    constructor(address _sender, IERC20 _token, bytes32 _merkleRoot) {
+    constructor(
+        address _sender,
+        IERC20 _token,
+        bytes32 _merkleRoot
+    ) {
         sender = _sender;
         token = _token;
         merkleRoot = _merkleRoot;
@@ -41,7 +44,12 @@ contract MerkleDistributor {
     /// @param index The index into the merkle tree.
     /// @param recipient The account of the claim being made.
     /// @param merkleProof The merkle proof proving the claim is valid.
-    function claim(uint256 index, address recipient, uint256 amount, bytes32[] calldata merkleProof) external {
+    function claim(
+        uint256 index,
+        address recipient,
+        uint256 amount,
+        bytes32[] calldata merkleProof
+    ) external {
         if (isClaimed(index)) revert AlreadyClaimed();
 
         // Verify the merkle proof.

@@ -9,13 +9,12 @@ import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol
 /// @author Nation3 (https://github.com/nation3).
 /// @dev Adapted from Rari-Capital rewards distributor (https://github.com/Rari-Capital/rari-governance-contracts/blob/master/contracts/RariGovernanceTokenUniswapDistributor.sol).
 contract LiquidityRewardsDistributor is Initializable, Ownable {
-
     /*///////////////////////////////////////////////////////////////
                                LIBRARIES
     //////////////////////////////////////////////////////////////*/
 
     using SafeERC20 for IERC20;
- 
+
     /*///////////////////////////////////////////////////////////////
                                  ERRORS
     //////////////////////////////////////////////////////////////*/
@@ -25,7 +24,7 @@ contract LiquidityRewardsDistributor is Initializable, Ownable {
     error InvalidRewardsAmount();
     error InsufficientStakeBalance();
     error InsufficientRewardsBalance();
-   
+
     /*///////////////////////////////////////////////////////////////
                                  EVENTS
     //////////////////////////////////////////////////////////////*/
@@ -37,7 +36,7 @@ contract LiquidityRewardsDistributor is Initializable, Ownable {
     /*///////////////////////////////////////////////////////////////
                         INMUTABLES / CONSTANTS
     //////////////////////////////////////////////////////////////*/
-    
+
     /// @dev Used to correct precision errors on divisions.
     uint256 internal constant PRECISION = 1e30;
 
@@ -86,10 +85,7 @@ contract LiquidityRewardsDistributor is Initializable, Ownable {
     /// @dev Sets both rewards & lptoken.
     /// @param _rewardsToken The contract of the rewards token.
     /// @param _lpToken The contract of the liquidity pool tokens.
-    function initialize(
-        IERC20 _rewardsToken,
-        IERC20 _lpToken
-    ) public initializer {
+    function initialize(IERC20 _rewardsToken, IERC20 _lpToken) public initializer {
         rewardsToken = _rewardsToken;
         lpToken = _lpToken;
     }
@@ -120,7 +116,7 @@ contract LiquidityRewardsDistributor is Initializable, Ownable {
         startBlock = _startBlock;
         endBlock = _endBlock;
         // Compute rewards that must be distributed each block, precision correction applied.
-        _blockRewards = (totalRewards - distributedRewards) * PRECISION / (endBlock - startBlock);
+        _blockRewards = ((totalRewards - distributedRewards) * PRECISION) / (endBlock - startBlock);
     }
 
     /// @notice Allow the owner to withdraw any ERC20 sent to the contract.
@@ -128,7 +124,7 @@ contract LiquidityRewardsDistributor is Initializable, Ownable {
     /// @param to Recipient address of the tokens.
     function recoverTokens(IERC20 token, address to) external virtual onlyOwner returns (uint256 amount) {
         amount = token.balanceOf(address(this));
-        if (token == lpToken) { 
+        if (token == lpToken) {
             amount = amount - totalStaked;
         } else if (token == rewardsToken) {
             amount = amount - totalRewards;
@@ -141,9 +137,9 @@ contract LiquidityRewardsDistributor is Initializable, Ownable {
                                 USER ACTIONS
     //////////////////////////////////////////////////////////////*/
 
-     /// @notice Returns the quantity of unclaimed rewards earned by `holder`.
-     /// @param holder The holder of staked LP tokens.
-     /// @return The quantity of unclaimed rewards tokens.
+    /// @notice Returns the quantity of unclaimed rewards earned by `holder`.
+    /// @param holder The holder of staked LP tokens.
+    /// @return The quantity of unclaimed rewards tokens.
     function getUnclaimedRewards(address holder) external view virtual returns (uint256) {
         return _userDistributedRewards[holder] - _userClaimedRewards[holder];
     }
@@ -197,13 +193,13 @@ contract LiquidityRewardsDistributor is Initializable, Ownable {
 
     /// @notice Claims all of `msg.sender` unclaimed rewards.
     /// @return The quantity of rewards tokens claimed.
-    function claimRewards() external virtual returns (uint256){
+    function claimRewards() external virtual returns (uint256) {
         // Distribute rewards to holder
         if (block.number > startBlock) _distributeRewards(msg.sender);
 
         // Get unclaimed rewards
         uint256 unclaimedRewards = _userDistributedRewards[msg.sender] - _userClaimedRewards[msg.sender];
-        if ( unclaimedRewards <= 0 ) revert InsufficientRewardsBalance();
+        if (unclaimedRewards <= 0) revert InsufficientRewardsBalance();
 
         // Register claimed rewards and transfer out
         _userClaimedRewards[msg.sender] = _userClaimedRewards[msg.sender] + unclaimedRewards;
@@ -217,10 +213,7 @@ contract LiquidityRewardsDistributor is Initializable, Ownable {
     /// @notice Withdraw all LP tokens and unclaimed rewards to sender.
     /// @return stakingAmount The staking amount drained.
     /// @return unclaimedRewards The quantity of rewards tokens claimed.
-    function withdrawAndClaim() external virtual returns (
-        uint256 stakingAmount,
-        uint256 unclaimedRewards
-    ){
+    function withdrawAndClaim() external virtual returns (uint256 stakingAmount, uint256 unclaimedRewards) {
         // Distribute rewards to holder
         if (block.number > startBlock) _distributeRewards(msg.sender);
 
@@ -255,14 +248,14 @@ contract LiquidityRewardsDistributor is Initializable, Ownable {
         _updateRewardsdistribution();
 
         // Compute undistributed rewards from the delta in rewardsRate since the user deposited
-        uint256 undistributedRewards = holderStake * (_rewardsRate - _userRatedRewards[holder]) / PRECISION;
+        uint256 undistributedRewards = (holderStake * (_rewardsRate - _userRatedRewards[holder])) / PRECISION;
         if (undistributedRewards <= 0) return 0;
 
         _userRatedRewards[holder] = _rewardsRate;
         _userDistributedRewards[holder] = _userDistributedRewards[holder] + undistributedRewards;
         return undistributedRewards;
     }
-    
+
     /// @dev Updates rewards distribution values.
     /// Distributes rewards in all blocks, including empty staking ones.
     function _updateRewardsdistribution() internal virtual {

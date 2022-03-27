@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity = 0.8.10;
+pragma solidity =0.8.10;
 
 import {DSTest} from "./utils/test.sol";
 import {Hevm} from "./utils/Hevm.sol";
@@ -21,15 +21,19 @@ contract MerkleDistributorTest is DSTest {
         token = new ERC20Mock("Nation3 Network Token", "NATION", tokenSupply);
         distributor = new MerkleDistributor(address(this), token, merkleRoot);
         // Set allowance for the airdrop
-        token.approve(address(distributor), airdropAllowance); 
+        token.approve(address(distributor), airdropAllowance);
     }
 
-    function getValidClaimer() public pure returns(
-        uint256 index,
-        address account,
-        uint256 amount,
-        bytes32[] memory proofs
-    ) {
+    function getValidClaimer()
+        public
+        pure
+        returns (
+            uint256 index,
+            address account,
+            uint256 amount,
+            bytes32[] memory proofs
+        )
+    {
         index = 19;
         account = 0xBC61c73CFc191321DA837def848784c002279a01;
         amount = 5;
@@ -76,8 +80,7 @@ contract MerkleDistributorTest is DSTest {
     }
 
     function testClaimInvalidAccount() public {
-
-        (uint256 index,, uint256 amount, bytes32[] memory proofs) = getValidClaimer();
+        (uint256 index, , uint256 amount, bytes32[] memory proofs) = getValidClaimer();
 
         // Random account
         address badAccount = 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266;
@@ -87,7 +90,7 @@ contract MerkleDistributorTest is DSTest {
     }
 
     function testClaimInvalidAmount() public {
-        (uint256 index, address account,, bytes32[] memory proofs) = getValidClaimer();
+        (uint256 index, address account, , bytes32[] memory proofs) = getValidClaimer();
 
         // Random amount
         uint256 badAmount = 20;
