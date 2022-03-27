@@ -2,12 +2,20 @@
 pragma solidity = 0.8.10;
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {ERC721} from "../utils/ERC721Extended.sol";
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 /// @notice ERC721 membership contract.
 /// @author Nation3 (https://github.com/nation3).
 /// @dev Mint, burn & transfers are restricted to owner (issuer contract).
 contract PassportNFT is ERC721, Ownable {
 
+    /*///////////////////////////////////////////////////////////////
+                               LIBRARIES
+    //////////////////////////////////////////////////////////////*/
+
+    using SafeERC20 for IERC20;
+ 
     /*///////////////////////////////////////////////////////////////
                             STORAGE
     //////////////////////////////////////////////////////////////*/
@@ -132,4 +140,11 @@ contract PassportNFT is ERC721, Ownable {
         }
     }
 
+    /// @notice Allow the owner to withdraw any ERC20 sent to the contract.
+    /// @param token Token to withdraw.
+    /// @param amount Amount of tokens to withdraw.
+    /// @param to Recipient address of the tokens.
+    function recoverTokens(IERC20 token, uint256 amount, address to) external virtual onlyOwner {
+        token.safeTransfer(to, amount);
+    }
 }
