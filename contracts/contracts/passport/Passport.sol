@@ -3,14 +3,6 @@ pragma solidity = 0.8.10;
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {ERC721} from "../utils/ERC721Extended.sol";
 
-error NotAuthorized();
-error InvalidFrom();
-error InvalidRecipient();
-error UnsafeRecipient();
-error AlreadyMinted();
-error NotMinted();
-error TokenOwnerMismatch();
-
 /// @notice ERC721 membership contract.
 /// @author Nation3 (https://github.com/nation3).
 /// @dev Mint, burn & transfers are restricted to owner (issuer contract).
@@ -111,8 +103,12 @@ contract PassportNFT is ERC721, Ownable {
     /// @dev Id is auto assigned.
     function mint(address to) external virtual onlyOwner {
         _mint(to, _idTracker);
-        _idTracker++;
-        _supply++;
+
+        // Realistically won't overflow;
+        unchecked {
+            _idTracker++;
+            _supply++;
+        }
     }
 
     /// @notice Mints a new passport to the recipient.
@@ -120,6 +116,7 @@ contract PassportNFT is ERC721, Ownable {
     /// @dev Id is auto assigned.
     function safeMint(address to) external virtual onlyOwner {
         _safeMint(to, _idTracker);
+
         _idTracker++;
         _supply++;
     }
@@ -128,6 +125,11 @@ contract PassportNFT is ERC721, Ownable {
     /// @param id Token to burn.
     function burn(uint256 id) external virtual onlyOwner {
         _burn(id);
-        _supply--;
+
+        // Would have reverted before if the token wasnt minted
+        unchecked {
+            _supply--;
+        }
     }
+
 }

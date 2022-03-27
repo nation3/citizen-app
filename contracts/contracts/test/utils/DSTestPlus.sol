@@ -3,7 +3,7 @@ pragma solidity >=0.8.0;
 
 import {DSTest} from "./test.sol";
 
-import {Hevm} from "./evm.sol";
+import {Hevm} from "./Hevm.sol";
 
 /// @notice Extended testing framework for DappTools projects.
 /// @author Solmate (https://github.com/Rari-Capital/solmate/blob/main/src/test/utils/DSTestPlus.sol)

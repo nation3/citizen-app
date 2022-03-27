@@ -5,17 +5,6 @@ import {Initializable} from "@openzeppelin/contracts/proxy/utils/Initializable.s
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
-/*///////////////////////////////////
-                ERRORS
-///////////////////////////////////*/
-/// @dev While solidity does not implement selectors for errors declared inside contract, errors are better declared out of the contract.
-
-error InvalidStartBlock();
-error InvalidEndBlock();
-error InvalidRewardsAmount();
-error InsufficientStakeBalance();
-error InsufficientRewardsBalance();
-
 /// @notice Distributes rewards to LP providers.
 /// @author Nation3 (https://github.com/nation3).
 /// @dev Adapted from Rari-Capital rewards distributor (https://github.com/Rari-Capital/rari-governance-contracts/blob/master/contracts/RariGovernanceTokenUniswapDistributor.sol).
@@ -26,7 +15,17 @@ contract LiquidityRewardsDistributor is Initializable, Ownable {
     //////////////////////////////////////////////////////////////*/
 
     using SafeERC20 for IERC20;
-    
+ 
+    /*///////////////////////////////////////////////////////////////
+                                 ERRORS
+    //////////////////////////////////////////////////////////////*/
+
+    error InvalidStartBlock();
+    error InvalidEndBlock();
+    error InvalidRewardsAmount();
+    error InsufficientStakeBalance();
+    error InsufficientRewardsBalance();
+   
     /*///////////////////////////////////////////////////////////////
                                  EVENTS
     //////////////////////////////////////////////////////////////*/

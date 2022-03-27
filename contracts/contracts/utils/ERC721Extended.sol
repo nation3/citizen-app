@@ -3,19 +3,6 @@ pragma solidity = 0.8.10;
 
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 
-/*///////////////////////////////////
-                ERRORS
-///////////////////////////////////*/
-/// @dev While solidity does not implement selectors for errors declared inside contract, errors are better declared out of the contract.
-
-error NotAuthorized();
-error InvalidFrom();
-error InvalidRecipient();
-error UnsafeRecipient();
-error AlreadyMinted();
-error NotMinted();
-error TokenOwnerMismatch();
-
 /// @notice Extended ERC721 implementation.
 /// @author Nation3 (https://github.com/nation3).
 /// @dev Extended from Solmate ERC721 (https://github.com/Rari-Capital/solmate/blob/main/src/tokens/ERC721.sol).
@@ -28,6 +15,18 @@ abstract contract ERC721 {
     //////////////////////////////////////////////////////////////*/
 
     using Strings for uint256;
+
+    /*///////////////////////////////////////////////////////////////
+                                 ERRORS
+    //////////////////////////////////////////////////////////////*/
+
+    error NotAuthorized();
+    error InvalidFrom();
+    error InvalidRecipient();
+    error UnsafeRecipient();
+    error AlreadyMinted();
+    error NotMinted();
+    error TokenOwnerMismatch();
 
     /*///////////////////////////////////////////////////////////////
                                  EVENTS

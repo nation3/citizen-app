@@ -2,9 +2,10 @@
 pragma solidity = 0.8.10;
 
 import {DSTest} from "./utils/test.sol";
-import {Hevm} from "./utils/evm.sol";
+import {Hevm} from "./utils/Hevm.sol";
+import {Signatures as sig} from "./utils/Signatures.sol";
 import {ERC20Mock} from "../mocks/ERC20Mock.sol";
-import {MerkleDistributor, AlreadyClaimed, InvalidProof} from "../distributors/MerkleDistributor.sol";
+import {MerkleDistributor} from "../distributors/MerkleDistributor.sol";
 
 contract MerkleDistributorTest is DSTest {
     Hevm evm = Hevm(HEVM_ADDRESS);
@@ -58,7 +59,7 @@ contract MerkleDistributorTest is DSTest {
         assertEq(diffDistributorAllowance, amount);
 
         // Trying to claim again must revert
-        evm.expectRevert(AlreadyClaimed.selector);
+        evm.expectRevert(sig.selector("AlreadyClaimed()"));
         distributor.claim(index, account, amount, proofs);
     }
 
@@ -70,7 +71,7 @@ contract MerkleDistributorTest is DSTest {
         badProofs[0] = proofs[1];
         badProofs[1] = proofs[0];
 
-        evm.expectRevert(InvalidProof.selector);
+        evm.expectRevert(sig.selector("InvalidProof()"));
         distributor.claim(index, account, amount, badProofs);
     }
 
@@ -81,7 +82,7 @@ contract MerkleDistributorTest is DSTest {
         // Random account
         address badAccount = 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266;
 
-        evm.expectRevert(InvalidProof.selector);
+        evm.expectRevert(sig.selector("InvalidProof()"));
         distributor.claim(index, badAccount, amount, proofs);
     }
 
@@ -91,7 +92,7 @@ contract MerkleDistributorTest is DSTest {
         // Random amount
         uint256 badAmount = 20;
 
-        evm.expectRevert(InvalidProof.selector);
+        evm.expectRevert(sig.selector("InvalidProof()"));
         distributor.claim(index, account, badAmount, proofs);
     }
 }

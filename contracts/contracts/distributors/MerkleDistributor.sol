@@ -6,9 +6,6 @@ import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol
 import {MerkleProof} from "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 import {BitMaps} from "@openzeppelin/contracts/utils/structs/BitMaps.sol";
 
-error InvalidProof();
-error AlreadyClaimed();
-
 /// @notice Distributes ERC20 tokens based on a Merkle Tree.
 /// @dev Adapted from ENS Airdrop (https://github.com/ensdomains/governance/blob/master/contracts/MerkleAirdrop.sol)
 /// & Uniswap Merkle distributor (https://github.com/Uniswap/merkle-distributor/blob/master/contracts/MerkleDistributor.sol).
@@ -17,6 +14,9 @@ contract MerkleDistributor {
 
     using SafeERC20 for IERC20;
     using BitMaps for BitMaps.BitMap;
+
+    error InvalidProof();
+    error AlreadyClaimed();
 
     event Claimed(uint256 indexed index, address indexed recipient, uint256 amount);
 

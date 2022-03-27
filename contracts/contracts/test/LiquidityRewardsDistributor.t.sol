@@ -2,16 +2,10 @@
 pragma solidity 0.8.10;
 
 import {DSTestPlus} from "./utils/DSTestPlus.sol";
-import {Selectors as sel} from "./utils/Selectors.sol";
-import {Hevm} from "./utils/evm.sol";
+import {Signatures as sig} from "./utils/Signatures.sol";
+import {Hevm} from "./utils/Hevm.sol";
 import {ERC20Mock} from "../mocks/ERC20Mock.sol";
-import {
-    LiquidityRewardsDistributor,
-    InvalidStartBlock,
-    InvalidEndBlock,
-    // InsufficientRewardsBalance,
-    InvalidRewardsAmount
-} from "../distributors/LiquidityRewardsDistributor.sol";
+import {LiquidityRewardsDistributor} from "../distributors/LiquidityRewardsDistributor.sol";
 
 contract RewardsDistributorTest is DSTestPlus {
 
@@ -54,7 +48,7 @@ contract RewardsDistributorTest is DSTestPlus {
         uint256 startBlock = block.number + 5;
         uint256 endBlock = startBlock + rewardsPeriod;
 
-        evm.expectRevert(sel.select("InsufficientRewardsBalance()"));
+        evm.expectRevert(sig.selector("InsufficientRewardsBalance()"));
         distributor.setRewards(totalRewards, startBlock, endBlock);
     }
 
@@ -63,7 +57,7 @@ contract RewardsDistributorTest is DSTestPlus {
         uint256 endBlock = startBlock + rewardsPeriod;
 
         rewardsToken.transfer(address(distributor), totalRewards);
-        evm.expectRevert(InvalidStartBlock.selector);
+        evm.expectRevert(sig.selector("InvalidStartBlock()"));
         distributor.setRewards(totalRewards, startBlock, endBlock);
     }
 
@@ -72,7 +66,7 @@ contract RewardsDistributorTest is DSTestPlus {
         uint256 endBlock = block.number - 5;
 
         rewardsToken.transfer(address(distributor), totalRewards);
-        evm.expectRevert(InvalidEndBlock.selector);
+        evm.expectRevert(sig.selector("InvalidEndBlock()"));
         distributor.setRewards(totalRewards, startBlock, endBlock);
     }
 
@@ -274,7 +268,7 @@ contract RewardsDistributorTest is DSTestPlus {
         evm.roll(startBlock + rewardsPeriod * 3/4);
 
         // Should fail becasue 3/4 of the rewards are already distributed to the single staker
-        evm.expectRevert(InvalidRewardsAmount.selector);
+        evm.expectRevert(sig.selector("InvalidRewardsAmount()"));
         distributor.setRewards(totalRewards / 2, block.number, endBlock);
     }
 

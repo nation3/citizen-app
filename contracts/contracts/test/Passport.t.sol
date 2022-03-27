@@ -1,10 +1,14 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity 0.8.10;
 
-import {DSTest} from "./utils/test.sol";
+import {DSTestPlus} from "./utils/DSTestPlus.sol";
+import {Hevm} from "./utils/Hevm.sol";
 import {PassportNFT} from "../passport/Passport.sol";
+import {Signatures as sig} from "./utils/Signatures.sol";
+contract PassportTest is DSTestPlus {
 
-contract PassportTest is DSTest {
+    Hevm evm = Hevm(HEVM_ADDRESS);
+
     PassportNFT pass;
 
     function setUp() public {
