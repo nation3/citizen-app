@@ -9,6 +9,7 @@ import {
   LogoutIcon,
   XCircleIcon,
   MenuIcon,
+  LockClosedIcon,
 } from '@heroicons/react/outline'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -29,6 +30,11 @@ const navigation = [
     name: 'Become a citizen',
     href: '/join',
     icon: <UserAddIcon className="h-5 w-5" />,
+  },
+  {
+    name: 'Lock tokens',
+    href: '/lock',
+    icon: <LockClosedIcon className="h-5 w-5" />,
   },
   {
     name: 'Claim airdrop',
@@ -150,9 +156,8 @@ export default function Layout({ children }) {
                       onClick={() =>
                         (document.getElementById('side-drawer').checked = false)
                       }
-                      key={item.href}
                     >
-                      <Link key={item.name} href={item.href}>
+                      <Link href={item.href}>
                         <a
                           className={
                             router.pathname == item.href ? 'active' : ''
