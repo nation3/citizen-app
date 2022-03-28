@@ -10,6 +10,13 @@ import { BigNumber } from "ethers";
 
 const saveDeployment = (info: object, path: string) => {
     const content = JSON.stringify(info, null, 1);
+    const file = path.split("\\").pop()?.split("/").pop() || "";
+    const dir = path.replace(file, "");
+
+    if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+    }
+
     return fs.writeFile(path, content, { encoding: "utf-8"}, (err) => { if(err) console.log(err); })
 }
 
@@ -29,9 +36,6 @@ async function main() {
 
   const AIRDROP_ROOT: string = "0xed145aa219b18aa3f2dc56afb2c4e0b148e429ca93b9c5f2c7a29d2101685aee";
   const AIRDROP_AMOUNT: BigNumber = ethers.BigNumber.from(dec(1000, 18));
-
-  const PASS_LOCKING_AMOUNT: BigNumber = ethers.BigNumber.from(dec(10, 18));
-  const LOCKING_DURATION: number = 13 * 3600 * 24 * 365;
 
   const [deployer] = await ethers.getSigners();
 
@@ -62,7 +66,7 @@ async function main() {
   await balancerPool.deployed();
 
   // Deploy passport contracts
-  const passportNFT = await PassportNFT.deploy("Nation3 Founding Citizen Passport", "GENESIS-PASSPORT");
+  const passportNFT = await PassportNFT.deploy("Nation3 Founding Citizen Passport", "FOUNDERPAS3");
   const passportIssuer = await PassportIssuer.deploy();
 
   await passportNFT.deployed();
@@ -74,17 +78,21 @@ async function main() {
   await passportIssuer.initialize(NATION.address, passportNFT.address);
   await passportNFT.transferOwnership(passportIssuer.address);
 
-  await NATION.approve(airdropDistributor.address, AIRDROP_AMOUNT);
-  await passportIssuer.setLockingParams(PASS_LOCKING_AMOUNT, LOCKING_DURATION);
+  // Dev setup
+  const PASSPORT_MAX_ISSUANCES: number = 100;
+  const PASSPORT_LOCKING_AMOUNT: BigNumber = ethers.BigNumber.from(dec(10, 18));
+  const PASSPORT_LOCKING_DURATION: number = 13 * 3600 * 24 * 365;
 
-  // Dev setup rewards distributors
+  await passportIssuer.setParams(PASSPORT_MAX_ISSUANCES, PASSPORT_LOCKING_AMOUNT, PASSPORT_LOCKING_DURATION);
+  await passportIssuer.setEnabled(true);
+
+  await NATION.approve(airdropDistributor.address, AIRDROP_AMOUNT);
   await NATION.transfer(rewardsDistributor.address, LP_REWARDS);
 
   const LP_REWARDS_START: number = await ethers.provider.getBlockNumber() + 10;
   const LP_REWARDS_END: number = LP_REWARDS_START + 300;
 
   await rewardsDistributor.setRewards(LP_REWARDS, LP_REWARDS_START, LP_REWARDS_END);
-
 
   const deployment = {
       "weth": WETH.address,
@@ -98,7 +106,7 @@ async function main() {
   }
 
   console.log(deployment);
-  saveDeployment(deployment, "./devDeployment.json")
+  saveDeployment(deployment, "./deployments/dev.json")
 }
 
 // We recommend this pattern to be able to use async/await everywhere
