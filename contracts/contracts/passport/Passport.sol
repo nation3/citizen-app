@@ -1,14 +1,15 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity =0.8.10;
-import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+
 import {ERC721} from "../utils/ERC721Extended.sol";
+import {Controlled} from "../utils/Controlled.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 /// @notice ERC721 membership contract.
 /// @author Nation3 (https://github.com/nation3).
 /// @dev Mint, burn & transfers are restricted to owner (issuer contract).
-contract PassportNFT is ERC721, Ownable {
+contract PassportNFT is ERC721, Controlled {
     /*///////////////////////////////////////////////////////////////
                                LIBRARIES
     //////////////////////////////////////////////////////////////*/
@@ -33,7 +34,7 @@ contract PassportNFT is ERC721, Ownable {
         return _supply;
     }
 
-    /// @notice Get next id to mint
+    /// @notice Gets next id to mint
     function getNextId() external view virtual returns (uint256) {
         return _idTracker;
     }
@@ -49,7 +50,7 @@ contract PassportNFT is ERC721, Ownable {
                        RESTRICTED ACTIONS
     //////////////////////////////////////////////////////////////*/
 
-    /// @notice Transfers passport (id) between two address restricted to contract owner.
+    /// @notice Transfers passport (id) between two address.
     /// @dev Contract owner is allways allowed to transfer.
     /// @param from Curent owner of the token.
     /// @param to Recipient of the token.
@@ -58,14 +59,14 @@ contract PassportNFT is ERC721, Ownable {
         address from,
         address to,
         uint256 id
-    ) public override onlyOwner {
+    ) public override onlyController {
         if (from != ownerOf[id]) revert InvalidFrom();
         if (to == address(0)) revert InvalidRecipient();
         if (
             msg.sender != from &&
             isApprovedForAll[from][msg.sender] == false &&
             msg.sender != getApproved[id] &&
-            msg.sender != owner()
+            msg.sender != controller()
         ) revert NotAuthorized();
 
         unchecked {
@@ -80,7 +81,7 @@ contract PassportNFT is ERC721, Ownable {
         emit Transfer(from, to, id);
     }
 
-    /// @notice Safe transfers passport (id) between two address restricted to contract owner.
+    /// @notice Safe transfers passport (id) between two address.
     /// @param from Curent owner of the token.
     /// @param to Recipient of the token.
     /// @param id Token to transfer.
@@ -88,11 +89,11 @@ contract PassportNFT is ERC721, Ownable {
         address from,
         address to,
         uint256 id
-    ) public override onlyOwner {
+    ) public override onlyController {
         super.safeTransferFrom(from, to, id);
     }
 
-    /// @notice Safe transfers passport (id) between two address restricted to contract owner.
+    /// @notice Safe transfers passport (id) between two address.
     /// @param from Curent owner of the token.
     /// @param to Recipient of the token.
     /// @param id Token to transfer.
@@ -101,15 +102,16 @@ contract PassportNFT is ERC721, Ownable {
         address to,
         uint256 id,
         bytes memory data
-    ) public override onlyOwner {
+    ) public override onlyController {
         super.safeTransferFrom(from, to, id, data);
     }
 
     /// @notice Mints a new passport to the recipient.
     /// @param to Token recipient.
     /// @dev Id is auto assigned.
-    function mint(address to) external virtual onlyOwner {
+    function mint(address to) external virtual onlyController returns (uint256 tokenId) {
         _mint(to, _idTracker);
+        tokenId = _idTracker;
 
         // Realistically won't overflow;
         unchecked {
@@ -121,8 +123,9 @@ contract PassportNFT is ERC721, Ownable {
     /// @notice Mints a new passport to the recipient.
     /// @param to Token recipient.
     /// @dev Id is auto assigned.
-    function safeMint(address to) external virtual onlyOwner {
+    function safeMint(address to) external virtual onlyController returns (uint256 tokenId) {
         _safeMint(to, _idTracker);
+        tokenId = _idTracker;
 
         _idTracker++;
         _supply++;
@@ -130,7 +133,7 @@ contract PassportNFT is ERC721, Ownable {
 
     /// @notice Burns the specified token.
     /// @param id Token to burn.
-    function burn(uint256 id) external virtual onlyOwner {
+    function burn(uint256 id) external virtual onlyController {
         _burn(id);
 
         // Would have reverted before if the token wasnt minted

@@ -28,7 +28,7 @@ export function useMintPassport() {
       addressOrName: nationPassportNFTIssuer,
       contractInterface: PassportIssuerABI,
     },
-    'secure'
+    'claim'
   )
 }
 
