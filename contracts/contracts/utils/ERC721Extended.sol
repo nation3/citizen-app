@@ -1,7 +1,12 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity = 0.8.10;
-import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/utils/Strings.sol";
+
+import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
+
+/*///////////////////////////////////
+                ERRORS
+///////////////////////////////////*/
+/// @dev While solidity does not implement selectors for errors declared inside contract, errors are better declared out of the contract.
 
 error NotAuthorized();
 error InvalidFrom();
@@ -11,37 +16,73 @@ error AlreadyMinted();
 error NotMinted();
 error TokenOwnerMismatch();
 
-/// @notice ERC721 membership contract
-/// @author Nation3 (https://github.com/nation3)
-/// Adapted from https://github.com/Rari-Capital/solmate/blob/main/src/tokens/ERC721.sol
-/// @dev Approval and Transfer are limited to Owner (issuer) contract
-contract PassportNFT is Ownable {
+/// @notice Extended ERC721 implementation.
+/// @author Nation3 (https://github.com/nation3).
+/// @dev Extended from Solmate ERC721 (https://github.com/Rari-Capital/solmate/blob/main/src/tokens/ERC721.sol).
+/// @dev Includes totalSupply for better compliance with indexers & aggregators.
+/// @dev Includes URI storage management for better per token metadata.
+abstract contract ERC721 {
+
+    /*///////////////////////////////////////////////////////////////
+                                LIBRARIES
+    //////////////////////////////////////////////////////////////*/
 
     using Strings for uint256;
+
+    /*///////////////////////////////////////////////////////////////
+                                 EVENTS
+    //////////////////////////////////////////////////////////////*/
 
     event Transfer(address indexed from, address indexed to, uint256 indexed id);
     event Approval(address indexed owner, address indexed spender, uint256 indexed id);
     event ApprovalForAll(address indexed owner, address indexed operator, bool approved);
 
+    /*///////////////////////////////////////////////////////////////
+                             METADATA STORAGE
+    //////////////////////////////////////////////////////////////*/
+
     string public name;
     string public symbol;
     string public baseURI;
-    uint256 public totalSupply;
-
-    uint256 private _idTracker;
+    
+    /*///////////////////////////////////////////////////////////////
+                            ERC721 STORAGE                        
+    //////////////////////////////////////////////////////////////*/
 
     mapping(address => uint256) public balanceOf;
-    mapping(address => uint256) public byOwner;
     mapping(uint256 => address) public ownerOf;
     mapping(uint256 => address) public getApproved;
     mapping(address => mapping(address => bool)) public isApprovedForAll;
+
+    /*///////////////////////////////////////////////////////////////
+                              CONSTRUCTOR
+    //////////////////////////////////////////////////////////////*/
 
     constructor(string memory _name, string memory _symbol) {
         name = _name;
         symbol = _symbol;
     }
+
+    /*///////////////////////////////////////////////////////////////
+                          ERC721 EXTENDED LOGIC
+    //////////////////////////////////////////////////////////////*/
+
+    function totalSupply() public view virtual returns (uint256);
+
+    function setBaseURI(string memory _baseURI) external virtual {
+        baseURI = _baseURI;
+    }
+
+    function tokenURI(uint256 tokenId) external view virtual returns (string memory) {
+        if (ownerOf[tokenId] == address(0)) revert NotMinted();
+        return string(abi.encodePacked(baseURI, "/", tokenId.toString(), ".json"));
+    }
+
+    /*///////////////////////////////////////////////////////////////
+                              ERC721 LOGIC
+    //////////////////////////////////////////////////////////////*/
     
-    function approve(address spender, uint256 id) public virtual onlyOwner {
+    function approve(address spender, uint256 id) public virtual {
         address owner = ownerOf[id];
 
         if (msg.sender != owner && isApprovedForAll[owner][msg.sender] == false) {
@@ -53,7 +94,7 @@ contract PassportNFT is Ownable {
         emit Approval(owner, spender, id);
     }
 
-    function setApprovalForAll(address operator, bool approved) public virtual onlyOwner {
+    function setApprovalForAll(address operator, bool approved) public virtual {
         isApprovedForAll[msg.sender][operator] = approved;
 
         emit ApprovalForAll(msg.sender, operator, approved);
@@ -63,7 +104,7 @@ contract PassportNFT is Ownable {
         address from,
         address to,
         uint256 id
-    ) public virtual onlyOwner {
+    ) public virtual {
         if(from != ownerOf[id]) revert InvalidFrom();
         if(to == address(0)) revert InvalidRecipient();
         if(
@@ -76,7 +117,6 @@ contract PassportNFT is Ownable {
         // ownership above and the recipient's balance can't realistically overflow.
         unchecked {
             balanceOf[from]--;
-
             balanceOf[to]++;
         }
 
@@ -91,7 +131,7 @@ contract PassportNFT is Ownable {
         address from,
         address to,
         uint256 id
-    ) public virtual onlyOwner {
+    ) public virtual {
         transferFrom(from, to, id);
 
         if (
@@ -106,7 +146,7 @@ contract PassportNFT is Ownable {
         address to,
         uint256 id,
         bytes memory data
-    ) public virtual onlyOwner {
+    ) public virtual {
         transferFrom(from, to, id);
 
         if (
@@ -116,36 +156,6 @@ contract PassportNFT is Ownable {
         ) revert UnsafeRecipient();
     }
  
-    function setBaseURI(string memory _baseURI) external onlyOwner {
-        baseURI = _baseURI;
-    }
-
-    function tokenURI(uint256 tokenId) external view virtual returns (string memory) {
-        if (ownerOf[tokenId] == address(0)) revert NotMinted();
-        return string(abi.encodePacked(baseURI, "/", tokenId.toString(), ".json"));
-    }
-
-    function getNextId() external view virtual returns (uint256) {
-        return _idTracker;
-    }
-
-    function mint(address to) external virtual onlyOwner {
-        _mint(to, _idTracker);
-        _idTracker++;
-    }
-
-    function burn(uint256 id) external virtual onlyOwner {
-        _burn(id);
-    }
-
-    function burnFromOwner(address owner) external virtual onlyOwner {
-        if (balanceOf[owner] == 0) revert NotMinted();
-        uint256 tokenId = byOwner[owner];
-        if (owner != ownerOf[tokenId]) revert TokenOwnerMismatch();
-        _burn(tokenId);
-    }
-
-
     /*///////////////////////////////////////////////////////////////
                               ERC165 LOGIC
     //////////////////////////////////////////////////////////////*/
@@ -163,14 +173,13 @@ contract PassportNFT is Ownable {
 
     function _mint(address to, uint256 id) internal virtual {
         if (to == address(0)) revert InvalidRecipient();
-
         if (ownerOf[id] != address(0)) revert AlreadyMinted();
 
-        totalSupply++;
+        unchecked {
+            balanceOf[to]++;
+        }
 
-        balanceOf[to] = 1;
         ownerOf[id] = to;
-        byOwner[to] = id;
 
         emit Transfer(address(0), to, id);
     }
@@ -180,11 +189,11 @@ contract PassportNFT is Ownable {
 
         if (owner == address(0)) revert NotMinted();
 
-        totalSupply--;
+        unchecked {
+            balanceOf[owner]--;
+        }
 
-        delete balanceOf[owner];
         delete ownerOf[id];
-        delete byOwner[owner];
         delete getApproved[id];
 
         emit Transfer(owner, address(0), id);
