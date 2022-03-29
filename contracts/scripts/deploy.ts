@@ -80,10 +80,9 @@ async function main() {
 
   // Dev setup
   const PASSPORT_MAX_ISSUANCES: number = 100;
-  const PASSPORT_LOCKING_AMOUNT: BigNumber = ethers.BigNumber.from(dec(10, 18));
-  const PASSPORT_LOCKING_DURATION: number = 13 * 3600 * 24 * 365;
+  const PASSPORT_MIN_LOCKED_AMOUNT: BigNumber = ethers.BigNumber.from(dec(25, 17));
 
-  await passportIssuer.setParams(PASSPORT_MAX_ISSUANCES, PASSPORT_LOCKING_AMOUNT, PASSPORT_LOCKING_DURATION);
+  await passportIssuer.setParams(PASSPORT_MAX_ISSUANCES, PASSPORT_MIN_LOCKED_AMOUNT);
   await passportIssuer.setEnabled(true);
 
   await NATION.approve(airdropDistributor.address, AIRDROP_AMOUNT);
