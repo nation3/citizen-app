@@ -10,4 +10,4 @@ cache
 foundry-cache
 artifacts
 out
-deployments
+deployments/*.json
