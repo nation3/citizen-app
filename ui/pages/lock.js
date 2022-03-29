@@ -1,9 +1,16 @@
-import { ethers } from 'ethers'
-import { useState, useEffect } from 'react'
-import { useBalancerPool } from '../lib/balancer'
+import { useState } from 'react'
 import { nationToken } from '../lib/config'
 import { useNationBalance } from '../lib/nation-token'
 import { useAccount } from '../lib/use-wagmi'
+import {
+  useVeNationBalance,
+  useVeNationLockAmount,
+  useVeNationLockEnd,
+  useVeNationCreateLock,
+  useVeNationIncreaseLockAmount,
+  useVeNationIncreaseLockTime,
+  useVeNationWithdrawLock,
+} from '../lib/ve-token'
 import ActionButton from '../components/ActionButton'
 import Head from '../components/Head'
 import LoadingBalance from '../components/LoadingBalance'
@@ -14,10 +21,21 @@ export default function Liquidity() {
   const [{ data: nationBalance, loading: nationBalanceLoading }] =
     useNationBalance(account?.address)
 
-  const veNationBalance = 100
+  const [{ data: veNationBalance, loading: veNationBalanceLoading }] =
+    useVeNationBalance(account?.address)
+
+  const [{ data: veNationLockAmount, loading: veNationLockAmountLoading }] =
+    useVeNationLockAmount(account?.address)
+
+  const [{ data: veNationLockEnd, loading: veNationLockEndLoading }] =
+    useVeNationLockEnd(account?.address)
+
+  const createLock = useVeNationCreateLock(account?.address)
+  const increaseLockAmount = useVeNationIncreaseLockAmount(account?.address)
+  const increaseLockTime = useVeNationIncreaseLockTime(account?.address)
+  const withdraw = useVeNationWithdrawLock(account?.address)
+
   const [lockValue, setLockValue] = useState(0)
-  const lock = [{ data: 0, loading: true, error: null }, () => {}]
-  const loading = false
 
   return (
     <>
@@ -75,48 +93,68 @@ export default function Liquidity() {
                         />{' '}
                         $NATION
                       </p>
-                      <label class="label">
-                        <span class="label-text">Lock amount</span>
-                      </label>
-                      <div className="input-group mb-4">
-                        <input
-                          type="number"
-                          placeholder="0"
-                          className="input input-bordered w-full"
-                          value={lockValue}
-                          onChange={(e) => {
-                            setLockValue(e.target.value)
-                          }}
-                        />
-                        <button
-                          className="btn btn-outline"
-                          onClick={() => setLockValue(nationBalance?.formatted)}
-                        >
-                          Max
-                        </button>
-                      </div>
-                      <label class="label">
-                        <span class="label-text">Lock expiration date</span>
-                      </label>
-                      <input
-                        type="date"
-                        placeholder="Expiration date"
-                        className="input input-bordered w-full"
-                      />
-                      <div className="card-actions mt-4">
-                        <ActionButton
-                          className="btn btn-primary w-full"
-                          action={lock}
-                          approval={{
-                            token: nationToken,
-                            spender: nationToken,
-                            amountNeeded: 100,
-                            approveText: 'Approve $NATION',
-                          }}
-                        >
-                          Deposit
-                        </ActionButton>
-                      </div>
+                      {!lockExpired ? (
+                        <>
+                          <label class="label">
+                            <span class="label-text">Lock amount</span>
+                          </label>
+                          <div className="input-group mb-4">
+                            <input
+                              type="number"
+                              placeholder="0"
+                              className="input input-bordered w-full"
+                              value={lockValue}
+                              onChange={(e) => {
+                                setLockValue(e.target.value)
+                              }}
+                            />
+                            <button
+                              className="btn btn-outline"
+                              onClick={() =>
+                                setLockValue(nationBalance?.formatted)
+                              }
+                            >
+                              Max
+                            </button>
+                          </div>
+                          <label class="label">
+                            <span class="label-text">Lock expiration date</span>
+                          </label>
+                          <input
+                            type="date"
+                            placeholder="Expiration date"
+                            className="input input-bordered w-full"
+                          />
+                          <div className="card-actions mt-4">
+                            <ActionButton
+                              className="btn btn-primary w-full"
+                              action={lock}
+                              approval={{
+                                token: nationToken,
+                                spender: nationToken,
+                                amountNeeded: 100,
+                                approveText: 'Approve $NATION',
+                              }}
+                            >
+                              Deposit
+                            </ActionButton>
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <p>
+                            Your previous lock has expired, you need to withdraw{' '}
+                          </p>
+                          <div className="card-actions mt-4">
+                            <ActionButton
+                              className="btn btn-primary w-full"
+                              action={lock}
+                            >
+                              Withdraw
+                            </ActionButton>
+                          </div>
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>

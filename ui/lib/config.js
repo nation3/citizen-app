@@ -1,6 +1,7 @@
 let config = {
   nationToken: process.env.NEXT_PUBLIC_NATION_ADDRESS,
-  nationRequiredStake: process.env.NEXT_PUBLIC_NATION_REQUIRED_STAKE,
+  veNationToken: process.env.NEXT_PUBLIC_VENATION_ADDRESS,
+  veNationRequiredStake: process.env.NEXT_PUBLIC_VENATION_REQUIRED_STAKE,
   balancerVault: process.env.NEXT_PUBLIC_BALANCER_VAULT_ADDRESS,
   balancerPoolId: process.env.NEXT_PUBLIC_BALANCER_NATION_ETH_POOL_ID,
   balancerLPToken: process.env.NEXT_PUBLIC_BALANCER_NATION_ETH_POOL_TOKEN,
@@ -30,7 +31,8 @@ console.log(config)
 
 export const {
   nationToken,
-  nationRequiredStake,
+  veNationToken,
+  veNationRequiredStake,
   balancerVault,
   balancerPoolId,
   balancerLPToken,
