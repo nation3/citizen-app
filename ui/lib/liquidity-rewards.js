@@ -24,7 +24,7 @@ export function useLiquidityRewards({ nationPrice, poolValue, address }) {
       }
     )
 
-  const [{ data: unclaimedRewards, error, loading: unclaimedRewardsLoading }] =
+  const [{ data: unclaimedRewards, loading: unclaimedRewardsLoading }] =
     useContractRead(
       {
         addressOrName: nationRewardsContract,
@@ -38,24 +38,19 @@ export function useLiquidityRewards({ nationPrice, poolValue, address }) {
       }
     )
 
-  const [
-    {
-      data: stakingBalance,
-      error: stakingBalanceError,
-      loading: stakingBalanceLoading,
-    },
-  ] = useContractRead(
-    {
-      addressOrName: nationRewardsContract,
-      contractInterface: rewardsContractABI,
-    },
-    'getStakingBalance',
-    {
-      args: [address],
-      watch: true,
-      skip: !nationRewardsContract,
-    }
-  )
+  const [{ data: stakingBalance, loading: stakingBalanceLoading }] =
+    useContractRead(
+      {
+        addressOrName: nationRewardsContract,
+        contractInterface: rewardsContractABI,
+      },
+      'getStakingBalance',
+      {
+        args: [address],
+        watch: true,
+        skip: !nationRewardsContract,
+      }
+    )
   const [liquidityRewardsAPY, setLiquidityRewardsAPY] = useState(0)
 
   useEffect(() => {

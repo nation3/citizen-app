@@ -6,9 +6,9 @@ import { useMintPassport } from '../lib/passport-nft'
 import { useHasPassport } from '../lib/passport-nft'
 import { useAccount } from '../lib/use-wagmi'
 import ActionButton from '../components/ActionButton'
+import Balance from '../components/Balance'
 import Confetti from '../components/Confetti'
 import Head from '../components/Head'
-import LoadingBalance from '../components/LoadingBalance'
 
 const requiredStake = process.env.NEXT_PUBLIC_NATION_REQUIRED_STAKE
 
@@ -34,7 +34,7 @@ export default function Join() {
         router.push('/citizen')
       }, 5000)
     }
-  }, [hasPassport])
+  }, [hasPassport, hasPassportLoading])
 
   const elementRef = useRef()
 
@@ -81,8 +81,8 @@ export default function Join() {
                       <div className="stat">
                         <div className="stat-title">Your balance</div>
                         <div className="stat-value">
-                          <LoadingBalance
-                            balanceLoading={balanceLoading}
+                          <Balance
+                            loading={balanceLoading}
                             balance={balance?.formatted}
                           />
                         </div>

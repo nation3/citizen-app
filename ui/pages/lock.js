@@ -12,8 +12,8 @@ import {
   useVeNationWithdrawLock,
 } from '../lib/ve-token'
 import ActionButton from '../components/ActionButton'
+import Balance from '../components/Balance'
 import Head from '../components/Head'
-import LoadingBalance from '../components/LoadingBalance'
 
 export default function Liquidity() {
   const [{ data: account }] = useAccount()
@@ -54,8 +54,8 @@ export default function Liquidity() {
                   <div className="stat">
                     <div className="stat-title">Your $veNATION balance</div>
                     <div className="stat-value">
-                      <LoadingBalance
-                        balanceLoading={loading}
+                      <Balance
+                        loading
                         balance={veNationBalance}
                         suffix="%"
                         decimals={0}
@@ -67,8 +67,8 @@ export default function Liquidity() {
                   <div className="stat">
                     <div className="stat-title">Your locked $NATION</div>
                     <div className="stat-value">
-                      <LoadingBalance
-                        balanceLoading={loading}
+                      <Balance
+                        loading
                         balance={veNationBalance}
                         suffix="%"
                         decimals={0}
@@ -87,8 +87,8 @@ export default function Liquidity() {
                     <div className="form-control">
                       <p className="mb-4">
                         Available to lock:{' '}
-                        <LoadingBalance
-                          balanceLoading={nationBalanceLoading}
+                        <Balance
+                          loading={nationBalanceLoading}
                           balance={nationBalance?.formatted}
                         />{' '}
                         $NATION
