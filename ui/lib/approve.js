@@ -1,4 +1,4 @@
-import ERC20ABI from '../abis/ERC20.json'
+import { abi as ERC20ABI } from '../abis/ERC20.json'
 import { useContractRead } from './use-wagmi'
 import { useContractWrite } from './use-wagmi'
 

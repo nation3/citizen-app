@@ -1,6 +1,6 @@
 import { ethers } from 'ethers'
 import { useState, useMemo } from 'react'
-import MerkleDistributorABI from '../abis/MerkleDistributor.json'
+import { abi as MerkleDistributorABI } from '../abis/MerkleDistributor.json'
 import { nationDropContract } from './config'
 import { useContractRead, useContractWrite } from './use-wagmi'
 

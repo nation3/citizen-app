@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react'
 import { NftProvider, useNft } from 'use-nft'
 import { nationPassportNFT } from '../lib/config'
 import { nationPassportNFTIssuer } from '../lib/config'
-import PassportABI from '../abis/ERC721.json'
-import PassportIssuerABI from '../abis/PassportIssuer.json'
+import { abi as PassportIssuerABI } from '../abis/PassportIssuer.json'
+import { abi as PassportABI } from '../abis/PassportNFT.json'
 import { useContractRead, useContractWrite } from './use-wagmi'
 
 export function useHasPassport(address) {
