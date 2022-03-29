@@ -5,9 +5,9 @@ import "@nomiclabs/hardhat-etherscan";
 import "@nomiclabs/hardhat-waffle";
 import "@typechain/hardhat";
 import "hardhat-gas-reporter";
-import "solidity-coverage";
+import "@nomiclabs/hardhat-vyper";
 import { dec } from "./utils/deploymentHelpers";
-import devDeployment from "./deployments/dev.json";
+import { BigNumber } from "ethers";
 
 dotenv.config();
 
@@ -22,6 +22,7 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 });
 
 task("checkAirdrop", "Check the airdrop contract", async (taskArgs, hre) => {
+    const devDeployment = require("./deployments/dev.json");
     const [deployer] = await hre.ethers.getSigners();
 
     const NATION = await hre.ethers.getContractAt("ERC20Mock", devDeployment.nation);
@@ -31,9 +32,10 @@ task("checkAirdrop", "Check the airdrop contract", async (taskArgs, hre) => {
 });
 
 task("setupRewards", "Set rewards").setAction(async (taskArgs, hre) => {
-    const rewardsAmount = process.env.REWARDS_AMOUNT || hre.ethers.BigNumber.from(dec(1337, 18));
-    const rewardsStart = await hre.ethers.provider.getBlockNumber();
-    const rewardsEnd = rewardsStart + 314;
+    const devDeployment = require("./deployments/dev.json");
+    // const [deployer] = await hre.ethers.getSigners();
+
+    const rewardsAmount: BigNumber = hre.ethers.BigNumber.from(process.env.REWARDS_AMOUNT?.toString() || dec(1337, 18));
 
     const NATION = await hre.ethers.getContractAt("ERC20Mock", devDeployment.nation);
     const rewardsDistributor = await hre.ethers.getContractAt("LiquidityRewardsDistributor", devDeployment.rewardsDistributor);
@@ -42,15 +44,18 @@ task("setupRewards", "Set rewards").setAction(async (taskArgs, hre) => {
     if (rewardsDistributorBalance < rewardsAmount) {
         await NATION.transfer(rewardsDistributor.address, rewardsAmount);
     }
+    const rewardsStart: number = await hre.ethers.provider.getBlockNumber() + 10;
+    const rewardsEnd: number = rewardsStart + 300;
+
     await rewardsDistributor.setRewards(rewardsAmount, rewardsStart, rewardsEnd);
-    await NATION.transfer(rewardsDistributor.address, rewardsAmount);
     
     const totalRewards = await rewardsDistributor.totalRewards();
-    console.log(`Address: ${rewardsDistributor.address}`);
+    console.log(`Address: ${rewardsDistributor.address} Balance: ${rewardsDistributorBalance}`);
     console.log(`Total Rewards: ${totalRewards} End: ${rewardsEnd}`);
 });
 
 task("setupAirdrop", "Set rewards").setAction(async (taskArgs, hre) => {
+  const devDeployment = require("./deployments/dev.json");
   const dropAmount = process.env.DROP_AMOUNT || hre.ethers.BigNumber.from(dec(1337, 18));
   const NATION = await hre.ethers.getContractAt("ERC20Mock", devDeployment.nation);
   const dropDistributor = await hre.ethers.getContractAt("MerkleDistributor", devDeployment.airdropDistributor);
@@ -65,6 +70,9 @@ task("setupAirdrop", "Set rewards").setAction(async (taskArgs, hre) => {
 
 const config: HardhatUserConfig = {
   solidity: "0.8.10",
+  vyper: {
+      version: "0.2.4",
+  },
   networks: {
     ropsten: {
       url: process.env.ROPSTEN_URL || "",

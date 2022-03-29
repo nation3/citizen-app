@@ -41,6 +41,7 @@ async function main() {
 
   // Get the contracts to deploy
   const ERC20Mock = await ethers.getContractFactory("ERC20Mock");
+  const VotingEscrow = await ethers.getContractFactory("VotingEscrow");
   const MerkleDistributor = await ethers.getContractFactory("MerkleDistributor");
   const LiquidityRewardsDistributor = await ethers.getContractFactory("LiquidityRewardsDistributor");
   const BalancerPoolsMock = await ethers.getContractFactory("BalancerPoolsMock");
@@ -55,6 +56,10 @@ async function main() {
   await NATION.deployed();
   await WETH.deployed();
   await LpToken.deployed();
+
+  // Deploy VotingEscrow
+  const veNATION = await VotingEscrow.deploy(NATION.address, "Voting Escrow Nation3 Token", "veNATION", "v1");
+  await veNATION.deployed();
 
   // Deploy distributors
   const balancerPool = await BalancerPoolsMock.deploy();
@@ -75,7 +80,7 @@ async function main() {
   // Connect contracts
   await balancerPool.setTokens(NATION.address, WETH.address);
   await rewardsDistributor.initialize(NATION.address, LpToken.address);
-  await passportIssuer.initialize(NATION.address, passportNFT.address);
+  await passportIssuer.initialize(veNATION.address, passportNFT.address);
   await passportNFT.transferOwnership(passportIssuer.address);
 
   // Dev setup
@@ -96,6 +101,7 @@ async function main() {
   const deployment = {
       "weth": WETH.address,
       "nation": NATION.address,
+      "veNation": veNATION.address,
       "balancerPair": LpToken.address,
       "balancerPool": balancerPool.address,
       "rewardsDistributor": rewardsDistributor.address,
