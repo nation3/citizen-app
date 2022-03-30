@@ -23,7 +23,9 @@ export default function ActionNeedsTokenApproval({
     },
   ] = useTokenAllowance({ token, address: account?.address, spender })
   const weiAmountNeeded = amountNeeded
-    ? ethers.utils.parseEther(amountNeeded.formatted)
+    ? amountNeeded.formatted
+      ? ethers.utils.parseEther(amountNeeded.formatted)
+      : ethers.utils.parseEther(amountNeeded)
     : 0
   const approve = useTokenApproval({
     amountNeeded: weiAmountNeeded,
