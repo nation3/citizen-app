@@ -27,6 +27,8 @@ export default function Liquidity() {
   const [{ data: veNationLockAmount, loading: veNationLockAmountLoading }] =
     useVeNationLockAmount(account?.address)
 
+  console.log(veNationLockAmount)
+
   const [{ data: veNationLockEnd, loading: veNationLockEndLoading }] =
     useVeNationLockEnd(account?.address)
 
@@ -35,15 +37,14 @@ export default function Liquidity() {
   const [lockTimestamp, setLockTimestamp] = useState(0)
 
   useEffect(() => {
-    console.log(veNationLockAmount)
     setLockAmount(veNationLockAmount)
     setLockTime(
       veNationLockEnd &&
-        new Date(veNationLockEnd * 1000).toISOString().substr(0, 10)
+        new Date(veNationLockEnd * 1000).toISOString().substring(0, 10)
     )
 
     console.log(veNationLockEnd)
-    setLockTimestamp(veNationLockEnd?.toString())
+    setLockTimestamp(veNationLockEnd?.formatted)
   }, [
     veNationLockAmount,
     veNationLockAmountLoading,
@@ -92,7 +93,10 @@ export default function Liquidity() {
                           <div className="stat-value">
                             <Balance
                               loading={loading}
-                              balance={veNationBalance?.formatted}
+                              balance={
+                                veNationBalance &&
+                                ethers.utils.formatEther(veNationBalance)
+                              }
                               decimals={2}
                             />
                           </div>

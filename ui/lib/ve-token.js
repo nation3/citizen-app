@@ -1,5 +1,6 @@
 import { ethers } from 'ethers'
 import { useState, useCallback } from 'react'
+import { useContract } from 'wagmi'
 import { veNationToken } from '../lib/config'
 import VotingEscrow from '../abis/VotingEscrow.json'
 import { useBalance, useContractRead, useContractWrite } from './use-wagmi'
@@ -10,12 +11,14 @@ const contractParams = {
 }
 
 export function useVeNationBalance(address) {
-  return useContractRead(contractParams, 'balanceOf', {
-    args: [address, null],
+  return useContractRead(contractParams, 'balanceOf(address)', {
+    args: [address],
     watch: true,
     skip: !address,
   })
-  /*return useBalance({
+  /*
+    For some reason 'balanceOf' doens't work, therefore useBalance doesn't either
+    return useBalance({
     addressOrName: address,
     token: veNationToken,
     watch: true,
@@ -24,7 +27,7 @@ export function useVeNationBalance(address) {
 }
 
 export function useVeNationLockAmount(address) {
-  return useContractRead(contractParams, 'locked', {
+  return useContractRead(contractParams, 'locked(address)', {
     args: [address],
     watch: true,
     skip: !address,
@@ -59,10 +62,10 @@ export function useVeNationIncreaseLock({
   const [{ loading: timeLoading }, increaseLockTime] =
     useVeNationIncreaseLockTime(newTime)
   const call = useCallback(() => {
-    if (newAmount.gt(currentAmount)) {
+    if (newAmount && newAmount.gt(currentAmount || ethers.BigNumber.from(0))) {
       increaseLockAmount(newAmount)
     }
-    if (newTime.gt(currentTime)) {
+    if (newTime && newTime.gt(currentTime)) {
       increaseLockTime(newTime)
     }
   })
