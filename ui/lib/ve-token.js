@@ -1,5 +1,5 @@
 import { veNationToken } from '../lib/config'
-import { abi as veNationTokenABI } from '../abis/veToken.json'
+import VotingEscrow from '../abis/VotingEscrow.json'
 import { useBalance, useContractRead, useContractWrite } from './use-wagmi'
 
 export function useVeNationBalance(address) {
@@ -13,70 +13,47 @@ export function useVeNationBalance(address) {
 
 const contractParams = {
   addressOrName: veNationToken,
-  abi: veNationTokenABI,
-  watch: true,
+  contractInterface: VotingEscrow.abi,
 }
 
 export function useVeNationLockAmount(address) {
-  return useContractRead(
-    {
-      ...contractParams,
-      skip: !address,
-    },
-    'locked',
-    { args: [address] }
-  )
+  return useContractRead(contractParams, 'locked', {
+    args: [address],
+    watch: true,
+    skip: !address,
+  })
 }
 
 export function useVeNationLockEnd(address) {
-  return useContractRead(
-    {
-      ...contractParams,
-      skip: !address,
-    },
-    'locked__end',
-    { args: [address] }
-  )
+  return useContractRead(contractParams, 'locked__end', {
+    args: [address],
+    watch: true,
+    skip: !address,
+  })
 }
 
 export function useVeNationCreateLock(amount, time) {
-  return useContractWrite(
-    {
-      ...contractParams,
-      skip: !amount || !time,
-    },
-    'create_lock',
-    { args: [amount, time] }
-  )
+  return useContractWrite(contractParams, 'create_lock', {
+    args: [amount, time],
+    watch: true,
+    skip: !amount || !time,
+  })
 }
 
 export function useVeNationIncreaseLockAmount(amount) {
-  return useContractWrite(
-    {
-      ...contractParams,
-      skip: !amount,
-    },
-    'increase_unlock_amount',
-    { args: [amount] }
-  )
+  return useContractWrite(contractParams, 'increase_unlock_amount', {
+    args: [amount],
+    skip: !amount,
+  })
 }
 
 export function useVeNationIncreaseLockTime(time) {
-  return useContractWrite(
-    {
-      ...contractParams,
-      skip: !time,
-    },
-    'increase_unlock_time',
-    { args: [time] }
-  )
+  return useContractWrite(contractParams, 'increase_unlock_time', {
+    args: [time],
+    skip: !time,
+  })
 }
 
 export function useVeNationWithdrawLock() {
-  return useContractWrite(
-    {
-      ...contractParams,
-    },
-    'withdraw'
-  )
+  return useContractWrite(contractParams, 'withdraw')
 }

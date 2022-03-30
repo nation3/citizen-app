@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router'
 import React, { useRef, useEffect } from 'react'
 import { nationToken, nationPassportNFTIssuer } from '../lib/config'
+import { veNationRequiredStake } from '../lib/config'
 import { useNationBalance } from '../lib/nation-token'
 import { useMintPassport } from '../lib/passport-nft'
 import { useHasPassport } from '../lib/passport-nft'
@@ -9,8 +10,6 @@ import ActionButton from '../components/ActionButton'
 import Balance from '../components/Balance'
 import Confetti from '../components/Confetti'
 import Head from '../components/Head'
-
-const requiredStake = process.env.NEXT_PUBLIC_NATION_REQUIRED_STAKE
 
 export default function Join() {
   const [{ data: account }] = useAccount()
@@ -66,15 +65,17 @@ export default function Join() {
                   <>
                     <p>
                       To become a citizen, you need to mint a passport NFT by
-                      locking up {requiredStake} $NATION for a year and renewing
-                      your stake over time. This is to make sure all citizens
-                      are economically aligned.
+                      locking up {veNationRequiredStake} $NATION for a year and
+                      renewing your stake over time. This is to make sure all
+                      citizens are economically aligned.
                     </p>
 
                     <div className="stats stats-vertical lg:stats-horizontal shadow my-4">
                       <div className="stat">
                         <div className="stat-title">Needed balance</div>
-                        <div className="stat-value">{requiredStake}</div>
+                        <div className="stat-value">
+                          {veNationRequiredStake}
+                        </div>
                         <div className="stat-desc">$NATION</div>
                       </div>
 
@@ -89,7 +90,7 @@ export default function Join() {
                         <div className="stat-desc">$NATION</div>
                       </div>
                     </div>
-                    {balance?.value < requiredStake ? (
+                    {balance?.value < veNationRequiredStake ? (
                       <a className="btn btn-primary grow">Buy $NATION</a>
                     ) : (
                       <ActionButton

@@ -1,6 +1,6 @@
 import { ethers } from 'ethers'
 import { useState, useEffect, useMemo } from 'react'
-import { abi as balancerVaultABI } from '../abis/BalancerVault.json'
+import BalancerVault from '../abis/BalancerVault.json'
 import { balancerVault } from './config'
 import { useContractRead } from './use-wagmi'
 
@@ -8,7 +8,7 @@ export function useBalancerPool(id) {
   const [{ data: poolData, loading: loadingPool }] = useContractRead(
     {
       addressOrName: balancerVault,
-      contractInterface: balancerVaultABI,
+      contractInterface: BalancerVault.abi,
     },
     'getPoolTokens',
     {
@@ -25,9 +25,9 @@ export function useBalancerPool(id) {
       'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'
     )
     const { ethereum } = await priceRes.json()
-    setEthPrice(ethereum.usd)
-    */
-    setEthPrice(2500)
+    setEthPrice(ethereum.usd)*/
+
+    setEthPrice(3300)
   }, [])
 
   useEffect(async () => {

@@ -1,7 +1,7 @@
 import { ethers } from 'ethers'
 import { useState, useEffect } from 'react'
 import { nationRewardsContract, balancerLPToken } from '../lib/config'
-import { abi as rewardsContractABI } from '../abis/LiquidityRewardsDistributor.json'
+import LiquidityRewardsDistributor from '../abis/LiquidityRewardsDistributor.json'
 import { useBalance, useContractRead, useContractWrite } from './use-wagmi'
 
 const formatNumber = (number) => {
@@ -11,46 +11,28 @@ const formatNumber = (number) => {
   return number
 }
 
+const contractParams = {
+  addressOrName: nationRewardsContract,
+  contractInterface: LiquidityRewardsDistributor.abi,
+}
+
 export function useLiquidityRewards({ nationPrice, poolValue, address }) {
   const [{ data: totalRewards, loading: totalRewardsLoading }] =
-    useContractRead(
-      {
-        addressOrName: nationRewardsContract,
-        contractInterface: rewardsContractABI,
-      },
-      'totalRewards',
-      {
-        skip: !nationRewardsContract,
-      }
-    )
+    useContractRead(contractParams, 'totalRewards')
 
   const [{ data: unclaimedRewards, loading: unclaimedRewardsLoading }] =
-    useContractRead(
-      {
-        addressOrName: nationRewardsContract,
-        contractInterface: rewardsContractABI,
-      },
-      'getUnclaimedRewards',
-      {
-        args: [address],
-        watch: true,
-        skip: !nationRewardsContract,
-      }
-    )
+    useContractRead(contractParams, 'getUnclaimedRewards', {
+      args: [address],
+      watch: true,
+      skip: !address,
+    })
 
   const [{ data: stakingBalance, loading: stakingBalanceLoading }] =
-    useContractRead(
-      {
-        addressOrName: nationRewardsContract,
-        contractInterface: rewardsContractABI,
-      },
-      'getStakingBalance',
-      {
-        args: [address],
-        watch: true,
-        skip: !nationRewardsContract,
-      }
-    )
+    useContractRead(contractParams, 'getStakingBalance', {
+      args: [address],
+      watch: true,
+      skip: !address,
+    })
   const [liquidityRewardsAPY, setLiquidityRewardsAPY] = useState(0)
 
   useEffect(() => {
@@ -84,43 +66,17 @@ export function usePoolTokenBalance(address) {
 }
 
 export function useClaimRewards() {
-  return useContractWrite(
-    {
-      addressOrName: nationRewardsContract,
-      contractInterface: rewardsContractABI,
-    },
-    'claimRewards'
-  )
+  return useContractWrite(contractParams, 'claimRewards')
 }
 
 export function useDeposit(amount) {
-  return useContractWrite(
-    {
-      addressOrName: nationRewardsContract,
-      contractInterface: rewardsContractABI,
-    },
-    'deposit',
-    { args: [amount] }
-  )
+  return useContractWrite(contractParams, 'deposit', { args: [amount] })
 }
 
 export function useWithdraw(amount) {
-  return useContractWrite(
-    {
-      addressOrName: nationRewardsContract,
-      contractInterface: rewardsContractABI,
-    },
-    'withdraw',
-    { args: [amount] }
-  )
+  return useContractWrite(contractParams, 'withdraw', { args: [amount] })
 }
 
 export function useWithdrawAndClaim(amount) {
-  return useContractWrite(
-    {
-      addressOrName: nationRewardsContract,
-      contractInterface: rewardsContractABI,
-    },
-    'withdrawAndClaim'
-  )
+  return useContractWrite(contractParams, 'withdrawAndClaim')
 }

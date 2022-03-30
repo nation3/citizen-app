@@ -2,19 +2,25 @@ import { useState, useEffect } from 'react'
 import { NftProvider, useNft } from 'use-nft'
 import { nationPassportNFT } from '../lib/config'
 import { nationPassportNFTIssuer } from '../lib/config'
-import { abi as PassportIssuerABI } from '../abis/PassportIssuer.json'
-import { abi as PassportABI } from '../abis/PassportNFT.json'
+import PassportIssuer from '../abis/PassportIssuer.json'
+import PassportNFT from '../abis/PassportNFT.json'
 import { useContractRead, useContractWrite } from './use-wagmi'
+
+const contractParams = {
+  addressOrName: nationPassportNFT,
+  contractInterface: PassportNFT.abi,
+}
 
 export function useHasPassport(address) {
   const [hasPassport, setHasPassport] = useState(false)
   const [{ data, loading, error }] = useContractRead(
-    {
-      addressOrName: nationPassportNFT,
-      contractInterface: PassportABI,
-    },
+    contractParams,
     'balanceOf',
-    { args: address, skip: !address, watch: true }
+    {
+      args: address,
+      watch: true,
+      skip: !address,
+    }
   )
   useEffect(() => {
     setHasPassport(data && data.gt(0))
@@ -26,7 +32,7 @@ export function useMintPassport() {
   return useContractWrite(
     {
       addressOrName: nationPassportNFTIssuer,
-      contractInterface: PassportIssuerABI,
+      contractInterface: PassportIssuer.abi,
     },
     'claim'
   )
@@ -34,10 +40,7 @@ export function useMintPassport() {
 
 export function usePassport(address) {
   const [{ data: id, loading: loadingId }] = useContractRead(
-    {
-      addressOrName: nationPassportNFT,
-      contractInterface: PassportABI,
-    },
+    contractParams,
     'balanceOf',
     { args: address, skip: !address }
   )

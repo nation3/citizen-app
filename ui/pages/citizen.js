@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import { usePassport } from '../lib/passport-nft'
-import { useAccount, useContractRead } from '../lib/use-wagmi'
+import { useAccount } from '../lib/use-wagmi'
 import Head from '../components/Head'
 import Passport from '../components/Passport'
 import AddToWallet from '../public/passport/wallet.svg'

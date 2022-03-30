@@ -8,6 +8,7 @@ function ErrorProvider({ children }) {
   const addError = (newErrors) => {
     if (newErrors && newErrors[0]) {
       for (const error of newErrors) {
+        console.log(error)
         if (error instanceof Error) {
           error = JSON.parse(
             JSON.stringify(error, Object.getOwnPropertyNames(error))

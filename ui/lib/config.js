@@ -17,6 +17,8 @@ if (process.env.NEXT_PUBLIC_DEV === 'true') {
   const devDeployments = require('../../contracts/deployments/dev.json')
   const devConfig = {
     nationToken: devDeployments.nation,
+    veNationToken: devDeployments.veNation,
+    veNationRequiredStake: 10,
     balancerVault: devDeployments.balancerPool,
     balancerLPToken: devDeployments.balancerPair,
     nationRewardsContract: devDeployments.rewardsDistributor,
