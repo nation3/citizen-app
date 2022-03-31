@@ -4945,22 +4945,22 @@ vm-browserify@1.1.2:
   resolved "https://registry.yarnpkg.com/vm-browserify/-/vm-browserify-1.1.2.tgz#78641c488b8e6ca91a75f511e7a3b32a86e5dda0"
   integrity sha512-2ham8XPWTONajOR0ohOKOHXkm3+gaBmGut3SRuu75xLd/RRaY6vqgh8NBYYk7+RW3u5AtzPQZG8F10LHkl0lAQ==
 
-wagmi-core@0.1.15:
-  version "0.1.15"
-  resolved "https://registry.yarnpkg.com/wagmi-core/-/wagmi-core-0.1.15.tgz#484d511493e20b7546a3072465ed559b23c7ecbf"
-  integrity sha512-DbweN9mW87uGEMHWSbsCUqeJCzfM2PkJIKASuGPNpLyBhKxy2tWEQU6fSKhFl81rAo7xSg660kbDh6s+MzWJpA==
+wagmi-core@0.1.18:
+  version "0.1.18"
+  resolved "https://registry.yarnpkg.com/wagmi-core/-/wagmi-core-0.1.18.tgz#c1835a1fb18f471ee9e8e427f515e74452b52eeb"
+  integrity sha512-83hFh9YbIBYxStzbUdpahQbwvXUAeMJl5ChUNX9QpqjyDjJt0HbGKQ39FWHGre168Pcm4fYh6Ud99PN+x44gDw==
   dependencies:
     "@ethersproject/providers" "^5.5.1"
     eventemitter3 "^4.0.7"
 
-wagmi@^0.2.21:
-  version "0.2.21"
-  resolved "https://registry.yarnpkg.com/wagmi/-/wagmi-0.2.21.tgz#cbd68407a82fd3507d80d7127745f78222e0fefd"
-  integrity sha512-POo41xE8D1C0jMCHmFbZ7L7kT7ReCmU6DqLzJefm0w7TqPh5Nz7LnbGOeW7DoM1f2gqf8ckA++8HxRdP6vHW0Q==
+wagmi@^0.2.24:
+  version "0.2.24"
+  resolved "https://registry.yarnpkg.com/wagmi/-/wagmi-0.2.24.tgz#cb19bb64cce81a2d8a8367d724941cd23d1d0e7e"
+  integrity sha512-iTs37Fewu4vu4sGHWKsy36vkfT797/gsheY7b0ufcQdghoOMbDb06cBZfOuvlwgVSHgekt6cUU9x1q8Z3NUC+w==
   dependencies:
     "@ethersproject/providers" "^5.5.1"
     "@walletconnect/ethereum-provider" "1.7.5"
-    wagmi-core "0.1.15"
+    wagmi-core "0.1.18"
     walletlink "^2.5.0"
 
 walletlink@^2.5.0:

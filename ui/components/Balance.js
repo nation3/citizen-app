@@ -1,3 +1,5 @@
+import { ethers } from 'ethers'
+
 export default function Balance({
   loading = false,
   balance,
@@ -10,7 +12,11 @@ export default function Balance({
       {loading ? (
         <button className="btn btn-square btn-ghost btn-disabled loading"></button>
       ) : balance ? (
-        `${prefix}${Number(balance).toFixed(decimals)}${suffix}`
+        `${prefix}${Number(
+          balance instanceof ethers.BigNumber
+            ? ethers.utils.formatEther(balance)
+            : balance
+        ).toFixed(decimals)}${suffix}`
       ) : (
         0
       )}

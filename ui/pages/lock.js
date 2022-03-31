@@ -5,8 +5,7 @@ import { useNationBalance } from '../lib/nation-token'
 import { useAccount } from '../lib/use-wagmi'
 import {
   useVeNationBalance,
-  useVeNationLockAmount,
-  useVeNationLockEnd,
+  useVeNationLock,
   useVeNationCreateLock,
   useVeNationIncreaseLock,
   useVeNationWithdrawLock,
@@ -15,7 +14,23 @@ import ActionButton from '../components/ActionButton'
 import Balance from '../components/Balance'
 import Head from '../components/Head'
 
-export default function Liquidity() {
+const dateToReadable = (date) => {
+  return date && date.toISOString().substring(0, 10)
+}
+
+const bigNumberToDate = (bigNumber) => {
+  return bigNumber && new Date(bigNumber.mul(1000).toNumber())
+}
+
+const dateOut = (date, { days, years }) => {
+  if (!date) return
+  let dateOut = date
+  days && dateOut.setDate(date.getDate() + days)
+  years && dateOut.setDate(date.getFullYear() + years)
+  return dateOut
+}
+
+export default function Lock() {
   const [{ data: account }] = useAccount()
 
   const [{ data: nationBalance, loading: nationBalanceLoading }] =
@@ -24,50 +39,94 @@ export default function Liquidity() {
   const [{ data: veNationBalance, loading: veNationBalanceLoading }] =
     useVeNationBalance(account?.address)
 
-  const [{ data: veNationLockAmount, loading: veNationLockAmountLoading }] =
-    useVeNationLockAmount(account?.address)
+  const [{ data: veNationLock, loading: veNationLockLoading }] =
+    useVeNationLock(account?.address)
 
-  console.log(veNationLockAmount)
+  const hasLock = veNationLock && veNationLock.amount.toString() !== '0'
+  const hasExpired =
+    hasLock &&
+    ethers.BigNumber.from(+new Date()).gte(veNationLock.end.mul(1000))
 
-  const [{ data: veNationLockEnd, loading: veNationLockEndLoading }] =
-    useVeNationLockEnd(account?.address)
+  const [lockAmount, setLockAmount] = useState('0')
 
-  const [lockAmount, setLockAmount] = useState(0)
-  const [lockTime, setLockTime] = useState(new Date())
-  const [lockTimestamp, setLockTimestamp] = useState(0)
+  const oneWeekOut = dateOut(new Date(), { days: 7 })
+
+  const [lockTime, setLockTime] = useState({
+    value: ethers.BigNumber.from(+oneWeekOut),
+    formatted: dateToReadable(oneWeekOut),
+  })
+
+  const [minMaxLockTime, setMinMaxLockTime] = useState({})
+
+  const [canIncrease, setCanIncrease] = useState({ amount: true, time: true })
 
   useEffect(() => {
-    setLockAmount(veNationLockAmount)
-    setLockTime(
-      veNationLockEnd &&
-        new Date(veNationLockEnd * 1000).toISOString().substring(0, 10)
-    )
+    if (hasLock) {
+      console.log(veNationLock)
+      setLockAmount(ethers.utils.formatEther(veNationLock?.amount))
+      setLockTime({
+        formatted: dateToReadable(bigNumberToDate(veNationLock.end)),
+        value: veNationLock.end,
+      })
+      setLockTime({
+        ...lockTime,
+        orig: {
+          value: lockTime.value,
+          formatted: lockTime.formatted,
+        },
+      })
+      setMinMaxLockTime({
+        min: dateToReadable(
+          dateOut(bigNumberToDate(veNationLock.end), { days: 8 })
+        ),
+        max: dateToReadable(
+          dateOut(bigNumberToDate(veNationLock.end), { years: 4 })
+        ),
+      })
+    } else {
+      setMinMaxLockTime({
+        min: dateToReadable(oneWeekOut),
+        max: dateToReadable(dateOut(new Date(), { years: 4 })),
+      })
+      setLockTime({
+        ...lockTime,
+        orig: {
+          min: lockTime.min,
+          max: lockTime.max,
+        },
+      })
+    }
+  }, [veNationLock, veNationLockLoading])
 
-    console.log(veNationLockEnd)
-    setLockTimestamp(veNationLockEnd?.formatted)
-  }, [
-    veNationLockAmount,
-    veNationLockAmountLoading,
-    veNationLockEnd,
-    veNationLockEndLoading,
-  ])
+  useEffect(() => {
+    if (hasLock) {
+      setCanIncrease({
+        amount:
+          lockAmount &&
+          ethers.utils.parseEther(lockAmount).gt(veNationLock.amount),
+        time:
+          lockTime?.value &&
+          lockTime.value.gt(
+            +dateOut(bigNumberToDate(veNationLock.end), { days: 7 })
+          ),
+      })
+    }
+  }, [lockAmount, lockTime])
 
-  const createLock = useVeNationCreateLock(lockAmount, lockTimestamp)
+  const createLock = useVeNationCreateLock(
+    lockAmount && ethers.utils.parseEther(lockAmount),
+    lockTime.value
+  )
   const increaseLock = useVeNationIncreaseLock({
-    currentAmount: veNationLockAmount,
+    currentAmount: veNationLock?.amount,
     newAmount: lockAmount && ethers.utils.parseEther(lockAmount),
-    currentTime: veNationLockEnd,
-    newTime: lockTimestamp,
+    currentTime: veNationLock?.end,
+    newTime: lockTime?.value.div(1000),
   })
   const withdraw = useVeNationWithdrawLock()
 
-  const hasLock = veNationLockEnd && !veNationLockEndLoading
-
   const loading =
-    nationBalanceLoading ||
-    veNationBalanceLoading ||
-    veNationLockAmountLoading ||
-    veNationLockEndLoading
+    nationBalanceLoading || veNationBalanceLoading || veNationLockLoading
 
   return (
     <>
@@ -83,7 +142,7 @@ export default function Liquidity() {
                   </h2>
                   <p className="mb-4">Learn about $veNATION.</p>
 
-                  {hasLock ? (
+                  {hasLock && (
                     <>
                       <div className="stats stats-vertical lg:stats-horizontal shadow mb-4">
                         <div className="stat">
@@ -93,11 +152,8 @@ export default function Liquidity() {
                           <div className="stat-value">
                             <Balance
                               loading={loading}
-                              balance={
-                                veNationBalance &&
-                                ethers.utils.formatEther(veNationBalance)
-                              }
-                              decimals={2}
+                              balance={veNationBalance}
+                              decimals={4}
                             />
                           </div>
                         </div>
@@ -108,8 +164,8 @@ export default function Liquidity() {
                           <div className="stat-value">
                             <Balance
                               loading={loading}
-                              balance={veNationLockAmount}
-                              decimals={2}
+                              balance={veNationLock.amount}
+                              decimals={4}
                             />
                           </div>
                         </div>
@@ -119,28 +175,28 @@ export default function Liquidity() {
                           <div className="stat-title">
                             Your lock expiration date
                           </div>
-                          <div className="stat-value">{lockTime}</div>
+                          <div className="stat-value">
+                            {dateToReadable(bigNumberToDate(veNationLock.end))}
+                          </div>
                         </div>
                       </div>
                     </>
-                  ) : (
-                    ''
                   )}
                   <div className="card bg-base-100 shadow">
                     <div className="card-body">
                       <div className="form-control">
-                        <p className="mb-4">
-                          Available to lock:{' '}
-                          <Balance
-                            loading={nationBalanceLoading}
-                            balance={nationBalance?.formatted}
-                          />{' '}
-                          $NATION
-                        </p>
-                        {true ? (
+                        {!hasExpired ? (
                           <>
-                            <label class="label">
-                              <span class="label-text">Lock amount</span>
+                            <p className="mb-4">
+                              Available to lock:{' '}
+                              <Balance
+                                loading={nationBalanceLoading}
+                                balance={nationBalance?.formatted}
+                              />{' '}
+                              $NATION
+                            </p>
+                            <label className="label">
+                              <span className="label-text">Lock amount</span>
                             </label>
                             <div className="input-group mb-4">
                               <input
@@ -148,48 +204,84 @@ export default function Liquidity() {
                                 placeholder="0"
                                 className="input input-bordered w-full"
                                 value={lockAmount}
+                                min={
+                                  hasLock
+                                    ? ethers.utils.formatEther(
+                                        veNationLock?.amount
+                                      )
+                                    : 0
+                                }
                                 onChange={(e) => {
+                                  console.log(e.target.value)
                                   setLockAmount(e.target.value)
                                 }}
                               />
                               <button
                                 className="btn btn-outline"
-                                onClick={() =>
+                                onClick={() => {
                                   setLockAmount(nationBalance?.formatted)
-                                }
+                                }}
                               >
                                 Max
                               </button>
                             </div>
-                            <label class="label">
-                              <span class="label-text">
+                            <label className="label">
+                              <span className="label-text">
                                 Lock expiration date
+                                <br />
+                                (min. one week, max four years)
                               </span>
                             </label>
                             <input
                               type="date"
                               placeholder="Expiration date"
                               className="input input-bordered w-full"
-                              value={lockTime}
+                              value={lockTime.formatted}
+                              min={minMaxLockTime.min}
+                              max={minMaxLockTime.max}
                               onChange={(e) => {
-                                setLockTime(e.target.value)
-                                setLockTimestamp(
-                                  Date.parse(e.target.value) / 1000
-                                )
+                                setLockTime({
+                                  ...lockTime,
+                                  formatted: e.target.value
+                                    ? e.target.value
+                                    : lockTime.orig.formatted,
+                                  value: e.target.value
+                                    ? ethers.BigNumber.from(
+                                        Date.parse(e.target.value)
+                                      )
+                                    : lockTime.orig.value,
+                                })
                               }}
                             />
                             <div className="card-actions mt-4">
                               <ActionButton
-                                className="btn btn-primary w-full"
+                                className={`btn btn-primary w-full ${
+                                  !(canIncrease.amount || canIncrease.time)
+                                    ? 'btn-disabled'
+                                    : ''
+                                }`}
                                 action={hasLock ? increaseLock : createLock}
                                 approval={{
                                   token: nationToken,
                                   spender: veNationToken,
-                                  amountNeeded: lockAmount,
+                                  amountNeeded:
+                                    veNationLock &&
+                                    lockAmount &&
+                                    ethers.utils
+                                      .parseEther(lockAmount)
+                                      .sub(veNationLock.amount),
                                   approveText: 'Approve $NATION',
                                 }}
                               >
-                                Lock
+                                {!hasLock
+                                  ? 'Lock'
+                                  : `Increase lock ${
+                                      canIncrease.amount ? 'amount' : ''
+                                    } ${
+                                      canIncrease.amount && canIncrease.time
+                                        ? '&'
+                                        : ''
+                                    } ${canIncrease.time ? 'time' : ''}`}
                               </ActionButton>
                             </div>
                           </>

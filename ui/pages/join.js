@@ -1,11 +1,12 @@
+import { ethers } from 'ethers'
 import { useRouter } from 'next/router'
 import React, { useRef, useEffect } from 'react'
 import { nationToken, nationPassportNFTIssuer } from '../lib/config'
 import { veNationRequiredStake } from '../lib/config'
-import { useNationBalance } from '../lib/nation-token'
 import { useMintPassport } from '../lib/passport-nft'
 import { useHasPassport } from '../lib/passport-nft'
 import { useAccount } from '../lib/use-wagmi'
+import { useVeNationBalance } from '../lib/ve-token'
 import ActionButton from '../components/ActionButton'
 import Balance from '../components/Balance'
 import Confetti from '../components/Confetti'
@@ -13,7 +14,7 @@ import Head from '../components/Head'
 
 export default function Join() {
   const [{ data: account }] = useAccount()
-  const [{ data: balance, loading: balanceLoading }] = useNationBalance(
+  const [{ data: balance, loading: balanceLoading }] = useVeNationBalance(
     account?.address
   )
   const [{ data: hasPassport, loading: hasPassportLoading }] = useHasPassport(
@@ -76,7 +77,7 @@ export default function Join() {
                         <div className="stat-value">
                           {veNationRequiredStake}
                         </div>
-                        <div className="stat-desc">$NATION</div>
+                        <div className="stat-desc">$veNATION</div>
                       </div>
 
                       <div className="stat">
@@ -84,10 +85,13 @@ export default function Join() {
                         <div className="stat-value">
                           <Balance
                             loading={balanceLoading}
-                            balance={balance?.formatted}
+                            balance={
+                              balance && ethers.utils.formatEther(balance)
+                            }
+                            decimals={2}
                           />
                         </div>
-                        <div className="stat-desc">$NATION</div>
+                        <div className="stat-desc">$veNATION</div>
                       </div>
                     </div>
                     {balance?.value < veNationRequiredStake ? (
