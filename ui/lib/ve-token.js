@@ -63,11 +63,7 @@ export function useVeNationIncreaseLock({
   const [{ loading: timeLoading }, increaseLockTime] =
     useVeNationIncreaseLockTime(newTime)
   const call = useCallback(() => {
-    console.log(currentAmount.toString())
-    console.log(newAmount.toString())
-    console.log(currentTime.toString())
-    console.log(newTime.toString())
-    if (newAmount && newAmount.gt(currentAmount)) {
+    if (!newAmount.isZero()) {
       increaseLockAmount(newAmount)
     }
     if (newTime && newTime.gt(currentTime)) {
@@ -79,12 +75,14 @@ export function useVeNationIncreaseLock({
 }
 
 export function useVeNationIncreaseLockAmount(amount) {
-  console.log(amount.toString())
   return useContractWrite(contractParams, 'increase_amount', {
     args: [amount],
     skip: !amount,
-    gasLimit:
-      VotingEscrow.abi.find((obj) => obj.name === 'increase_amount').gas * 100,
+    overrides: {
+      gasLimit:
+        VotingEscrow.abi.find((obj) => obj.name === 'increase_amount').gas *
+        100,
+    },
   })
 }
 
@@ -92,9 +90,11 @@ export function useVeNationIncreaseLockTime(time) {
   return useContractWrite(contractParams, 'increase_unlock_time', {
     args: [time],
     skip: !time,
-    gasLimit:
-      VotingEscrow.abi.find((obj) => obj.name === 'increase_unlock_time').gas *
-      100,
+    overrides: {
+      gasLimit:
+        VotingEscrow.abi.find((obj) => obj.name === 'increase_unlock_time')
+          .gas * 100,
+    },
   })
 }
 

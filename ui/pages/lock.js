@@ -26,7 +26,7 @@ const dateOut = (date, { days, years }) => {
   if (!date) return
   let dateOut = date
   days && dateOut.setDate(date.getDate() + days)
-  years && dateOut.setDate(date.getFullYear() + years)
+  years && dateOut.setFullYear(date.getFullYear() + years)
   return dateOut
 }
 
@@ -47,7 +47,7 @@ export default function Lock() {
     hasLock &&
     ethers.BigNumber.from(+new Date()).gte(veNationLock.end.mul(1000))
 
-  const [lockAmount, setLockAmount] = useState('0')
+  const [lockAmount, setLockAmount] = useState(0)
 
   const oneWeekOut = dateOut(new Date(), { days: 7 })
 
@@ -62,18 +62,15 @@ export default function Lock() {
 
   useEffect(() => {
     if (hasLock) {
-      console.log(veNationLock)
-      setLockAmount(ethers.utils.formatEther(veNationLock?.amount))
-      setLockTime({
-        formatted: dateToReadable(bigNumberToDate(veNationLock.end)),
+      !lockAmount &&
+        setLockAmount(ethers.utils.formatEther(veNationLock?.amount))
+      const origTime = {
         value: veNationLock.end,
-      })
+        formatted: dateToReadable(bigNumberToDate(veNationLock.end)),
+      }
       setLockTime({
-        ...lockTime,
-        orig: {
-          value: lockTime.value,
-          formatted: lockTime.formatted,
-        },
+        ...origTime,
+        orig: origTime,
       })
       setMinMaxLockTime({
         min: dateToReadable(
@@ -83,17 +80,10 @@ export default function Lock() {
           dateOut(bigNumberToDate(veNationLock.end), { years: 4 })
         ),
       })
-    } else {
+    } else if (!hasLock) {
       setMinMaxLockTime({
         min: dateToReadable(oneWeekOut),
         max: dateToReadable(dateOut(new Date(), { years: 4 })),
-      })
-      setLockTime({
-        ...lockTime,
-        orig: {
-          min: lockTime.min,
-          max: lockTime.max,
-        },
       })
     }
   }, [veNationLock, veNationLockLoading])
@@ -115,11 +105,14 @@ export default function Lock() {
 
   const createLock = useVeNationCreateLock(
     lockAmount && ethers.utils.parseEther(lockAmount),
-    lockTime.value
+    lockTime.value.div(1000)
   )
   const increaseLock = useVeNationIncreaseLock({
     currentAmount: veNationLock?.amount,
-    newAmount: lockAmount && ethers.utils.parseEther(lockAmount),
+    newAmount:
+      lockAmount &&
+      veNationLock &&
+      ethers.utils.parseEther(lockAmount).sub(veNationLock?.amount),
     currentTime: veNationLock?.end,
     newTime: lockTime?.value.div(1000),
   })
@@ -150,11 +143,7 @@ export default function Lock() {
                             Your $veNATION balance
                           </div>
                           <div className="stat-value">
-                            <Balance
-                              loading={loading}
-                              balance={veNationBalance}
-                              decimals={4}
-                            />
+                            <Balance balance={veNationBalance} decimals={4} />
                           </div>
                         </div>
                       </div>
@@ -163,7 +152,6 @@ export default function Lock() {
                           <div className="stat-title">Your locked $NATION</div>
                           <div className="stat-value">
                             <Balance
-                              loading={loading}
                               balance={veNationLock.amount}
                               decimals={4}
                             />
@@ -189,10 +177,7 @@ export default function Lock() {
                           <>
                             <p className="mb-4">
                               Available to lock:{' '}
-                              <Balance
-                                loading={nationBalanceLoading}
-                                balance={nationBalance?.formatted}
-                              />{' '}
+                              <Balance balance={nationBalance?.formatted} />{' '}
                               $NATION
                             </p>
                             <label className="label">
@@ -212,7 +197,6 @@ export default function Lock() {
                                     : 0
                                 }
                                 onChange={(e) => {
-                                  console.log(e.target.value)
                                   setLockAmount(e.target.value)
                                 }}
                               />
