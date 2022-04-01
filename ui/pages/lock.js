@@ -13,6 +13,7 @@ import {
 import ActionButton from '../components/ActionButton'
 import Balance from '../components/Balance'
 import Head from '../components/Head'
+import TimeRange from '../components/TimeRange'
 
 const dateToReadable = (date) => {
   return date && date.toISOString().substring(0, 10)
@@ -234,6 +235,20 @@ export default function Lock() {
                                         Date.parse(e.target.value)
                                       )
                                     : lockTime.orig.value,
+                                })
+                              }}
+                            />
+                            <TimeRange
+                              time={Date.parse(lockTime.formatted)}
+                              min={Date.parse(minMaxLockTime.min)}
+                              max={Date.parse(minMaxLockTime.max)}
+                              onChange={(newDate) => {
+                                setLockTime({
+                                  ...lockTime,
+                                  formatted: dateToReadable(newDate),
+                                  value: ethers.BigNumber.from(
+                                    Date.parse(newDate)
+                                  ),
                                 })
                               }}
                             />
