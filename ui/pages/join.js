@@ -51,10 +51,6 @@ export default function Join() {
         .mul(4)
         .gte(ethers.utils.parseEther((veNationRequiredStake / 4).toString())),
     })
-    setAction({
-      mint: false,
-      lockAndMint: true,
-    })
   }, [
     nationBalance,
     nationBalanceLoading,
