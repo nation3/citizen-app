@@ -1,8 +1,8 @@
-import { ethers } from 'ethers'
-import { useEffect } from 'react'
 import { useTokenAllowance, useTokenApproval } from '../lib/approve'
+import { transformNumber } from '../lib/numbers'
 import { useAccount } from '../lib/use-wagmi'
 import ActionButton from './ActionButton'
+import { useErrorContext } from './ErrorProvider'
 
 export default function ActionNeedsTokenApproval({
   className,
@@ -23,13 +23,16 @@ export default function ActionNeedsTokenApproval({
     },
   ] = useTokenAllowance({ token, address: account?.address, spender })
 
-  const weiAmountNeeded = amountNeeded
-    ? amountNeeded.formatted
-      ? ethers.utils.parseEther(amountNeeded.formatted)
-      : amountNeeded instanceof ethers.BigNumber
-      ? amountNeeded
-      : ethers.utils.parseEther(amountNeeded)
-    : 0
+  const { addError } = useErrorContext()
+  addError([allowanceError])
+
+  const weiAmountNeeded = transformNumber(
+    amountNeeded.formatted || amountNeeded,
+    'bignumber',
+    0
+  )
+
+  console.log(weiAmountNeeded.toString())
   const approve = useTokenApproval({
     amountNeeded: weiAmountNeeded,
     token,

@@ -2,10 +2,9 @@ import { ethers } from 'ethers'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useRef, useEffect, useState } from 'react'
-import { nationToken, nationPassportNFTIssuer } from '../lib/config'
 import { veNationRequiredStake } from '../lib/config'
 import { useNationBalance } from '../lib/nation-token'
-import { useMintPassport } from '../lib/passport-nft'
+import { useClaimPassport } from '../lib/passport-nft'
 import { useHasPassport } from '../lib/passport-nft'
 import { useAccount } from '../lib/use-wagmi'
 import { useVeNationBalance } from '../lib/ve-token'
@@ -23,7 +22,7 @@ export default function Join() {
   const [{ data: hasPassport, loading: hasPassportLoading }] = useHasPassport(
     account?.address
   )
-  const mint = useMintPassport()
+  const claim = useClaimPassport()
 
   const router = useRouter()
 
@@ -91,7 +90,7 @@ export default function Join() {
                       action.mint && !hasPassport ? 'step-primary' : ''
                     }`}
                   >
-                    Mint passport
+                    Claim passport
                   </li>
                   <li
                     className={`step text-sm ${
@@ -141,10 +140,10 @@ export default function Join() {
                     {action.mint ? (
                       <ActionButton
                         className="btn btn-primary grow"
-                        action={mint}
+                        action={claim}
                         preAction={changeUrl}
                       >
-                        Mint
+                        Claim
                       </ActionButton>
                     ) : action.lockAndMint ? (
                       <>

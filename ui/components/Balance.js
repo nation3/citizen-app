@@ -1,4 +1,4 @@
-import { ethers } from 'ethers'
+import { transformNumber } from '../lib/numbers'
 
 export default function Balance({
   loading = false,
@@ -12,11 +12,7 @@ export default function Balance({
       {loading ? (
         <button className="btn btn-square btn-ghost btn-disabled bg-transparent loading"></button>
       ) : balance ? (
-        `${prefix}${Number(
-          balance instanceof ethers.BigNumber
-            ? ethers.utils.formatEther(balance)
-            : balance
-        ).toFixed(decimals)}${suffix}`
+        `${prefix}${transformNumber(balance, 'string', decimals)}${suffix}`
       ) : (
         0
       )}

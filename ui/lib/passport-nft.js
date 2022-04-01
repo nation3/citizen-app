@@ -28,7 +28,7 @@ export function useHasPassport(address) {
   return [{ data: hasPassport, loading, error }]
 }
 
-export function useMintPassport() {
+export function useClaimPassport() {
   return useContractWrite(
     {
       addressOrName: nationPassportNFTIssuer,

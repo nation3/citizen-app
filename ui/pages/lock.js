@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { nationToken, veNationToken } from '../lib/config'
 import { veNationRequiredStake } from '../lib/config'
 import { useNationBalance } from '../lib/nation-token'
+import { transformNumber } from '../lib/numbers'
 import { useAccount } from '../lib/use-wagmi'
 import {
   useVeNationBalance,
@@ -301,7 +302,11 @@ export default function Lock() {
                                     lockAmount && veNationLock && +lockAmount,
                                   veNationAmount:
                                     veNationBalance &&
-                                    +ethers.utils.formatEther(veNationBalance),
+                                    transformNumber(
+                                      veNationBalance,
+                                      'number',
+                                      18
+                                    ),
                                   time: Date.parse(lockTime.formatted),
                                   lockTime: Date.parse(
                                     hasLock && lockTime?.orig
