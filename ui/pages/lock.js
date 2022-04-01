@@ -1,6 +1,7 @@
 import { ethers } from 'ethers'
 import { useEffect, useState } from 'react'
 import { nationToken, veNationToken } from '../lib/config'
+import { veNationRequiredStake } from '../lib/config'
 import { useNationBalance } from '../lib/nation-token'
 import { useAccount } from '../lib/use-wagmi'
 import {
@@ -29,6 +30,27 @@ const dateOut = (date, { days, years }) => {
   days && dateOut.setDate(date.getDate() + days)
   years && dateOut.setFullYear(date.getFullYear() + years)
   return dateOut
+}
+
+const calculateVeNation = ({
+  nationAmount,
+  veNationAmount,
+  time,
+  lockTime,
+  max,
+}) => {
+  const vestingStart = calculateVestingStart({
+    nationAmount,
+    veNationAmount,
+    lockTime,
+  })
+  const percentage = (time - vestingStart) / (max - vestingStart)
+  return (nationAmount * percentage).toFixed(2)
+}
+
+const calculateVestingStart = ({ nationAmount, veNationAmount, lockTime }) => {
+  const fourYears = 31556926000 * 4
+  return lockTime - (veNationAmount / nationAmount) * fourYears
 }
 
 export default function Lock() {
@@ -60,6 +82,7 @@ export default function Lock() {
   const [minMaxLockTime, setMinMaxLockTime] = useState({})
 
   const [canIncrease, setCanIncrease] = useState({ amount: true, time: true })
+  const [wantsToIncrease, setWantsToIncrease] = useState(false)
 
   useEffect(() => {
     if (hasLock) {
@@ -69,6 +92,7 @@ export default function Lock() {
         value: veNationLock.end,
         formatted: dateToReadable(bigNumberToDate(veNationLock.end)),
       }
+      !lockTime && lockTime.orig
       setLockTime({
         ...origTime,
         orig: origTime,
@@ -77,9 +101,7 @@ export default function Lock() {
         min: dateToReadable(
           dateOut(bigNumberToDate(veNationLock.end), { days: 8 })
         ),
-        max: dateToReadable(
-          dateOut(bigNumberToDate(veNationLock.end), { years: 4 })
-        ),
+        max: dateToReadable(dateOut(new Date(), { years: 4 })),
       })
     } else if (!hasLock) {
       setMinMaxLockTime({
@@ -135,6 +157,20 @@ export default function Lock() {
                     Lock $NATION to get $veNATION
                   </h2>
                   <p className="mb-4">Learn about $veNATION.</p>
+                  {!hasLock ? (
+                    <p>
+                      To mint a passport NFT, you need {veNationRequiredStake}{' '}
+                      $veNATION. $veNATION increases proportionally with the
+                      amount of time you lock your $NATION for. Some examples:
+                      <ul>
+                        <li>1 $NATION locked up for 4 years = 1 $veNATION</li>
+                        <li>1 $NATION locked up for 2 years = 0.5 $veNATION</li>
+                        <li>1 $NATION locked up for 1 year = 0.25 $veNATION</li>
+                      </ul>
+                    </p>
+                  ) : (
+                    ''
+                  )}
 
                   {hasLock && (
                     <>
@@ -199,12 +235,14 @@ export default function Lock() {
                                 }
                                 onChange={(e) => {
                                   setLockAmount(e.target.value)
+                                  setWantsToIncrease(true)
                                 }}
                               />
                               <button
                                 className="btn btn-outline"
                                 onClick={() => {
                                   setLockAmount(nationBalance?.formatted)
+                                  setWantsToIncrease(true)
                                 }}
                               >
                                 Max
@@ -236,12 +274,14 @@ export default function Lock() {
                                       )
                                     : lockTime.orig.value,
                                 })
+                                setWantsToIncrease(!!e.target.value)
                               }}
                             />
                             <TimeRange
                               time={Date.parse(lockTime.formatted)}
                               min={Date.parse(minMaxLockTime.min)}
                               max={Date.parse(minMaxLockTime.max)}
+                              displaySteps={!hasLock}
                               onChange={(newDate) => {
                                 setLockTime({
                                   ...lockTime,
@@ -250,8 +290,32 @@ export default function Lock() {
                                     Date.parse(newDate)
                                   ),
                                 })
+                                setWantsToIncrease(true)
                               }}
                             />
+                            {account && wantsToIncrease ? (
+                              <p>
+                                Your final balance will be approx{' '}
+                                {calculateVeNation({
+                                  nationAmount:
+                                    lockAmount && veNationLock && +lockAmount,
+                                  veNationAmount:
+                                    veNationBalance &&
+                                    +ethers.utils.formatEther(veNationBalance),
+                                  time: Date.parse(lockTime.formatted),
+                                  lockTime: Date.parse(
+                                    hasLock && lockTime?.orig
+                                      ? lockTime.orig.formatted
+                                      : new Date()
+                                  ),
+                                  max: Date.parse(minMaxLockTime.max),
+                                })}{' '}
+                                $veNATION
+                              </p>
+                            ) : (
+                              ''
+                            )}
+
                             <div className="card-actions mt-4">
                               <ActionButton
                                 className={`btn btn-primary w-full ${

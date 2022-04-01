@@ -27,7 +27,7 @@ export default function ActionButton({
         </label>
       ) : loading ? (
         <div className={className}>
-          <button className="btn btn-square btn-ghost btn-disabled loading"></button>
+          <button className="btn btn-square btn-link btn-disabled bg-transparent loading"></button>
         </div>
       ) : approval ? (
         <ActionNeedsTokenApproval

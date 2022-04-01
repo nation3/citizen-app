@@ -10,7 +10,7 @@ export default function Balance({
   return (
     <>
       {loading ? (
-        <button className="btn btn-square btn-ghost btn-disabled loading"></button>
+        <button className="btn btn-square btn-ghost btn-disabled bg-transparent loading"></button>
       ) : balance ? (
         `${prefix}${Number(
           balance instanceof ethers.BigNumber

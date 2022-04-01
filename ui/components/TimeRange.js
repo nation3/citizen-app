@@ -1,4 +1,4 @@
-export default function TimeRange({ time, min, max, onChange }) {
+export default function TimeRange({ time, min, max, displaySteps, onChange }) {
   const step = (min * 100) / max
 
   return (
@@ -16,10 +16,22 @@ export default function TimeRange({ time, min, max, onChange }) {
       />
 
       <div className="w-full flex justify-between text-xs px-2 mb-4">
-        <span>-</span>
-        <span>1 y</span>
-        <span>2 y</span>
-        <span>3 y</span>
+        {displaySteps ? (
+          <>
+            <span>-</span>
+            <span>1 y</span>
+            <span>2 y</span>
+            <span>3 y</span>
+          </>
+        ) : (
+          <>
+            {' '}
+            <span>Now</span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </>
+        )}
         <span>4 y</span>
       </div>
     </>

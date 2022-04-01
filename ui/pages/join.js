@@ -62,12 +62,6 @@ export default function Join() {
     veNationBalanceLoading,
   ])
 
-  const [lockTime, setLockTime] = useState({
-    formatted: '1 year',
-    value: 0,
-    rangeValue: 0,
-  })
-
   const loading =
     nationBalanceLoading || veNationBalanceLoading || hasPassportLoading
 
@@ -89,10 +83,25 @@ export default function Join() {
                   Become a Nation3 citizen
                 </h2>
                 <ul className="steps steps-vertical lg:steps-horizontal my-8">
-                  <li className={`step ${!hasPassport ? 'step-primary' : ''}`}>
-                    Stake and mint
+                  <li
+                    className={`step text-sm ${
+                      action.mint ? 'step-primary' : ''
+                    }`}
+                  >
+                    Lock $NATION
                   </li>
-                  <li className={`step ${hasPassport ? 'step-primary' : ''}`}>
+                  <li
+                    className={`step text-sm ${
+                      action.mint && !hasPassport ? 'step-primary' : ''
+                    }`}
+                  >
+                    Mint passport
+                  </li>
+                  <li
+                    className={`step text-sm ${
+                      hasPassport ? 'step-primary' : ''
+                    }`}
+                  >
                     Adore your passport
                   </li>
                 </ul>
@@ -101,10 +110,12 @@ export default function Join() {
                   <>
                     <p>
                       To become a citizen, you need to mint a passport NFT by
-                      having at least {veNationRequiredStake} $veNATION. This is
-                      to make sure all citizens are economically aligned. Your
-                      $veNATION won't be taken away from you — instead, you can
-                      choose to withdraw them it when your lock expires.
+                      holding at least {veNationRequiredStake} $veNATION. This
+                      is to make sure all citizens are economically aligned.
+                      <br />
+                      Your $veNATION won't be taken away from you. When your
+                      lock expires, you can either withdraw them or increase the
+                      lock to keep citizenship.
                     </p>
 
                     <div className="stats stats-vertical lg:stats-horizontal shadow my-4">

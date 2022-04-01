@@ -53,7 +53,7 @@ export default function ActionNeedsTokenApproval({
         )
       ) : (
         <div className={className}>
-          <button className="btn btn-square btn-ghost btn-disabled loading"></button>
+          <button className="btn btn-square btn-outline btn-disabled bg-transparent loading"></button>
         </div>
       )}
     </>
