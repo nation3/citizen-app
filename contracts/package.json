@@ -4,7 +4,8 @@
     "prettier:solidity": "prettier --write contracts/**/*.sol"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "^4.5.0"
+    "@openzeppelin/contracts": "^4.5.0",
+    "@rari-capital/solmate": "^6.2.0"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.0",
