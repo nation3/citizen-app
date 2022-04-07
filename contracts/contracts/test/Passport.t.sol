@@ -3,9 +3,9 @@ pragma solidity 0.8.10;
 
 import {DSTestPlus} from "./utils/DSTestPlus.sol";
 import {Hevm} from "./utils/Hevm.sol";
-import {PassportNFT} from "../passport/Passport.sol";
+import {PassportNFT} from "../membership/Passport.sol";
 import {Signatures as sig} from "./utils/Signatures.sol";
-import {ERC20Mock} from "../mocks/ERC20Mock.sol";
+import {MockERC20} from "./utils/mocks/MockERC20.sol";
 
 contract PassportTest is DSTestPlus {
     Hevm evm = Hevm(HEVM_ADDRESS);
@@ -71,10 +71,10 @@ contract PassportTest is DSTestPlus {
 
         evm.startPrank(notOwner);
 
-        evm.expectRevert(sig.selector("CallerIsNotController()"));
+        evm.expectRevert(sig.selector("CallerIsNotAuthorized()"));
         passport.mint(address(0xBABE));
 
-        evm.expectRevert(sig.selector("CallerIsNotController()"));
+        evm.expectRevert(sig.selector("CallerIsNotAuthorized()"));
         passport.safeMint(address(0xBABE));
 
         evm.stopPrank();
@@ -86,12 +86,12 @@ contract PassportTest is DSTestPlus {
         passport.mint(address(0xBABE));
 
         evm.prank(notOwner);
-        evm.expectRevert(sig.selector("CallerIsNotController()"));
+        evm.expectRevert(sig.selector("CallerIsNotAuthorized()"));
         passport.burn(0);
     }
 
     function testTokenRecovery() public {
-        ERC20Mock token = new ERC20Mock("Token", "TKN", 100 * 1e18);
+        MockERC20 token = new MockERC20("Token", "TKN", 100 * 1e18);
         token.transfer(address(passport), 100 * 1e18);
 
         // Valid recovery
@@ -99,12 +99,12 @@ contract PassportTest is DSTestPlus {
         assertEq(token.balanceOf(address(0xBABE)), 50 * 1e18);
 
         // Exceeding amount should fail
-        evm.expectRevert("ERC20: transfer amount exceeds balance");
+        evm.expectRevert(sig.selector("TransferFailed()"));
         passport.recoverTokens(token, 100 * 1e18, address(0xBABE));
 
         // Only owner should be able to execute
         evm.prank(address(0xBABE));
-        evm.expectRevert(sig.selector("CallerIsNotOwner()"));
+        evm.expectRevert(sig.selector("CallerIsNotAuthorized()"));
         passport.recoverTokens(token, 50 * 1e18, address(0xBABE));
     }
 }

@@ -1,63 +1,26 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity 0.8.10;
 
-import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {DSTestPlus} from "./utils/DSTestPlus.sol";
 import {Hevm} from "./utils/Hevm.sol";
-import {PassportNFT} from "../passport/Passport.sol";
-import {PassportIssuer} from "../passport/PassportIssuer.sol";
+import {PassportNFT} from "../membership/Passport.sol";
+import {PassportIssuer} from "../membership/PassportIssuer.sol";
 import {Signatures as sig} from "./utils/Signatures.sol";
-import {IVotingEscrow} from "../interfaces/IVotingEscrow.sol";
-
-contract VotingEscrowMock is IVotingEscrow, DSTestPlus {
-    string name;
-    string symbol;
-
-    mapping(address => uint256) internal _balance;
-
-    constructor(string memory _name, string memory _symbol) {
-        name = _name;
-        symbol = _symbol;
-    }
-
-    function allowance(address owner, address spender) external view override returns (uint256) {}
-
-    function approve(address spender, uint256 amount) external override returns (bool) {}
-
-    function totalSupply() external view override returns (uint256) {}
-
-    function transfer(address to, uint256 amount) external override returns (bool) {}
-
-    function transferFrom(
-        address from,
-        address to,
-        uint256 amount
-    ) external override returns (bool) {}
-
-    function setBalance(address to, uint256 amount) public {
-        _balance[to] = amount;
-    }
-
-    function balanceOf(address account) public view override returns (uint256) {
-        return _balance[account];
-    }
-
-    function locked(address) external view returns (LockedBalance memory) {}
-}
+import {MockVotingEscrow} from "./utils/mocks/MockVotingEscrow.sol";
 
 contract PassportIssuerTest is DSTestPlus {
     Hevm evm = Hevm(HEVM_ADDRESS);
 
     PassportNFT passport;
     PassportIssuer issuer;
-    VotingEscrowMock veToken;
+    MockVotingEscrow veToken;
 
     uint256 constant MAX_PASSPORT_ISSUANCES = 3;
     uint256 constant MIN_LOCKED_AMOUNT = 10 * 1e18;
 
     function setUp() public {
         passport = new PassportNFT("Passport", "PAS3");
-        veToken = new VotingEscrowMock("Nation3 Voting Escrow Token", "veNATION");
+        veToken = new MockVotingEscrow("Nation3 Voting Escrow Token", "veNATION");
         issuer = new PassportIssuer();
 
         issuer.initialize(veToken, passport);

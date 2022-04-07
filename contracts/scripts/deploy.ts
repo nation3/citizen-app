@@ -28,7 +28,6 @@ async function main() {
   // manually to make sure everything is compiled
   // await hre.run('compile');
 
-  const WETH_SUPPLY: BigNumber = ethers.BigNumber.from(dec(10000, 18));
   const NATION_SUPPLY: BigNumber = ethers.BigNumber.from(dec(42069, 18));
   const LPTOKEN_SUPPLY: BigNumber = ethers.BigNumber.from(dec(3140, 18));
 
@@ -40,18 +39,19 @@ async function main() {
   const [deployer] = await ethers.getSigners();
 
   // Get the contracts to deploy
-  const ERC20Mock = await ethers.getContractFactory("ERC20Mock");
+  const ERC20Token = await ethers.getContractFactory("NATION");
+  const WrapContract = await ethers.getContractFactory("WETH");
   const VotingEscrow = await ethers.getContractFactory("VotingEscrow");
   const MerkleDistributor = await ethers.getContractFactory("MerkleDistributor");
   const LiquidityRewardsDistributor = await ethers.getContractFactory("LiquidityRewardsDistributor");
-  const BalancerPoolsMock = await ethers.getContractFactory("BalancerPoolsMock");
+  const BalancerPoolsMock = await ethers.getContractFactory("MockBalancerPools");
   const PassportNFT = await ethers.getContractFactory("PassportNFT");
   const PassportIssuer = await ethers.getContractFactory("PassportIssuer");
 
   // Deploy tokens
-  const NATION = await ERC20Mock.deploy("Nation3 Token", "NATION", NATION_SUPPLY);
-  const WETH = await ERC20Mock.deploy("Wrapped Eth", "ETH", WETH_SUPPLY);
-  const LpToken = await ERC20Mock.deploy("Balancer ETH/NATION Pair", "ETHNATION", LPTOKEN_SUPPLY);
+  const WETH = await WrapContract.deploy();
+  const NATION = await ERC20Token.deploy("Nation3 Token", "NATION", NATION_SUPPLY);
+  const LpToken = await ERC20Token.deploy("Balancer ETH/NATION Pair", "ETHNATION", LPTOKEN_SUPPLY);
 
   await NATION.deployed();
   await WETH.deployed();

@@ -1,32 +1,56 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity =0.8.10;
 
-import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import {MerkleProof} from "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 import {BitMaps} from "@openzeppelin/contracts/utils/structs/BitMaps.sol";
+import {SafeTransferLib} from "../utils/SafeTransferLib.sol";
+import {IERC20} from "../tokens/ERC20/IERC20.sol";
 
 /// @notice Distributes ERC20 tokens based on a Merkle Tree.
 /// @dev Adapted from ENS Airdrop (https://github.com/ensdomains/governance/blob/master/contracts/MerkleAirdrop.sol)
 /// & Uniswap Merkle distributor (https://github.com/Uniswap/merkle-distributor/blob/master/contracts/MerkleDistributor.sol).
 /// @dev Instead of sending the tokens for the airdrop to the contract allow this contract to transfer the tokens from DAO account.
 contract MerkleDistributor {
-    using SafeERC20 for IERC20;
+    /*///////////////////////////////////////////////////////////////
+                               LIBRARIES
+    //////////////////////////////////////////////////////////////*/
+
+    using SafeTransferLib for IERC20;
     using BitMaps for BitMaps.BitMap;
+
+    /*///////////////////////////////////////////////////////////////
+                                 ERRORS
+    //////////////////////////////////////////////////////////////*/
 
     error InvalidProof();
     error AlreadyClaimed();
 
+    /*///////////////////////////////////////////////////////////////
+                                 EVENTS
+    //////////////////////////////////////////////////////////////*/
+
     event Claimed(uint256 indexed index, address indexed recipient, uint256 amount);
+
+    /*///////////////////////////////////////////////////////////////
+                        INMUTABLES / CONSTANTS
+    //////////////////////////////////////////////////////////////*/
 
     address public immutable sender;
     IERC20 public immutable token;
     bytes32 public immutable merkleRoot;
 
+    /*///////////////////////////////////////////////////////////////
+                                 STORAGE
+    //////////////////////////////////////////////////////////////*/
+
     /// @dev This is a packed array of booleans to signal that a leaf has been claimed.
     BitMaps.BitMap private claimed;
 
-    /// @dev Initializes the contract.
+    /*//////////////////////////////////////////////////////////////
+                               CONSTRUCTOR
+    //////////////////////////////////////////////////////////////*/
+
+    /// @dev Set token contract, tokens sender and merkle tree's root.
     /// @param _sender The account to send airdrop tokens from.
     /// @param _token The token to airdrop.
     /// @param _merkleRoot The root of the merkle tree.
@@ -40,7 +64,11 @@ contract MerkleDistributor {
         merkleRoot = _merkleRoot;
     }
 
-    /// @notice Claims airdropped tokens.
+    /*///////////////////////////////////////////////////////////////
+                                USER ACTIONS
+    //////////////////////////////////////////////////////////////*/
+
+    /// @notice Claims tokens for a recipient if the proofs are valid.
     /// @param index The index into the merkle tree.
     /// @param recipient The account of the claim being made.
     /// @param merkleProof The merkle proof proving the claim is valid.

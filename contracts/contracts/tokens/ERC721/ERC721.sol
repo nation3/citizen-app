@@ -3,9 +3,9 @@ pragma solidity =0.8.10;
 
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 
-/// @notice Extended ERC721 implementation.
-/// @author Nation3 (https://github.com/nation3).
-/// @dev Extended from Solmate ERC721 (https://github.com/Rari-Capital/solmate/blob/main/src/tokens/ERC721.sol).
+/// @notice Extended modern and gas efficient ERC721 implementation.
+/// @author Nation3 (https://github.com/nation3/app/contracts/contracts/tokens/ERC721.sol).
+/// @dev Modified from Solmate ERC721 (https://github.com/Rari-Capital/solmate/blob/main/src/tokens/ERC721.sol).
 /// @dev Includes totalSupply for better compliance with indexers & aggregators.
 /// @dev Includes URI storage management for better per token metadata.
 abstract contract ERC721 {

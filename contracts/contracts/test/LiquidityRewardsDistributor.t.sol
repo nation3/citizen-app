@@ -4,14 +4,14 @@ pragma solidity 0.8.10;
 import {DSTestPlus} from "./utils/DSTestPlus.sol";
 import {Signatures as sig} from "./utils/Signatures.sol";
 import {Hevm} from "./utils/Hevm.sol";
-import {ERC20Mock} from "../mocks/ERC20Mock.sol";
+import {MockERC20} from "./utils/mocks/MockERC20.sol";
 import {LiquidityRewardsDistributor} from "../distributors/LiquidityRewardsDistributor.sol";
 
 contract RewardsDistributorTest is DSTestPlus {
     Hevm evm = Hevm(HEVM_ADDRESS);
 
-    ERC20Mock rewardsToken;
-    ERC20Mock lpToken;
+    MockERC20 rewardsToken;
+    MockERC20 lpToken;
     LiquidityRewardsDistributor distributor;
 
     uint256 public constant tokenSupply = 4206900 * 1e18;
@@ -19,8 +19,8 @@ contract RewardsDistributorTest is DSTestPlus {
     uint256 public constant rewardsPeriod = 300; // Blocks
 
     function setUp() public {
-        rewardsToken = new ERC20Mock("Nation3 Network Token", "NATION", tokenSupply);
-        lpToken = new ERC20Mock("ETH/NATION Balancer Token", "ETHNATION", tokenSupply);
+        rewardsToken = new MockERC20("Nation3 Network Token", "NATION", tokenSupply);
+        lpToken = new MockERC20("ETH/NATION Balancer Token", "ETHNATION", tokenSupply);
 
         distributor = new LiquidityRewardsDistributor();
         distributor.initialize(rewardsToken, lpToken);
@@ -272,7 +272,7 @@ contract RewardsDistributorTest is DSTestPlus {
 
     function testERC20Recovery() public {
         // Someone sends an ERC20 by error
-        ERC20Mock token = new ERC20Mock("Token", "TK", 200 * 1e18);
+        MockERC20 token = new MockERC20("Token", "TK", 200 * 1e18);
         token.transfer(address(distributor), 100 * 1e18);
 
         uint256 tokensRecovered = distributor.recoverTokens(token, address(0xBABE));

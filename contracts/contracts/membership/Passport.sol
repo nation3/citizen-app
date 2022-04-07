@@ -1,20 +1,20 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity =0.8.10;
 
-import {ERC721} from "../utils/ERC721Extended.sol";
+import {SafeTransferLib} from "../utils/SafeTransferLib.sol";
 import {Controlled} from "../utils/Controlled.sol";
-import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import {ERC721} from "../tokens/ERC721/ERC721.sol";
+import {IERC20} from "../tokens/ERC20/IERC20.sol";
 
-/// @notice ERC721 membership contract.
+/// @notice Nation3 membership contract.
 /// @author Nation3 (https://github.com/nation3).
-/// @dev Mint, burn & transfers are restricted to owner (issuer contract).
+/// @dev Mint, burn & transfers are restricted to controller.
 contract PassportNFT is ERC721, Controlled {
     /*///////////////////////////////////////////////////////////////
                                LIBRARIES
     //////////////////////////////////////////////////////////////*/
 
-    using SafeERC20 for IERC20;
+    using SafeTransferLib for IERC20;
 
     /*///////////////////////////////////////////////////////////////
                             STORAGE
@@ -142,7 +142,7 @@ contract PassportNFT is ERC721, Controlled {
         }
     }
 
-    /// @notice Allow the owner to withdraw any ERC20 sent to the contract.
+    /// @notice Allow the owner to withdraw any IERC20 sent to the contract.
     /// @param token Token to withdraw.
     /// @param amount Amount of tokens to withdraw.
     /// @param to Recipient address of the tokens.

@@ -4,13 +4,13 @@ pragma solidity =0.8.10;
 import {DSTest} from "./utils/test.sol";
 import {Hevm} from "./utils/Hevm.sol";
 import {Signatures as sig} from "./utils/Signatures.sol";
-import {ERC20Mock} from "../mocks/ERC20Mock.sol";
+import {MockERC20} from "./utils/mocks/MockERC20.sol";
 import {MerkleDistributor} from "../distributors/MerkleDistributor.sol";
 
 contract MerkleDistributorTest is DSTest {
     Hevm evm = Hevm(HEVM_ADDRESS);
 
-    ERC20Mock token;
+    MockERC20 token;
     MerkleDistributor distributor;
 
     uint256 public constant tokenSupply = 42069 * 1e21;
@@ -18,7 +18,7 @@ contract MerkleDistributorTest is DSTest {
     bytes32 public constant merkleRoot = 0x5cdea970c9f23ca3ad7c3d706650a7d1a1cf0269632e0059c9dcfcb544d3a5c8;
 
     function setUp() public {
-        token = new ERC20Mock("Nation3 Network Token", "NATION", tokenSupply);
+        token = new MockERC20("Nation3 Network Token", "NATION", tokenSupply);
         distributor = new MerkleDistributor(address(this), token, merkleRoot);
         // Set allowance for the airdrop
         token.approve(address(distributor), airdropAllowance);

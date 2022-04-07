@@ -3,12 +3,12 @@ pragma solidity 0.8.10;
 
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {Initializable} from "@openzeppelin/contracts/proxy/utils/Initializable.sol";
-import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import {IVotingEscrow} from "../interfaces/IVotingEscrow.sol";
+import {SafeTransferLib} from "../utils/SafeTransferLib.sol";
+import {IERC20} from "../tokens/ERC20/IERC20.sol";
+import {IVotingEscrow} from "../governance/IVotingEscrow.sol";
 import {PassportNFT} from "./Passport.sol";
 
-/// @notice Issues membership tokens when locking ERC20 tokens
+/// @notice Issues membership tokens when locking IERC20 tokens
 /// @author Nation3 (https://github.com/nation3)
 /// @dev Only issues new passports to not already issued accounts
 contract PassportIssuer is Initializable, Ownable {
@@ -16,8 +16,8 @@ contract PassportIssuer is Initializable, Ownable {
                                LIBRARIES
     //////////////////////////////////////////////////////////////*/
 
-    using SafeERC20 for IERC20;
-    using SafeERC20 for IVotingEscrow;
+    using SafeTransferLib for IERC20;
+    using SafeTransferLib for IVotingEscrow;
 
     /*///////////////////////////////////////////////////////////////
                                  ERRORS
@@ -115,7 +115,7 @@ contract PassportIssuer is Initializable, Ownable {
         enabled = status;
     }
 
-    /// @notice Allow the owner to withdraw any ERC20 sent to the contract.
+    /// @notice Allow the owner to withdraw any IERC20 sent to the contract.
     /// @param token Token to withdraw.
     /// @param to Recipient address of the tokens.
     function recoverTokens(IERC20 token, address to) external virtual onlyOwner returns (uint256 amount) {

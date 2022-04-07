@@ -1,18 +1,15 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity =0.8.10;
 
-/// @notice Minimal implementation of access control mechanism with two roles (owner, controller)
-/// @dev Extends Openzeppelin Ownable (https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/access/Ownable.sol)
+/// @notice Minimal implementation of access control mechanism with two roles (owner & controller)
+/// @dev Modified from OpenZeppelin (https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/access/Ownable.sol)
 contract Controlled {
     /*///////////////////////////////////////////////////////////////
                                  ERRORS
     //////////////////////////////////////////////////////////////*/
 
-    error CallerIsNotOwner();
-    error CallerIsNotController();
-    error CallerIsNOtOwnerOrController();
-    error NewOwnerIsZeroAddress();
-    error NewControllerIsZeroAddress();
+    error CallerIsNotAuthorized();
+    error TargetIsZeroAddress();
 
     /*///////////////////////////////////////////////////////////////
                                  EVENTS
@@ -42,17 +39,17 @@ contract Controlled {
     //////////////////////////////////////////////////////////////*/
 
     modifier onlyOwner() {
-        if (_owner != msg.sender) revert CallerIsNotOwner();
+        if (_owner != msg.sender) revert CallerIsNotAuthorized();
         _;
     }
 
     modifier onlyController() {
-        if (_controller != msg.sender) revert CallerIsNotController();
+        if (_controller != msg.sender) revert CallerIsNotAuthorized();
         _;
     }
 
     modifier onlyOwnerOrController() {
-        if (_owner != msg.sender && _controller != msg.sender) revert CallerIsNOtOwnerOrController();
+        if (_owner != msg.sender && _controller != msg.sender) revert CallerIsNotAuthorized();
         _;
     }
 
@@ -81,12 +78,12 @@ contract Controlled {
     }
 
     function transferOwnership(address newOwner) external virtual onlyOwner {
-        if (newOwner == address(0)) revert NewOwnerIsZeroAddress();
+        if (newOwner == address(0)) revert TargetIsZeroAddress();
         _transferOwnership(newOwner);
     }
 
     function transferControl(address newController) external virtual onlyOwnerOrController {
-        if (newController == address(0)) revert NewControllerIsZeroAddress();
+        if (newController == address(0)) revert TargetIsZeroAddress();
         _transferControl(newController);
     }
 
