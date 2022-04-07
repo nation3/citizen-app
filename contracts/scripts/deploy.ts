@@ -81,7 +81,7 @@ async function main() {
   await balancerPool.setTokens(NATION.address, WETH.address);
   await rewardsDistributor.initialize(NATION.address, LpToken.address);
   await passportIssuer.initialize(veNATION.address, passportNFT.address);
-  await passportNFT.transferOwnership(passportIssuer.address);
+  await passportNFT.transferControl(passportIssuer.address);
 
   // Dev setup
   const PASSPORT_MAX_ISSUANCES: number = 100;
