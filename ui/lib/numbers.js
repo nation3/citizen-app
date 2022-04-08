@@ -5,7 +5,9 @@ function stringToNumber(string, decimals) {
 }
 
 export function transformNumber(number, to, decimals) {
-  if (!number) return
+  if (!number) {
+    return to === 'bignumber' ? ethers.BigNumber.from('0') : 0
+  }
 
   if (to === 'bignumber') {
     if (number instanceof ethers.BigNumber) return number

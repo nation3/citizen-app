@@ -17,6 +17,7 @@ import {
 import { useAccount } from '../lib/use-wagmi'
 import ActionButton from '../components/ActionButton'
 import Balance from '../components/Balance'
+import GradientLink from '../components/GradientLink'
 import Head from '../components/Head'
 
 export default function Liquidity() {
@@ -68,8 +69,9 @@ export default function Liquidity() {
                     $NATION liquidity rewards
                   </h2>
                   <p>
-                    Provide liquitity in this Balancer pool, then deposit the
-                    pool token here.
+                    Provide liquitity in the pool and then deposit the pool
+                    token here.{' '}
+                    <GradientLink href="#" text="Balancer pool" textSize="md" />
                   </p>
 
                   <div className="stats stats-vertical lg:stats-horizontal shadow my-4">
@@ -169,7 +171,7 @@ export default function Liquidity() {
                                 approval={{
                                   token: balancerLPToken,
                                   spender: nationRewardsContract,
-                                  amountNeeded: poolTokenBalance,
+                                  amountNeeded: depositValue,
                                   approveText: 'Approve LP token',
                                 }}
                               >
@@ -228,7 +230,7 @@ export default function Liquidity() {
             </div>
           </div>
         ) : (
-          <button className="btn btn-square btn-ghost btn-disabled loading"></button>
+          <button className="btn btn-square btn-ghost btn-disabled bg-transparent loading"></button>
         )}
       </div>
     </>

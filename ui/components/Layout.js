@@ -10,6 +10,8 @@ import {
   XCircleIcon,
   MenuIcon,
   LockClosedIcon,
+  PlusIcon,
+  ExternalLinkIcon,
 } from '@heroicons/react/outline'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -48,6 +50,11 @@ const navigation = [
   },
   {
     name: 'Divider',
+  },
+  {
+    name: 'Buy $NATION',
+    href: '#',
+    icon: <PlusIcon className="h-5 w-5" />,
   },
   {
     name: 'Homepage',
@@ -152,7 +159,7 @@ export default function Layout({ children }) {
                 <>
                   {item.name !== 'Divider' ? (
                     <li
-                      className="mt-1"
+                      className="mt-1 relative"
                       onClick={() =>
                         (document.getElementById('side-drawer').checked = false)
                       }
@@ -165,6 +172,9 @@ export default function Layout({ children }) {
                         >
                           {item.icon}
                           {item.name}
+                          {item.href.charAt(0) !== '/' && (
+                            <ExternalLinkIcon className="h-5 w-5 absolute right-4 opacity-50" />
+                          )}
                         </a>
                       </Link>
                     </li>

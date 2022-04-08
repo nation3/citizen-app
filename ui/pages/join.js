@@ -106,7 +106,8 @@ export default function Join() {
                     <p>
                       To become a citizen, you need to mint a passport NFT by
                       holding at least {veNationRequiredStake} $veNATION. This
-                      is to make sure all citizens are economically aligned.
+                      is to make sure all citizens are economically aligned
+                      <br />
                       <br />
                       Your $veNATION won't be taken away from you. When your
                       lock expires, you can either withdraw them or increase the
@@ -158,7 +159,16 @@ export default function Join() {
                     )}
                   </>
                 ) : (
-                  <p>Welcome to the club</p>
+                  <>
+                    <p>
+                      We are honored to welcome you to Nation3 as a fellow
+                      citizen. You will be taken to your passport in a few
+                      seconds ✨
+                    </p>
+                    <div className="flex place-content-center">
+                      <button className="btn btn-square btn-ghost btn-disabled btn-lg bg-transparent loading"></button>
+                    </div>
+                  </>
                 )}
               </div>
             </div>

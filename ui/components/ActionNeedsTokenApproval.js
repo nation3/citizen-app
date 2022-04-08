@@ -27,12 +27,11 @@ export default function ActionNeedsTokenApproval({
   addError([allowanceError])
 
   const weiAmountNeeded = transformNumber(
-    amountNeeded.formatted || amountNeeded,
+    amountNeeded?.formatted || amountNeeded,
     'bignumber',
-    0
+    18
   )
 
-  console.log(weiAmountNeeded.toString())
   const approve = useTokenApproval({
     amountNeeded: weiAmountNeeded,
     token,

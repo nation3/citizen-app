@@ -29,7 +29,7 @@ export default function Claim() {
     index: proofIndex,
     account: account?.address,
     amount: ethers.utils.parseEther(nationDropAmount),
-    proof: canClaim ? claimsFile?.claims[account?.address].proof : {},
+    proof: canClaim ? claimsFile?.claims[account?.address]?.proof : {},
   })
 
   const elementRef = useRef()
@@ -56,8 +56,12 @@ export default function Claim() {
                       $NATION tweetdrop
                     </h2>
                     <p>
-                      If you have participated in the $NATION tweetdrop, you can
-                      claim here. If not, you can buy $NATION.
+                      {!account
+                        ? `Connect your account to see if you are eligible ⚡️`
+                        : canClaim
+                        ? `You are eligible to claim ${nationDropAmount} $NATION 🎉`
+                        : `If you have participated in the $NATION tweetdrop, you can
+                      claim here. If not, you can buy $NATION.`}
                     </p>
 
                     <div className="stats stats-vertical lg:stats-horizontal shadow my-4">
@@ -89,7 +93,7 @@ export default function Claim() {
                       Welcome new $NATION holder!
                     </h2>
                     <p className="text-white">
-                      Your $NATION was claimed successfully.
+                      Your $NATION was claimed successfully 🎉`
                     </p>
                     <p className="text-white">
                       Go mint yourself a passport and become a citizen of

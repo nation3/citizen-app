@@ -5,14 +5,14 @@ export default function TimeRange({ time, min, max, displaySteps, onChange }) {
     <>
       <input
         type="range"
-        min={min}
-        max={max}
+        min={min || 0}
+        max={max || 0}
         value={time}
         onChange={(e) => {
           onChange(new Date(parseFloat(e.target.value)))
         }}
         className="range range-secondary mt-4"
-        step={step}
+        step={step || 0}
       />
 
       <div className="w-full flex justify-between text-xs px-2 mb-4">

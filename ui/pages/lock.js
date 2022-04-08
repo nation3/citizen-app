@@ -14,6 +14,7 @@ import {
 } from '../lib/ve-token'
 import ActionButton from '../components/ActionButton'
 import Balance from '../components/Balance'
+import GradientLink from '../components/GradientLink'
 import Head from '../components/Head'
 import TimeRange from '../components/TimeRange'
 
@@ -157,16 +158,29 @@ export default function Lock() {
                   <h2 className="card-title text-center">
                     Lock $NATION to get $veNATION
                   </h2>
-                  <p className="mb-4">Learn about $veNATION.</p>
+                  <p className="mb-4">
+                    $veNATION enables governance, minting passport NFTs and
+                    boosting liquidity rewards (up to 2x).{' '}
+                    <GradientLink
+                      text="Learn more"
+                      href="httpd://wiki.nation3.org"
+                      internal={false}
+                      textSize={'md'}
+                    ></GradientLink>
+                  </p>
                   {!hasLock ? (
-                    <p>
-                      To mint a passport NFT, you need {veNationRequiredStake}{' '}
-                      $veNATION. $veNATION increases proportionally with the
-                      amount of time you lock your $NATION for. Some examples:
-                      <ul>
-                        <li>1 $NATION locked up for 4 years = 1 $veNATION</li>
-                        <li>1 $NATION locked up for 2 years = 0.5 $veNATION</li>
-                        <li>1 $NATION locked up for 1 year = 0.25 $veNATION</li>
+                    <p className="mb-4">
+                      $veNATION increases proportionally with the amount of time
+                      you lock your $NATION for.{' '}
+                      <b>{veNationRequiredStake} $veNATION</b> are currently
+                      needed to mint a passport NFT.
+                      <br />
+                      <br />
+                      Some examples of how to get to 10 $veNATION:
+                      <ul className="list-disc list-inside">
+                        <li>10 $NATION locked for 4 years, or</li>
+                        <li>20 $NATION locked for 2 years, or</li>
+                        <li>40 $NATION locked for 1 year</li>
                       </ul>
                     </p>
                   ) : (
@@ -377,7 +391,7 @@ export default function Lock() {
             </div>
           </div>
         ) : (
-          <button className="btn btn-square btn-ghost btn-disabled loading"></button>
+          <button className="btn btn-square btn-ghost btn-disabled bg-transparent loading"></button>
         )}
       </div>
     </>

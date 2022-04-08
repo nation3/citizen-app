@@ -70,6 +70,7 @@ export function useClaimRewards() {
 }
 
 export function useDeposit(amount) {
+  console.log(amount.toString())
   return useContractWrite(contractParams, 'deposit', { args: [amount] })
 }
 

@@ -33,7 +33,7 @@ export default function Citizen() {
             </div>
           </div>
         ) : (
-          <button className="btn btn-square btn-ghost btn-disabled btn-lg loading"></button>
+          <button className="btn btn-square btn-ghost btn-disabled btn-lg bg-transparent loading"></button>
         )}
       </div>
     </>
