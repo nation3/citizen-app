@@ -42,6 +42,8 @@ const calculateVeNation = ({
   lockTime,
   max,
 }) => {
+  if (!nationAmount > 0) return 0
+
   const vestingStart = calculateVestingStart({
     nationAmount,
     veNationAmount,
