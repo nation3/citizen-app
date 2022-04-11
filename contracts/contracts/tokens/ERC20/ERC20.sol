@@ -77,14 +77,13 @@ abstract contract ERC20 is IERC20 {
     }
 
     function transfer(address to, uint256 amount) public virtual returns (bool) {
-        uint256 senderBalance = balanceOf[msg.sender]; // Saves gas for checks
         // Revert with context
-        if (senderBalance < amount) revert TransferExceedsBalance();
+        if (balanceOf[msg.sender] < amount) revert TransferExceedsBalance();
 
         // Cannot overflow because the sum of all user
         // balances can't exceed the max uint256 value.
         unchecked {
-            balanceOf[msg.sender] = senderBalance - amount;
+            balanceOf[msg.sender] -= amount;
             balanceOf[to] += amount;
         }
 
@@ -99,17 +98,16 @@ abstract contract ERC20 is IERC20 {
         uint256 amount
     ) public virtual returns (bool) {
         uint256 allowed = allowance[from][msg.sender]; // Saves gas for limited approvals.
-        uint256 fromBalance = balanceOf[from]; // Saves gas for checks
         // Revert with context
         if (allowed < amount) revert TransferExceedsAllowance(allowed, amount);
-        if (fromBalance < amount) revert TransferExceedsBalance();
+        if (balanceOf[from] < amount) revert TransferExceedsBalance();
 
         if (allowed != type(uint256).max) allowance[from][msg.sender] = allowed - amount;
 
         // Cannot overflow because the sum of all user
         // balances can't exceed the max uint256 value.
         unchecked {
-            balanceOf[from] = fromBalance - amount;
+            balanceOf[from] -= amount;
             balanceOf[to] += amount;
         }
 
