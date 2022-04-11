@@ -13,7 +13,7 @@ export default function Citizen() {
   return (
     <>
       <Head title="Welcome, citizen" />
-      <div className="hero bg-gradient-to-r from-n3blue-100 to-n3green-100 flex-auto items-center overflow-auto">
+      <div className="hero flex-auto items-center overflow-auto">
         {account ? (
           <div className="flex flex-col">
             <Passport

@@ -37,22 +37,19 @@ export default function Claim() {
   return (
     <>
       <Head title="Claim your $NATION" />
-      <div
-        ref={elementRef}
-        className="hero bg-gradient-to-r from-n3blue-100 to-n3green-100 flex-auto overflow-auto relative"
-      >
+      <div ref={elementRef} className="hero flex-auto overflow-auto relative">
         {justClaimed && <Confetti elementRef={elementRef} />}
         <div className="hero-content">
           <div className="max-w-md">
             <div
-              className={`card w-80 md:w-96 bg-base-100 shadow-xl ${
+              className={`card w-80 md:w-96 bg-base-100 shadow-md ${
                 justClaimed && 'bg-gradient-to-r from-n3blue to-n3green'
               }`}
             >
               <div className="card-body items-stretch items-center">
                 {!justClaimed ? (
                   <>
-                    <h2 className="card-title text-center">
+                    <h2 className="card-title text-center text-3xl font-medium mb-2">
                       $NATION tweetdrop
                     </h2>
                     <p>
@@ -69,14 +66,16 @@ export default function Claim() {
                         <div className="stat-figure text-secondary">
                           {canClaim ? (
                             <ActionButton
-                              className="btn btn-primary grow"
+                              className="btn btn-primary normal-case font-medium grow"
                               action={claimDrop}
                               postAction={() => setJustClaimed(true)}
                             >
                               Claim
                             </ActionButton>
                           ) : (
-                            <a className="btn btn-primary grow">Buy $NATION</a>
+                            <a className="btn btn-primary normal-case font-medium grow">
+                              Buy $NATION
+                            </a>
                           )}
                         </div>
                         <div className="stat-title">Your claimable</div>
@@ -89,7 +88,7 @@ export default function Claim() {
                   </>
                 ) : (
                   <>
-                    <h2 className="card-title text-center text-white">
+                    <h2 className="card-title text-center text-2xl text-white">
                       Welcome new $NATION holder!
                     </h2>
                     <p className="text-white">

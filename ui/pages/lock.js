@@ -16,6 +16,7 @@ import ActionButton from '../components/ActionButton'
 import Balance from '../components/Balance'
 import GradientLink from '../components/GradientLink'
 import Head from '../components/Head'
+import MainCard from '../components/MainCard'
 import TimeRange from '../components/TimeRange'
 
 const dateToReadable = (date) => {
@@ -149,251 +150,211 @@ export default function Lock() {
   return (
     <>
       <Head title="$veNATION" />
-      <div className="hero bg-gradient-to-r from-n3blue-100 to-n3green-100 flex-auto overflow-auto">
-        {!loading ? (
-          <div className="hero-content">
-            <div className="max-w-md">
-              <div className="card w-80 md:w-96 bg-base-100 shadow-xl">
-                <div className="card-body items-stretch items-center">
-                  <h2 className="card-title text-center">
-                    Lock $NATION to get $veNATION
-                  </h2>
+      <MainCard loading={loading} title="Lock $NATION to get $veNATION">
+        <p className="mb-4">
+          $veNATION enables governance, minting passport NFTs and boosting
+          liquidity rewards (up to 2x).{' '}
+          <GradientLink
+            text="Learn more"
+            href="httpd://wiki.nation3.org"
+            internal={false}
+            textSize={'md'}
+          ></GradientLink>
+        </p>
+        {!hasLock ? (
+          <p className="mb-4">
+            $veNATION increases proportionally with the amount of time you lock
+            your $NATION for. <b>{veNationRequiredStake} $veNATION</b> are
+            currently needed to mint a passport NFT.
+            <br />
+            <br />
+            Some examples of how to get to 10 $veNATION:
+            <ul className="list-disc list-inside">
+              <li>10 $NATION locked for 4 years, or</li>
+              <li>20 $NATION locked for 2 years, or</li>
+              <li>40 $NATION locked for 1 year</li>
+            </ul>
+          </p>
+        ) : (
+          ''
+        )}
+
+        {hasLock && (
+          <>
+            <div className="stats stats-vertical lg:stats-horizontal shadow mb-4">
+              <div className="stat">
+                <div className="stat-title">Your $veNATION balance</div>
+                <div className="stat-value">
+                  <Balance balance={veNationBalance} decimals={4} />
+                </div>
+              </div>
+            </div>
+            <div className="stats stats-vertical lg:stats-horizontal shadow mb-4">
+              <div className="stat">
+                <div className="stat-title">Your locked $NATION</div>
+                <div className="stat-value">
+                  <Balance balance={veNationLock.amount} decimals={4} />
+                </div>
+              </div>
+            </div>
+            <div className="stats stats-vertical lg:stats-horizontal shadow mb-4">
+              <div className="stat">
+                <div className="stat-title">Your lock expiration date</div>
+                <div className="stat-value">
+                  {dateToReadable(bigNumberToDate(veNationLock.end))}
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+        <div className="card bg-base-100 shadow">
+          <div className="card-body">
+            <div className="form-control">
+              {!hasExpired ? (
+                <>
                   <p className="mb-4">
-                    $veNATION enables governance, minting passport NFTs and
-                    boosting liquidity rewards (up to 2x).{' '}
-                    <GradientLink
-                      text="Learn more"
-                      href="httpd://wiki.nation3.org"
-                      internal={false}
-                      textSize={'md'}
-                    ></GradientLink>
+                    Available to lock:{' '}
+                    <Balance balance={nationBalance?.formatted} /> $NATION
                   </p>
-                  {!hasLock ? (
-                    <p className="mb-4">
-                      $veNATION increases proportionally with the amount of time
-                      you lock your $NATION for.{' '}
-                      <b>{veNationRequiredStake} $veNATION</b> are currently
-                      needed to mint a passport NFT.
+                  <label className="label">
+                    <span className="label-text">Lock amount</span>
+                  </label>
+                  <div className="input-group mb-4">
+                    <input
+                      type="number"
+                      placeholder="0"
+                      className="input input-bordered w-full"
+                      value={lockAmount}
+                      min={
+                        hasLock
+                          ? ethers.utils.formatEther(veNationLock?.amount)
+                          : 0
+                      }
+                      onChange={(e) => {
+                        setLockAmount(e.target.value)
+                        setWantsToIncrease(true)
+                      }}
+                    />
+                    <button
+                      className="btn btn-outline"
+                      onClick={() => {
+                        setLockAmount(nationBalance?.formatted)
+                        setWantsToIncrease(true)
+                      }}
+                    >
+                      Max
+                    </button>
+                  </div>
+                  <label className="label">
+                    <span className="label-text">
+                      Lock expiration date
                       <br />
-                      <br />
-                      Some examples of how to get to 10 $veNATION:
-                      <ul className="list-disc list-inside">
-                        <li>10 $NATION locked for 4 years, or</li>
-                        <li>20 $NATION locked for 2 years, or</li>
-                        <li>40 $NATION locked for 1 year</li>
-                      </ul>
+                      (min. one week, max four years)
+                    </span>
+                  </label>
+                  <input
+                    type="date"
+                    placeholder="Expiration date"
+                    className="input input-bordered w-full"
+                    value={lockTime.formatted}
+                    min={minMaxLockTime.min}
+                    max={minMaxLockTime.max}
+                    onChange={(e) => {
+                      setLockTime({
+                        ...lockTime,
+                        formatted: e.target.value
+                          ? e.target.value
+                          : lockTime.orig.formatted,
+                        value: e.target.value
+                          ? ethers.BigNumber.from(Date.parse(e.target.value))
+                          : lockTime.orig.value,
+                      })
+                      setWantsToIncrease(!!e.target.value)
+                    }}
+                  />
+                  <TimeRange
+                    time={Date.parse(lockTime.formatted)}
+                    min={Date.parse(minMaxLockTime.min)}
+                    max={Date.parse(minMaxLockTime.max)}
+                    displaySteps={!hasLock}
+                    onChange={(newDate) => {
+                      setLockTime({
+                        ...lockTime,
+                        formatted: dateToReadable(newDate),
+                        value: ethers.BigNumber.from(Date.parse(newDate)),
+                      })
+                      setWantsToIncrease(true)
+                    }}
+                  />
+                  {account && wantsToIncrease ? (
+                    <p>
+                      Your final balance will be approx{' '}
+                      {calculateVeNation({
+                        nationAmount: lockAmount && veNationLock && +lockAmount,
+                        veNationAmount:
+                          veNationBalance &&
+                          transformNumber(veNationBalance, 'number', 18),
+                        time: Date.parse(lockTime.formatted),
+                        lockTime: Date.parse(
+                          hasLock && lockTime?.orig
+                            ? lockTime.orig.formatted
+                            : new Date()
+                        ),
+                        max: Date.parse(minMaxLockTime.max),
+                      })}{' '}
+                      $veNATION
                     </p>
                   ) : (
                     ''
                   )}
 
-                  {hasLock && (
-                    <>
-                      <div className="stats stats-vertical lg:stats-horizontal shadow mb-4">
-                        <div className="stat">
-                          <div className="stat-title">
-                            Your $veNATION balance
-                          </div>
-                          <div className="stat-value">
-                            <Balance balance={veNationBalance} decimals={4} />
-                          </div>
-                        </div>
-                      </div>
-                      <div className="stats stats-vertical lg:stats-horizontal shadow mb-4">
-                        <div className="stat">
-                          <div className="stat-title">Your locked $NATION</div>
-                          <div className="stat-value">
-                            <Balance
-                              balance={veNationLock.amount}
-                              decimals={4}
-                            />
-                          </div>
-                        </div>
-                      </div>
-                      <div className="stats stats-vertical lg:stats-horizontal shadow mb-4">
-                        <div className="stat">
-                          <div className="stat-title">
-                            Your lock expiration date
-                          </div>
-                          <div className="stat-value">
-                            {dateToReadable(bigNumberToDate(veNationLock.end))}
-                          </div>
-                        </div>
-                      </div>
-                    </>
-                  )}
-                  <div className="card bg-base-100 shadow">
-                    <div className="card-body">
-                      <div className="form-control">
-                        {!hasExpired ? (
-                          <>
-                            <p className="mb-4">
-                              Available to lock:{' '}
-                              <Balance balance={nationBalance?.formatted} />{' '}
-                              $NATION
-                            </p>
-                            <label className="label">
-                              <span className="label-text">Lock amount</span>
-                            </label>
-                            <div className="input-group mb-4">
-                              <input
-                                type="number"
-                                placeholder="0"
-                                className="input input-bordered w-full"
-                                value={lockAmount}
-                                min={
-                                  hasLock
-                                    ? ethers.utils.formatEther(
-                                        veNationLock?.amount
-                                      )
-                                    : 0
-                                }
-                                onChange={(e) => {
-                                  setLockAmount(e.target.value)
-                                  setWantsToIncrease(true)
-                                }}
-                              />
-                              <button
-                                className="btn btn-outline"
-                                onClick={() => {
-                                  setLockAmount(nationBalance?.formatted)
-                                  setWantsToIncrease(true)
-                                }}
-                              >
-                                Max
-                              </button>
-                            </div>
-                            <label className="label">
-                              <span className="label-text">
-                                Lock expiration date
-                                <br />
-                                (min. one week, max four years)
-                              </span>
-                            </label>
-                            <input
-                              type="date"
-                              placeholder="Expiration date"
-                              className="input input-bordered w-full"
-                              value={lockTime.formatted}
-                              min={minMaxLockTime.min}
-                              max={minMaxLockTime.max}
-                              onChange={(e) => {
-                                setLockTime({
-                                  ...lockTime,
-                                  formatted: e.target.value
-                                    ? e.target.value
-                                    : lockTime.orig.formatted,
-                                  value: e.target.value
-                                    ? ethers.BigNumber.from(
-                                        Date.parse(e.target.value)
-                                      )
-                                    : lockTime.orig.value,
-                                })
-                                setWantsToIncrease(!!e.target.value)
-                              }}
-                            />
-                            <TimeRange
-                              time={Date.parse(lockTime.formatted)}
-                              min={Date.parse(minMaxLockTime.min)}
-                              max={Date.parse(minMaxLockTime.max)}
-                              displaySteps={!hasLock}
-                              onChange={(newDate) => {
-                                setLockTime({
-                                  ...lockTime,
-                                  formatted: dateToReadable(newDate),
-                                  value: ethers.BigNumber.from(
-                                    Date.parse(newDate)
-                                  ),
-                                })
-                                setWantsToIncrease(true)
-                              }}
-                            />
-                            {account && wantsToIncrease ? (
-                              <p>
-                                Your final balance will be approx{' '}
-                                {calculateVeNation({
-                                  nationAmount:
-                                    lockAmount && veNationLock && +lockAmount,
-                                  veNationAmount:
-                                    veNationBalance &&
-                                    transformNumber(
-                                      veNationBalance,
-                                      'number',
-                                      18
-                                    ),
-                                  time: Date.parse(lockTime.formatted),
-                                  lockTime: Date.parse(
-                                    hasLock && lockTime?.orig
-                                      ? lockTime.orig.formatted
-                                      : new Date()
-                                  ),
-                                  max: Date.parse(minMaxLockTime.max),
-                                })}{' '}
-                                $veNATION
-                              </p>
-                            ) : (
-                              ''
-                            )}
-
-                            <div className="card-actions mt-4">
-                              <ActionButton
-                                className={`btn btn-primary w-full ${
-                                  !(canIncrease.amount || canIncrease.time)
-                                    ? 'btn-disabled'
-                                    : ''
-                                }`}
-                                action={hasLock ? increaseLock : createLock}
-                                approval={{
-                                  token: nationToken,
-                                  spender: veNationToken,
-                                  amountNeeded:
-                                    veNationLock &&
-                                    lockAmount &&
-                                    ethers.utils
-                                      .parseEther(lockAmount)
-                                      .sub(veNationLock.amount),
-                                  approveText: 'Approve $NATION',
-                                }}
-                              >
-                                {!hasLock
-                                  ? 'Lock'
-                                  : `Increase lock ${
-                                      canIncrease.amount ? 'amount' : ''
-                                    } ${
-                                      canIncrease.amount && canIncrease.time
-                                        ? '&'
-                                        : ''
-                                    } ${canIncrease.time ? 'time' : ''}`}
-                              </ActionButton>
-                            </div>
-                          </>
-                        ) : (
-                          <>
-                            <p>
-                              Your previous lock has expired, you need to
-                              withdraw{' '}
-                            </p>
-                            <div className="card-actions mt-4">
-                              <ActionButton
-                                className="btn btn-primary w-full"
-                                action={withdraw}
-                              >
-                                Withdraw
-                              </ActionButton>
-                            </div>
-                          </>
-                        )}
-                      </div>
-                    </div>
+                  <div className="card-actions mt-4">
+                    <ActionButton
+                      className={`btn btn-primary normal-case font-medium w-full ${
+                        !(canIncrease.amount || canIncrease.time)
+                          ? 'btn-disabled'
+                          : ''
+                      }`}
+                      action={hasLock ? increaseLock : createLock}
+                      approval={{
+                        token: nationToken,
+                        spender: veNationToken,
+                        amountNeeded:
+                          veNationLock &&
+                          lockAmount &&
+                          ethers.utils
+                            .parseEther(lockAmount)
+                            .sub(veNationLock.amount),
+                        approveText: 'Approve $NATION',
+                      }}
+                    >
+                      {!hasLock
+                        ? 'Lock'
+                        : `Increase lock ${
+                            canIncrease.amount ? 'amount' : ''
+                          } ${
+                            canIncrease.amount && canIncrease.time ? '&' : ''
+                          } ${canIncrease.time ? 'time' : ''}`}
+                    </ActionButton>
                   </div>
-                </div>
-              </div>
+                </>
+              ) : (
+                <>
+                  <p>Your previous lock has expired, you need to withdraw </p>
+                  <div className="card-actions mt-4">
+                    <ActionButton
+                      className="btn btn-primary normal-case font-medium w-full"
+                      action={withdraw}
+                    >
+                      Withdraw
+                    </ActionButton>
+                  </div>
+                </>
+              )}
             </div>
           </div>
-        ) : (
-          <button className="btn btn-square btn-ghost btn-disabled bg-transparent loading"></button>
-        )}
-      </div>
+        </div>
+      </MainCard>
     </>
   )
 }

@@ -11,6 +11,7 @@ import {
   MenuIcon,
   LockClosedIcon,
   PlusIcon,
+  ViewGridIcon,
   ExternalLinkIcon,
 } from '@heroicons/react/outline'
 import Image from 'next/image'
@@ -28,6 +29,11 @@ import ErrorCard from './ErrorCard'
 import { useErrorContext } from './ErrorProvider'
 
 const navigation = [
+  {
+    name: 'Start',
+    href: '/',
+    icon: <ViewGridIcon className="h-5 w-5" />,
+  },
   {
     name: 'Become a citizen',
     href: '/join',
@@ -47,9 +53,6 @@ const navigation = [
     name: 'Liquidity rewards',
     href: '/liquidity',
     icon: <CurrencyDollarIcon className="h-5 w-5" />,
-  },
-  {
-    name: 'Divider',
   },
   {
     name: 'Buy $NATION',
@@ -90,14 +93,11 @@ export default function Layout({ children }) {
         navigation[0].name = 'Welcome citizen'
         navigation[0].href = '/citizen'
         setNav(navigation)
-        if (
-          (router.pathname === '/join' && !router.query.mintingPassport) ||
-          router.pathname == '/'
-        ) {
+        if (router.pathname === '/join' && !router.query.mintingPassport) {
           router.push('/citizen')
         }
       } else {
-        if (router.pathname === '/citizen' || router.pathname == '/') {
+        if (router.pathname === '/citizen') {
           router.push('/join')
         }
       }
@@ -105,11 +105,11 @@ export default function Layout({ children }) {
   }, [hasPassport, hasPassportLoading, router.pathname])
 
   return (
-    <div className="mx-auto">
+    <div className="mx-auto bg-n3bg font-display">
       <div className="flex flex-col h-screen">
-        <div className="navbar bg-base-100 border-slate-100 border-b-2 py-0 pl-0">
+        <div className="navbar bg-base-100 border-slate-100 border-b-2 py-0 pl-0 lg:hidden">
           <div className="navbar-start border-slate-100 pl-0">
-            <div className="w-80 border-slate-100 lg:border-r-2 py-4 box-content">
+            <div className="w-80 border-slate-100 py-4 box-content">
               <div className="pl-6 pt-2 cursor-pointer">
                 <div className="flex-none hidden lg:block">
                   <Link href="/">
@@ -127,66 +127,78 @@ export default function Layout({ children }) {
               </div>
             </div>
           </div>
-          <div className="navbar-end pr-4">
-            {account ? (
-              <label
-                htmlFor="web3-modal"
-                className="mask mask-circle cursor-pointer"
-              >
-                <Blockies seed={account?.address} size={12} />
-              </label>
-            ) : (
-              <label
-                htmlFor="web3-modal"
-                className="btn btn-primary text-white modal-button"
-              >
-                Sign in
-              </label>
-            )}
-          </div>
         </div>
 
-        <div className="drawer drawer-mobile w-full grow max-h-screen flex-1">
+        <div className="drawer drawer-mobile w-full h-full grow max-h-screen flex-1">
           <input id="side-drawer" type="checkbox" className="drawer-toggle" />
-
-          <div className="drawer-side border-slate-100 border-r-2">
+          <div className="drawer-content flex flex-col overflow-auto">
+            {children}
+          </div>
+          <div className="drawer-side">
             <label
               htmlFor="side-drawer"
               className="drawer-overlay z-10"
             ></label>
-            <ul className="menu p-4 overflow-y-auto w-80 text-base-content bg-white">
-              {nav.map((item) => (
-                <>
-                  {item.name !== 'Divider' ? (
-                    <li
-                      className="mt-1 relative"
-                      onClick={() =>
-                        (document.getElementById('side-drawer').checked = false)
-                      }
+            <div className="bg-white w-80 flex flex-col justify-between pb-24 lg:pb-0 overflow-y-auto drop-shadow-md min-h-screen">
+              <div className="mt-6 py-4 hidden lg:block">
+                <div className="px-8 pt-2 cursor-pointer">
+                  <Link href="/">
+                    <Image src={Logo}></Image>
+                  </Link>
+                </div>
+              </div>
+              <ul className="menu p-4 overflow-y-auto text-base-400 grow">
+                {nav.map((item) => (
+                  <li
+                    className="mt-1 relative py-2"
+                    onClick={() =>
+                      (document.getElementById('side-drawer').checked = false)
+                    }
+                  >
+                    <Link href={item.href}>
+                      <a
+                        className={`py-4 ${
+                          router.pathname == item.href ? 'active' : ''
+                        }`}
+                      >
+                        {item.icon}
+                        {item.name}
+                        {item.href.charAt(0) !== '/' && (
+                          <ExternalLinkIcon className="h-5 w-5 absolute right-4 opacity-50" />
+                        )}
+                      </a>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+              <ul className="menu p-4 text-base-400">
+                {account ? (
+                  <li>
+                    <label htmlFor="web3-modal">
+                      <div className="mask mask-circle cursor-pointer">
+                        <Blockies seed={account?.address} size={12} />
+                      </div>
+                      {account.ens?.name
+                        ? account.ens?.name
+                        : `${account.address.substring(
+                            0,
+                            6
+                          )}...${account.address.slice(-4)}`}
+                    </label>
+                  </li>
+                ) : (
+                  <li>
+                    {' '}
+                    <label
+                      htmlFor="web3-modal"
+                      className="btn btn-primary normal-case font-medium text-white modal-button"
                     >
-                      <Link href={item.href}>
-                        <a
-                          className={
-                            router.pathname == item.href ? 'active' : ''
-                          }
-                        >
-                          {item.icon}
-                          {item.name}
-                          {item.href.charAt(0) !== '/' && (
-                            <ExternalLinkIcon className="h-5 w-5 absolute right-4 opacity-50" />
-                          )}
-                        </a>
-                      </Link>
-                    </li>
-                  ) : (
-                    <div className="border-slate-100 border-b-2 border-r-2 -mx-4 my-4"></div>
-                  )}
-                </>
-              ))}
-            </ul>
-          </div>
-          <div className="drawer-content flex flex-col">
-            <div className="overflow-y-auto flex-1 flex">{children}</div>
+                      Sign in
+                    </label>
+                  </li>
+                )}
+              </ul>
+            </div>
           </div>
         </div>
       </div>
@@ -205,7 +217,7 @@ export default function Layout({ children }) {
               <h3 className="text-lg font-bold px-4">Account</h3>
               <p className="p-4">Connected to {account.connector.name}</p>
               <ul className="menu bg-base-100 p-2 -m-2 rounded-box">
-                <li>
+                <li key="address">
                   <a
                     href={`https://etherscan.io/address/${account.address}`}
                     rel="noreferrer noopener"
@@ -220,7 +232,7 @@ export default function Layout({ children }) {
                         )}...${account.address.slice(-4)}`}
                   </a>
                 </li>
-                <li>
+                <li key="logout">
                   <a onClick={disconnect}>
                     <LogoutIcon className="h-5 w-5" />
                     Log out

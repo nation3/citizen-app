@@ -1,7 +1,7 @@
 import Link from 'next/link'
 
-export default function GradientLink({ text, href, internal, textSize }) {
-  if (internal) {
+export default function GradientLink({ text, href, textSize }) {
+  if (href.charAt(0) === '/') {
     return (
       <Link href={href}>
         <a

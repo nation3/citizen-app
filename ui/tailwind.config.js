@@ -5,8 +5,15 @@ module.exports = {
   ],
   theme: {
     fontFamily: {
-      display: ['Bossa', 'sans-serif'],
+      display: ['Poppins', 'sans-serif'],
       body: ['UniversalSans', 'sans-serif'],
+    },
+    fontWeight: {
+      thin: 200,
+      light: 300,
+      normal: 300,
+      medium: 500,
+      semibold: 400,
     },
     extend: {
       colors: {
@@ -14,6 +21,8 @@ module.exports = {
         n3green: '#88F1BB',
         'n3blue-100': '#DCFFFF',
         'n3green-100': '#D5FFFF',
+        n3bg: '#F4FAFF',
+        n3nav: '#7395B2',
       },
     },
   },
@@ -28,6 +37,7 @@ module.exports = {
           neutral: '#3d4451',
           'primary-content': '#ffffff',
           'base-100': '#ffffff',
+          'base-content': '#224059',
         },
       },
     ],
