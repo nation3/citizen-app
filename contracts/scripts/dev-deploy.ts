@@ -5,6 +5,8 @@ import { formatUnits } from "@ethersproject/units"
 import Nation from '../out/NATION.sol/NATION.json';
 import VotingEscrow from '../out/VotingEscrow.vy/VotingEscrow.json';
 import MerkleDistributor from '../out/MerkleDistributor.sol/MerkleDistributor.json';
+import LiquidityRewardsDistributor from '../out/LiquidityRewardsDistributor.sol/LiquidityRewardsDistributor.json';
+import MockERC20 from '../out/MockERC20.sol/MockERC20.json';
 
 const getContractFactory = (artifact: any) => {
     return new ethers.ContractFactory(artifact.abi, artifact.bytecode.object, wallet);
@@ -66,17 +68,44 @@ const deployAirdropDistributor = async (nationToken: Contract) => {
     return airdropDistributor;
 }
 
+const deployLiquidityRewards = async (rewardsToken: Contract) => {
+    const contractFactory = getContractFactory(LiquidityRewardsDistributor);
+    const tokenFactory = getContractFactory(MockERC20);
+    const supply = BigNumber.from(dec(314, 18));
+
+    const lpToken = await deployContract({
+        name: "lpToken",
+        deployer: wallet,
+        factory: tokenFactory,
+        args: ["80NATION-20WETH", "80NATION-20WETH", supply]
+    })
+
+    const distributor = await deployContract({
+        name: "lpRewardsContract",
+        deployer: wallet,
+        factory: contractFactory,
+        args: []
+    })
+
+    await distributor.connect(wallet).initialize(rewardsToken.address, lpToken.address);
+
+    return { "lpToken": lpToken, "lpRewardsContract": distributor}
+}
+
 const main = async () => {
     console.log(`Using deployer: ${wallet.address}`);
 
     const NATION = await deployNation();
     const veNATION = await deployVeNation(NATION);
     const nationDrop = await deployAirdropDistributor(NATION);
+    const lpContracts = await deployLiquidityRewards(NATION);
 
     const deployment = {
         "nationToken": NATION.address,
         "veNationToken": veNATION.address,
         "nationDropContract": nationDrop.address,
+        "balancerLPToken": lpContracts.lpToken.address,
+        "lpRewardsContract": lpContracts.lpRewardsContract.address
     }
 
     const manifestFile = "./deployments/local.json";

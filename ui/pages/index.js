@@ -62,6 +62,25 @@ export default function Index() {
                 <div className="card w-80 md:w-96 bg-base-100 shadow-md">
                   <div className="card-body items-stretch items-center">
                     <h2 className="card-title text-center font-medium">
+                      Liquidity rewards
+                    </h2>
+                    <p>
+                      Provide liquidity in the 80% $NATION / 20% $ETH Balancer
+                      pool to receive rewards.
+                      <br />
+                      Get up to {veNationRewardsMultiplier}x boost with
+                      $veNATION.
+                    </p>
+                    <GradientLink
+                      text="Provide liquidity"
+                      href="/liquidity"
+                    ></GradientLink>
+                  </div>
+                </div>
+                <div className="card w-80 md:w-96 bg-base-100 shadow-md">
+                <div className="card w-80 md:w-96 bg-base-100 shadow-md">
+                  <div className="card-body items-stretch items-center">
+                    <h2 className="card-title text-center font-medium">
                       Get $veNATION
                     </h2>
                     <p>

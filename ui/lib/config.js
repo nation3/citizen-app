@@ -7,8 +7,8 @@ let config = {
   balancerVault: process.env.NEXT_PUBLIC_BALANCER_VAULT_ADDRESS,
   balancerPoolId: process.env.NEXT_PUBLIC_BALANCER_NATION_ETH_POOL_ID,
   balancerLPToken: process.env.NEXT_PUBLIC_BALANCER_NATION_ETH_POOL_TOKEN,
-  nationRewardsContract:
-    process.env.NEXT_PUBLIC_NATION_REWARDS_CONTRACT_ADDRESS,
+  lpRewardsContract:
+    process.env.NEXT_PUBLIC_LP_REWARDS_CONTRACT_ADDRESS,
   nationPassportNFT: process.env.NEXT_PUBLIC_PASSPORT_NFT_ADDRESS,
   nationPassportNFTIssuer: process.env.NEXT_PUBLIC_PASSPORT_NFT_ISSUER_ADDRESS,
   nationDropContract:
@@ -26,7 +26,7 @@ if (process.env.NEXT_PUBLIC_CHAIN !== 'mainnet') {
     veNationRewardsMultiplier: '2.5',
     balancerVault: devDeployments.balancerPool || zeroAddress,
     balancerLPToken: devDeployments.balancerPair || zeroAddress,
-    nationRewardsContract: devDeployments.rewardsDistributor || zeroAddress,
+    lpRewardsContract: devDeployments.rewardsDistributor || zeroAddress,
     nationPassportNFT: devDeployments.passportNFT || zeroAddress,
     nationPassportNFTIssuer: devDeployments.passportIssuer || zeroAddress,
     nationDropContract: devDeployments.nationDropContract || zeroAddress,
@@ -44,7 +44,7 @@ export const {
   balancerVault,
   balancerPoolId,
   balancerLPToken,
-  nationRewardsContract,
+  lpRewardsContract,
   nationPassportNFT,
   nationPassportNFTIssuer,
   nationDropContract,
