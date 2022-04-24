@@ -1,0 +1,35 @@
+{
+  "name": "nation3-app",
+  "private": true,
+  "scripts": {
+    "dev": "PORT=42069 next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@heroicons/react": "^1.0.5",
+    "@uniswap/merkle-distributor": "^1.0.1",
+    "daisyui": "^2.13.5",
+    "ethers": "^5.6.0",
+    "next": "12.0.7",
+    "react": "17.0.2",
+    "react-animated-3d-card": "^1.0.2",
+    "react-blockies": "^1.4.1",
+    "react-confetti": "^6.0.1",
+    "react-dom": "17.0.2",
+    "react-use": "^17.3.2",
+    "use-nft": "^0.10.2",
+    "wagmi": "^0.2.26"
+  },
+  "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "^3.2.0",
+    "autoprefixer": "^10.4.0",
+    "eslint": "8.4.1",
+    "eslint-config-next": "12.0.7",
+    "eslint-config-prettier": "^8.3.0",
+    "postcss": "^8.4.5",
+    "prettier": "^2.5.1",
+    "tailwindcss": "^3.0.2"
+  }
+}

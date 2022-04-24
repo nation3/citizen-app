@@ -1,0 +1,2 @@
+@openzeppelin/contracts=lib/openzeppelin-contracts/contracts/
+@rari-capital/solmate=lib/solmate/

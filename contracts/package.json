@@ -1,0 +1,33 @@
+{
+  "scripts": {
+    "compile-sol": "forge build",
+    "compile-vyper": "ts-node scripts/vyper-compile.ts",
+    "compile": "npm run compile-sol && npm run compile-vyper",
+    "dev-deploy": "ts-node scripts/dev-deploy.ts",
+    "solhint": "solhint -f table src/**/*.sol",
+    "prettier:solidity": "prettier --write src/**/*.sol"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@typechain/ethers-v5": "^7.0.1",
+    "@typescript-eslint/eslint-plugin": "^4.29.1",
+    "@typescript-eslint/parser": "^4.29.1",
+    "dotenv": "^10.0.0",
+    "eslint": "^7.29.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "eslint-plugin-promise": "^5.1.0",
+    "ethers": "^5.0.0",
+    "prettier": "^2.6.1",
+    "prettier-plugin-solidity": "^1.0.0-beta.19",
+    "solhint": "^3.3.7",
+    "solhint-plugin-prettier": "^0.0.5",
+    "solidity-coverage": "^0.7.16",
+    "ts-node": "^10.1.0",
+    "typechain": "^5.1.2",
+    "typescript": "^4.6.2"
+  }
+}
