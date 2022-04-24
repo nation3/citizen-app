@@ -6,6 +6,7 @@ import Head from '../components/Head'
 import flag from '../public/flag.svg'
 
 export default function Index() {
+
   return (
     <>
       <Head title="Home" />
