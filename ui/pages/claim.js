@@ -86,7 +86,7 @@ export default function Claim() {
           </p>
           <p className="text-white">
             Go lock your $NATION for $veNATION so you can get yourself a Genesis
-            passport on launch become a citizen of Nation3!
+            passport on launch and become a citizen of Nation3!
           </p>
         </MainCard>
       )}
