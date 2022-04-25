@@ -2,9 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useRef, useEffect, useState } from 'react'
-import {
-  nationToken,
-} from '../lib/config'
+import { nationToken } from '../lib/config'
 import { useNationBalance } from '../lib/nation-token'
 import { useAccount } from '../lib/use-wagmi'
 import { useVeNationBalance } from '../lib/ve-token'
@@ -26,8 +24,7 @@ export default function Index() {
     setFromTweetdrop(true)
   }, [router])
 
-  const loading =
-    nationBalanceLoading || veNationBalanceLoading
+  const loading = nationBalanceLoading || veNationBalanceLoading
 
   return (
     <>
@@ -77,7 +74,6 @@ export default function Index() {
                     ></GradientLink>
                   </div>
                 </div>
-                <div className="card w-80 md:w-96 bg-base-100 shadow-md">
                 <div className="card w-80 md:w-96 bg-base-100 shadow-md">
                   <div className="card-body items-stretch items-center">
                     <h2 className="card-title text-center font-medium">
