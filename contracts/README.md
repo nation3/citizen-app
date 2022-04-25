@@ -29,9 +29,16 @@ cp .env.sampe .env
 # Compile solidity and vyper contracts
 yarn compile
 
+# Install git submodules
+forge install
+
 # Deploy stack for local development
 yarn dev-deploy
 ```
+
+### Running a node
+
+If you want to test/develop locally, you'll need to run a local node, for example with [Ganache](https://trufflesuite.com/ganache/).
 
 ### Testing
 
