@@ -52,8 +52,10 @@ contract RewardsDistributorTest is DSTestPlus {
     }
 
     function testCannotSetPastStartBlock() public {
-        uint256 startBlock = block.number - 5;
+        uint256 startBlock = block.number;
         uint256 endBlock = startBlock + rewardsPeriod;
+
+        evm.roll(startBlock + 5);
 
         rewardsToken.transfer(address(distributor), totalRewards);
         evm.expectRevert(sig.selector("InvalidStartBlock()"));
@@ -61,9 +63,10 @@ contract RewardsDistributorTest is DSTestPlus {
     }
 
     function testCannotSetPastEndBlock() public {
-        uint256 startBlock = block.number + 5;
-        uint256 endBlock = block.number - 5;
+        uint256 startBlock = block.number + 10;
+        uint256 endBlock = block.number + 5;
 
+        evm.roll(endBlock + 5);
         rewardsToken.transfer(address(distributor), totalRewards);
         evm.expectRevert(sig.selector("InvalidEndBlock()"));
         distributor.setRewards(totalRewards, startBlock, endBlock);

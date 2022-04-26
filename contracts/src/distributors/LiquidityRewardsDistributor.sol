@@ -54,7 +54,7 @@ contract LiquidityRewardsDistributor is Initializable, Ownable {
     /// @notice Last block to distribute rewards.
     uint256 public endBlock;
     /// @notice Total LP tokens stakded by users.
-    uint256 public totalStaked;
+    uint256 public totalDeposited;
     /// @notice Total rewards beeing distributed.
     uint256 public totalRewards;
     /// @notice Rewards distributed to users.
@@ -70,7 +70,7 @@ contract LiquidityRewardsDistributor is Initializable, Ownable {
     uint256 internal _lastDistributedBlock;
 
     /// @dev Amount of LP tokens staked by user.
-    mapping(address => uint256) internal _userStaking;
+    mapping(address => uint256) internal _userDeposit;
     /// @dev Rewards per LP staked token at last user deposit.
     mapping(address => uint256) internal _userRatedRewards;
     /// @dev Distributed rewards to the user at last distribution.
@@ -85,7 +85,10 @@ contract LiquidityRewardsDistributor is Initializable, Ownable {
     /// @dev Sets both rewards & lptoken.
     /// @param _rewardsToken The contract of the rewards token.
     /// @param _lpToken The contract of the liquidity pool tokens.
-    function initialize(ERC20 _rewardsToken, ERC20 _lpToken) public initializer {
+    function initialize(
+        ERC20 _rewardsToken,
+        ERC20 _lpToken
+    ) public initializer {
         rewardsToken = _rewardsToken;
         lpToken = _lpToken;
     }
@@ -108,7 +111,7 @@ contract LiquidityRewardsDistributor is Initializable, Ownable {
         if (_endBlock <= _startBlock) revert InvalidEndBlock();
 
         // Distribute possible pending rewards
-        if (totalStaked > 0) _updateRewardsdistribution();
+        if (totalDeposited > 0) _updateRewardsdistribution();
         if (amount <= distributedRewards) revert InvalidRewardsAmount();
 
         // Set / reset variables
@@ -125,7 +128,7 @@ contract LiquidityRewardsDistributor is Initializable, Ownable {
     function recoverTokens(ERC20 token, address to) external virtual onlyOwner returns (uint256 amount) {
         amount = token.balanceOf(address(this));
         if (token == lpToken) {
-            amount = amount - totalStaked;
+            amount = amount - totalDeposited;
         } else if (token == rewardsToken) {
             amount = amount - totalRewards;
         }
@@ -137,18 +140,18 @@ contract LiquidityRewardsDistributor is Initializable, Ownable {
                                 USER ACTIONS
     //////////////////////////////////////////////////////////////*/
 
-    /// @notice Returns the quantity of unclaimed rewards earned by `holder`.
-    /// @param holder The holder of staked LP tokens.
+    /// @notice Returns the quantity of unclaimed rewards earned by `acccount`.
+    /// @param acccount The acccount of staked LP tokens.
     /// @return The quantity of unclaimed rewards tokens.
-    function getUnclaimedRewards(address holder) external view virtual returns (uint256) {
-        return _userDistributedRewards[holder] - _userClaimedRewards[holder];
+    function getUnclaimedRewards(address acccount) external view virtual returns (uint256) {
+        return _userDistributedRewards[acccount] - _userClaimedRewards[acccount];
     }
 
-    /// @notice Returns the queantity of LP tokens staked by `holder`.
-    /// @param holder the holder of staked LP tokens.
+    /// @notice Returns the queantity of LP tokens staked by `acccount`.
+    /// @param acccount the acccount of staked LP tokens.
     /// @return The quantity of staked LP tokens.
-    function getStakingBalance(address holder) external view virtual returns (uint256) {
-        return _userStaking[holder];
+    function getUserBalance(address acccount) external view virtual returns (uint256) {
+        return _userDeposit[acccount];
     }
 
     /// @notice Deposits `amount` of LP tokens from sender to this contract.
@@ -158,7 +161,7 @@ contract LiquidityRewardsDistributor is Initializable, Ownable {
         lpToken.safeTransferFrom(msg.sender, address(this), amount);
 
         if (block.number > startBlock) {
-            if (_userStaking[msg.sender] > 0) {
+            if (_userDeposit[msg.sender] > 0) {
                 // Distribute rewards until this point and update snapshot of rewards per LP Token
                 _distributeRewards(msg.sender);
             } else {
@@ -169,8 +172,8 @@ contract LiquidityRewardsDistributor is Initializable, Ownable {
         }
 
         // Add to staking balance
-        _userStaking[msg.sender] = _userStaking[msg.sender] + amount;
-        totalStaked = totalStaked + amount;
+        _userDeposit[msg.sender] = _userDeposit[msg.sender] + amount;
+        totalDeposited = totalDeposited + amount;
 
         emit Deposit(msg.sender, amount);
     }
@@ -178,12 +181,12 @@ contract LiquidityRewardsDistributor is Initializable, Ownable {
     /// @notice Withdraws `amount` of LP tokens from this contract to sender.
     /// @param amount The amount of LP tokens to withdraw.
     function withdraw(uint256 amount) external virtual {
-        if (amount > _userStaking[msg.sender]) revert InsufficientStakeBalance();
+        if (amount > _userDeposit[msg.sender]) revert InsufficientStakeBalance();
         if (block.number > startBlock) _distributeRewards(msg.sender);
 
         // Substract from staking balance
-        _userStaking[msg.sender] = _userStaking[msg.sender] - amount;
-        totalStaked = totalStaked - amount;
+        _userDeposit[msg.sender] = _userDeposit[msg.sender] - amount;
+        totalDeposited = totalDeposited - amount;
 
         // Transfer out to sender
         lpToken.safeTransfer(msg.sender, amount);
@@ -194,7 +197,7 @@ contract LiquidityRewardsDistributor is Initializable, Ownable {
     /// @notice Claims all of `msg.sender` unclaimed rewards.
     /// @return The quantity of rewards tokens claimed.
     function claimRewards() external virtual returns (uint256) {
-        // Distribute rewards to holder
+        // Distribute rewards to acccount
         if (block.number > startBlock) _distributeRewards(msg.sender);
 
         // Get unclaimed rewards
@@ -214,15 +217,15 @@ contract LiquidityRewardsDistributor is Initializable, Ownable {
     /// @return stakingAmount The staking amount drained.
     /// @return unclaimedRewards The quantity of rewards tokens claimed.
     function withdrawAndClaim() external virtual returns (uint256 stakingAmount, uint256 unclaimedRewards) {
-        // Distribute rewards to holder
+        // Distribute rewards to acccount
         if (block.number > startBlock) _distributeRewards(msg.sender);
 
-        stakingAmount = _userStaking[msg.sender];
+        stakingAmount = _userDeposit[msg.sender];
         unclaimedRewards = _userDistributedRewards[msg.sender] - _userClaimedRewards[msg.sender];
 
-        // Drain holder staking and update claimed rewards
-        _userStaking[msg.sender] = 0;
-        totalStaked = totalStaked - stakingAmount;
+        // Drain acccount staking and update claimed rewards
+        _userDeposit[msg.sender] = 0;
+        totalDeposited = totalDeposited - stakingAmount;
         _userClaimedRewards[msg.sender] = _userClaimedRewards[msg.sender] + unclaimedRewards;
 
         // Transfer out LP tokens & rewards
@@ -237,22 +240,22 @@ contract LiquidityRewardsDistributor is Initializable, Ownable {
                        INTERNAL DISTRIBUTION LOGIC
     //////////////////////////////////////////////////////////////*/
 
-    /// @dev Distributes all undistributed rewards earned by `holder`.
+    /// @dev Distributes all undistributed rewards earned by `acccount`.
     /// @dev Do not reverts on if there is no rewards to distribute.
-    /// @param holder The LP Token staker whose rewards are to be distributed.
+    /// @param acccount The LP Token staker whose rewards are to be distributed.
     /// @return The quantity of rewards distributed.
-    function _distributeRewards(address holder) internal virtual returns (uint256) {
-        uint256 holderStake = _userStaking[holder];
-        if (holderStake <= 0) return 0;
+    function _distributeRewards(address acccount) internal virtual returns (uint256) {
+        uint256 userDeposit = _userDeposit[acccount];
+        if (userDeposit <= 0) return 0;
 
         _updateRewardsdistribution();
 
         // Compute undistributed rewards from the delta in rewardsRate since the user deposited
-        uint256 undistributedRewards = (holderStake * (_rewardsRate - _userRatedRewards[holder])) / PRECISION;
+        uint256 undistributedRewards = (userDeposit * (_rewardsRate - _userRatedRewards[acccount])) / PRECISION;
         if (undistributedRewards <= 0) return 0;
 
-        _userRatedRewards[holder] = _rewardsRate;
-        _userDistributedRewards[holder] = _userDistributedRewards[holder] + undistributedRewards;
+        _userRatedRewards[acccount] = _rewardsRate;
+        _userDistributedRewards[acccount] = _userDistributedRewards[acccount] + undistributedRewards;
         return undistributedRewards;
     }
 
@@ -276,9 +279,9 @@ contract LiquidityRewardsDistributor is Initializable, Ownable {
         _lastDistributedBlock = block.number;
 
         // Update rewards per LP token only if there are staked tokens
-        if (totalStaked > 0) {
+        if (totalDeposited > 0) {
             distributedRewards = distributedRewards + rewardsToDistribute / PRECISION;
-            _rewardsRate = _rewardsRate + rewardsToDistribute / totalStaked;
+            _rewardsRate = _rewardsRate + rewardsToDistribute / totalDeposited;
         }
     }
 }
