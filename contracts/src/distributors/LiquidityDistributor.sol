@@ -8,7 +8,7 @@ import {ERC20} from "@rari-capital/solmate/src/tokens/ERC20.sol";
 /// @notice Distributes rewards to LP providers.
 /// @author Nation3 (https://github.com/nation3).
 /// @dev Adapted from Rari-Capital rewards distributor (https://github.com/Rari-Capital/rari-governance-contracts/blob/master/contracts/RariGovernanceTokenUniswapDistributor.sol).
-contract LiquidityRewardsDistributor is Initializable, Ownable {
+contract LiquidityDistributor is Initializable, Ownable {
     /*///////////////////////////////////////////////////////////////
                                LIBRARIES
     //////////////////////////////////////////////////////////////*/

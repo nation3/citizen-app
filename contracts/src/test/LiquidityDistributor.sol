@@ -5,14 +5,14 @@ import {DSTestPlus} from "./utils/DSTestPlus.sol";
 import {Signatures as sig} from "./utils/Signatures.sol";
 import {Hevm} from "./utils/Hevm.sol";
 import {MockERC20} from "./utils/mocks/MockERC20.sol";
-import {LiquidityRewardsDistributor} from "../distributors/LiquidityRewardsDistributor.sol";
+import {LiquidityDistributor} from "../distributors/LiquidityDistributor.sol";
 
-contract RewardsDistributorTest is DSTestPlus {
+contract LiquidityDistributorTest is DSTestPlus {
     Hevm evm = Hevm(HEVM_ADDRESS);
 
     MockERC20 rewardsToken;
     MockERC20 lpToken;
-    LiquidityRewardsDistributor distributor;
+    LiquidityDistributor distributor;
 
     uint256 public constant tokenSupply = 4206900 * 1e18;
     uint256 public constant totalRewards = 30000 * 1e18;
@@ -22,7 +22,7 @@ contract RewardsDistributorTest is DSTestPlus {
         rewardsToken = new MockERC20("Nation3 Network Token", "NATION", tokenSupply);
         lpToken = new MockERC20("ETH/NATION Balancer Token", "ETHNATION", tokenSupply);
 
-        distributor = new LiquidityRewardsDistributor();
+        distributor = new LiquidityDistributor();
         distributor.initialize(rewardsToken, lpToken);
     }
 
