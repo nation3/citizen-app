@@ -16,6 +16,7 @@ import {
 import {
   useLiquidityRewards,
   usePoolTokenBalance,
+  useVeNationBoost,
   useDeposit,
   useWithdraw,
   useWithdrawAndClaim,
@@ -41,12 +42,8 @@ export default function Liquidity() {
   const [{ data: poolTokenBalance, loading: poolTokenBalanceLoading }] =
     usePoolTokenBalance(account?.address)
 
-  const [
-    {
-      data: liquidityRewardsNationBalance,
-      loading: liquidityRewardsNationBalanceLoading,
-    },
-  ] = useNationBalance(lpRewardsContract)
+  const [{ data: liquidityRewardsNationBalance }] =
+    useNationBalance(lpRewardsContract)
   const [
     {
       liquidityRewardsAPY,
@@ -60,48 +57,14 @@ export default function Liquidity() {
     address: account?.address,
   })
 
-  const [{ data: veNationSupply, loading: veNationSupplyLoading }] =
-    useVeNationSupply()
+  const [{ data: veNationSupply }] = useVeNationSupply()
 
-  const [userBoostedAPY, setUserBoostedAPY] = useState(0)
-  useEffect(() => {
-    if (
-      veNationBalanceLoading ||
-      veNationSupplyLoading ||
-      liquidityRewardsNationBalanceLoading ||
-      loadingLiquidityRewards ||
-      !stakingBalance ||
-      !liquidityRewardsNationBalance ||
-      !veNationBalance ||
-      !veNationSupply
-    )
-      return
-
-    // userStake = amount of LP tokens staked by user
-    // totalStake = amount of LP tokens in rewards contract
-    // userVotingPower = veNationBalance
-    // totalVotingPower = veNATION supply
-    // min(userStake, userStake * 40/100 + totalStake * userVotingPower / totalVotingPower * 60/100)
-    const userStakePercentage = stakingBalance.mul(
-      transformNumber(40 / 100, 'bignumber', 1)
-    )
-
-    const userVotingPercentage = liquidityRewardsNationBalance.value
-      .mul(veNationBalance)
-      .div(veNationSupply.mul(transformNumber(60 / 100, 'bignumber', 1)))
-    const boost = userStakePercentage.add(userVotingPercentage)
-    setUserBoostedAPY(stakingBalance.gt(boost) ? stakingBalance : boost)
-  }, [
-    veNationBalance,
-    veNationBalanceLoading,
-    veNationSupply,
-    veNationSupplyLoading,
-    liquidityRewardsNationBalance,
-    liquidityRewardsNationBalanceLoading,
-    liquidityRewardsAPY,
-    stakingBalance,
-    loadingLiquidityRewards,
-  ])
+  const userVeNationBoost = useVeNationBoost({
+    userStake: stakingBalance,
+    totalStake: liquidityRewardsNationBalance?.value,
+    userVeNation: veNationBalance,
+    totalVeNation: veNationSupply,
+  })
 
   const [depositValue, setDepositValue] = useState()
   const [withdrawalValue, setWithdrawalValue] = useState()
@@ -177,7 +140,14 @@ export default function Liquidity() {
             </div>
             <div className="stat-title">Your boosted APY</div>
             <div className="stat-value text-secondary">
-              <Balance balance={userBoostedAPY} suffix="%" decimals={2} />
+              <Balance
+                balance={
+                  liquidityRewardsAPY &&
+                  liquidityRewardsAPY.mul(userVeNationBoost)
+                }
+                suffix="%"
+                decimals={2}
+              />
             </div>
           </div>
         </div>
