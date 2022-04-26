@@ -70,7 +70,10 @@ export default function Liquidity() {
       veNationSupplyLoading ||
       liquidityRewardsNationBalanceLoading ||
       loadingLiquidityRewards ||
-      !stakingBalance
+      !stakingBalance ||
+      !liquidityRewardsNationBalance ||
+      !veNationBalance ||
+      !veNationSupply
     )
       return
 
