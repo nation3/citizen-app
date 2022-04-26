@@ -1,7 +1,7 @@
-import { ethers } from 'ethers'
 import { useState, useEffect } from 'react'
 import { nationDropAmount, nationToken } from '../lib/config'
 import { useClaimsFile, useIsClaimed, useClaimDrop } from '../lib/merkle-drop'
+import { transformNumber } from '../lib/numbers'
 import { useHandleError } from '../lib/use-handle-error'
 import { useAccount } from '../lib/use-wagmi'
 import ActionButton from '../components/ActionButton'
@@ -30,7 +30,7 @@ export default function Claim() {
   const claimDrop = useClaimDrop({
     index: proofIndex,
     account: account?.address,
-    amount: ethers.utils.parseEther(nationDropAmount),
+    amount: transformNumber(nationDropAmount, 'string', 0),
     proof: canClaim ? claimsFile?.claims[account?.address]?.proof : {},
   })
 

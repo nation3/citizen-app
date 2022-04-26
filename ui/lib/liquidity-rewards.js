@@ -4,13 +4,6 @@ import { lpRewardsContract, balancerLPToken } from '../lib/config'
 import LiquidityRewardsDistributor from '../abis/LiquidityRewardsDistributor.json'
 import { useBalance, useContractRead, useContractWrite } from './use-wagmi'
 
-const formatNumber = (number) => {
-  if (number) {
-    return ethers.utils.formatEther(number)
-  }
-  return number
-}
-
 const contractParams = {
   addressOrName: lpRewardsContract,
   contractInterface: LiquidityRewardsDistributor.abi,
@@ -46,8 +39,8 @@ export function useLiquidityRewards({ nationPrice, poolValue, address }) {
   return [
     {
       liquidityRewardsAPY,
-      unclaimedRewards: formatNumber(unclaimedRewards),
-      stakingBalance: formatNumber(stakingBalance),
+      unclaimedRewards: unclaimedRewards,
+      stakingBalance: stakingBalance,
       loading:
         totalRewardsLoading || unclaimedRewardsLoading || stakingBalanceLoading,
     },

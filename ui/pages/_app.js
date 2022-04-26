@@ -12,7 +12,7 @@ let externalProvider
 if (process.env.NEXT_PUBLIC_CHAIN === 'local') {
   console.log('Dev environment')
   externalProvider = new ethers.providers.JsonRpcProvider(
-    'http://localhost:8545'
+    'http://localhost:7545'
   )
 } else {
   externalProvider = ethers.getDefaultProvider(process.env.NEXT_PUBLIC_CHAIN, {
