@@ -4,7 +4,7 @@ import { formatUnits } from "@ethersproject/units"
 
 import Nation from '../out/NATION.sol/NATION.json';
 import VotingEscrow from '../out/VotingEscrow.vy/VotingEscrow.json';
-import MerkleDistributor from '../out/MerkleDistributor.sol/MerkleDistributor.json';
+import MerkleDistributorV2 from '../out/MerkleDistributorV2.sol/MerkleDistributorV2.json';
 
 const getContractFactory = (artifact: any) => {
     return new ethers.ContractFactory(artifact.abi, artifact.bytecode.object, wallet);
@@ -48,17 +48,17 @@ const deployVeNation = async (nationToken: Contract) => {
     return veNATION;
 }
 
-const deployAirdropDistributor = async (nationToken: Contract) => {
-    const Factory = getContractFactory(MerkleDistributor);
-    const root = process.env.AIRDROP_ROOT ?? "0xed145aa219b18aa3f2dc56afb2c4e0b148e429ca93b9c5f2c7a29d2101685aee";
+const deployAirdropDistributor = async (nationToken: Contract, root: string) => {
+    const Factory = getContractFactory(MerkleDistributorV2);
     const dropAmount = BigNumber.from(process.env.AIRDROP_AMOUNT ?? dec(314, 18));
 
     const airdropDistributor = await deployContract({
         name: "nationDropContract",
         deployer: wallet,
         factory: Factory,
-        args: [wallet.address, nationToken.address, root]
+        args: []
     })
+    await airdropDistributor.setUp(wallet.address, nationToken.address, root);
 
     await nationToken.connect(wallet).approve(airdropDistributor.address, dropAmount);
     console.log(`Approved ${formatUnits(dropAmount, 18)} tokens for drop`);
@@ -71,12 +71,13 @@ const main = async () => {
 
     const NATION = await deployNation();
     const veNATION = await deployVeNation(NATION);
-    const nationDrop = await deployAirdropDistributor(NATION);
+    const nationDropA = await deployAirdropDistributor(NATION, "0xed145aa219b18aa3f2dc56afb2c4e0b148e429ca93b9c5f2c7a29d2101685aee");
+    const nationDropB = await deployAirdropDistributor(NATION, "0xb8d662135979ae3791167c967cba4bf6fb681c665d0c03372745c483fe5089f8");
 
     const deployment = {
         "nationToken": NATION.address,
         "veNationToken": veNATION.address,
-        "nationDropContract": nationDrop.address,
+        "nationDropContracts": [nationDropA.address, nationDropB.address],
     }
 
     const manifestFile = "./deployments/local.json";

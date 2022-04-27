@@ -1,6 +1,6 @@
 {
   "nationToken": "0x333A4823466879eeF910A04D473505da62142069",
   "veNationToken": "0xf7def1d2fbda6b74bee7452fdf7894da9201065d",
-  "nationDropContract": "0xCBbd5a8871E6Cf995305e58168cEaFB0be512c67"
+  "nationDropContracts": ["0xCBbd5a8871E6Cf995305e58168cEaFB0be512c67"]
 }
 
