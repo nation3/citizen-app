@@ -5,7 +5,7 @@ import { formatUnits } from "@ethersproject/units"
 import Nation from '../out/NATION.sol/NATION.json';
 import VotingEscrow from '../out/VotingEscrow.vy/VotingEscrow.json';
 import MerkleDistributor from '../out/MerkleDistributor.sol/MerkleDistributor.json';
-import LiquidityDistributor from '../out/LiquidityDistributor.sol/LiquidityDistributor.json';
+import LiquidityDistributor from '../out/BoostedLiquidityDistributor.sol/BoostedLiquidityDistributor.json';
 import MockERC20 from '../out/MockERC20.sol/MockERC20.json';
 
 const getContractFactory = (artifact: any) => {
@@ -68,7 +68,7 @@ const deployAirdropDistributor = async (nationToken: Contract) => {
     return airdropDistributor;
 }
 
-const deployLiquidityDistributor = async (rewardsToken: Contract) => {
+const deployLiquidityDistributor = async (rewardsToken: Contract, boostToken: Contract) => {
     const contractFactory = getContractFactory(LiquidityDistributor);
     const tokenFactory = getContractFactory(MockERC20);
     const supply = BigNumber.from(dec(314, 18));
@@ -87,7 +87,7 @@ const deployLiquidityDistributor = async (rewardsToken: Contract) => {
         args: []
     })
 
-    await distributor.connect(wallet).initialize(rewardsToken.address, lpToken.address);
+    await distributor.connect(wallet).initialize(rewardsToken.address, lpToken.address, boostToken.address);
 
     return { "lpToken": lpToken, "lpRewardsContract": distributor}
 }
@@ -98,7 +98,7 @@ const main = async () => {
     const NATION = await deployNation();
     const veNATION = await deployVeNation(NATION);
     const nationDrop = await deployAirdropDistributor(NATION);
-    const lpContracts = await deployLiquidityDistributor(NATION);
+    const lpContracts = await deployLiquidityDistributor(NATION, veNATION);
 
     const deployment = {
         "nationToken": NATION.address,
