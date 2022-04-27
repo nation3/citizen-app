@@ -1,7 +1,12 @@
 import { ethers } from 'ethers'
 import { useState, useEffect } from 'react'
 import { nationDropAmount, nationToken } from '../lib/config'
-import { useClaimsFile, useIsClaimed, useClaimDrop } from '../lib/merkle-drop'
+import {
+  useClaimsFiles,
+  checkEligibility,
+  useIsClaimed,
+  useClaimDrop,
+} from '../lib/merkle-drop'
 import { useHandleError } from '../lib/use-handle-error'
 import { useAccount } from '../lib/use-wagmi'
 import ActionButton from '../components/ActionButton'
@@ -12,26 +17,33 @@ import MainCard from '../components/MainCard'
 export default function Claim() {
   const [{ data: account }] = useAccount()
   const [canClaim, setCanClaim] = useState(false)
+  const [contractId, setContractId] = useState(0)
   const [proofIndex, setProofIndex] = useState()
   const [justClaimed, setJustClaimed] = useState(false)
 
-  const [{ data: claimsFile }] = useHandleError(useClaimsFile())
-  const [{ data: isClaimed }] = useIsClaimed(proofIndex)
+  const [{ data: claimsFiles }] = useHandleError(useClaimsFiles())
+  const [{ data: isClaimed }] = useIsClaimed(contractId, proofIndex)
 
   useEffect(() => {
-    if (claimsFile && account) {
-      if (claimsFile.claims[account.address]) {
-        setProofIndex(claimsFile.claims[account.address].index)
+    if (claimsFiles && account) {
+      const [contractId, index] = checkEligibility(claimsFiles, account.address)
+      if (typeof index === 'number') {
+        setContractId(contractId)
+        setProofIndex(index)
         setCanClaim(!isClaimed)
       }
     }
-  }, [account, claimsFile, isClaimed])
+  }, [account, claimsFiles, contractId, proofIndex, isClaimed])
 
   const claimDrop = useClaimDrop({
+    contractId: contractId,
     index: proofIndex,
     account: account?.address,
     amount: ethers.utils.parseEther(nationDropAmount),
-    proof: canClaim ? claimsFile?.claims[account?.address]?.proof : {},
+    proof:
+      canClaim && claimsFiles
+        ? claimsFiles[contractId].claims[account?.address]?.proof
+        : {},
   })
 
   return (
