@@ -1,9 +1,9 @@
 import { useState, useMemo } from 'react'
 import MerkleDistributor from '../abis/MerkleDistributor.json'
-import { nationDropContract } from './config'
+import { nationDropContract1, nationDropContract2 } from './config'
 import { useContractRead, useContractWrite } from './use-wagmi'
 
-export function useClaimsFile() {
+export function _useClaimsFile() {
   const [data, setData] = useState({ loading: true })
   useMemo(async () => {
     try {
@@ -19,8 +19,13 @@ export function useClaimsFile() {
   return [data]
 }
 
-const contractParams = {
-  addressOrName: nationDropContract,
+const contractParams1 = {
+  addressOrName: nationDropContract1,
+  contractInterface: MerkleDistributor.abi,
+}
+
+const contractParams2 = {
+  addressOrName: nationDropContract2,
   contractInterface: MerkleDistributor.abi,
 }
 
