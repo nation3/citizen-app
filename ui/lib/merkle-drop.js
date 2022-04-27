@@ -5,14 +5,13 @@ import { useContractRead, useContractWrite } from './use-wagmi'
 
 async function fetchClaimsFile(contractId) {
   const res = await fetch(
-    `http://localhost:42069/tweetdrop/${process.env.NEXT_PUBLIC_CHAIN}-${contractId}.json`
+    `/tweetdrop/${process.env.NEXT_PUBLIC_CHAIN}-${contractId}.json`
   )
   return await res.json()
 }
 
 export function checkEligibility(claimsFiles, address) {
   for (const id in claimsFiles) {
-    console.log(id)
     if (claimsFiles[id].claims[address]) {
       return [id, claimsFiles[id].claims[address].index]
     }
