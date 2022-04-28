@@ -31,10 +31,7 @@ if (process.env.NEXT_PUBLIC_CHAIN !== 'mainnet') {
     nationRewardsContract: devDeployments.rewardsDistributor || zeroAddress,
     nationPassportNFT: devDeployments.passportNFT || zeroAddress,
     nationPassportNFTIssuer: devDeployments.passportIssuer || zeroAddress,
-    nationDropContracts: [
-      devDeployments.nationDropContract || zeroAddress,
-      devDeployments.nationDropContract || zeroAddress,
-    ],
+    nationDropContracts: devDeployments.nationDropContracts || [zeroAddress],
   }
   config = { ...config, ...devConfig }
 }

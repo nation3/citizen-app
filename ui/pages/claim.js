@@ -18,7 +18,7 @@ export default function Claim() {
   const [{ data: account }] = useAccount()
   const [canClaim, setCanClaim] = useState(false)
   const [contractId, setContractId] = useState(0)
-  const [proofIndex, setProofIndex] = useState()
+  const [proofIndex, setProofIndex] = useState(0)
   const [justClaimed, setJustClaimed] = useState(false)
 
   const [{ data: claimsFiles }] = useHandleError(useClaimsFiles())

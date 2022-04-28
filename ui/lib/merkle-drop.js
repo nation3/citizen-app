@@ -4,10 +4,13 @@ import { nationDropContracts } from './config'
 import { useContractRead, useContractWrite } from './use-wagmi'
 
 async function fetchClaimsFile(contractId) {
-  const res = await fetch(
-    `/tweetdrop/${process.env.NEXT_PUBLIC_CHAIN}-${contractId}.json`
-  )
-  return await res.json()
+  if (typeof window !== 'undefined') {
+    const res = await fetch(
+      `/tweetdrop/${process.env.NEXT_PUBLIC_CHAIN}-${contractId}.json`
+    )
+    return await res.json()
+  }
+  return {}
 }
 
 export function checkEligibility(claimsFiles, address) {
@@ -46,7 +49,7 @@ export function useIsClaimed(contractId, index) {
   return useContractRead(contractParams(contractId), 'isClaimed', {
     args: [index],
     watch: true,
-    skip: !index,
+    skip: !contractId || !index,
   })
 }
 
