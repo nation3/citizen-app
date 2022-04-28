@@ -18,7 +18,7 @@ export default function Claim() {
   const [{ data: account }] = useAccount()
   const [canClaim, setCanClaim] = useState(false)
   const [contractId, setContractId] = useState(0)
-  const [proofIndex, setProofIndex] = useState(0)
+  const [proofIndex, setProofIndex] = useState()
   const [justClaimed, setJustClaimed] = useState(false)
 
   const [{ data: claimsFiles }] = useHandleError(useClaimsFiles())
@@ -27,10 +27,13 @@ export default function Claim() {
   useEffect(() => {
     if (claimsFiles && account) {
       const [contractId, index] = checkEligibility(claimsFiles, account.address)
+      console.log(contractId)
+      console.log(index)
+      console.log(isClaimed)
       if (typeof index === 'number') {
         setContractId(contractId)
         setProofIndex(index)
-        setCanClaim(!isClaimed)
+        isClaimed && setCanClaim(!isClaimed)
       }
     }
   }, [account, claimsFiles, contractId, proofIndex, isClaimed])
@@ -39,7 +42,10 @@ export default function Claim() {
     contractId: contractId,
     index: proofIndex,
     account: account?.address,
-    amount: ethers.utils.parseEther(nationDropAmount),
+    amount:
+      canClaim && claimsFiles
+        ? claimsFiles[contractId].claims[account?.address]?.amount
+        : 0,
     proof:
       canClaim && claimsFiles
         ? claimsFiles[contractId].claims[account?.address]?.proof
