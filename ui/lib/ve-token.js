@@ -25,10 +25,10 @@ export function useVeNationBalance(address) {
 
 let gasLimits = {
   locked: 330000,
-  create_lock: 438772,
-  increase_amount: 370183,
-  increase_unlock_time: 337407,
-  withdraw: 330560,
+  create_lock: 600000,
+  increase_amount: 600000,
+  increase_unlock_time: 600000,
+  withdraw: 400000,
 }
 
 export function useVeNationLock(address) {
