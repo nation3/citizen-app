@@ -1,4 +1,3 @@
-import { ethers } from 'ethers'
 import { useState, useEffect } from 'react'
 import { nationDropAmount, nationToken } from '../lib/config'
 import {
@@ -22,21 +21,29 @@ export default function Claim() {
   const [justClaimed, setJustClaimed] = useState(false)
 
   const [{ data: claimsFiles }] = useHandleError(useClaimsFiles())
-  const [{ data: isClaimed }] = useIsClaimed(contractId, proofIndex)
+  const [{ data: isClaimed, loading: isClaimedLoading }] = useIsClaimed(
+    contractId,
+    proofIndex
+  )
 
   useEffect(() => {
-    if (claimsFiles && account) {
-      const [contractId, index] = checkEligibility(claimsFiles, account.address)
-      console.log(contractId)
-      console.log(index)
-      console.log(isClaimed)
+    if (account && claimsFiles) {
+      const [id, index] = checkEligibility(claimsFiles, account.address)
       if (typeof index === 'number') {
-        setContractId(contractId)
+        setContractId(id)
         setProofIndex(index)
-        isClaimed && setCanClaim(!isClaimed)
+        typeof isClaimed !== 'undefined' && setCanClaim(!isClaimed)
       }
     }
-  }, [account, claimsFiles, contractId, proofIndex, isClaimed])
+  }, [account, claimsFiles, isClaimed, isClaimedLoading])
+
+  /*useEffect(() => {
+    console.log(isClaimedLoading)
+    console.log(isClaimed)
+    !isClaimedLoading &&
+      typeof isClaimed === 'undefined' &&
+      setCanClaim(!isClaimed)
+  }, [isClaimed, isClaimedLoading])*/
 
   const claimDrop = useClaimDrop({
     contractId: contractId,
