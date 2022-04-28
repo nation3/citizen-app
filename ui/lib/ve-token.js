@@ -11,7 +11,7 @@ export function useVeNationBalance(address) {
   return useContractRead(contractParams, 'balanceOf(address)', {
     args: [address],
     watch: true,
-    skip: !address,
+    enabled: !address,
   })
   /*
   For some reason 'balanceOf' doens't work, therefore useBalance doesn't either
@@ -35,7 +35,7 @@ export function useVeNationLock(address) {
   return useContractRead(contractParams, 'locked', {
     args: [address],
     watch: true,
-    skip: !address,
+    enabled: !address,
     overrides: {
       gasLimit: gasLimits.locked,
     },

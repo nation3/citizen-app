@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react'
 import {
-  useConnect as _useConnect,
+  // useConnect as _useConnect,
   useAccount as _useAccount,
   useBalance as _useBalance,
   useContract,
@@ -9,10 +9,6 @@ import {
 } from 'wagmi'
 import { useErrorContext } from '../components/ErrorProvider'
 import { useHandleError } from './use-handle-error'
-
-export function useConnect() {
-  return useHandleError(_useConnect())
-}
 
 export function useAccount(params) {
   return useHandleError(_useAccount(params))
@@ -36,16 +32,15 @@ function _useContractWrite(config, method, argsAndOverrides) {
 
   const [data, setData] = useState(null)
   const [error, setError] = useState(null)
-  const [loading, setLoading] = useState(false)
+  const [isLoading, setLoading] = useState(false)
 
-  const [{ data: signerData, error: signerError, loading: signerLoading }] =
-    useSigner()
+  const { data: signerData, error: signerError } = useSigner()
   const contract = useContract({
     ...config,
     signerOrProvider: signerData,
   })
 
-  const write = useCallback(async () => {
+  const refetch = useCallback(async () => {
     try {
       setLoading(true)
       let data
@@ -54,8 +49,8 @@ function _useContractWrite(config, method, argsAndOverrides) {
           ...(Array.isArray(argsAndOverrides.args)
             ? argsAndOverrides.args
             : argsAndOverrides.args
-            ? [argsAndOverrides.args]
-            : []),
+              ? [argsAndOverrides.args]
+              : []),
           ...(argsAndOverrides.overrides ? [argsAndOverrides.overrides] : []),
         ]
         data = await contract[method](...params)
@@ -78,5 +73,5 @@ function _useContractWrite(config, method, argsAndOverrides) {
     }
   }, [config, argsAndOverrides])
   errorContext.addError([signerError])
-  return [{ data, error, loading }, write]
+  return { data, error, isLoading, refetch };
 }

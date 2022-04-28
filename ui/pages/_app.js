@@ -1,11 +1,21 @@
-import { ethers } from 'ethers'
+import { ethers, providers } from 'ethers'
 import { useEffect, useState } from 'react'
 import { NftProvider } from 'use-nft'
-import { WagmiProvider } from 'wagmi'
+import { Provider, chain, createClient, defaultChains, developmentChains } from 'wagmi'
 import { connectors } from '../lib/connectors'
 import { ErrorProvider } from '../components/ErrorProvider'
 import Layout from '../components/Layout'
 import '../styles/globals.css'
+
+const alchemyId = process.env.NEXT_PUBLIC_ALCHEMY_ID
+const defaultChain = chain.mainnet
+const isChainSupported = (chainId) =>
+  chains?.some((x) => x.id === chainId)
+
+const chains =
+  process.env.NEXT_PUBLIC_CHAIN === 'mainnet'
+    ? defaultChains
+    : developmentChains
 
 let externalProvider
 
@@ -23,13 +33,31 @@ if (process.env.NEXT_PUBLIC_CHAIN === 'local') {
   })
 }
 
+const client = createClient({
+  autoConnect: true,
+  connectors,
+  provider({ chainId }) {
+    return new providers.AlchemyProvider(
+      isChainSupported(chainId) ? chainId : defaultChain.id,
+      alchemyId,
+    )
+  },
+  webSocketProvider({ chainId }) {
+    return new providers.AlchemyWebSocketProvider(
+      isChainSupported(chainId) ? chainId : defaultChain.id,
+      alchemyId,
+    )
+  },
+})
+
 function App({ Component, pageProps }) {
   const [provider, setProvider] = useState()
 
   useEffect(() => {
     const userProvider = window.ethereum || window.web3?.currentProvider
     if (userProvider) {
-      setProvider(new ethers.providers.Web3Provider(userProvider))
+      const newProvider = new ethers.providers.Web3Provider(userProvider)
+      setProvider(newProvider)
     } else {
       setProvider(provider)
     }
@@ -37,13 +65,13 @@ function App({ Component, pageProps }) {
 
   return (
     <ErrorProvider>
-      <WagmiProvider autoConnect connectors={connectors} provider={provider}>
+      <Provider client={client}>
         <NftProvider fetcher={['ethers', { provider }]}>
           <Layout>
             <Component {...pageProps} />
           </Layout>
         </NftProvider>
-      </WagmiProvider>
+      </Provider>
     </ErrorProvider>
   )
 }

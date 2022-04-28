@@ -1,7 +1,7 @@
 import { chain, defaultChains, developmentChains } from 'wagmi'
 import { InjectedConnector } from 'wagmi/connectors/injected'
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
-import { WalletLinkConnector } from 'wagmi/connectors/walletLink'
+import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet'
 import CoinbaseWalletIcon from '../public/icons/connectors/coinbase.svg'
 import FrameIcon from '../public/icons/connectors/frame.svg'
 import MetaMaskIcon from '../public/icons/connectors/metamask.svg'
@@ -30,7 +30,7 @@ export function connectors({ chainId }) {
       },
       icon: WalletConnectIcon,
     }),
-    new WalletLinkConnector({
+    new CoinbaseWalletConnector({
       options: {
         appName: 'Nation3 app',
         jsonRpcUrl: `${rpcUrl}/${infuraId}`,

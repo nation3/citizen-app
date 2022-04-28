@@ -23,7 +23,7 @@ export function checkEligibility(claimsFiles, address) {
 }
 
 export function useClaimsFiles() {
-  const [data, setData] = useState({ loading: true })
+  const [data, setData] = useState({ isLoading: true })
   useMemo(async () => {
     try {
       const claims = await Promise.all(
@@ -31,13 +31,13 @@ export function useClaimsFiles() {
           async (_, contractId) => await fetchClaimsFile(contractId)
         )
       )
-      setData({ data: claims, loading: false })
+      setData({ data: claims, isLoading: false })
     } catch (error) {
       console.log(error)
-      setData({ error, loading: false })
+      setData({ error, isLoading: false })
     }
   }, [])
-  return [data]
+  return data
 }
 
 const contractParams = (contractId) => ({
@@ -49,7 +49,7 @@ export function useIsClaimed(contractId, index) {
   return useContractRead(contractParams(contractId), 'isClaimed', {
     args: [index],
     watch: true,
-    skip: !contractId || !index,
+    enabled: !contractId || !index,
   })
 }
 

@@ -12,7 +12,7 @@ export function useTokenAllowance({ token, address, spender }) {
     {
       args: [address, spender],
       watch: true,
-      skip: !token || !address || !spender,
+      enabled: !token || !address || !spender,
     }
   )
 }
