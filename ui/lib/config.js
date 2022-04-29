@@ -10,8 +10,10 @@ let config = {
   lpRewardsContract: process.env.NEXT_PUBLIC_LP_REWARDS_CONTRACT_ADDRESS,
   nationPassportNFT: process.env.NEXT_PUBLIC_PASSPORT_NFT_ADDRESS,
   nationPassportNFTIssuer: process.env.NEXT_PUBLIC_PASSPORT_NFT_ISSUER_ADDRESS,
-  nationDropContract:
-    process.env.NEXT_PUBLIC_NATION_DISTRIBUTOR_CONTRACT_ADDRESS,
+  nationDropContracts: [
+    process.env.NEXT_PUBLIC_NATION_DISTRIBUTOR1_CONTRACT_ADDRESS,
+    process.env.NEXT_PUBLIC_NATION_DISTRIBUTOR2_CONTRACT_ADDRESS,
+  ],
   nationDropAmount: process.env.NEXT_PUBLIC_NATION_DISTRIBUTOR_DROP_AMOUNT,
 }
 
@@ -29,8 +31,7 @@ if (process.env.NEXT_PUBLIC_CHAIN !== 'mainnet') {
     lpRewardsContract: devDeployments.lpRewardsContract || zeroAddress,
     nationPassportNFT: devDeployments.passportNFT || zeroAddress,
     nationPassportNFTIssuer: devDeployments.passportIssuer || zeroAddress,
-    nationDropContract: devDeployments.nationDropContract || zeroAddress,
-    nationDropAmount: 1,
+    nationDropContracts: devDeployments.nationDropContracts || [zeroAddress],
   }
 }
 
@@ -47,6 +48,6 @@ export const {
   lpRewardsContract,
   nationPassportNFT,
   nationPassportNFTIssuer,
-  nationDropContract,
+  nationDropContracts,
   nationDropAmount,
 } = config
