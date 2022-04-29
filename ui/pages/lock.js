@@ -10,7 +10,6 @@ import {
   nationToken,
   veNationToken,
   veNationRequiredStake,
-  veNationRewardsMultiplier,
 } from '../lib/config'
 import { useNationBalance } from '../lib/nation-token'
 import { transformNumber } from '../lib/numbers'
@@ -202,9 +201,16 @@ export default function Lock() {
               Some examples of how to get to {veNationRequiredStake} $veNATION:
             </p>
             <ul className="list-disc list-inside mb-4">
-              <li>At least {veNationRequiredStake} $NATION locked for 4 years, or</li>
-              <li>At least {veNationRequiredStake * 2} $NATION locked for 2 years, or</li>
-              <li>At least {veNationRequiredStake * 4} $NATION locked for 1 year</li>
+              <li>
+                At least {veNationRequiredStake} $NATION locked for 4 years, or
+              </li>
+              <li>
+                At least {veNationRequiredStake * 2} $NATION locked for 2 years,
+                or
+              </li>
+              <li>
+                At least {veNationRequiredStake * 4} $NATION locked for 1 year
+              </li>
             </ul>
             <div className="alert mb-4">
               <div>
