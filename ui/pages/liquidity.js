@@ -42,13 +42,12 @@ export default function Liquidity() {
   const [{ data: poolTokenBalance, loading: poolTokenBalanceLoading }] =
     usePoolTokenBalance(account?.address)
 
-  const [{ data: liquidityRewardsNationBalance }] =
-    useNationBalance(lpRewardsContract)
   const [
     {
       liquidityRewardsAPY,
       unclaimedRewards,
-      stakingBalance,
+      userDeposit,
+      totalDeposit,
       loading: loadingLiquidityRewards,
     },
   ] = useLiquidityRewards({
@@ -59,9 +58,16 @@ export default function Liquidity() {
 
   const [{ data: veNationSupply }] = useVeNationSupply()
 
+  console.log({
+    userDeposit,
+    totalDeposit,
+    userVeNation: veNationBalance,
+    totalVeNation: veNationSupply,
+  })
+
   const userVeNationBoost = useVeNationBoost({
-    userStake: stakingBalance,
-    totalStake: liquidityRewardsNationBalance?.value,
+    userDeposit,
+    totalDeposit,
     userVeNation: veNationBalance,
     totalVeNation: veNationSupply,
   })
@@ -116,7 +122,7 @@ export default function Liquidity() {
             </div>
             <div className="stat-title">Current APY</div>
             <div className="stat-value">
-              <Balance balance={liquidityRewardsAPY} suffix="%" decimals={0} />
+              <Balance balance={liquidityRewardsAPY} suffix="%" decimals={2} />
             </div>
           </div>
         </div>
@@ -143,7 +149,9 @@ export default function Liquidity() {
               <Balance
                 balance={
                   liquidityRewardsAPY &&
-                  liquidityRewardsAPY.mul(userVeNationBoost)
+                  (transformNumber(liquidityRewardsAPY, 'number', 18) /
+                    10 ** 18) *
+                    userVeNationBoost
                 }
                 suffix="%"
                 decimals={2}

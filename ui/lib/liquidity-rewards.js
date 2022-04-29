@@ -1,7 +1,7 @@
 import { ethers } from 'ethers'
 import { useState, useEffect } from 'react'
 import { lpRewardsContract, balancerLPToken } from '../lib/config'
-import LiquidityRewardsDistributor from '../abis/LiquidityRewardsDistributor.json'
+import LiquidityRewardsDistributor from '../abis/BoostedLiquidityRewardsDistributor.json'
 import { transformNumber } from './numbers'
 import { useBalance, useContractRead, useContractWrite } from './use-wagmi'
 
@@ -11,8 +11,11 @@ const contractParams = {
 }
 
 export function useLiquidityRewards({ nationPrice, poolValue, address }) {
-  const [{ data: totalRewards, loading: totalRewardsLoading }] =
-    useContractRead(contractParams, 'totalRewards')
+  /*const [{ data: totalRewards, loading: totalRewardsLoading }] =
+    useContractRead(contractParams, 'totalRewards')*/
+  const totalRewards = transformNumber(500, 'bignumber', 18)
+  const totalRewardsLoading = false
+  const months = transformNumber(6, 'bignumber', 0)
 
   const [{ data: unclaimedRewards, loading: unclaimedRewardsLoading }] =
     useContractRead(contractParams, 'getUnclaimedRewards', {
@@ -21,32 +24,44 @@ export function useLiquidityRewards({ nationPrice, poolValue, address }) {
       skip: !address,
     })
 
-  const [{ data: stakingBalance, loading: stakingBalanceLoading }] =
-    useContractRead(contractParams, 'getStakingBalance', {
+  const [{ data: userDeposit, loading: userDepositLoading }] = useContractRead(
+    contractParams,
+    'userDeposit',
+    {
       args: [address],
       watch: true,
       skip: !address,
-    })
+    }
+  )
+
+  const [{ data: totalDeposit, loading: totalDepositLoading }] =
+    useContractRead(contractParams, 'totalDeposit')
+
   const [liquidityRewardsAPY, setLiquidityRewardsAPY] = useState(0)
 
   useEffect(() => {
-    if (totalRewards) {
+    if (totalRewards && poolValue) {
       setLiquidityRewardsAPY(
         totalRewards
-          .mul(transformNumber(nationPrice, 'bignumber', 0))
-          .mul(100)
+          .div(months)
+          .mul(transformNumber(nationPrice, 'bignumber', 2))
           .div(poolValue)
       )
     }
-  }, [totalRewards, totalRewardsLoading, poolValue, nationPrice])
+  }, [poolValue, nationPrice])
+  // totalRewards, totalRewardsLoading,
 
   return [
     {
       liquidityRewardsAPY,
-      unclaimedRewards: unclaimedRewards,
-      stakingBalance: stakingBalance,
+      unclaimedRewards,
+      userDeposit,
+      totalDeposit,
       loading:
-        totalRewardsLoading || unclaimedRewardsLoading || stakingBalanceLoading,
+        totalRewardsLoading ||
+        unclaimedRewardsLoading ||
+        userDepositLoading ||
+        totalDepositLoading,
     },
   ]
 }
@@ -62,32 +77,41 @@ export function usePoolTokenBalance(address) {
   return [{ data, loading }]
 }
 
-// userStake = amount of LP tokens staked by user
-// totalStake = amount of LP tokens in rewards contract
+// userDeposit = amount of LP tokens staked by user
+// totalDeposit = amount of LP tokens in rewards contract
 // userVotingPower = veNationBalance
 // totalVotingPower = veNATION supply
-// min(userStake, userStake * 40/100 + totalStake * userVotingPower / totalVotingPower * 60/100)
+// min(userDeposit, (_totalDeposit * userPower / totalPower) * (100 - BOOSTLESS_PRODUCTION) / 100)
 export function useVeNationBoost({
-  userStake,
-  totalStake,
+  userDeposit,
+  totalDeposit,
   userVeNation,
   totalVeNation,
 }) {
   const [boost, setBoost] = useState(0)
   useEffect(() => {
-    if (userStake && totalStake && userVeNation && totalVeNation) {
-      const userStakePercentage = userStake.mul(
-        transformNumber(40 / 100, 'bignumber', 1)
-      )
+    //  && totalVeNation
+    if (userDeposit && totalDeposit && userVeNation) {
+      totalVeNation = transformNumber(6666, 'bignumber', 0)
 
-      const userVotingPercentage = totalStake
-        .mul(userVeNation)
-        .div(totalVeNation.mul(transformNumber(60 / 100, 'bignumber', 1)))
-      const boost = userStakePercentage.add(userVotingPercentage)
-      setBoost(userStake.gt(boost) ? userStake : boost)
+      userDeposit = transformNumber(userDeposit, 'number')
+      totalDeposit = transformNumber(totalDeposit, 'number')
+      userVeNation = transformNumber(userVeNation, 'number')
+      totalVeNation = 6666
+      console.log({
+        userDeposit,
+        totalDeposit,
+        userVeNation,
+        totalVeNation,
+      })
+      let boost =
+        (userDeposit * 40) / 100 +
+        (((totalDeposit * userVeNation) / totalVeNation) * 60) / 100
+      boost = 1 + boost
       console.log(boost)
+      setBoost(transformNumber(boost, 'bignumber', 18))
     }
-  }, [userStake, totalStake, userVeNation, totalVeNation])
+  }, [userDeposit, totalDeposit, userVeNation, totalVeNation])
 
   return boost
 }
