@@ -90,16 +90,19 @@ export function useVeNationBoost({
       userVeNation = transformNumber(userVeNation, 'number', 18)
       totalVeNation = transformNumber(totalVeNation, 'number', 18)
 
-      let boost =
+      let boostedBalance =
         (userDeposit * 40) / 100 +
         (((totalDeposit * userVeNation) / totalVeNation) * 60) / 100
-      boost = 1 + boost
+      if (boostedBalance >= userDeposit) boostedBalance = userDeposit
+      const boost = boostedBalance / (userDeposit * 0.4)
+
       console.log({
         userDeposit,
         totalDeposit,
         userVeNation,
         totalVeNation,
       })
+      console.log(`Boost: ${boost}`)
       setBoost(transformNumber(boost, 'bignumber', 18))
     }
   }, [userDeposit, totalDeposit, userVeNation, totalVeNation])
@@ -108,11 +111,16 @@ export function useVeNationBoost({
 }
 
 export function useClaimRewards() {
-  return useContractWrite(contractParams, 'claimRewards')
+  return useContractWrite(contractParams, 'claimRewards', {
+    overrides: { gasLimit: 300000 },
+  })
 }
 
 export function useDeposit(amount) {
-  return useContractWrite(contractParams, 'deposit', { args: [amount] })
+  return useContractWrite(contractParams, 'deposit', {
+    args: [amount],
+    overrides: { gasLimit: 300000 },
+  })
 }
 
 export function useWithdraw(amount) {

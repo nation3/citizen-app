@@ -5,7 +5,7 @@ import {
   CalculatorIcon,
 } from '@heroicons/react/outline'
 import { ethers } from 'ethers'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useBalancerPool } from '../lib/balancer'
 import {
   balancerPoolId,
@@ -22,7 +22,6 @@ import {
   useWithdrawAndClaim,
   useClaimRewards,
 } from '../lib/liquidity-rewards'
-import { useNationBalance } from '../lib/nation-token'
 import { transformNumber } from '../lib/numbers'
 import { useAccount } from '../lib/use-wagmi'
 import { useVeNationBalance, useVeNationSupply } from '../lib/ve-token'
