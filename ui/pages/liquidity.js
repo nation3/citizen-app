@@ -86,7 +86,11 @@ export default function Liquidity() {
       <MainCard loading={loading} title="$NATION liquidity rewards">
         <p>
           Provide liquitity in the pool and then deposit the pool token here.{' '}
-          <GradientLink href="#" text="Balancer pool" textSize="md" />
+          <GradientLink
+            href="https://app.balancer.fi/#/pool/0x0bf37157d30dfe6f56757dcadff01aed83b08cd600020000000000000000019a"
+            text="Balancer pool"
+            textSize="md"
+          />
           <br />
           Get up to {veNationRewardsMultiplier}x more rewards with $veNATION.{' '}
           <GradientLink href="/lock" text="Get $veNATION" textSize="md" />
