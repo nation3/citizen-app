@@ -90,14 +90,13 @@ export function useVeNationBoost({
 }) {
   const [boost, setBoost] = useState(0)
   useEffect(() => {
-    //  && totalVeNation
-    if (userDeposit && totalDeposit && userVeNation) {
+    if (userDeposit && totalDeposit && userVeNation && totalVeNation) {
       totalVeNation = transformNumber(6666, 'bignumber', 0)
 
       userDeposit = transformNumber(userDeposit, 'number')
       totalDeposit = transformNumber(totalDeposit, 'number')
       userVeNation = transformNumber(userVeNation, 'number')
-      totalVeNation = 6666
+
       console.log({
         userDeposit,
         totalDeposit,

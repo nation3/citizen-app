@@ -95,9 +95,5 @@ export function useVeNationWithdrawLock() {
 }
 
 export function useVeNationSupply() {
-  return useContractRead(contractParams, 'supply', {
-    overrides: {
-      gasLimit: 300000,
-    },
-  })
+  return useContractRead(contractParams, 'totalSupply()')
 }
