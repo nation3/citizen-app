@@ -1,16 +1,11 @@
 import { useState, useEffect } from 'react'
 import { nationDropAmount, nationToken } from '../lib/config'
-<<<<<<< HEAD
-import { useClaimsFile, useIsClaimed, useClaimDrop } from '../lib/merkle-drop'
-import { transformNumber } from '../lib/numbers'
-=======
 import {
   useClaimsFiles,
   checkEligibility,
   useIsClaimed,
   useClaimDrop,
 } from '../lib/merkle-drop'
->>>>>>> main
 import { useHandleError } from '../lib/use-handle-error'
 import { useAccount } from '../lib/use-wagmi'
 import ActionButton from '../components/ActionButton'

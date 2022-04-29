@@ -4,13 +4,9 @@ import { formatUnits } from "@ethersproject/units"
 
 import Nation from '../out/NATION.sol/NATION.json';
 import VotingEscrow from '../out/VotingEscrow.vy/VotingEscrow.json';
-<<<<<<< HEAD
-import MerkleDistributor from '../out/MerkleDistributor.sol/MerkleDistributor.json';
 import LiquidityDistributor from '../out/BoostedLiquidityDistributor.sol/BoostedLiquidityDistributor.json';
 import MockERC20 from '../out/MockERC20.sol/MockERC20.json';
-=======
 import MerkleDistributorV2 from '../out/MerkleDistributorV2.sol/MerkleDistributorV2.json';
->>>>>>> main
 
 const getContractFactory = (artifact: any) => {
     return new ethers.ContractFactory(artifact.abi, artifact.bytecode.object, wallet);

@@ -58,13 +58,6 @@ export default function Liquidity() {
 
   const [{ data: veNationSupply }] = useVeNationSupply()
 
-  console.log({
-    userDeposit,
-    totalDeposit,
-    userVeNation: veNationBalance,
-    totalVeNation: veNationSupply,
-  })
-
   const userVeNationBoost = useVeNationBoost({
     userDeposit,
     totalDeposit,
@@ -108,7 +101,7 @@ export default function Liquidity() {
             <div className="stat-title">Total liquidity</div>
             <div className="stat-value">
               <Balance
-                balance={poolValue / 1000000}
+                balance={transformNumber(poolValue, 'number', 0) / 1000000}
                 prefix="$"
                 suffix="M"
                 decimals={2}
@@ -238,8 +231,8 @@ export default function Liquidity() {
               ) : (
                 <>
                   <p className="mb-4">
-                    Available to withdraw: <Balance balance={stakingBalance} />{' '}
-                    LP tokens
+                    Available to withdraw: <Balance balance={userDeposit} /> LP
+                    tokens
                   </p>
                   <div className="input-group">
                     <input

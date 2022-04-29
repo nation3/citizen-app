@@ -1,4 +1,3 @@
-import { ethers } from 'ethers'
 import { useState, useEffect } from 'react'
 import { lpRewardsContract, balancerLPToken } from '../lib/config'
 import LiquidityRewardsDistributor from '../abis/BoostedLiquidityRewardsDistributor.json'
@@ -11,10 +10,8 @@ const contractParams = {
 }
 
 export function useLiquidityRewards({ nationPrice, poolValue, address }) {
-  /*const [{ data: totalRewards, loading: totalRewardsLoading }] =
-    useContractRead(contractParams, 'totalRewards')*/
-  const totalRewards = transformNumber(500, 'bignumber', 18)
-  const totalRewardsLoading = false
+  const [{ data: totalRewards, loading: totalRewardsLoading }] =
+    useContractRead(contractParams, 'totalRewards')
   const months = transformNumber(6, 'bignumber', 0)
 
   const [{ data: unclaimedRewards, loading: unclaimedRewardsLoading }] =
@@ -46,10 +43,10 @@ export function useLiquidityRewards({ nationPrice, poolValue, address }) {
           .div(months)
           .mul(transformNumber(nationPrice, 'bignumber', 2))
           .div(poolValue)
+          .mul(transformNumber(1, 'bignumber'))
       )
     }
-  }, [poolValue, nationPrice])
-  // totalRewards, totalRewardsLoading,
+  }, [poolValue, nationPrice, totalRewards, totalRewardsLoading])
 
   return [
     {
@@ -67,21 +64,18 @@ export function useLiquidityRewards({ nationPrice, poolValue, address }) {
 }
 
 export function usePoolTokenBalance(address) {
-  const [{ data, loading }] = useBalance({
+  return useBalance({
     addressOrName: address,
     token: balancerLPToken,
     watch: true,
     skip: !address,
   })
-
-  return [{ data, loading }]
 }
 
 // userDeposit = amount of LP tokens staked by user
 // totalDeposit = amount of LP tokens in rewards contract
 // userVotingPower = veNationBalance
 // totalVotingPower = veNATION supply
-// min(userDeposit, (_totalDeposit * userPower / totalPower) * (100 - BOOSTLESS_PRODUCTION) / 100)
 export function useVeNationBoost({
   userDeposit,
   totalDeposit,
@@ -91,23 +85,21 @@ export function useVeNationBoost({
   const [boost, setBoost] = useState(0)
   useEffect(() => {
     if (userDeposit && totalDeposit && userVeNation && totalVeNation) {
-      totalVeNation = transformNumber(6666, 'bignumber', 0)
+      userDeposit = transformNumber(userDeposit, 'number', 18)
+      totalDeposit = transformNumber(totalDeposit, 'number', 18)
+      userVeNation = transformNumber(userVeNation, 'number', 18)
+      totalVeNation = transformNumber(totalVeNation, 'number', 18)
 
-      userDeposit = transformNumber(userDeposit, 'number')
-      totalDeposit = transformNumber(totalDeposit, 'number')
-      userVeNation = transformNumber(userVeNation, 'number')
-
+      let boost =
+        (userDeposit * 40) / 100 +
+        (((totalDeposit * userVeNation) / totalVeNation) * 60) / 100
+      boost = 1 + boost
       console.log({
         userDeposit,
         totalDeposit,
         userVeNation,
         totalVeNation,
       })
-      let boost =
-        (userDeposit * 40) / 100 +
-        (((totalDeposit * userVeNation) / totalVeNation) * 60) / 100
-      boost = 1 + boost
-      console.log(boost)
       setBoost(transformNumber(boost, 'bignumber', 18))
     }
   }, [userDeposit, totalDeposit, userVeNation, totalVeNation])
@@ -127,6 +119,6 @@ export function useWithdraw(amount) {
   return useContractWrite(contractParams, 'withdraw', { args: [amount] })
 }
 
-export function useWithdrawAndClaim(amount) {
+export function useWithdrawAndClaim() {
   return useContractWrite(contractParams, 'withdrawAndClaim')
 }

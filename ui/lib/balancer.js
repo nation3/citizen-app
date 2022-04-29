@@ -1,5 +1,4 @@
-import { ethers } from 'ethers'
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect } from 'react'
 import BalancerVault from '../abis/BalancerVault.json'
 import { balancerVault } from './config'
 import { transformNumber } from './numbers'
@@ -21,7 +20,7 @@ export function useBalancerPool(id) {
   const [nationPrice, setNationPrice] = useState(0)
   const [ethPrice, setEthPrice] = useState(0)
 
-  useMemo(async () => {
+  useEffect(async () => {
     const priceRes = await fetch(
       'https://api.coingecko.com/api/v3/simple/price?ids=nation3,ethereum&vs_currencies=usd'
     )
@@ -36,20 +35,26 @@ export function useBalancerPool(id) {
   }, [])
 
   useEffect(() => {
-    if (!loadingPool && nationPrice && ethPrice) {
-      const nationBalance = poolData?.balances[0]
-      const wethBalance = poolData?.balances[1]
+    if (process.env.NEXT_PUBLIC_CHAIN === 'local') {
+      setPoolValue(transformNumber(333333, 'bignumber', 0))
+    } else if (!loadingPool && nationPrice && ethPrice) {
+      let nationBalance
+      let wethBalance
+      if (process.env.NEXT_PUBLIC_CHAIN === 'mainnet') {
+        nationBalance = poolData?.balances[0]
+        wethBalance = poolData?.balances[1]
+      } else {
+        nationBalance = transformNumber(333, 'bignumber', 18)
+        wethBalance = transformNumber(333, 'bignumber', 18)
+      }
 
       if (nationBalance && wethBalance) {
         const nationValue = nationBalance.mul(Math.round(nationPrice))
         const ethValue = wethBalance.mul(Math.round(ethPrice))
         const totalValue = nationValue.add(ethValue)
-        setPoolValue(ethers.utils.formatEther(totalValue))
+        setPoolValue(totalValue)
       }
     }
-    if (process.env.NEXT_PUBLIC_CHAIN === 'local') {
-      setPoolValue(transformNumber(2000000, 'bignumber', 0))
-    }
-  }, [loadingPool, poolData, ethPrice])
+  }, [loadingPool, poolData, ethPrice, nationPrice])
   return [{ poolValue, nationPrice, loadingPool }]
 }
