@@ -144,10 +144,11 @@ export default function Liquidity() {
             <div className="stat-value text-secondary">
               <Balance
                 balance={
-                  liquidityRewardsAPY &&
-                  (transformNumber(liquidityRewardsAPY, 'number', 18) /
-                    10 ** 18) *
-                    userVeNationBoost
+                  liquidityRewardsAPY && !userVeNationBoost.isZero()
+                    ? (transformNumber(liquidityRewardsAPY, 'number', 18) /
+                        10 ** 18) *
+                      userVeNationBoost
+                    : liquidityRewardsAPY
                 }
                 suffix="%"
                 decimals={2}
