@@ -72,6 +72,8 @@ const deployLiquidityDistributor = async (rewardsToken: Contract, boostToken: Co
     const contractFactory = getContractFactory(LiquidityDistributor);
     const tokenFactory = getContractFactory(MockERC20);
     const supply = BigNumber.from(dec(314, 18));
+    const rewards = BigNumber.from(dec(500, 18));
+    const rewardsPeriod = 1196308; // 6 months of blocks approx
 
     const lpToken = await deployContract({
         name: "lpToken",
@@ -88,6 +90,16 @@ const deployLiquidityDistributor = async (rewardsToken: Contract, boostToken: Co
     })
 
     await distributor.connect(wallet).initialize(rewardsToken.address, lpToken.address, boostToken.address);
+
+    const provider = new ethers.providers.JsonRpcProvider(process.env.RPC_URL);
+    const blockNumber = await provider.getBlockNumber();
+    // Setup rewards
+    await rewardsToken.connect(wallet).mint(distributor.address, rewards);
+    const startBlock = blockNumber + 5;
+    const endBlock = startBlock + rewardsPeriod;
+
+    await distributor.connect(wallet).setRewards(rewards, startBlock, endBlock);
+    console.log(`Set ${formatUnits(rewards, 18)} NATIONs as rewards from block ${startBlock} to ${endBlock}`)
 
     return { "lpToken": lpToken, "lpRewardsContract": distributor}
 }
