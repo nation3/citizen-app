@@ -36,8 +36,12 @@ export default function Liquidity() {
 
   const [{ data: veNationBalance, loading: veNationBalanceLoading }] =
     useVeNationBalance(account?.address)
-  const [{ poolValue, nationPrice, loadingPool }] =
-    useBalancerPool(balancerPoolId)
+  const {
+    poolValue,
+    nationPrice,
+    loading: poolLoading,
+  } = useBalancerPool(balancerPoolId)
+
   const [{ data: poolTokenBalance, loading: poolTokenBalanceLoading }] =
     usePoolTokenBalance(account?.address)
 
@@ -66,18 +70,16 @@ export default function Liquidity() {
 
   const [depositValue, setDepositValue] = useState()
   const [withdrawalValue, setWithdrawalValue] = useState()
-  const deposit = useDeposit(
-    ethers.utils.parseEther(depositValue ? depositValue.toString() : '0')
-  )
+  const deposit = useDeposit(transformNumber(depositValue, 'bignumber', 18))
   const withdraw = useWithdraw(
-    ethers.utils.parseEther(withdrawalValue ? withdrawalValue.toString() : '0')
+    transformNumber(withdrawalValue, 'bignumber', 18)
   )
   const claimRewards = useClaimRewards(unclaimedRewards)
   const withdrawAndClaimRewards = useWithdrawAndClaim()
   const [activeTab, setActiveTab] = useState(0)
 
   const loading =
-    loadingPool || poolTokenBalanceLoading || loadingLiquidityRewards
+    poolLoading || poolTokenBalanceLoading || loadingLiquidityRewards
 
   return (
     <>
@@ -144,7 +146,9 @@ export default function Liquidity() {
             <div className="stat-value text-secondary">
               <Balance
                 balance={
-                  liquidityRewardsAPY && !userVeNationBoost.isZero()
+                  liquidityRewardsAPY &&
+                  userVeNationBoost &&
+                  !userVeNationBoost.isZero()
                     ? (transformNumber(liquidityRewardsAPY, 'number', 18) /
                         10 ** 18) *
                       userVeNationBoost

@@ -85,16 +85,18 @@ export function useVeNationBoost({
   const [boost, setBoost] = useState(0)
   useEffect(() => {
     if (userDeposit && totalDeposit && userVeNation && totalVeNation) {
-      userDeposit = transformNumber(userDeposit, 'number', 18)
-      totalDeposit = transformNumber(totalDeposit, 'number', 18)
-      userVeNation = transformNumber(userVeNation, 'number', 18)
-      totalVeNation = transformNumber(totalVeNation, 'number', 18)
+      const bn = {
+        userDeposit: transformNumber(userDeposit, 'number', 18),
+        totalDeposit: transformNumber(totalDeposit, 'number', 18),
+        userVeNation: transformNumber(userVeNation, 'number', 18),
+        totalVeNation: transformNumber(totalVeNation, 'number', 18),
+      }
 
       let boostedBalance =
-        (userDeposit * 40) / 100 +
-        (((totalDeposit * userVeNation) / totalVeNation) * 60) / 100
-      if (boostedBalance >= userDeposit) boostedBalance = userDeposit
-      const boost = boostedBalance / (userDeposit * 0.4)
+        (bn.userDeposit * 40) / 100 +
+        (((bn.totalDeposit * bn.userVeNation) / bn.totalVeNation) * 60) / 100
+      if (boostedBalance >= bn.userDeposit) boostedBalance = bn.userDeposit
+      const boost = boostedBalance / (bn.userDeposit * 0.4)
 
       console.log({
         userDeposit,
@@ -111,9 +113,7 @@ export function useVeNationBoost({
 }
 
 export function useClaimRewards() {
-  return useContractWrite(contractParams, 'claimRewards', {
-    overrides: { gasLimit: 300000 },
-  })
+  return useContractWrite(contractParams, 'claimRewards')
 }
 
 export function useDeposit(amount) {
