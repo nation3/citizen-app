@@ -24,17 +24,19 @@ contract BoostedLiquidityDistributor is Initializable, Ownable {
     error InvalidStartBlock();
     error InvalidEndBlock();
     error InvalidRewardsAmount();
-    error InsufficientStakeBalance();
+    error InsufficientDepositBalance();
     error InsufficientRewardsBalance();
+    error KickNotAllowed();
 
     /*///////////////////////////////////////////////////////////////
                                  EVENTS
     //////////////////////////////////////////////////////////////*/
 
+    event RewardsSet(uint256 amount, uint256 startBlock, uint256 endBlock);
     event Claim(address indexed user, uint256 rewards);
     event Deposit(address indexed user, uint256 amount);
     event Withdraw(address indexed user, uint256 amount);
-    event UpdatedBalances(address acccount, uint256 balance, uint256 totalBalance);
+    event UpdatedBalances(address account, uint256 balance, uint256 totalBalance);
 
     /*///////////////////////////////////////////////////////////////
                         INMUTABLES / CONSTANTS
@@ -51,7 +53,7 @@ contract BoostedLiquidityDistributor is Initializable, Ownable {
 
     /// @notice The token rewarded to LP providers.
     ERC20 public rewardsToken;
-    /// @notice The LP token accepted to stake by the contract.
+    /// @notice The LP token accepted to deposit by the contract.
     ERC20 public lpToken;
     /// @notice The token used to boost rewards.
     ERC20 public boostToken;
@@ -73,17 +75,17 @@ contract BoostedLiquidityDistributor is Initializable, Ownable {
     /// @dev Only changes on rewards update.
     /// @dev Precision correction will be applied.
     uint256 internal _blockRewards;
-    /// @dev Rewards per LP staked token at last distribution.
+    /// @dev Rewards per LP deposited token at last distribution.
     uint256 internal _rewardsRate;
     /// @dev Las block in which rewards have been distributed.
     uint256 internal _lastDistributedBlock;
 
-    /// @dev Amount of LP tokens staked by user.
+    /// @dev Amount of LP tokens deposited by user.
     mapping(address => uint256) public userDeposit;
     /// @dev Balance of user deposit after boost
     mapping(address => uint256) public userBalance;
 
-    /// @dev Rewards per LP staked token at last user deposit.
+    /// @dev Rewards per LP deposited token at last user deposit.
     mapping(address => uint256) internal _userRatedRewards;
     /// @dev Distributed rewards to the user at last distribution.
     mapping(address => uint256) internal _userDistributedRewards;
@@ -101,7 +103,7 @@ contract BoostedLiquidityDistributor is Initializable, Ownable {
         ERC20 _rewardsToken,
         ERC20 _lpToken,
         address _boostToken
-    ) public initializer {
+    ) external initializer {
         rewardsToken = _rewardsToken;
         lpToken = _lpToken;
         boostToken = ERC20(_boostToken);
@@ -115,25 +117,30 @@ contract BoostedLiquidityDistributor is Initializable, Ownable {
     /// @param amount The amount of reward tokens to set as rewards, expects this amount to be already transferred to the contract.
     /// @param _startBlock Initial block of the rewards distribution.
     /// @param _endBlock Final block of the rewards distribution.
+    /// @dev If the rewardsToken contract has not been verified before this could lead to a reentrancy attack
     function setRewards(
         uint256 amount,
         uint256 _startBlock,
         uint256 _endBlock
     ) external virtual onlyOwner {
-        if (amount - distributedRewards > rewardsToken.balanceOf(address(this))) revert InsufficientRewardsBalance();
         if (_startBlock < block.number) revert InvalidStartBlock();
         if (_endBlock <= _startBlock) revert InvalidEndBlock();
 
         // Distribute possible pending rewards
-        if (totalDeposit > 0) _updateRewardsdistribution();
-        if (amount <= distributedRewards) revert InvalidRewardsAmount();
+        _updateRewardsdistribution();
+
+        uint256 _distributedRewards = distributedRewards; // Gas savings
+        if (amount <= _distributedRewards) revert InvalidRewardsAmount();
+        if (amount - distributedRewards > rewardsToken.balanceOf(address(this))) revert InsufficientRewardsBalance();
 
         // Set / reset variables
         totalRewards = amount;
         startBlock = _startBlock;
         endBlock = _endBlock;
         // Compute rewards that must be distributed each block, precision correction applied.
-        _blockRewards = ((totalRewards - distributedRewards) * PRECISION) / (endBlock - startBlock);
+        _blockRewards = ((amount - _distributedRewards) * PRECISION) / (_endBlock - _startBlock);
+
+        emit RewardsSet(amount, _startBlock, _endBlock);
     }
 
     /// @notice Allow the owner to withdraw any ERC20 sent to the contract.
@@ -154,15 +161,22 @@ contract BoostedLiquidityDistributor is Initializable, Ownable {
                                 USER ACTIONS
     //////////////////////////////////////////////////////////////*/
 
-    /// @notice Returns the quantity of unclaimed rewards earned by `acccount`.
-    /// @param acccount The acccount of staked LP tokens.
+    /// @notice Returns the quantity of unclaimed rewards earned by `account`.
+    /// @param account The account of deposited LP tokens.
     /// @return The quantity of unclaimed rewards tokens.
-    function getUnclaimedRewards(address acccount) external view virtual returns (uint256) {
-        return _userDistributedRewards[acccount] - _userClaimedRewards[acccount];
+    function getUnclaimedRewards(address account) external view virtual returns (uint256) {
+        return _userDistributedRewards[account] - _userClaimedRewards[account];
     }
 
-    /// @notice
+    /// @notice Kick an account for abusing the boost
+    /// @dev Only if their boost power expired
     function kick(address account) external virtual {
+        uint256 _userDeposit = userDeposit[account];
+        if (userBalance[account] <= _userDeposit * BOOSTLESS_PRODUCTION / 100) revert KickNotAllowed();
+        if (boostToken.balanceOf(account) > 0) revert KickNotAllowed();
+
+        _distributeRewards(account);
+        _updateBalances(account, _userDeposit, totalDeposit);
     }
 
     /// @notice Deposits `amount` of LP tokens from sender to this contract.
@@ -198,7 +212,7 @@ contract BoostedLiquidityDistributor is Initializable, Ownable {
     function withdraw(uint256 amount) external virtual {
         uint256 _userDeposit = userDeposit[msg.sender];
 
-        if (amount > _userDeposit) revert InsufficientStakeBalance();
+        if (amount > _userDeposit) revert InsufficientDepositBalance();
         if (block.number > startBlock) _distributeRewards(msg.sender);
 
         // Substract from staking balance
@@ -217,7 +231,7 @@ contract BoostedLiquidityDistributor is Initializable, Ownable {
     /// @notice Claims all of `msg.sender` unclaimed rewards.
     /// @return The quantity of rewards tokens claimed.
     function claimRewards() external virtual returns (uint256) {
-        // Distribute rewards to acccount
+        // Distribute rewards to account
         if (block.number > startBlock) _distributeRewards(msg.sender);
 
         // Get unclaimed rewards
@@ -240,13 +254,13 @@ contract BoostedLiquidityDistributor is Initializable, Ownable {
     /// @return withdrawAmount The staking amount drained.
     /// @return unclaimedRewards The quantity of rewards tokens claimed.
     function withdrawAndClaim() external virtual returns (uint256 withdrawAmount, uint256 unclaimedRewards) {
-        // Distribute rewards to acccount
+        // Distribute rewards to account
         if (block.number > startBlock) _distributeRewards(msg.sender);
 
         withdrawAmount = userDeposit[msg.sender];
         unclaimedRewards = _userDistributedRewards[msg.sender] - _userClaimedRewards[msg.sender];
 
-        // Drain acccount staking and update claimed rewards
+        // Drain account staking and update claimed rewards
         userDeposit[msg.sender] = 0;
         totalDeposit = totalDeposit - withdrawAmount;
         _userClaimedRewards[msg.sender] = _userClaimedRewards[msg.sender] + unclaimedRewards;
@@ -265,43 +279,47 @@ contract BoostedLiquidityDistributor is Initializable, Ownable {
                        INTERNAL DISTRIBUTION LOGIC
     //////////////////////////////////////////////////////////////*/
     
-
-    function _updateBalances(address acccount, uint256 _userDeposit, uint256 _totalDeposit) internal virtual {
-        uint256 userPower = boostToken.balanceOf(acccount);
+    /// @dev Update user balance & total balance after boosts.
+    /// @param account The LP token depositor whose balance is being updated.
+    /// @param _userDeposit LP tokens deposited by the user to use as base balance.
+    /// @param _totalDeposit Total LP tokens deposited in the contract.
+    /// @dev If the boostToken contract hasn't been verified before this could lead to a reentrancy attack
+    function _updateBalances(address account, uint256 _userDeposit, uint256 _totalDeposit) internal virtual {
+        uint256 userPower = boostToken.balanceOf(account);
         uint256 totalPower = boostToken.totalSupply();
 
-        // Compute workingBalance by applying the power boost to the curent deposit of the user
+        // Calculate user balance after boost
+        // min((userDeposit * 0.4) + (totalDeposit * userVotingPower / totalVotingPower * 0.6), (userDeposit * 0.4))
         uint256 workingBalance = _userDeposit * BOOSTLESS_PRODUCTION / 100;
-
         if (totalPower > 0) {
-            workingBalance += (_totalDeposit * userPower / totalPower) * (100 - BOOSTLESS_PRODUCTION) / 100;
+            workingBalance += (_totalDeposit * userPower * (100 - BOOSTLESS_PRODUCTION)) / (totalPower * 100);
         }
         workingBalance = Math.min(_userDeposit, workingBalance);
 
         // Update boosted balances
-        uint256 lastUserBalance = userBalance[acccount];
-        userBalance[acccount] = workingBalance;
+        uint256 lastUserBalance = userBalance[account];
+        userBalance[account] = workingBalance;
         totalBalance = totalBalance + workingBalance - lastUserBalance;
 
-        emit UpdatedBalances(acccount, workingBalance, totalBalance);
+        emit UpdatedBalances(account, workingBalance, totalBalance);
     }
 
-    /// @dev Distributes all undistributed rewards earned by `acccount`.
+    /// @dev Distributes all undistributed rewards earned by `account`.
     /// @dev Do not reverts on if there is no rewards to distribute.
-    /// @param acccount The LP Token staker whose rewards are to be distributed.
+    /// @param account The LP Token depositor whose rewards are to be distributed.
     /// @return The quantity of rewards distributed.
-    function _distributeRewards(address acccount) internal virtual returns (uint256) {
-        uint256 _userBalance = userBalance[acccount];
+    function _distributeRewards(address account) internal virtual returns (uint256) {
+        uint256 _userBalance = userBalance[account];
         if (_userBalance <= 0) return 0;
 
         _updateRewardsdistribution();
 
         // Compute undistributed rewards from the delta in rewardsRate since the user deposited
-        uint256 undistributedRewards = (_userBalance * (_rewardsRate - _userRatedRewards[acccount])) / PRECISION;
+        uint256 undistributedRewards = (_userBalance * (_rewardsRate - _userRatedRewards[account])) / PRECISION;
         if (undistributedRewards <= 0) return 0;
 
-        _userRatedRewards[acccount] = _rewardsRate;
-        _userDistributedRewards[acccount] = _userDistributedRewards[acccount] + undistributedRewards;
+        _userRatedRewards[account] = _rewardsRate;
+        _userDistributedRewards[account] = _userDistributedRewards[account] + undistributedRewards;
 
         return undistributedRewards;
     }
@@ -310,6 +328,7 @@ contract BoostedLiquidityDistributor is Initializable, Ownable {
     /// Distributes rewards in all blocks, including empty staking ones.
     function _updateRewardsdistribution() internal virtual {
         if (totalRewards <= 0) return;
+        if (endBlock <= _lastDistributedBlock) return;
         if (_lastDistributedBlock < startBlock) _lastDistributedBlock = startBlock;
 
         uint256 blocksToDistribute;
@@ -325,7 +344,7 @@ contract BoostedLiquidityDistributor is Initializable, Ownable {
 
         _lastDistributedBlock = block.number;
 
-        // Update rewards per LP token only if there are staked tokens
+        // Update rewards per LP token only if there are deposited tokens
         if (totalBalance > 0) {
             distributedRewards = distributedRewards + rewardsToDistribute / PRECISION;
             _rewardsRate = _rewardsRate + rewardsToDistribute / totalBalance;

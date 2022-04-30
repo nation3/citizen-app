@@ -37,6 +37,8 @@ contract BoostedLiquidityDistributorTest is DSTestPlus {
         distributor.setRewards(totalRewards, startBlock, endBlock);
     }
 
+    error NotEnough();
+
     function testSetRewards() public {
         (uint256 startBlock, uint256 endBlock) = setRewards();
 
@@ -415,5 +417,36 @@ contract BoostedLiquidityDistributorTest is DSTestPlus {
         uint256 balanceA = rewardsToken.balanceOf(userAccountA);
         uint256 balanceB = rewardsToken.balanceOf(userAccountB);
         assertApproxEq(balanceA + balanceB, totalRewards, 10);
+    }
+
+    function testUpdateRewardsAfter() public {
+        (uint256 startBlock, uint256 endBlock) = setRewards();
+
+        uint256 depositAmount = 100 * 1e18;
+        address userAccountA = address(0xBABE);
+
+        lpToken.transfer(userAccountA, depositAmount);
+
+        evm.roll(startBlock + rewardsPeriod / 2);
+
+        evm.startPrank(userAccountA);
+        lpToken.approve(address(distributor), depositAmount * 10);
+        distributor.deposit(depositAmount);
+        evm.stopPrank();
+
+        evm.roll(endBlock + 10);
+
+        evm.prank(userAccountA);
+        distributor.claimRewards();
+
+        evm.roll(endBlock + 20);
+
+        uint256 distributedRewards = distributor.distributedRewards();
+        rewardsToken.transfer(address(distributor), distributedRewards * 2);
+
+        evm.expectRevert(sig.selector("InvalidRewardsAmount()"));
+        distributor.setRewards(distributedRewards, block.number + 10, block.number + 100);
+
+        distributor.setRewards(distributedRewards * 2, block.number + 10, block.number + 100);
     }
 }
