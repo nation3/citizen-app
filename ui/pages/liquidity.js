@@ -118,7 +118,7 @@ export default function Liquidity() {
             <div className="stat-figure">
               <TrendingUpIcon className="h-8 w-8" />
             </div>
-            <div className="stat-title">Current APY</div>
+            <div className="stat-title">Rewards APY</div>
             <div className="stat-value">
               <Balance
                 balance={liquidityRewardsAPY}
