@@ -51,6 +51,7 @@ export default function Liquidity() {
       unclaimedRewards,
       userDeposit,
       totalDeposit,
+      userBalance,
       loading: liquidityRewardsLoading,
     },
   ] = useLiquidityRewards({
@@ -66,9 +67,8 @@ export default function Liquidity() {
     totalDeposit,
     userVeNation: veNationBalance,
     totalVeNation: veNationSupply,
+    userBalance,
   })
-
-  console.log({ currentBoost, potentialBoost, canBoost })
 
   const [depositValue, setDepositValue] = useState(0)
   const [withdrawalValue, setWithdrawalValue] = useState(0)

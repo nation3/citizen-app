@@ -2,7 +2,12 @@ import { useState, useEffect } from 'react'
 import { lpRewardsContract, balancerLPToken } from '../lib/config'
 import LiquidityRewardsDistributor from '../abis/BoostedLiquidityRewardsDistributor.json'
 import { transformNumber } from './numbers'
-import { useBalance, useContractRead, useContractWrite } from './use-wagmi'
+import {
+  useBalance,
+  useContractRead,
+  useContractWrite,
+  wagmiUseContractWrite,
+} from './use-wagmi'
 
 const contractParams = {
   addressOrName: lpRewardsContract,
@@ -34,6 +39,16 @@ export function useLiquidityRewards({ nationPrice, poolValue, address }) {
   const [{ data: totalDeposit, loading: totalDepositLoading }] =
     useContractRead(contractParams, 'totalDeposit')
 
+  const [{ data: userBalance, loading: userBalanceLoading }] = useContractRead(
+    contractParams,
+    'userBalance',
+    {
+      args: [address],
+      watch: true,
+      skip: !address,
+    }
+  )
+
   const [liquidityRewardsAPY, setLiquidityRewardsAPY] = useState(0)
 
   useEffect(() => {
@@ -54,11 +69,13 @@ export function useLiquidityRewards({ nationPrice, poolValue, address }) {
       unclaimedRewards,
       userDeposit,
       totalDeposit,
+      userBalance,
       loading:
         totalRewardsLoading ||
         unclaimedRewardsLoading ||
         userDepositLoading ||
-        totalDepositLoading,
+        totalDepositLoading ||
+        userBalanceLoading,
     },
   ]
 }
@@ -81,39 +98,48 @@ export function useVeNationBoost({
   totalDeposit,
   userVeNation,
   totalVeNation,
+  userBalance,
 }) {
   const [boost, setBoost] = useState({
     canBoost: false,
   })
   useEffect(() => {
-    if (userDeposit && totalDeposit && userVeNation && totalVeNation) {
-      const bn = {
-        userDeposit: transformNumber(userDeposit, 'number', 18),
-        totalDeposit: transformNumber(totalDeposit, 'number', 18),
-        userVeNation: transformNumber(userVeNation, 'number', 18),
-        totalVeNation: transformNumber(totalVeNation, 'number', 18),
+    if (
+      userDeposit &&
+      totalDeposit &&
+      userVeNation &&
+      totalVeNation &&
+      userBalance
+    ) {
+      const n = {
+        userDeposit: parseFloat(transformNumber(userDeposit, 'number', 18)),
+        totalDeposit: parseFloat(transformNumber(totalDeposit, 'number', 18)),
+        userVeNation: parseFloat(transformNumber(userVeNation, 'number', 18)),
+        totalVeNation: parseFloat(transformNumber(totalVeNation, 'number', 18)),
+        userBalance: parseFloat(transformNumber(userBalance, 'number', 18)),
       }
 
-      const currentBoost = bn.userVeNation / (bn.userDeposit * 0.4)
+      const currentBoost = n.userBalance / (n.userDeposit * 0.4)
 
       let boostedBalance =
-        (bn.userDeposit * 40) / 100 +
-        (((bn.totalDeposit * bn.userVeNation) / bn.totalVeNation) * 60) / 100
+        (n.userDeposit * 40) / 100 +
+        ((n.totalDeposit + n.userVeNation / n.totalVeNation) * 60) / 100
 
-      if (boostedBalance >= bn.userDeposit) boostedBalance = bn.userDeposit
-      const boost = boostedBalance / (bn.userDeposit * 0.4)
+      boostedBalance = Math.min(boostedBalance, n.userDeposit)
 
-      console.log({
-        userDeposit,
-        totalDeposit,
-        userVeNation,
-        totalVeNation,
-      })
-      console.log(`Boost: ${boost}`)
+      const potentialBoost = boostedBalance / (n.userDeposit * 0.4)
+
+      console.log(`Current boost: ${currentBoost}`)
+      console.log(`Potential boost: ${potentialBoost}`)
       setBoost({
-        currentBoost: transformNumber(currentBoost, 'bignumber', 18),
-        potentialBoost: transformNumber(boost, 'bignumber', 18),
-        canBoost: boost > currentBoost,
+        currentBoost: transformNumber(
+          Math.max(currentBoost, 1),
+          'bignumber',
+          18
+        ),
+        potentialBoost: transformNumber(potentialBoost, 'bignumber', 18),
+        canBoost:
+          Math.trunc(potentialBoost * 10) > Math.trunc(currentBoost * 10),
       })
     }
   }, [userDeposit, totalDeposit, userVeNation, totalVeNation])
@@ -121,8 +147,9 @@ export function useVeNationBoost({
   return boost
 }
 
+// Using Wagmi's contractWrite directly, getting a "no signer connected" error otherwise
 export function useClaimRewards() {
-  return useContractWrite(contractParams, 'claimRewards')
+  return wagmiUseContractWrite(contractParams, 'claimRewards')
 }
 
 export function useDeposit(amount) {

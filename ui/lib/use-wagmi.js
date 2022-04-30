@@ -5,6 +5,7 @@ import {
   useBalance as _useBalance,
   useContract,
   useContractRead as _useContractRead,
+  useContractWrite as _wagmiUseContractWrite,
   useSigner,
 } from 'wagmi'
 import { useErrorContext } from '../components/ErrorProvider'
@@ -28,6 +29,12 @@ export function useContractRead(config, method, argsAndOverrides) {
 
 export function useContractWrite(config, method, argsAndOverrides) {
   return useHandleError(_useContractWrite(config, method, argsAndOverrides))
+}
+
+export function wagmiUseContractWrite(config, method, argsAndOverrides) {
+  return useHandleError(
+    _wagmiUseContractWrite(config, method, argsAndOverrides)
+  )
 }
 
 // Reason for this is that wagmi's useContractWrite doesn't seem to be passing arguments to ethers correctly
