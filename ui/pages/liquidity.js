@@ -3,8 +3,8 @@ import {
   CurrencyDollarIcon,
   SparklesIcon,
   CalculatorIcon,
+  InformationCircleIcon,
 } from '@heroicons/react/outline'
-import { ethers } from 'ethers'
 import { useState } from 'react'
 import { useBalancerPool } from '../lib/balancer'
 import {
@@ -51,7 +51,7 @@ export default function Liquidity() {
       unclaimedRewards,
       userDeposit,
       totalDeposit,
-      loading: loadingLiquidityRewards,
+      loading: liquidityRewardsLoading,
     },
   ] = useLiquidityRewards({
     nationPrice,
@@ -61,15 +61,17 @@ export default function Liquidity() {
 
   const [{ data: veNationSupply }] = useVeNationSupply()
 
-  const userVeNationBoost = useVeNationBoost({
+  const { currentBoost, potentialBoost, canBoost } = useVeNationBoost({
     userDeposit,
     totalDeposit,
     userVeNation: veNationBalance,
     totalVeNation: veNationSupply,
   })
 
-  const [depositValue, setDepositValue] = useState()
-  const [withdrawalValue, setWithdrawalValue] = useState()
+  console.log({ currentBoost, potentialBoost, canBoost })
+
+  const [depositValue, setDepositValue] = useState(0)
+  const [withdrawalValue, setWithdrawalValue] = useState(0)
   const deposit = useDeposit(transformNumber(depositValue, 'bignumber', 18))
   const withdraw = useWithdraw(
     transformNumber(withdrawalValue, 'bignumber', 18)
@@ -78,14 +80,11 @@ export default function Liquidity() {
   const withdrawAndClaimRewards = useWithdrawAndClaim()
   const [activeTab, setActiveTab] = useState(0)
 
-  const loading =
-    poolLoading || poolTokenBalanceLoading || loadingLiquidityRewards
-
   return (
     <>
       <Head title="$NATION liquidity rewards" />
 
-      <MainCard loading={loading} title="$NATION liquidity rewards">
+      <MainCard title="$NATION liquidity rewards">
         <p>
           Provide liquitity in the pool and then deposit the pool token here.{' '}
           <GradientLink
@@ -107,6 +106,7 @@ export default function Liquidity() {
             <div className="stat-value">
               <Balance
                 balance={transformNumber(poolValue, 'number', 0) / 1000000}
+                loading={poolLoading}
                 prefix="$"
                 suffix="M"
                 decimals={2}
@@ -120,7 +120,12 @@ export default function Liquidity() {
             </div>
             <div className="stat-title">Current APY</div>
             <div className="stat-value">
-              <Balance balance={liquidityRewardsAPY} suffix="%" decimals={2} />
+              <Balance
+                balance={liquidityRewardsAPY}
+                loading={liquidityRewardsLoading}
+                suffix="%"
+                decimals={2}
+              />
             </div>
           </div>
         </div>
@@ -146,20 +151,40 @@ export default function Liquidity() {
             <div className="stat-value text-secondary">
               <Balance
                 balance={
-                  liquidityRewardsAPY &&
-                  userVeNationBoost &&
-                  !userVeNationBoost.isZero()
+                  liquidityRewardsAPY && currentBoost && !currentBoost.isZero()
                     ? (transformNumber(liquidityRewardsAPY, 'number', 18) /
                         10 ** 18) *
-                      userVeNationBoost
+                      currentBoost
                     : liquidityRewardsAPY
                 }
+                loading={liquidityRewardsLoading}
                 suffix="%"
                 decimals={2}
               />
             </div>
           </div>
         </div>
+        {canBoost && (
+          <div className="alert mb-4">
+            <div>
+              <InformationCircleIcon className="h-8 w-8 text-n3blue" />
+              <span>
+                You can boost your APY to{' '}
+                <span className="text-n3blue font-semibold">
+                  {transformNumber(
+                    (transformNumber(liquidityRewardsAPY, 'number', 18) /
+                      10 ** 18) *
+                      potentialBoost,
+                    'string',
+                    2
+                  )}
+                  %
+                </span>
+                . To do so, claim your current rewards.
+              </span>
+            </div>
+          </div>
+        )}
         <div className="stats stats-vertical lg:stats-horizontal shadow mb-4">
           <div className="stat">
             <div className="stat-figure text-secondary">
@@ -172,7 +197,7 @@ export default function Liquidity() {
             </div>
             <div className="stat-title">Your rewards</div>
             <div className="stat-value text-primary">
-              <Balance balance={unclaimedRewards} decimals={2} />
+              <Balance balance={unclaimedRewards} decimals={4} />
             </div>
             <div className="stat-desc">NATION tokens</div>
           </div>
@@ -199,7 +224,11 @@ export default function Liquidity() {
                 <>
                   <p className="mb-4">
                     Available to deposit:{' '}
-                    <Balance balance={poolTokenBalance?.formatted} /> LP tokens
+                    <Balance
+                      balance={poolTokenBalance?.formatted}
+                      loading={poolTokenBalanceLoading}
+                    />{' '}
+                    LP tokens
                   </p>
                   <div className="input-group">
                     <input

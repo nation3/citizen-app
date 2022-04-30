@@ -82,7 +82,9 @@ export function useVeNationBoost({
   userVeNation,
   totalVeNation,
 }) {
-  const [boost, setBoost] = useState(0)
+  const [boost, setBoost] = useState({
+    canBoost: false,
+  })
   useEffect(() => {
     if (userDeposit && totalDeposit && userVeNation && totalVeNation) {
       const bn = {
@@ -92,9 +94,12 @@ export function useVeNationBoost({
         totalVeNation: transformNumber(totalVeNation, 'number', 18),
       }
 
+      const currentBoost = bn.userVeNation / (bn.userDeposit * 0.4)
+
       let boostedBalance =
         (bn.userDeposit * 40) / 100 +
         (((bn.totalDeposit * bn.userVeNation) / bn.totalVeNation) * 60) / 100
+
       if (boostedBalance >= bn.userDeposit) boostedBalance = bn.userDeposit
       const boost = boostedBalance / (bn.userDeposit * 0.4)
 
@@ -105,7 +110,11 @@ export function useVeNationBoost({
         totalVeNation,
       })
       console.log(`Boost: ${boost}`)
-      setBoost(transformNumber(boost, 'bignumber', 18))
+      setBoost({
+        currentBoost: transformNumber(currentBoost, 'bignumber', 18),
+        potentialBoost: transformNumber(boost, 'bignumber', 18),
+        canBoost: boost > currentBoost,
+      })
     }
   }, [userDeposit, totalDeposit, userVeNation, totalVeNation])
 
@@ -124,7 +133,10 @@ export function useDeposit(amount) {
 }
 
 export function useWithdraw(amount) {
-  return useContractWrite(contractParams, 'withdraw', { args: [amount] })
+  return useContractWrite(contractParams, 'withdraw', {
+    args: [amount],
+    overrides: { gasLimit: 300000 },
+  })
 }
 
 export function useWithdrawAndClaim() {
