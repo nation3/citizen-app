@@ -17,6 +17,7 @@ import {
   useLiquidityRewards,
   usePoolTokenBalance,
   useVeNationBoost,
+  useBoostedAPY,
   useDeposit,
   useWithdraw,
   useWithdrawAndClaim,
@@ -68,6 +69,13 @@ export default function Liquidity() {
     userVeNation: veNationBalance,
     totalVeNation: veNationSupply,
     userBalance,
+  })
+
+  console.log(transformNumber(liquidityRewardsAPY, 'number', 18))
+
+  const boostedAPY = useBoostedAPY({
+    defaultAPY: liquidityRewardsAPY,
+    boostMultiplier: currentBoost,
   })
 
   const [depositValue, setDepositValue] = useState(0)
@@ -150,14 +158,7 @@ export default function Liquidity() {
             <div className="stat-title">Your boosted APY</div>
             <div className="stat-value text-secondary">
               <Balance
-                balance={
-                  liquidityRewardsAPY && currentBoost && !currentBoost.isZero()
-                    ? (transformNumber(liquidityRewardsAPY, 'number', 18) /
-                        10 ** 18) *
-                      currentBoost
-                    : liquidityRewardsAPY
-                }
-                loading={liquidityRewardsLoading}
+                balance={boostedAPY || liquidityRewardsAPY}
                 suffix="%"
                 decimals={2}
               />
@@ -284,7 +285,10 @@ export default function Liquidity() {
                     <button
                       className="btn btn-outline"
                       onClick={() =>
-                        stakingBalance && setWithdrawalValue(stakingBalance)
+                        userDeposit &&
+                        setWithdrawalValue(
+                          transformNumber(userDeposit, 'string')
+                        )
                       }
                     >
                       Max

@@ -31,7 +31,7 @@ export function useContractWrite(config, method, argsAndOverrides) {
   return useHandleError(_useContractWrite(config, method, argsAndOverrides))
 }
 
-export function wagmiUseContractWrite(config, method, argsAndOverrides) {
+export function useWagmiContractWrite(config, method, argsAndOverrides) {
   return useHandleError(
     _wagmiUseContractWrite(config, method, argsAndOverrides)
   )

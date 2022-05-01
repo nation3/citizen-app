@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react'
 import { lpRewardsContract, balancerLPToken } from '../lib/config'
-import LiquidityRewardsDistributor from '../abis/BoostedLiquidityRewardsDistributor.json'
+import LiquidityRewardsDistributor from '../abis/BoostedLiquidityDistributor.json'
 import { transformNumber } from './numbers'
 import {
   useBalance,
   useContractRead,
   useContractWrite,
-  wagmiUseContractWrite,
+  useWagmiContractWrite,
 } from './use-wagmi'
 
 const contractParams = {
@@ -49,7 +49,9 @@ export function useLiquidityRewards({ nationPrice, poolValue, address }) {
     }
   )
 
-  const [liquidityRewardsAPY, setLiquidityRewardsAPY] = useState(0)
+  const [liquidityRewardsAPY, setLiquidityRewardsAPY] = useState(
+    transformNumber(0, 'bignumber')
+  )
 
   useEffect(() => {
     if (totalRewards && poolValue) {
@@ -142,30 +144,44 @@ export function useVeNationBoost({
           Math.trunc(potentialBoost * 10) > Math.trunc(currentBoost * 10),
       })
     }
-  }, [userDeposit, totalDeposit, userVeNation, totalVeNation])
+  }, [userDeposit, totalDeposit, userVeNation, totalVeNation, userBalance])
 
   return boost
 }
 
+export function useBoostedAPY({ defaultAPY, boostMultiplier }) {
+  const [apy, setAPY] = useState(
+    parseFloat(transformNumber(defaultAPY, 'number', 2))
+  )
+  useEffect(() => {
+    if (!defaultAPY?.isZero() && !boostMultiplier?.isZero()) {
+      setAPY(
+        (transformNumber(defaultAPY, 'number', 2) / 10 ** 18) * boostMultiplier
+      )
+    }
+  }, [defaultAPY, boostMultiplier])
+  return apy
+}
+
 // Using Wagmi's contractWrite directly, getting a "no signer connected" error otherwise
 export function useClaimRewards() {
-  return wagmiUseContractWrite(contractParams, 'claimRewards')
+  return useWagmiContractWrite(contractParams, 'claimRewards', {
+    overrides: { gasLimit: 300000 },
+  })
 }
 
 export function useDeposit(amount) {
   return useContractWrite(contractParams, 'deposit', {
     args: [amount],
-    overrides: { gasLimit: 300000 },
   })
 }
 
 export function useWithdraw(amount) {
   return useContractWrite(contractParams, 'withdraw', {
     args: [amount],
-    overrides: { gasLimit: 300000 },
   })
 }
 
 export function useWithdrawAndClaim() {
-  return useContractWrite(contractParams, 'withdrawAndClaim')
+  return useWagmiContractWrite(contractParams, 'withdrawAndClaim')
 }
