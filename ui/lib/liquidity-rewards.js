@@ -183,5 +183,7 @@ export function useWithdraw(amount) {
 }
 
 export function useWithdrawAndClaim() {
-  return useWagmiContractWrite(contractParams, 'withdrawAndClaim')
+  return useWagmiContractWrite(contractParams, 'withdrawAndClaim', {
+    overrides: { gasLimit: 300000 },
+  })
 }
