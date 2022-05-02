@@ -93,3 +93,7 @@ export function useVeNationWithdrawLock() {
     },
   })
 }
+
+export function useVeNationSupply() {
+  return useContractRead(contractParams, 'totalSupply()')
+}

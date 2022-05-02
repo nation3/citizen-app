@@ -26,11 +26,14 @@ yarn install
 # Set up environment variables
 cp .env.sampe .env
 
-# Compile solidity and vyper contracts
-yarn compile
+# Install Vyper
+pip install vyper==0.2.4
 
-# Install git submodules
+# Install Git submodules
 forge install
+
+# Compile Solidity and Vyper contracts
+yarn compile
 
 # Deploy stack for local development
 yarn dev-deploy

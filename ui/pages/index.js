@@ -1,10 +1,8 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import React, { useRef, useEffect, useState } from 'react'
-import {
-  nationToken,
-} from '../lib/config'
+import React, { useEffect, useState } from 'react'
+import { nationToken, veNationRewardsMultiplier } from '../lib/config'
 import { useNationBalance } from '../lib/nation-token'
 import { useAccount } from '../lib/use-wagmi'
 import { useVeNationBalance } from '../lib/ve-token'
@@ -26,8 +24,7 @@ export default function Index() {
     setFromTweetdrop(true)
   }, [router])
 
-  const loading =
-    nationBalanceLoading || veNationBalanceLoading
+  const loading = nationBalanceLoading || veNationBalanceLoading
 
   return (
     <>
@@ -59,6 +56,24 @@ export default function Index() {
               </Link>
               <p>and then...</p>
               <div className="flex flex-col 2xl:flex-row mt-2 gap-8">
+                <div className="card w-80 md:w-96 bg-base-100 shadow-md">
+                  <div className="card-body items-stretch items-center">
+                    <h2 className="card-title text-center font-medium">
+                      Liquidity rewards
+                    </h2>
+                    <p>
+                      Provide liquidity in the 80% $NATION / 20% $ETH Balancer
+                      pool to receive rewards.
+                      <br />
+                      Get up to {veNationRewardsMultiplier}x boost with
+                      $veNATION.
+                    </p>
+                    <GradientLink
+                      text="Provide liquidity"
+                      href="/liquidity"
+                    ></GradientLink>
+                  </div>
+                </div>
                 <div className="card w-80 md:w-96 bg-base-100 shadow-md">
                   <div className="card-body items-stretch items-center">
                     <h2 className="card-title text-center font-medium">
