@@ -177,6 +177,7 @@ export function useClaimRewards() {
 export function useDeposit(amount) {
   return useContractWrite(contractParams, 'deposit', {
     args: [amount],
+    overrides: { gasLimit: 300000 },
   })
 }
 
