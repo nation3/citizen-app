@@ -7,9 +7,9 @@ import {SafeTransferLib} from "@rari-capital/solmate/src/utils/SafeTransferLib.s
 import {ERC20} from "@rari-capital/solmate/src/tokens/ERC20.sol";
 
 /// @notice Distributes rewards to LP providers.
-/// @author Nation3 (https://github.com/nation3).
-/// @dev Adapted from Rari-Capital rewards distributor (https://github.com/Rari-Capital/rari-governance-contracts/blob/master/contracts/RariGovernanceTokenUniswapDistributor.sol).
-/// @dev Implemented boosted rewards mechanics from Curve Finance boosted gauges
+/// @author Nation3 (https://github.com/nation3/app/blob/main/contracts/src/distributors/BoostedLiquidityDistributor.sol).
+/// @dev Inspired by Rari-Capital rewards distributor (https://github.com/Rari-Capital/rari-governance-contracts/blob/master/contracts/RariGovernanceTokenUniswapDistributor.sol).
+/// @dev Implemented boosted rewards mechanics from Curve Finance (https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/gauges/LiquidityGauge.vy)
 contract BoostedLiquidityDistributor is Initializable, Ownable {
     /*///////////////////////////////////////////////////////////////
                                LIBRARIES
@@ -42,7 +42,7 @@ contract BoostedLiquidityDistributor is Initializable, Ownable {
                         INMUTABLES / CONSTANTS
     //////////////////////////////////////////////////////////////*/
 
-    /// @dev % of the user deposited tokens that count to working balance without boost
+    /// @dev % of the user deposited tokens that counts for working balance without boost
     uint256 internal constant BOOSTLESS_PRODUCTION = 40; // %
     /// @dev Used to correct precision errors on divisions.
     uint256 internal constant PRECISION = 1e30;
@@ -68,16 +68,16 @@ contract BoostedLiquidityDistributor is Initializable, Ownable {
     uint256 public totalBalance;
     /// @notice Total rewards beeing distributed.
     uint256 public totalRewards;
-    /// @notice Rewards distributed to users.
+    /// @notice Total rewards already distributed to users.
     uint256 public distributedRewards;
 
-    /// @dev Rewards per block on current rewards period
-    /// @dev Only changes on rewards update.
+    /// @dev Rewards per block on current rewards period.
+    /// @dev Only changes on total rewards update.
     /// @dev Precision correction will be applied.
     uint256 internal _blockRewards;
     /// @dev Rewards per LP deposited token at last distribution.
     uint256 internal _rewardsRate;
-    /// @dev Las block in which rewards have been distributed.
+    /// @dev Last block in which rewards have been distributed.
     uint256 internal _lastDistributedBlock;
 
     /// @dev Amount of LP tokens deposited by user.
@@ -85,7 +85,7 @@ contract BoostedLiquidityDistributor is Initializable, Ownable {
     /// @dev Balance of user deposit after boost
     mapping(address => uint256) public userBalance;
 
-    /// @dev Rewards per LP deposited token at last user deposit.
+    /// @dev Rewards per LP token deposited at last user deposit.
     mapping(address => uint256) internal _userRatedRewards;
     /// @dev Distributed rewards to the user at last distribution.
     mapping(address => uint256) internal _userDistributedRewards;
@@ -96,9 +96,10 @@ contract BoostedLiquidityDistributor is Initializable, Ownable {
                              INITIALIZATION
     //////////////////////////////////////////////////////////////*/
 
-    /// @dev Sets both rewards & lptoken.
+    /// @dev Sets both rewards, LP & boost token.
     /// @param _rewardsToken The contract of the rewards token.
     /// @param _lpToken The contract of the liquidity pool tokens.
+    /// @param _boostToken The contract of boosting power balance.
     function initialize(
         ERC20 _rewardsToken,
         ERC20 _lpToken,
@@ -114,7 +115,7 @@ contract BoostedLiquidityDistributor is Initializable, Ownable {
     //////////////////////////////////////////////////////////////*/
 
     /// @notice Set rewards amount & rewards period duration, can be used to update rewards destribution anytime in the future.
-    /// @param amount The amount of reward tokens to set as rewards, expects this amount to be already transferred to the contract.
+    /// @param amount The amount of reward tokens to set as rewards, it expects this amount to be already transferred to the contract.
     /// @param _startBlock Initial block of the rewards distribution.
     /// @param _endBlock Final block of the rewards distribution.
     /// @dev If the rewardsToken contract has not been verified before this could lead to a reentrancy attack
@@ -168,8 +169,9 @@ contract BoostedLiquidityDistributor is Initializable, Ownable {
         return _userDistributedRewards[account] - _userClaimedRewards[account];
     }
 
-    /// @notice Kick an account for abusing the boost
-    /// @dev Only if their boost power expired
+    /// @notice Kick an account for abusing the boost.
+    /// @param account The account to update balances.
+    /// @dev Only if their boost power expired.
     function kick(address account) external virtual {
         uint256 _userDeposit = userDeposit[account];
         if (userBalance[account] <= _userDeposit * BOOSTLESS_PRODUCTION / 100) revert KickNotAllowed();
@@ -283,7 +285,7 @@ contract BoostedLiquidityDistributor is Initializable, Ownable {
     /// @param account The LP token depositor whose balance is being updated.
     /// @param _userDeposit LP tokens deposited by the user to use as base balance.
     /// @param _totalDeposit Total LP tokens deposited in the contract.
-    /// @dev If the boostToken contract hasn't been verified before this could lead to a reentrancy attack
+    /// @dev If the boostToken contract hasn't been verified before this could lead to a reentrancy attack.
     function _updateBalances(address account, uint256 _userDeposit, uint256 _totalDeposit) internal virtual {
         uint256 userPower = boostToken.balanceOf(account);
         uint256 totalPower = boostToken.totalSupply();
@@ -305,7 +307,7 @@ contract BoostedLiquidityDistributor is Initializable, Ownable {
     }
 
     /// @dev Distributes all undistributed rewards earned by `account`.
-    /// @dev Do not reverts on if there is no rewards to distribute.
+    /// @dev Do not reverts if there is no rewards to distribute.
     /// @param account The LP Token depositor whose rewards are to be distributed.
     /// @return The quantity of rewards distributed.
     function _distributeRewards(address account) internal virtual returns (uint256) {
