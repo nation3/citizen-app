@@ -23,7 +23,8 @@ const main = async () => {
     const contractFile = "VotingEscrow.vy";
     const contractFilePath = `${contractsBaseDir}/${contractDir}/${contractFile}`;
 
-    const contractContent = fs.readFileSync(contractFilePath, { encoding: "utf8" });
+    const contractContent = fs.readFileSync(`${process.cwd()}/${contractFilePath}`, { encoding: "utf8" });
+    console.log(contractFilePath)
 
     let inputParams = JSON.parse(JSON.stringify(INPUT_SCHEMA));
     inputParams.sources[contractFilePath] = {"content": contractContent};

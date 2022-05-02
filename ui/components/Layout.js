@@ -13,6 +13,7 @@ import {
   ChevronRightIcon,
   ChevronDownIcon,
   ExternalLinkIcon,
+  CurrencyDollarIcon,
 } from '@heroicons/react/outline'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -50,11 +51,11 @@ const navigation = [
     href: '/lock',
     icon: <LockClosedIcon className="h-5 w-5" />,
   },
-  /*{
+  {
     name: 'Liquidity rewards',
     href: '/liquidity',
     icon: <CurrencyDollarIcon className="h-5 w-5" />,
-  },*/
+  },
   {
     name: 'Buy $NATION',
     href: `https://app.balancer.fi/#/trade/ether/${nationToken}`,
