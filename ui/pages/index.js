@@ -56,7 +56,7 @@ export default function Index() {
                     href="https://app.balancer.fi/#/pool/0x0bf37157d30dfe6f56757dcadff01aed83b08cd600020000000000000000019a"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className=""
+                    className="text-n3blue"
                   >
                     80% $NATION / 20% $ETH Balancer pool
                   </a>{' '}
