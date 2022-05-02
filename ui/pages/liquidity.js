@@ -107,8 +107,8 @@ export default function Liquidity() {
           <div>
             <InformationCircleIcon className="h-8 w-8 text-n3blue" />
             <span>
-              Liquidity rewards start May 2nd, 1pm UTC. You won't see rewards to
-              claim until that point in time.
+              Liquidity rewards start May 2nd, 1pm UTC. Rewards will only start
+              accruing after that time.
             </span>
           </div>
         </div>
