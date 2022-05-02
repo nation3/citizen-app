@@ -103,6 +103,16 @@ export default function Liquidity() {
           <GradientLink href="/lock" text="Get $veNATION" textSize="md" />
         </p>
 
+        <div className="alert my-4">
+          <div>
+            <InformationCircleIcon className="h-8 w-8 text-n3blue" />
+            <span>
+              Liquidity rewards start May 2nd, 1pm UTC. You won't see rewards to
+              claim until that point in time.
+            </span>
+          </div>
+        </div>
+
         <div className="stats stats-vertical lg:stats-horizontal shadow my-4">
           <div className="stat">
             <div className="stat-figure">
