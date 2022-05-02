@@ -11,7 +11,7 @@ export default function WebsiteHead({ title, description, image, type }) {
       <meta property="og:type" content={type} />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
-      <meta name="twitter:image" content={image} />
+      <meta name="twitter:image" content="https://nation3.org/social.jpg" />
       <meta name="twitter:card" content="summary" />
     </Head>
   )
