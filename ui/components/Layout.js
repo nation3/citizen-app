@@ -29,6 +29,7 @@ import { useAccount } from '../lib/use-wagmi'
 import Logo from '../public/logo.svg'
 import ErrorCard from './ErrorCard'
 import { useErrorContext } from './ErrorProvider'
+import PreferredNetworkWrapper from './PreferredNetworkWrapper'
 
 const navigation = [
   {
@@ -115,7 +116,11 @@ export default function Layout({ children }) {
         <div className="drawer drawer-mobile w-full h-full grow max-h-screen flex-1">
           <input id="side-drawer" type="checkbox" className="drawer-toggle" />
           <div className="drawer-content flex flex-col overflow-auto">
-            {children}
+            <PreferredNetworkWrapper
+              preferredNetwork={process.env.NEXT_PUBLIC_CHAIN}
+            >
+              {children}
+            </PreferredNetworkWrapper>
           </div>
           <div className="drawer-side">
             <label
