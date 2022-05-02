@@ -14,14 +14,16 @@ export default function ActionNeedsTokenApproval({
   action,
   preAction,
 }) {
-  const [{ data: account }] = useAccount()
-  const [
-    {
-      data: tokenAllowance,
-      loading: tokenAllowanceLoading,
-      error: allowanceError,
-    },
-  ] = useTokenAllowance({ token, address: account?.address, spender })
+  const { data: account } = useAccount()
+  const {
+    data: tokenAllowance,
+    isLoading: tokenAllowanceLoading,
+    error: allowanceError,
+  } = useTokenAllowance({ token, address: account?.address, spender })
+
+  console.log(amountNeeded)
+  console.log(token)
+  console.log(spender)
 
   const { addError } = useErrorContext()
   addError([allowanceError])

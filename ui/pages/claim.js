@@ -14,14 +14,14 @@ import Head from '../components/Head'
 import MainCard from '../components/MainCard'
 
 export default function Claim() {
-  const [{ data: account }] = useAccount()
+  const { data: account } = useAccount()
   const [canClaim, setCanClaim] = useState(false)
   const [contractId, setContractId] = useState(0)
   const [proofIndex, setProofIndex] = useState()
   const [justClaimed, setJustClaimed] = useState(false)
 
-  const [{ data: claimsFiles }] = useHandleError(useClaimsFiles())
-  const [{ data: isClaimed, loading: isClaimedLoading }] = useIsClaimed(
+  const { data: claimsFiles } = useHandleError(useClaimsFiles())
+  const { data: isClaimed, isLoading: isClaimedLoading } = useIsClaimed(
     contractId,
     proofIndex
   )

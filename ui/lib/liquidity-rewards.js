@@ -15,37 +15,37 @@ const contractParams = {
 }
 
 export function useLiquidityRewards({ nationPrice, poolValue, address }) {
-  const [{ data: totalRewards, loading: totalRewardsLoading }] =
+  const { data: totalRewards, isLoading: totalRewardsLoading } =
     useContractRead(contractParams, 'totalRewards')
   const months = transformNumber(6, 'bignumber', 0)
 
-  const [{ data: unclaimedRewards, loading: unclaimedRewardsLoading }] =
+  const { data: unclaimedRewards, isLoading: unclaimedRewardsLoading } =
     useContractRead(contractParams, 'getUnclaimedRewards', {
       args: [address],
       watch: true,
-      skip: !address,
+      enabled: address,
     })
 
-  const [{ data: userDeposit, loading: userDepositLoading }] = useContractRead(
+  const { data: userDeposit, isLoading: userDepositLoading } = useContractRead(
     contractParams,
     'userDeposit',
     {
       args: [address],
       watch: true,
-      skip: !address,
+      enabled: address,
     }
   )
 
-  const [{ data: totalDeposit, loading: totalDepositLoading }] =
+  const { data: totalDeposit, isLoading: totalDepositLoading } =
     useContractRead(contractParams, 'totalDeposit')
 
-  const [{ data: userBalance, loading: userBalanceLoading }] = useContractRead(
+  const { data: userBalance, isLoading: userBalanceLoading } = useContractRead(
     contractParams,
     'userBalance',
     {
       args: [address],
       watch: true,
-      skip: !address,
+      enabled: address,
     }
   )
 
@@ -65,21 +65,19 @@ export function useLiquidityRewards({ nationPrice, poolValue, address }) {
     }
   }, [poolValue, nationPrice, totalRewards, totalRewardsLoading])
 
-  return [
-    {
-      liquidityRewardsAPY,
-      unclaimedRewards,
-      userDeposit,
-      totalDeposit,
-      userBalance,
-      loading:
-        totalRewardsLoading ||
-        unclaimedRewardsLoading ||
-        userDepositLoading ||
-        totalDepositLoading ||
-        userBalanceLoading,
-    },
-  ]
+  return {
+    liquidityRewardsAPY,
+    unclaimedRewards,
+    userDeposit,
+    totalDeposit,
+    userBalance,
+    loading:
+      totalRewardsLoading ||
+      unclaimedRewardsLoading ||
+      userDepositLoading ||
+      totalDepositLoading ||
+      userBalanceLoading,
+  }
 }
 
 export function usePoolTokenBalance(address) {
@@ -87,7 +85,7 @@ export function usePoolTokenBalance(address) {
     addressOrName: address,
     token: balancerLPToken,
     watch: true,
-    skip: !address,
+    enabled: address,
   })
 }
 

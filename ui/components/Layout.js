@@ -76,15 +76,15 @@ export default function Layout({ children }) {
   const router = useRouter()
   const { connectors, connectAsync, error: connectError } = useConnect()
   const { data: ensName } = useEnsName()
-  const { disconnect } = useDisconnect() 
+  const { disconnect } = useDisconnect()
   const [nav, setNav] = useState(navigation)
   const errorContext = useErrorContext()
   const [account, setAccount] = useState('')
   // because of the useAccount doesn't rerender on account change, so use useEffect to update account
-  const [{ data }] =  useAccount()
+  const { data: accountData } = useAccount()
   useEffect(() => {
-    setAccount(data)
-  }, [data])
+    setAccount(accountData)
+  }, [accountData])
 
   return (
     <div className="mx-auto bg-n3bg font-display">

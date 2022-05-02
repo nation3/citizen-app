@@ -70,15 +70,19 @@ const calculateVestingStart = ({ nationAmount, veNationAmount, lockTime }) => {
 }
 
 export default function Lock() {
-  const [{ data: account }] = useAccount()
+  const { data: account } = useAccount()
 
-  const [{ data: nationBalance, loading: nationBalanceLoading }] =
+  const { data: nationBalance, isLoading: nationBalanceLoading } =
     useNationBalance(account?.address)
 
-  const [{ data: veNationBalance, loading: veNationBalanceLoading }] =
+  console.log(nationBalance?.value.toString() / 10 ** 18)
+
+  console.log(nationBalance)
+
+  const { data: veNationBalance, isLoading: veNationBalanceLoading } =
     useVeNationBalance(account?.address)
 
-  const [{ data: veNationLock, loading: veNationLockLoading }] =
+  const { data: veNationLock, isLoading: veNationLockLoading } =
     useVeNationLock(account?.address)
 
   const [hasLock, setHasLock] = useState(false)
@@ -166,6 +170,7 @@ export default function Lock() {
     currentTime: veNationLock?.end,
     newTime: lockTime?.value.div(1000),
   })
+  console.log(increaseLock)
   const withdraw = useVeNationWithdrawLock()
 
   // $veNATION enables governance, minting passport NFTs and boosting liquidity rewards (up to {veNationRewardsMultiplier}x).{' '}
@@ -202,9 +207,16 @@ export default function Lock() {
               Some examples of how to get to {veNationRequiredStake} $veNATION:
             </p>
             <ul className="list-disc list-inside mb-4">
-              <li>At least {veNationRequiredStake} $NATION locked for 4 years, or</li>
-              <li>At least {veNationRequiredStake * 2} $NATION locked for 2 years, or</li>
-              <li>At least {veNationRequiredStake * 4} $NATION locked for 1 year</li>
+              <li>
+                At least {veNationRequiredStake} $NATION locked for 4 years, or
+              </li>
+              <li>
+                At least {veNationRequiredStake * 2} $NATION locked for 2 years,
+                or
+              </li>
+              <li>
+                At least {veNationRequiredStake * 4} $NATION locked for 1 year
+              </li>
             </ul>
             <div className="alert mb-4">
               <div>

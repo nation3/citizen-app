@@ -33,9 +33,9 @@ import Head from '../components/Head'
 import MainCard from '../components/MainCard'
 
 export default function Liquidity() {
-  const [{ data: account }] = useAccount()
+  const { data: account } = useAccount()
 
-  const [{ data: veNationBalance, loading: veNationBalanceLoading }] =
+  const { data: veNationBalance, isLoading: veNationBalanceLoading } =
     useVeNationBalance(account?.address)
   const {
     poolValue,
@@ -43,25 +43,23 @@ export default function Liquidity() {
     loading: poolLoading,
   } = useBalancerPool(balancerPoolId)
 
-  const [{ data: poolTokenBalance, loading: poolTokenBalanceLoading }] =
+  const { data: poolTokenBalance, isLoading: poolTokenBalanceLoading } =
     usePoolTokenBalance(account?.address)
 
-  const [
-    {
-      liquidityRewardsAPY,
-      unclaimedRewards,
-      userDeposit,
-      totalDeposit,
-      userBalance,
-      loading: liquidityRewardsLoading,
-    },
-  ] = useLiquidityRewards({
+  const {
+    liquidityRewardsAPY,
+    unclaimedRewards,
+    userDeposit,
+    totalDeposit,
+    userBalance,
+    loading: liquidityRewardsLoading,
+  } = useLiquidityRewards({
     nationPrice,
     poolValue,
     address: account?.address,
   })
 
-  const [{ data: veNationSupply }] = useVeNationSupply()
+  const { data: veNationSupply } = useVeNationSupply()
 
   const { currentBoost, potentialBoost, canBoost } = useVeNationBoost({
     userDeposit,

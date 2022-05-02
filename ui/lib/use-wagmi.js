@@ -47,7 +47,7 @@ function _useContractWrite(config, method, argsAndOverrides) {
     signerOrProvider: signerData,
   })
 
-  const refetch = useCallback(async () => {
+  const write = useCallback(async () => {
     try {
       setLoading(true)
       let data
@@ -56,8 +56,8 @@ function _useContractWrite(config, method, argsAndOverrides) {
           ...(Array.isArray(argsAndOverrides.args)
             ? argsAndOverrides.args
             : argsAndOverrides.args
-              ? [argsAndOverrides.args]
-              : []),
+            ? [argsAndOverrides.args]
+            : []),
           ...(argsAndOverrides.overrides ? [argsAndOverrides.overrides] : []),
         ]
         data = await contract[method](...params)
@@ -80,5 +80,5 @@ function _useContractWrite(config, method, argsAndOverrides) {
     }
   }, [config, argsAndOverrides])
   errorContext.addError([signerError])
-  return { data, error, isLoading, refetch };
+  return { data, error, isLoading, write }
 }

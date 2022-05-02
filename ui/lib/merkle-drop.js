@@ -49,7 +49,7 @@ export function useIsClaimed(contractId, index) {
   return useContractRead(contractParams(contractId), 'isClaimed', {
     args: [index],
     watch: true,
-    enabled: !contractId || !index,
+    enabled: contractId && index,
   })
 }
 

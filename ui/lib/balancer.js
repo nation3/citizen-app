@@ -5,7 +5,7 @@ import { transformNumber } from './numbers'
 import { useContractRead } from './use-wagmi'
 
 export function useBalancerPool(id) {
-  const [{ data: poolData, loading }] = useContractRead(
+  const { data: poolData, isLoading } = useContractRead(
     {
       addressOrName: balancerVault,
       contractInterface: BalancerVault.abi,
@@ -33,7 +33,7 @@ export function useBalancerPool(id) {
   }, [])
 
   useEffect(() => {
-    if (!loading && nationPrice && ethPrice) {
+    if (!isLoading && nationPrice && ethPrice) {
       let nationBalance
       let wethBalance
       if (process.env.NEXT_PUBLIC_CHAIN === 'mainnet') {
@@ -51,6 +51,6 @@ export function useBalancerPool(id) {
         setPoolValue(totalValue)
       }
     }
-  }, [loading, poolData, ethPrice, nationPrice])
-  return { poolValue, nationPrice, loading }
+  }, [isLoading, poolData, ethPrice, nationPrice])
+  return { poolValue, nationPrice, isLoading }
 }

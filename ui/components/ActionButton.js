@@ -9,14 +9,15 @@ export default function ActionButton({
   postAction,
   approval,
 }) {
-  const [{ data: account }] = useAccount()
-  const [{ loading }, call] = action
+  const { data: account } = useAccount()
+  console.log(action)
+  const { isLoading, write } = action
   const onClick = async () => {
     preAction && preAction()
     /* Will have to change once wagmi's useContractWrite works again,
     since they return a TransactionResponse instead of already returning
     the mined transaction */
-    const tx = await call()
+    const tx = await write()
     postAction && tx.hash && postAction()
   }
   return (
@@ -25,7 +26,7 @@ export default function ActionButton({
         <label htmlFor="web3-modal" className={`${className} modal-button`}>
           {children}
         </label>
-      ) : loading ? (
+      ) : isLoading ? (
         <div className={className}>
           <button className="btn btn-square btn-link btn-disabled bg-transparent loading"></button>
         </div>
