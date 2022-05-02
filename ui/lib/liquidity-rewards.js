@@ -121,15 +121,19 @@ export function useVeNationBoost({
         userBalance: parseFloat(transformNumber(userBalance, 'number', 18)),
       }
 
-      const currentBoost = n.userBalance / (n.userDeposit * 0.4)
+      const baseBalance = n.userDeposit * 0.4
 
       let boostedBalance =
-        (n.userDeposit * 40) / 100 +
-        ((n.totalDeposit + n.userVeNation / n.totalVeNation) * 60) / 100
+        baseBalance +
+        ((n.totalDeposit * n.userVeNation) / n.totalVeNation) * (60 / 100)
 
       boostedBalance = Math.min(boostedBalance, n.userDeposit)
 
-      const potentialBoost = boostedBalance / (n.userDeposit * 0.4)
+      const potentialBoost = boostedBalance / baseBalance
+
+      boostedBalance = Math.min(boostedBalance, n.userDeposit)
+
+      const currentBoost = n.userBalance / baseBalance
 
       console.log(`Current boost: ${currentBoost}`)
       console.log(`Potential boost: ${potentialBoost}`)
