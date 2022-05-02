@@ -3,6 +3,7 @@ import {
   useConnect as _useConnect,
   useAccount as _useAccount,
   useBalance as _useBalance,
+  useNetwork as _useNetwork,
   useContract,
   useContractRead as _useContractRead,
   useContractWrite as _wagmiUseContractWrite,
@@ -17,6 +18,10 @@ export function useConnect() {
 
 export function useAccount(params) {
   return useHandleError(_useAccount(params))
+}
+
+export function useNetwork(params) {
+  return useHandleError(_useNetwork(params))
 }
 
 export function useBalance(params) {

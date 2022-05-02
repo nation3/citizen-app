@@ -1,5 +1,5 @@
 import { ExclamationCircleIcon } from '@heroicons/react/outline'
-import { useNetwork } from 'wagmi'
+import { useNetwork } from '../lib/use-wagmi'
 
 const chainIds = {
   mainnet: 1,
