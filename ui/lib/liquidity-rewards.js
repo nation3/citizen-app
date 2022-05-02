@@ -60,7 +60,7 @@ export function useLiquidityRewards({ nationPrice, poolValue, address }) {
           .div(months)
           .mul(transformNumber(nationPrice, 'bignumber', 2))
           .div(poolValue)
-          .mul(transformNumber(1, 'bignumber'))
+          .mul(transformNumber(12, 'bignumber'))
       )
     }
   }, [poolValue, nationPrice, totalRewards, totalRewardsLoading])
