@@ -174,7 +174,7 @@ contract BoostedLiquidityDistributor is Initializable, Ownable {
     /// @dev Only if their boost power expired.
     function kick(address account) external virtual {
         uint256 _userDeposit = userDeposit[account];
-        if (userBalance[account] <= _userDeposit * BOOSTLESS_PRODUCTION / 100) revert KickNotAllowed();
+        if (userBalance[account] <= (_userDeposit * BOOSTLESS_PRODUCTION) / 100) revert KickNotAllowed();
         if (boostToken.balanceOf(account) > 0) revert KickNotAllowed();
 
         _distributeRewards(account);
@@ -280,19 +280,23 @@ contract BoostedLiquidityDistributor is Initializable, Ownable {
     /*///////////////////////////////////////////////////////////////
                        INTERNAL DISTRIBUTION LOGIC
     //////////////////////////////////////////////////////////////*/
-    
+
     /// @dev Update user balance & total balance after boosts.
     /// @param account The LP token depositor whose balance is being updated.
     /// @param _userDeposit LP tokens deposited by the user to use as base balance.
     /// @param _totalDeposit Total LP tokens deposited in the contract.
     /// @dev If the boostToken contract hasn't been verified before this could lead to a reentrancy attack.
-    function _updateBalances(address account, uint256 _userDeposit, uint256 _totalDeposit) internal virtual {
+    function _updateBalances(
+        address account,
+        uint256 _userDeposit,
+        uint256 _totalDeposit
+    ) internal virtual {
         uint256 userPower = boostToken.balanceOf(account);
         uint256 totalPower = boostToken.totalSupply();
 
         // Calculate user balance after boost
         // min((userDeposit * 0.4) + (totalDeposit * userVotingPower / totalVotingPower * 0.6), (userDeposit * 0.4))
-        uint256 workingBalance = _userDeposit * BOOSTLESS_PRODUCTION / 100;
+        uint256 workingBalance = (_userDeposit * BOOSTLESS_PRODUCTION) / 100;
         if (totalPower > 0) {
             workingBalance += (_totalDeposit * userPower * (100 - BOOSTLESS_PRODUCTION)) / (totalPower * 100);
         }

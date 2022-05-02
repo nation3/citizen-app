@@ -357,7 +357,7 @@ contract BoostedLiquidityDistributorTest is DSTestPlus {
         uint256 rewardsAccountB = distributor.claimRewards();
 
         // Account A should have x2.5 the rewards of account B
-        assertApproxEq(rewardsAccountA, rewardsAccountB * 5/2, 5);
+        assertApproxEq(rewardsAccountA, (rewardsAccountB * 5) / 2, 5);
 
         // Both accounts should add up to the totalRewards
         assertApproxEq(rewardsAccountA + rewardsAccountB, totalRewards, 10);
@@ -400,7 +400,7 @@ contract BoostedLiquidityDistributorTest is DSTestPlus {
         uint256 rewardsAccountB = distributor.claimRewards();
 
         // A should have a x2.5 in rewards over B
-        assertApproxEq(rewardsAccountA, rewardsAccountB * 10/4, 5);
+        assertApproxEq(rewardsAccountA, (rewardsAccountB * 10) / 4, 5);
 
         // Fastforward to 100% of rewards period
         evm.roll(endBlock);
@@ -411,7 +411,7 @@ contract BoostedLiquidityDistributorTest is DSTestPlus {
         rewardsAccountB = distributor.claimRewards();
 
         // B should have a ~x1.21 over A
-        assertApproxEq(rewardsAccountB, rewardsAccountA * 10/7, 5);
+        assertApproxEq(rewardsAccountB, (rewardsAccountA * 10) / 7, 5);
 
         // Both accounts should add up to the totalRewards
         uint256 balanceA = rewardsToken.balanceOf(userAccountA);

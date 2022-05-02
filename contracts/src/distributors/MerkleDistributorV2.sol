@@ -45,7 +45,7 @@ contract MerkleDistributorV2 is Controlled {
 
     /// @dev This is a mapping of packed arrays of booleans to signal that a leaf has been claimed.
     /// As you can't delete complex structs on solidity you need to select the active bitmap
-    mapping (uint16 => BitMaps.BitMap) private claims;
+    mapping(uint16 => BitMaps.BitMap) private claims;
     /// @dev This signal de id of the drop
     /// This contract supports up to 2^16 different drops
     uint16 dropId;
@@ -64,7 +64,11 @@ contract MerkleDistributorV2 is Controlled {
     /// @param _sender The account to send airdrop tokens from.
     /// @param _token The token to airdrop.
     /// @param _merkleRoot The root of the merkle tree.
-    function setUp(address _sender, ERC20 _token, bytes32 _merkleRoot) public onlyController {
+    function setUp(
+        address _sender,
+        ERC20 _token,
+        bytes32 _merkleRoot
+    ) public onlyController {
         sender = _sender;
         token = _token;
         merkleRoot = _merkleRoot;
