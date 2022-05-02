@@ -8,7 +8,7 @@ import flag from '../public/flag.svg'
 export default function Index() {
   return (
     <>
-      <Head title="Tweetdrop" />
+      <Head title="Home" />
       <div className="hero h-full">
         <div className="hero-content flex-col pb-24">
           <h1 className="card-title text-center text-3xl font-semibold mb-2">
