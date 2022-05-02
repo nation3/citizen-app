@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { nationToken } from '../lib/config'
+import { nationToken, veNationRewardsMultiplier } from '../lib/config'
 import GradientLink from '../components/GradientLink'
 import Head from '../components/Head'
 import flag from '../public/flag.svg'
@@ -40,9 +40,33 @@ export default function Index() {
                 <p>
                   Lock your $NATION to obtain $veNATION and help govern the
                   Nation3 DAO. $veNATION will be required to mint the upcoming
-                  passport NFTs and to boost liquidity rewards.
+                  passport NFTs to become a citizen.
                 </p>
                 <GradientLink text="Get $veNATION" href="/lock"></GradientLink>
+              </div>
+            </div>
+            <div className="card w-80 md:w-96 bg-base-100 shadow-md">
+              <div className="card-body items-stretch items-center">
+                <h2 className="card-title text-center font-medium">
+                  Earn LP rewards
+                </h2>
+                <p>
+                  Provide liquidity in the{' '}
+                  <a
+                    href="https://app.balancer.fi/#/pool/0x0bf37157d30dfe6f56757dcadff01aed83b08cd600020000000000000000019a"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className=""
+                  >
+                    80% $NATION / 20% $ETH Balancer pool
+                  </a>{' '}
+                  and earn liquidity rewards. Boost your APY by $
+                  {veNationRewardsMultiplier}x by having $veNATION.
+                </p>
+                <GradientLink
+                  text="Provide liquidity"
+                  href="/liquidity"
+                ></GradientLink>
               </div>
             </div>
             <div className="card w-80 md:w-96 bg-base-100 shadow-md">
@@ -52,8 +76,8 @@ export default function Index() {
                 </h2>
                 <p>
                   You can buy more $NATION and participate in liquidity rewards.
-                  You can also lock your $NATION to get $veNATION, allowing you
-                  to boost your rewards, get a passport NFT, and govern the DAO.
+                  You can also lock your $NATION to get $veNATION to boost your
+                  rewards, get a passport NFT, and govern the DAO.
                 </p>
                 <GradientLink
                   text="Buy $NATION"
