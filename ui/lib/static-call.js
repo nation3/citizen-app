@@ -9,6 +9,7 @@ export function useStaticCall({
   args,
   defaultData,
   skip = false,
+  throwOnRevert = true, // set to false if you'd like a reverted txn to be ignored and use the default data
   genericErrorMessage = 'Error calling contract',
 }) {
   args = args?.length === 0 ? undefined : args // args should be undefined if there are no arguments, make sure here
@@ -27,13 +28,7 @@ export function useStaticCall({
   })
 
   useEffect(async () => {
-    if (
-      skip ||
-      !contract?.callStatic[methodName] ||
-      signerLoading ||
-      signerError ||
-      !signer
-    ) {
+    if (skip || !signer) {
       return
     }
     try {
@@ -43,8 +38,10 @@ export function useStaticCall({
       setData(result)
       setLoading(false)
     } catch (error) {
-      console.error(error)
-      setError({ ...error, message: genericErrorMessage })
+      if (throwOnRevert) {
+        console.error(error)
+        setError({ ...error, message: genericErrorMessage })
+      }
       setLoading(false)
     }
   }, [
