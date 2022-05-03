@@ -10,10 +10,16 @@ import {
   useSigner,
 } from 'wagmi'
 import { useErrorContext } from '../components/ErrorProvider'
+import { useStaticCall as _useStaticCall } from './static-call'
 import { useHandleError } from './use-handle-error'
 
 export function useConnect() {
   return useHandleError(_useConnect())
+}
+
+// custom extension of wagmi
+export function useStaticCall(params) {
+  return useHandleError(_useStaticCall(params))
 }
 
 export function useAccount(params) {
