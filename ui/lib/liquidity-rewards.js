@@ -3,6 +3,7 @@ import { lpRewardsContract, balancerLPToken } from '../lib/config'
 import LiquidityRewardsDistributor from '../abis/BoostedLiquidityDistributor.json'
 import { transformNumber } from './numbers'
 import {
+  useStaticCall,
   useBalance,
   useContractRead,
   useContractWrite,
@@ -20,9 +21,11 @@ export function useLiquidityRewards({ nationPrice, poolValue, address }) {
   const months = transformNumber(6, 'bignumber', 0)
 
   const [{ data: unclaimedRewards, loading: unclaimedRewardsLoading }] =
-    useContractRead(contractParams, 'getUnclaimedRewards', {
-      args: [address],
-      watch: true,
+    useStaticCall({
+      ...contractParams,
+      methodName: 'claimRewards',
+      defaultData: transformNumber(0, 'bignumber'),
+      throwOnRevert: false, // assumes a reverted transaction means no claimable rewards
       skip: !address,
     })
 
