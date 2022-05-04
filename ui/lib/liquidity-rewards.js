@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { lpRewardsContract, balancerLPToken } from '../lib/config'
 import LiquidityRewardsDistributor from '../abis/BoostedLiquidityDistributor.json'
+import ERC20 from '../abis/ERC20.json'
 import { transformNumber } from './numbers'
 import {
   useStaticCall,
@@ -18,7 +19,7 @@ const contractParams = {
 export function useLiquidityRewards({ nationPrice, poolValue, address }) {
   const [{ data: totalRewards, loading: totalRewardsLoading }] =
     useContractRead(contractParams, 'totalRewards')
-  const months = transformNumber(6, 'bignumber', 0)
+  const months = 6
 
   const [{ data: unclaimedRewards, loading: unclaimedRewardsLoading }] =
     useStaticCall({
@@ -42,6 +43,10 @@ export function useLiquidityRewards({ nationPrice, poolValue, address }) {
   const [{ data: totalDeposit, loading: totalDepositLoading }] =
     useContractRead(contractParams, 'totalDeposit')
 
+  const [{ data: lpTokensSupply, loading: lpTokensSupplyLoading }] = useContractRead(
+      {addressOrName: balancerLPToken, contractInterface: ERC20.abi}, 'totalSupply'
+  )
+
   const [{ data: userBalance, loading: userBalanceLoading }] = useContractRead(
     contractParams,
     'userBalance',
@@ -57,16 +62,24 @@ export function useLiquidityRewards({ nationPrice, poolValue, address }) {
   )
 
   useEffect(() => {
-    if (totalRewards && poolValue) {
+    if (totalRewards && poolValue && totalDeposit && lpTokensSupply) {
       setLiquidityRewardsAPY(
         totalRewards
-          .div(months)
+          .mul(transformNumber(12 / months, 'bignumber'))
           .mul(transformNumber(nationPrice, 'bignumber', 2))
-          .div(poolValue)
-          .mul(transformNumber(12, 'bignumber'))
+          .div(poolValue.mul(totalDeposit).div(lpTokensSupply))
       )
     }
-  }, [poolValue, nationPrice, totalRewards, totalRewardsLoading])
+  }, [
+      poolValue,
+      totalDeposit,
+      lpTokensSupply,
+      nationPrice,
+      totalRewards,
+      totalRewardsLoading,
+      totalDepositLoading,
+      lpTokensSupplyLoading
+  ])
 
   return [
     {
