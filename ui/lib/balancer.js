@@ -33,12 +33,13 @@ export function useBalancerPool(id) {
   }, [])
 
   useEffect(() => {
-    if (!isLoading && nationPrice && ethPrice) {
+    if (!isLoading && poolData && nationPrice && ethPrice) {
       let nationBalance
       let wethBalance
       if (process.env.NEXT_PUBLIC_CHAIN === 'mainnet') {
-        nationBalance = poolData?.balances[0]
-        wethBalance = poolData?.balances[1]
+        const balances = poolData[1]
+        nationBalance = balances[0]
+        wethBalance = balances[1]
       } else {
         nationBalance = transformNumber(333, 'bignumber', 18)
         wethBalance = transformNumber(333, 'bignumber', 18)

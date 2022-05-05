@@ -10,6 +10,7 @@ import {
   nationToken,
   veNationToken,
   veNationRequiredStake,
+  veNationRewardsMultiplier,
 } from '../lib/config'
 import { useNationBalance } from '../lib/nation-token'
 import { transformNumber } from '../lib/numbers'
@@ -74,10 +75,6 @@ export default function Lock() {
   const { data: nationBalance, isLoading: nationBalanceLoading } =
     useNationBalance(account?.address)
 
-  console.log(nationBalance?.value.toString() / 10 ** 18)
-
-  console.log(nationBalance)
-
   const { data: veNationBalance, isLoading: veNationBalanceLoading } =
     useVeNationBalance(account?.address)
 
@@ -87,7 +84,7 @@ export default function Lock() {
   const [hasLock, setHasLock] = useState(false)
   useEffect(() => {
     !veNationLockLoading &&
-      setHasLock(veNationLock && veNationLock.amount.toString() !== '0')
+      setHasLock(veNationLock && !veNationLock[0].isZero())
   }, [veNationLock])
 
   const [hasExpired, setHasExpired] = useState(false)
@@ -95,8 +92,8 @@ export default function Lock() {
     !veNationLockLoading &&
       setHasExpired(
         veNationLock &&
-          !veNationLock.end.isZero() &&
-          ethers.BigNumber.from(+new Date()).gte(veNationLock.end.mul(1000))
+          !veNationLock[1].isZero() &&
+          ethers.BigNumber.from(+new Date()).gte(veNationLock[1].mul(1000))
       )
   }, [veNationLock])
 
@@ -115,12 +112,11 @@ export default function Lock() {
   const [wantsToIncrease, setWantsToIncrease] = useState(false)
 
   useEffect(() => {
-    if (hasLock) {
-      !lockAmount &&
-        setLockAmount(ethers.utils.formatEther(veNationLock?.amount))
+    if (hasLock && veNationLock) {
+      !lockAmount && setLockAmount(ethers.utils.formatEther(veNationLock[0]))
       const origTime = {
-        value: veNationLock.end,
-        formatted: dateToReadable(bigNumberToDate(veNationLock.end)),
+        value: veNationLock[1],
+        formatted: dateToReadable(bigNumberToDate(veNationLock[1])),
       }
       !lockTime && lockTime.orig
       setLockTime({
@@ -128,24 +124,23 @@ export default function Lock() {
         orig: origTime,
       })
     }
-  }, [hasLock])
+  }, [hasLock, veNationLock])
 
   useEffect(() => {
-    if (hasLock) {
+    if (hasLock && veNationLock) {
       setMinMaxLockTime({
         min: dateToReadable(
-          dateOut(bigNumberToDate(veNationLock.end), { days: 8 })
+          dateOut(bigNumberToDate(veNationLock[1]), { days: 8 })
         ),
         max: dateToReadable(dateOut(new Date(), { years: 4 })),
       })
       setCanIncrease({
         amount:
-          lockAmount &&
-          ethers.utils.parseEther(lockAmount).gt(veNationLock.amount),
+          lockAmount && ethers.utils.parseEther(lockAmount).gt(veNationLock[0]),
         time:
           lockTime?.value &&
           lockTime.value.gt(
-            +dateOut(bigNumberToDate(veNationLock.end), { days: 7 })
+            +dateOut(bigNumberToDate(veNationLock[1]), { days: 7 })
           ),
       })
     } else {
@@ -154,32 +149,31 @@ export default function Lock() {
         max: dateToReadable(dateOut(new Date(), { years: 4 })),
       })
     }
-  }, [hasLock, lockAmount, lockTime])
+  }, [hasLock, lockAmount, lockTime, veNationLock])
 
   const createLock = useVeNationCreateLock(
     lockAmount && ethers.utils.parseEther(lockAmount),
     lockTime.value.div(1000)
   )
   const increaseLock = useVeNationIncreaseLock({
-    currentAmount: veNationLock?.amount,
+    currentAmount: veNationLock && veNationLock[0],
     newAmount:
       lockAmount &&
       veNationLock &&
-      ethers.utils.parseEther(lockAmount).sub(veNationLock?.amount),
-    currentTime: veNationLock?.end,
+      ethers.utils.parseEther(lockAmount).sub(veNationLock[0]),
+    currentTime: veNationLock && veNationLock[1],
     newTime: lockTime?.value.div(1000),
   })
-  console.log(increaseLock)
-  const withdraw = useVeNationWithdrawLock()
 
-  // $veNATION enables governance, minting passport NFTs and boosting liquidity rewards (up to {veNationRewardsMultiplier}x).{' '}
+  const withdraw = useVeNationWithdrawLock()
 
   return (
     <>
       <Head title="$veNATION" />
       <MainCard title="Lock $NATION to get $veNATION">
         <p className="mb-4">
-          $veNATION enables governance and will enable minting passport NFTs.{' '}
+          $veNATION enables governance, minting passport NFTs and boosting
+          liquidity rewards (up to {veNationRewardsMultiplier}x).{' '}
           <GradientLink
             text="Learn more"
             href="https://wiki.nation3.org/token/#venation"
@@ -262,7 +256,7 @@ export default function Lock() {
                 <div className="stat-title">Your locked $NATION</div>
                 <div className="stat-value text-secondary">
                   <Balance
-                    balance={veNationLock?.amount}
+                    balance={veNationLock && veNationLock[0]}
                     loading={veNationLockLoading}
                     decimals={2}
                   />
@@ -276,7 +270,8 @@ export default function Lock() {
                 </div>
                 <div className="stat-title">Your lock expiration date</div>
                 <div className="stat-value">
-                  {dateToReadable(bigNumberToDate(veNationLock?.end))}
+                  {veNationLock &&
+                    dateToReadable(bigNumberToDate(veNationLock[1]))}
                 </div>
               </div>
             </div>
@@ -305,8 +300,8 @@ export default function Lock() {
                       className="input input-bordered w-full"
                       value={lockAmount}
                       min={
-                        veNationLock?.amount
-                          ? ethers.utils.formatEther(veNationLock?.amount)
+                        veNationLock
+                          ? ethers.utils.formatEther(veNationLock[0])
                           : 0
                       }
                       onChange={(e) => {
@@ -401,11 +396,11 @@ export default function Lock() {
                         token: nationToken,
                         spender: veNationToken,
                         amountNeeded:
-                          veNationLock &&
-                          lockAmount &&
-                          ethers.utils
-                            .parseEther(lockAmount)
-                            .sub(veNationLock.amount),
+                          hasLock && veNationLock
+                            ? transformNumber(lockAmount, 'bignumber').sub(
+                                veNationLock[0]
+                              )
+                            : transformNumber(lockAmount, 'bignumber'),
                         approveText: 'Approve $NATION',
                       }}
                     >

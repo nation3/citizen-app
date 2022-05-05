@@ -75,13 +75,14 @@ const navigation = [
 
 export default function Layout({ children }) {
   const router = useRouter()
-  const { connectors, connectAsync, error: connectError } = useConnect()
-  const { data: ensName } = useEnsName()
+  const { connectors, connect, error: connectError } = useConnect()
+  //const { data: ensName } = useEnsName()
+  let ensName
   const { disconnect } = useDisconnect()
   const [nav, setNav] = useState(navigation)
   const errorContext = useErrorContext()
   const [account, setAccount] = useState('')
-  // because of the useAccount doesn't rerender on account change, so use useEffect to update account
+
   const { data: accountData } = useAccount()
   useEffect(() => {
     setAccount(accountData)
@@ -263,7 +264,7 @@ export default function Layout({ children }) {
                   <li key={connector.id}>
                     <a
                       disabled={!connector.ready}
-                      onClick={() => connectAsync(connector)}
+                      onClick={() => connect(connector)}
                     >
                       {connectorIcons[connector.name] ? (
                         <div className="h-5 w-5">

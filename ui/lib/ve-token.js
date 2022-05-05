@@ -34,24 +34,14 @@ let gasLimits = {
 }
 
 export function useVeNationLock(address) {
-  const bigZero = transformNumber(0, 'bignumber')
-  const [data, setData] = useState({ amount: bigZero, end: bigZero })
-  const res = useContractRead(contractParams, 'locked', {
+  return useContractRead(contractParams, 'locked', {
     args: [address],
     watch: true,
-    enabled: address,
+    enabled: !!address,
     overrides: {
       gasLimit: gasLimits.locked,
     },
   })
-  useEffect(() => {
-    if (res.data) {
-      res.data.amount = res.data[0]
-      res.data.end = res.data[1]
-      setData(res)
-    }
-  }, [address])
-  return data
 }
 
 export function useVeNationCreateLock(amount, time) {

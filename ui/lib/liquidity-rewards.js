@@ -41,10 +41,11 @@ export function useLiquidityRewards({ nationPrice, poolValue, address }) {
   const { data: totalDeposit, isLoading: totalDepositLoading } =
     useContractRead(contractParams, 'totalDeposit')
 
-  const { data: lpTokensSupply, loading: lpTokensSupplyLoading } = useContractRead(
-    { addressOrName: balancerLPToken, contractInterface: ERC20.abi },
-    'totalSupply',
-  )
+  const { data: lpTokensSupply, isLoading: lpTokensSupplyLoading } =
+    useContractRead(
+      { addressOrName: balancerLPToken, contractInterface: ERC20.abi },
+      'totalSupply'
+    )
 
   const { data: userBalance, isLoading: userBalanceLoading } = useContractRead(
     contractParams,
@@ -77,7 +78,7 @@ export function useLiquidityRewards({ nationPrice, poolValue, address }) {
     totalRewards,
     totalRewardsLoading,
     totalDepositLoading,
-    lpTokensSupplyLoading
+    lpTokensSupplyLoading,
   ])
 
   return {

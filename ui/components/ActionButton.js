@@ -10,7 +10,6 @@ export default function ActionButton({
   approval,
 }) {
   const { data: account } = useAccount()
-  console.log(action)
   const { isLoading, write } = action
   const onClick = async () => {
     preAction && preAction()
