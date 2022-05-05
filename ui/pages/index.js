@@ -1,22 +1,14 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
 import { nationToken, veNationRewardsMultiplier } from '../lib/config'
-import { useNationBalance } from '../lib/nation-token'
-import { useAccount } from '../lib/use-wagmi'
-import { useVeNationBalance } from '../lib/ve-token'
 import GradientLink from '../components/GradientLink'
 import Head from '../components/Head'
 import flag from '../public/flag.svg'
 
 export default function Index() {
-  const router = useRouter()
-  const { data: account } = useAccount()
-
   return (
     <>
-      <Head title="Tweetdrop" />
+      <Head title="Home" />
       <div className="hero h-full">
         <div className="hero-content flex-col pb-24">
           <h1 className="card-title text-center text-3xl font-semibold mb-2">
@@ -42,13 +34,33 @@ export default function Index() {
             <div className="card w-80 md:w-96 bg-base-100 shadow-md">
               <div className="card-body items-stretch items-center">
                 <h2 className="card-title text-center font-medium">
-                  Liquidity rewards
+                  Get $veNATION
                 </h2>
                 <p>
-                  Provide liquidity in the 80% $NATION / 20% $ETH Balancer pool
-                  to receive rewards.
-                  <br />
-                  Get up to {veNationRewardsMultiplier}x boost with $veNATION.
+                  Lock your $NATION to obtain $veNATION and help govern the
+                  Nation3 DAO. $veNATION will be required to mint the upcoming
+                  passport NFTs to become a citizen.
+                </p>
+                <GradientLink text="Get $veNATION" href="/lock"></GradientLink>
+              </div>
+            </div>
+            <div className="card w-80 md:w-96 bg-base-100 shadow-md">
+              <div className="card-body items-stretch items-center">
+                <h2 className="card-title text-center font-medium">
+                  Earn LP rewards
+                </h2>
+                <p>
+                  Provide liquidity in the{' '}
+                  <a
+                    href="https://app.balancer.fi/#/pool/0x0bf37157d30dfe6f56757dcadff01aed83b08cd600020000000000000000019a"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-n3blue"
+                  >
+                    80% $NATION / 20% $ETH Balancer pool
+                  </a>{' '}
+                  and earn liquidity rewards. Boost your APY by $
+                  {veNationRewardsMultiplier}x by having $veNATION.
                 </p>
                 <GradientLink
                   text="Provide liquidity"
@@ -59,25 +71,12 @@ export default function Index() {
             <div className="card w-80 md:w-96 bg-base-100 shadow-md">
               <div className="card-body items-stretch items-center">
                 <h2 className="card-title text-center font-medium">
-                  Get $veNATION
-                </h2>
-                <p>
-                  Lock your $NATION to obtain $veNATION and help govern the
-                  Nation3 DAO. $veNATION will be required to mint the upcoming
-                  passport NFTs and to boost liquidity rewards.
-                </p>
-                <GradientLink text="Get $veNATION" href="/lock"></GradientLink>
-              </div>
-            </div>
-            <div className="card w-80 md:w-96 bg-base-100 shadow-md">
-              <div className="card-body items-stretch items-center">
-                <h2 className="card-title text-center font-medium">
                   Buy more $NATION
                 </h2>
                 <p>
                   You can buy more $NATION and participate in liquidity rewards.
-                  You can also lock your $NATION to get $veNATION, allowing you
-                  to boost your rewards, get a passport NFT, and govern the DAO.
+                  You can also lock your $NATION to get $veNATION to boost your
+                  rewards, get a passport NFT, and govern the DAO.
                 </p>
                 <GradientLink
                   text="Buy $NATION"

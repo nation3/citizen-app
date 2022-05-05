@@ -1,18 +1,33 @@
 import { useState, useCallback } from 'react'
 import {
-  // useConnect as _useConnect,
+  useConnect as _useConnect,
   useAccount as _useAccount,
   useBalance as _useBalance,
+  useNetwork as _useNetwork,
   useContract,
   useContractRead as _useContractRead,
   useContractWrite as _wagmiUseContractWrite,
   useSigner,
 } from 'wagmi'
 import { useErrorContext } from '../components/ErrorProvider'
+import { useStaticCall as _useStaticCall } from './static-call'
 import { useHandleError } from './use-handle-error'
+
+export function useConnect() {
+  return useHandleError(_useConnect())
+}
+
+// custom extension of wagmi
+export function useStaticCall(params) {
+  return useHandleError(_useStaticCall(params))
+}
 
 export function useAccount(params) {
   return useHandleError(_useAccount(params))
+}
+
+export function useNetwork(params) {
+  return useHandleError(_useNetwork(params))
 }
 
 export function useBalance(params) {
@@ -56,8 +71,8 @@ function _useContractWrite(config, method, argsAndOverrides) {
           ...(Array.isArray(argsAndOverrides.args)
             ? argsAndOverrides.args
             : argsAndOverrides.args
-            ? [argsAndOverrides.args]
-            : []),
+              ? [argsAndOverrides.args]
+              : []),
           ...(argsAndOverrides.overrides ? [argsAndOverrides.overrides] : []),
         ]
         data = await contract[method](...params)

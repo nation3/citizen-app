@@ -18,15 +18,7 @@ export default function ActionNeedsTokenApproval({
   const {
     data: tokenAllowance,
     isLoading: tokenAllowanceLoading,
-    error: allowanceError,
   } = useTokenAllowance({ token, address: account?.address, spender })
-
-  console.log(amountNeeded)
-  console.log(token)
-  console.log(spender)
-
-  const { addError } = useErrorContext()
-  addError([allowanceError])
 
   const weiAmountNeeded = transformNumber(
     amountNeeded?.formatted || amountNeeded,

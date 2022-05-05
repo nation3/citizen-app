@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react'
 import { lpRewardsContract, balancerLPToken } from '../lib/config'
 import LiquidityRewardsDistributor from '../abis/BoostedLiquidityDistributor.json'
+import ERC20 from '../abis/ERC20.json'
 import { transformNumber } from './numbers'
 import {
+  useStaticCall,
   useBalance,
   useContractRead,
   useContractWrite,
@@ -17,7 +19,7 @@ const contractParams = {
 export function useLiquidityRewards({ nationPrice, poolValue, address }) {
   const { data: totalRewards, isLoading: totalRewardsLoading } =
     useContractRead(contractParams, 'totalRewards')
-  const months = transformNumber(6, 'bignumber', 0)
+  const months = 6
 
   const { data: unclaimedRewards, isLoading: unclaimedRewardsLoading } =
     useContractRead(contractParams, 'getUnclaimedRewards', {
@@ -39,6 +41,11 @@ export function useLiquidityRewards({ nationPrice, poolValue, address }) {
   const { data: totalDeposit, isLoading: totalDepositLoading } =
     useContractRead(contractParams, 'totalDeposit')
 
+  const { data: lpTokensSupply, loading: lpTokensSupplyLoading } = useContractRead(
+    { addressOrName: balancerLPToken, contractInterface: ERC20.abi },
+    'totalSupply',
+  )
+
   const { data: userBalance, isLoading: userBalanceLoading } = useContractRead(
     contractParams,
     'userBalance',
@@ -54,16 +61,24 @@ export function useLiquidityRewards({ nationPrice, poolValue, address }) {
   )
 
   useEffect(() => {
-    if (totalRewards && poolValue) {
+    if (totalRewards && poolValue && totalDeposit && lpTokensSupply) {
       setLiquidityRewardsAPY(
         totalRewards
-          .div(months)
+          .mul(transformNumber(12 / months, 'bignumber'))
           .mul(transformNumber(nationPrice, 'bignumber', 2))
-          .div(poolValue)
-          .mul(transformNumber(1, 'bignumber'))
+          .div(poolValue.mul(totalDeposit).div(lpTokensSupply))
       )
     }
-  }, [poolValue, nationPrice, totalRewards, totalRewardsLoading])
+  }, [
+    poolValue,
+    totalDeposit,
+    lpTokensSupply,
+    nationPrice,
+    totalRewards,
+    totalRewardsLoading,
+    totalDepositLoading,
+    lpTokensSupplyLoading
+  ])
 
   return {
     liquidityRewardsAPY,
@@ -119,15 +134,19 @@ export function useVeNationBoost({
         userBalance: parseFloat(transformNumber(userBalance, 'number', 18)),
       }
 
-      const currentBoost = n.userBalance / (n.userDeposit * 0.4)
+      const baseBalance = n.userDeposit * 0.4
 
       let boostedBalance =
-        (n.userDeposit * 40) / 100 +
-        ((n.totalDeposit + n.userVeNation / n.totalVeNation) * 60) / 100
+        baseBalance +
+        ((n.totalDeposit * n.userVeNation) / n.totalVeNation) * (60 / 100)
 
       boostedBalance = Math.min(boostedBalance, n.userDeposit)
 
-      const potentialBoost = boostedBalance / (n.userDeposit * 0.4)
+      const potentialBoost = boostedBalance / baseBalance
+
+      boostedBalance = Math.min(boostedBalance, n.userDeposit)
+
+      const currentBoost = n.userBalance / baseBalance
 
       console.log(`Current boost: ${currentBoost}`)
       console.log(`Potential boost: ${potentialBoost}`)
@@ -171,6 +190,7 @@ export function useClaimRewards() {
 export function useDeposit(amount) {
   return useContractWrite(contractParams, 'deposit', {
     args: [amount],
+    overrides: { gasLimit: 300000 },
   })
 }
 

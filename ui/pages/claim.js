@@ -37,14 +37,6 @@ export default function Claim() {
     }
   }, [account, claimsFiles, isClaimed, isClaimedLoading])
 
-  /*useEffect(() => {
-    console.log(isClaimedLoading)
-    console.log(isClaimed)
-    !isClaimedLoading &&
-      typeof isClaimed === 'undefined' &&
-      setCanClaim(!isClaimed)
-  }, [isClaimed, isClaimedLoading])*/
-
   const claimDrop = useClaimDrop({
     contractId: contractId,
     index: proofIndex,

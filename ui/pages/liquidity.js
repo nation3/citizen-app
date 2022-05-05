@@ -69,8 +69,6 @@ export default function Liquidity() {
     userBalance,
   })
 
-  console.log(transformNumber(liquidityRewardsAPY, 'number', 18))
-
   const boostedAPY = useBoostedAPY({
     defaultAPY: liquidityRewardsAPY,
     boostMultiplier: currentBoost,

@@ -10,7 +10,6 @@ import {
   nationToken,
   veNationToken,
   veNationRequiredStake,
-  veNationRewardsMultiplier,
 } from '../lib/config'
 import { useNationBalance } from '../lib/nation-token'
 import { transformNumber } from '../lib/numbers'
