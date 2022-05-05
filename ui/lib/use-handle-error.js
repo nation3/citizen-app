@@ -1,10 +1,11 @@
 import { useEffect } from 'react'
 import { useErrorContext } from '../components/ErrorProvider'
 
-export function useHandleError([{ data, error, loading }, method]) {
+export function useHandleError(object) {
   const errorContext = useErrorContext()
   useEffect(() => {
-    errorContext.addError([error])
-  }, [error])
-  return [{ data, error, loading }, method]
+    console.log(object.error)
+    errorContext.addError([object.error])
+  }, [object.error])
+  return object
 }

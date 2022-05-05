@@ -6,6 +6,6 @@ export function useNationBalance(address) {
     addressOrName: address,
     token: nationToken,
     watch: true,
-    skip: !address,
+    enabled: address,
   })
 }
