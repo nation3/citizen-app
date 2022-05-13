@@ -36,15 +36,15 @@ function App({ Component, pageProps }) {
   }, [])
 
   return (
-    <ErrorProvider>
-      <WagmiProvider autoConnect connectors={connectors} provider={provider}>
+    <WagmiProvider autoConnect connectors={connectors} provider={provider}>
+      <ErrorProvider>
         <NftProvider fetcher={['ethers', { provider }]}>
           <Layout>
             <Component {...pageProps} />
           </Layout>
         </NftProvider>
-      </WagmiProvider>
-    </ErrorProvider>
+      </ErrorProvider>
+    </WagmiProvider>
   )
 }
 

@@ -1,12 +1,20 @@
 import { createContext, useContext, useState, useEffect } from 'react'
+import { useNetwork } from 'wagmi'
 
 const ErrorContext = createContext([])
 
 function ErrorProvider({ children }) {
   const [errors, setErrors] = useState([])
   const [count, setCount] = useState([])
+  const [{ data: networkData }] = useNetwork()
+
   const addError = (newErrors) => {
-    if (newErrors && newErrors[0]) {
+    if (
+      newErrors &&
+      newErrors[0] &&
+      networkData.chain?.name.toUpperCase() ==
+        process.env.NEXT_PUBLIC_CHAIN.toUpperCase()
+    ) {
       for (const error of newErrors) {
         console.error(error)
         if (error instanceof Error) {
