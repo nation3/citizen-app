@@ -36,12 +36,12 @@ export function useStaticCall({
         ? await contract.callStatic[methodName](...args)
         : await contract.callStatic[methodName]()
       setData(result)
-      setLoading(false)
     } catch (error) {
       if (throwOnRevert) {
         console.error(error)
         setError({ ...error, message: genericErrorMessage })
       }
+    } finally {
       setLoading(false)
     }
   }, [
