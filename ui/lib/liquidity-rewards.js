@@ -18,7 +18,7 @@ const contractParams = {
 
 export function useLiquidityRewards({ nationPrice, poolValue, address }) {
   const [{ data: totalRewards, loading: totalRewardsLoading }] =
-    useContractRead(contractParams, 'totalRewards')
+    useContractRead(contractParams, 'totalRewards', {}, false)
   const months = 6
 
   const [{ data: unclaimedRewards, loading: unclaimedRewardsLoading }] =
@@ -41,11 +41,15 @@ export function useLiquidityRewards({ nationPrice, poolValue, address }) {
   )
 
   const [{ data: totalDeposit, loading: totalDepositLoading }] =
-    useContractRead(contractParams, 'totalDeposit')
+    useContractRead(contractParams, 'totalDeposit', {}, false)
 
-  const [{ data: lpTokensSupply, loading: lpTokensSupplyLoading }] = useContractRead(
-      {addressOrName: balancerLPToken, contractInterface: ERC20.abi}, 'totalSupply'
-  )
+  const [{ data: lpTokensSupply, loading: lpTokensSupplyLoading }] =
+    useContractRead(
+      { addressOrName: balancerLPToken, contractInterface: ERC20.abi },
+      'totalSupply',
+      {},
+      false
+    )
 
   const [{ data: userBalance, loading: userBalanceLoading }] = useContractRead(
     contractParams,
@@ -71,14 +75,14 @@ export function useLiquidityRewards({ nationPrice, poolValue, address }) {
       )
     }
   }, [
-      poolValue,
-      totalDeposit,
-      lpTokensSupply,
-      nationPrice,
-      totalRewards,
-      totalRewardsLoading,
-      totalDepositLoading,
-      lpTokensSupplyLoading
+    poolValue,
+    totalDeposit,
+    lpTokensSupply,
+    nationPrice,
+    totalRewards,
+    totalRewardsLoading,
+    totalDepositLoading,
+    lpTokensSupplyLoading,
   ])
 
   return [

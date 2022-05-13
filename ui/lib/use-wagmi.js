@@ -34,12 +34,27 @@ export function useBalance(params) {
   return useHandleError(_useBalance(params))
 }
 
-export function useContractRead(config, method, argsAndOverrides) {
-  return useHandleError(_useContractRead(config, method, argsAndOverrides))
+export function useContractRead(
+  config,
+  method,
+  argsAndOverrides,
+  throwOnRevert
+) {
+  return useHandleError(
+    _useContractRead(config, method, argsAndOverrides),
+    throwOnRevert
+  )
 }
 
-export function useContractWrite(config, method, argsAndOverrides) {
-  return useHandleError(_useContractWrite(config, method, argsAndOverrides))
+export function useContractWrite(
+  config,
+  method,
+  argsAndOverrides,
+  throwOnRevert
+) {
+  return useHandleError(
+    _useContractWrite(config, method, argsAndOverrides, throwOnRevert)
+  )
 }
 
 export function useWagmiContractWrite(config, method, argsAndOverrides) {
