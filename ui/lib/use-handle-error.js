@@ -7,7 +7,9 @@ export function useHandleError(
 ) {
   const errorContext = useErrorContext()
   useEffect(() => {
-    if (throwOnRevert) errorContext.addError([error])
+    if (throwOnRevert) {
+      errorContext.addError([error])
+    }
   }, [error])
   return [{ data, error, loading }, method]
 }
