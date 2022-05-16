@@ -7,7 +7,7 @@ const chainIds = {
 }
 
 export default function SwitchNetworkBanner({ newNetwork }) {
-  const [{}, switchNetwork] = useNetwork()
+  const { switchNetwork } = useNetwork()
 
   const capitalized = (network) =>
     network.charAt(0).toUpperCase() + network.slice(1)

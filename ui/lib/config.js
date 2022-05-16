@@ -35,6 +35,7 @@ if (process.env.NEXT_PUBLIC_CHAIN !== 'mainnet') {
   }
 }
 
+console.log(process.env.NEXT_PUBLIC_CHAIN)
 console.log(config)
 
 export const {

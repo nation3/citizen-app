@@ -4,7 +4,6 @@ import LiquidityRewardsDistributor from '../abis/BoostedLiquidityDistributor.jso
 import ERC20 from '../abis/ERC20.json'
 import { transformNumber } from './numbers'
 import {
-  useStaticCall,
   useBalance,
   useContractRead,
   useContractWrite,
@@ -17,33 +16,31 @@ const contractParams = {
 }
 
 export function useLiquidityRewards({ nationPrice, poolValue, address }) {
-  const [{ data: totalRewards, loading: totalRewardsLoading }] =
+  const { data: totalRewards, isLoading: totalRewardsLoading } =
     useContractRead(contractParams, 'totalRewards', {}, false)
   const months = 6
 
-  const [{ data: unclaimedRewards, loading: unclaimedRewardsLoading }] =
-    useStaticCall({
-      ...contractParams,
-      methodName: 'claimRewards',
-      defaultData: transformNumber(0, 'bignumber'),
-      throwOnRevert: false, // assumes a reverted transaction means no claimable rewards
-      skip: !address,
+  const { data: unclaimedRewards, isLoading: unclaimedRewardsLoading } =
+    useContractRead(contractParams, 'getUnclaimedRewards', {
+      args: [address],
+      watch: true,
+      enabled: address,
     })
 
-  const [{ data: userDeposit, loading: userDepositLoading }] = useContractRead(
+  const { data: userDeposit, isLoading: userDepositLoading } = useContractRead(
     contractParams,
     'userDeposit',
     {
       args: [address],
       watch: true,
-      skip: !address,
+      enabled: address,
     }
   )
 
-  const [{ data: totalDeposit, loading: totalDepositLoading }] =
+  const { data: totalDeposit, isLoading: totalDepositLoading } =
     useContractRead(contractParams, 'totalDeposit', {}, false)
 
-  const [{ data: lpTokensSupply, loading: lpTokensSupplyLoading }] =
+  const { data: lpTokensSupply, isLoading: lpTokensSupplyLoading } =
     useContractRead(
       { addressOrName: balancerLPToken, contractInterface: ERC20.abi },
       'totalSupply',
@@ -51,13 +48,13 @@ export function useLiquidityRewards({ nationPrice, poolValue, address }) {
       false
     )
 
-  const [{ data: userBalance, loading: userBalanceLoading }] = useContractRead(
+  const { data: userBalance, isLoading: userBalanceLoading } = useContractRead(
     contractParams,
     'userBalance',
     {
       args: [address],
       watch: true,
-      skip: !address,
+      enabled: address,
     }
   )
 
@@ -85,21 +82,19 @@ export function useLiquidityRewards({ nationPrice, poolValue, address }) {
     lpTokensSupplyLoading,
   ])
 
-  return [
-    {
-      liquidityRewardsAPY,
-      unclaimedRewards,
-      userDeposit,
-      totalDeposit,
-      userBalance,
-      loading:
-        totalRewardsLoading ||
-        unclaimedRewardsLoading ||
-        userDepositLoading ||
-        totalDepositLoading ||
-        userBalanceLoading,
-    },
-  ]
+  return {
+    liquidityRewardsAPY,
+    unclaimedRewards,
+    userDeposit,
+    totalDeposit,
+    userBalance,
+    loading:
+      totalRewardsLoading ||
+      unclaimedRewardsLoading ||
+      userDepositLoading ||
+      totalDepositLoading ||
+      userBalanceLoading,
+  }
 }
 
 export function usePoolTokenBalance(address) {
@@ -107,7 +102,7 @@ export function usePoolTokenBalance(address) {
     addressOrName: address,
     token: balancerLPToken,
     watch: true,
-    skip: !address,
+    enabled: address,
   })
 }
 

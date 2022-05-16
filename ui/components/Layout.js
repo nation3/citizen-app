@@ -19,12 +19,11 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import Script from 'next/script'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Blockies from 'react-blockies'
-import { useConnect } from 'wagmi'
+import { useConnect, useEnsName, useDisconnect } from 'wagmi'
 import { nationToken } from '../lib/config'
 import { connectorIcons } from '../lib/connectors'
-import { useHandleError } from '../lib/use-handle-error'
 import { useAccount } from '../lib/use-wagmi'
 import Logo from '../public/logo.svg'
 import ErrorCard from './ErrorCard'
@@ -76,16 +75,18 @@ const navigation = [
 
 export default function Layout({ children }) {
   const router = useRouter()
-  const [{ data: connectData, error: connectError }, connect] = useConnect()
-  const [{ data: account }, disconnect] = useHandleError(
-    useAccount({
-      fetchEns: true,
-    })
-  )
-
+  const { connectors, connect, error: connectError } = useConnect()
+  //const { data: ensName } = useEnsName()
+  let ensName
+  const { disconnect } = useDisconnect()
   const [nav, setNav] = useState(navigation)
-
   const errorContext = useErrorContext()
+  const [account, setAccount] = useState('')
+
+  const { data: accountData } = useAccount()
+  useEffect(() => {
+    setAccount(accountData)
+  }, [accountData])
 
   return (
     <div className="mx-auto bg-n3bg font-display">
@@ -174,14 +175,14 @@ export default function Layout({ children }) {
                 ))}
               </ul>
               <ul className="menu p-4 text-base-400">
-                {account ? (
+                {account?.address ? (
                   <li>
                     <label htmlFor="web3-modal">
                       <div className="mask mask-circle cursor-pointer">
                         <Blockies seed={account?.address} size={12} />
                       </div>
-                      {account.ens?.name
-                        ? account.ens?.name
+                      {ensName
+                        ? ensName
                         : `${account.address.substring(
                             0,
                             6
@@ -217,7 +218,7 @@ export default function Layout({ children }) {
           {account ? (
             <>
               <h3 className="text-lg font-bold px-4">Account</h3>
-              <p className="p-4">Connected to {account.connector.name}</p>
+              <p className="p-4">Connected to {account.connector?.name}</p>
               <ul className="menu bg-base-100 p-2 -m-2 rounded-box">
                 <li key="address">
                   <a
@@ -226,8 +227,8 @@ export default function Layout({ children }) {
                     target="_blank"
                   >
                     <UserIcon className="h-5 w-5" />
-                    {account.ens?.name
-                      ? account.ens?.name
+                    {ensName
+                      ? ensName
                       : `${account.address.substring(
                           0,
                           6
@@ -259,7 +260,7 @@ export default function Layout({ children }) {
                 ''
               )}
               <ul className="menu bg-base-100 p-2 -m-2 rounded-box">
-                {connectData.connectors.map((connector) => (
+                {connectors.map((connector) => (
                   <li key={connector.id}>
                     <a
                       disabled={!connector.ready}
