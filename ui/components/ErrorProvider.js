@@ -6,13 +6,13 @@ const ErrorContext = createContext([])
 function ErrorProvider({ children }) {
   const [errors, setErrors] = useState([])
   const [count, setCount] = useState([])
-  const [{ data: networkData }] = useNetwork()
+  const { activeChain } = useNetwork()
 
   const addError = (newErrors) => {
     if (
       newErrors &&
       newErrors[0] &&
-      networkData.chain?.name.toUpperCase() ==
+      activeChain.name.toUpperCase() ==
         process.env.NEXT_PUBLIC_CHAIN.toUpperCase()
     ) {
       for (const error of newErrors) {

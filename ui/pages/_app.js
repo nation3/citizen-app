@@ -36,13 +36,13 @@ function App({ Component, pageProps }) {
   return (
     <>
       {client && (
-        <ErrorProvider>
-          <Provider client={client}>
+        <Provider client={client}>
+          <ErrorProvider>
             <Layout>
               <Component {...pageProps} />
             </Layout>
-          </Provider>
-        </ErrorProvider>
+          </ErrorProvider>
+        </Provider>
       )}
     </>
   )

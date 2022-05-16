@@ -5,12 +5,12 @@ export default function PreferredNetworkWrapper({
   children,
   preferredNetwork,
 }) {
-  const { data: networkData } = useNetwork()
+  const { activeChain } = useNetwork()
+
   return (
     <>
-      {networkData?.chain &&
-        networkData.chain?.name.toUpperCase() !=
-        preferredNetwork.toUpperCase() && (
+      {activeChain &&
+        activeChain.name.toUpperCase() != preferredNetwork.toUpperCase() && (
           <SwitchNetworkBanner newNetwork={preferredNetwork} />
         )}
       {children}
