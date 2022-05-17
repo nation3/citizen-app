@@ -1,12 +1,21 @@
 import { createContext, useContext, useState, useEffect } from 'react'
+import { useNetwork } from 'wagmi'
+import networkToId from '../lib/networkToId'
 
 const ErrorContext = createContext([])
 
 function ErrorProvider({ children }) {
   const [errors, setErrors] = useState([])
   const [count, setCount] = useState([])
+  const { activeChain } = useNetwork()
+
   const addError = (newErrors) => {
-    if (newErrors && newErrors[0]) {
+    if (
+      newErrors &&
+      newErrors[0] &&
+      activeChain?.id &&
+      activeChain.id == networkToId(process.env.NEXT_PUBLIC_CHAIN)
+    ) {
       for (const error of newErrors) {
         console.error(error)
         if (error instanceof Error) {

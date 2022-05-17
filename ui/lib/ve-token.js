@@ -1,5 +1,7 @@
+import { useEffect, useState } from 'react'
 import { veNationToken } from '../lib/config'
 import VotingEscrow from '../abis/VotingEscrow.json'
+import { transformNumber } from './numbers'
 import { useContractRead, useContractWrite } from './use-wagmi'
 
 const contractParams = {
@@ -11,7 +13,7 @@ export function useVeNationBalance(address) {
   return useContractRead(contractParams, 'balanceOf(address)', {
     args: [address],
     watch: true,
-    skip: !address,
+    enabled: address,
   })
   /*
   For some reason 'balanceOf' doens't work, therefore useBalance doesn't either
@@ -19,7 +21,7 @@ export function useVeNationBalance(address) {
     addressOrName: address,
     token: veNationToken,
     watch: true,
-    skip: !address,
+    enabled: address,
   })*/
 }
 
@@ -35,7 +37,7 @@ export function useVeNationLock(address) {
   return useContractRead(contractParams, 'locked', {
     args: [address],
     watch: true,
-    skip: !address,
+    enabled: !!address,
     overrides: {
       gasLimit: gasLimits.locked,
     },
@@ -52,11 +54,11 @@ export function useVeNationCreateLock(amount, time) {
 }
 
 export function useVeNationIncreaseLock({ newAmount, currentTime, newTime }) {
-  const [{ loading: amountLoading }, increaseLockAmount] =
+  const { isLoading: amountLoading, write: increaseLockAmount } =
     useVeNationIncreaseLockAmount(newAmount)
-  const [{ loading: timeLoading }, increaseLockTime] =
+  const { isLoading: timeLoading, write: increaseLockTime } =
     useVeNationIncreaseLockTime(newTime)
-  const call = () => {
+  const write = () => {
     if (!newAmount.isZero()) {
       increaseLockAmount(newAmount)
     }
@@ -65,7 +67,7 @@ export function useVeNationIncreaseLock({ newAmount, currentTime, newTime }) {
     }
   }
 
-  return [{ loading: amountLoading || timeLoading }, call]
+  return { isLoading: amountLoading || timeLoading, write }
 }
 
 export function useVeNationIncreaseLockAmount(amount) {
