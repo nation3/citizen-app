@@ -10,7 +10,7 @@ export default function PreferredNetworkWrapper({
 
   return (
     <>
-      {activeChain && activeChain.id != networkToId(preferredNetwork) && (
+      {activeChain.id && activeChain.id != networkToId(preferredNetwork) && (
         <SwitchNetworkBanner newNetwork={preferredNetwork} />
       )}
       {children}
