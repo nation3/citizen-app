@@ -17,7 +17,7 @@ let config = {
   nationDropAmount: process.env.NEXT_PUBLIC_NATION_DISTRIBUTOR_DROP_AMOUNT,
 }
 
-if (process.env.NEXT_PUBLIC_CHAIN !== 'ethereum') {
+if (process.env.NEXT_PUBLIC_CHAIN !== 'mainnet') {
   const zeroAddress = '0x0000000000000000000000000000000000000000'
   const devDeployments = require(`../../contracts/deployments/${process.env.NEXT_PUBLIC_CHAIN}.json`)
   config = {

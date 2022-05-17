@@ -12,8 +12,7 @@ function ErrorProvider({ children }) {
     if (
       newErrors &&
       newErrors[0] &&
-      activeChain.name.toUpperCase() ==
-        process.env.NEXT_PUBLIC_CHAIN.toUpperCase()
+      activeChain.id == networkToId(process.env.NEXT_PUBLIC_CHAIN)
     ) {
       for (const error of newErrors) {
         console.error(error)

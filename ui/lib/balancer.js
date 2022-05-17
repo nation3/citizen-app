@@ -36,7 +36,7 @@ export function useBalancerPool(id) {
     if (!isLoading && poolData && nationPrice && ethPrice) {
       let nationBalance
       let wethBalance
-      if (process.env.NEXT_PUBLIC_CHAIN === 'ethereum') {
+      if (process.env.NEXT_PUBLIC_CHAIN === 'mainnet') {
         const balances = poolData[1]
         nationBalance = balances[0]
         wethBalance = balances[1]
