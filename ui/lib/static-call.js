@@ -18,8 +18,11 @@ export function useStaticCall({
   const [error, setError] = useState(null)
   const [data, setData] = useState(defaultData)
 
-  const [{ data: signer, isError: signerError, isLoading: signerLoading }] =
-    useSigner()
+  const {
+    data: signer,
+    isError: signerError,
+    isLoading: signerLoading,
+  } = useSigner()
 
   const contract = useContract({
     addressOrName: addressOrName,

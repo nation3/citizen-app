@@ -21,7 +21,7 @@ export function useLiquidityRewards({ nationPrice, poolValue, address }) {
     useContractRead(contractParams, 'totalRewards', {}, false)
   const months = 6
 
-  const [{ data: unclaimedRewards, loading: unclaimedRewardsLoading }] =
+  const { data: unclaimedRewards, loading: unclaimedRewardsLoading } =
     useStaticCall({
       ...contractParams,
       methodName: 'claimRewards',
