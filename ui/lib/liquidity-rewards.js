@@ -5,6 +5,7 @@ import ERC20 from '../abis/ERC20.json'
 import { transformNumber } from './numbers'
 import {
   useBalance,
+  useStaticCall,
   useContractRead,
   useContractWrite,
   useWagmiContractWrite,
@@ -20,11 +21,13 @@ export function useLiquidityRewards({ nationPrice, poolValue, address }) {
     useContractRead(contractParams, 'totalRewards', {}, false)
   const months = 6
 
-  const { data: unclaimedRewards, isLoading: unclaimedRewardsLoading } =
-    useContractRead(contractParams, 'getUnclaimedRewards', {
-      args: [address],
-      watch: true,
-      enabled: address,
+  const [{ data: unclaimedRewards, loading: unclaimedRewardsLoading }] =
+    useStaticCall({
+      ...contractParams,
+      methodName: 'claimRewards',
+      defaultData: transformNumber(0, 'bignumber'),
+      throwOnRevert: false, // assumes a reverted transaction means no claimable rewards
+      skip: !address,
     })
 
   const { data: userDeposit, isLoading: userDepositLoading } = useContractRead(
