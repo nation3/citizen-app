@@ -29,6 +29,7 @@ export function useLiquidityRewards({ nationPrice, poolValue, address }) {
       throwOnRevert: false, // assumes a reverted transaction means no claimable rewards
       skip: !address,
     })
+  console.log(unclaimedRewards)
 
   const { data: userDeposit, isLoading: userDepositLoading } = useContractRead(
     contractParams,
