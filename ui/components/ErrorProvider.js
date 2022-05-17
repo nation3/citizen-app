@@ -12,7 +12,7 @@ function ErrorProvider({ children }) {
     if (
       newErrors &&
       newErrors[0] &&
-      activeChain.id &&
+      activeChain?.id &&
       activeChain.id == networkToId(process.env.NEXT_PUBLIC_CHAIN)
     ) {
       for (const error of newErrors) {
