@@ -1,16 +1,12 @@
-import networkToId from '../lib/networkToId'
-import { useNetwork } from '../lib/use-wagmi'
+import usePreferredNetwork from '../lib/use-preferred-network'
 import SwitchNetworkBanner from './SwitchNetworkBanner'
 
-export default function PreferredNetworkWrapper({
-  children,
-  preferredNetwork,
-}) {
-  const { activeChain } = useNetwork()
+export default function PreferredNetworkWrapper({ children }) {
+  const { isPreferredNetwork, preferredNetwork } = usePreferredNetwork()
 
   return (
     <>
-      {activeChain?.id && activeChain.id != networkToId(preferredNetwork) && (
+      {!isPreferredNetwork && (
         <SwitchNetworkBanner newNetwork={preferredNetwork} />
       )}
       {children}
