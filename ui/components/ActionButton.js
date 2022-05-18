@@ -1,3 +1,4 @@
+import usePreferredNetwork from '../lib/use-preferred-network'
 import { useAccount } from '../lib/use-wagmi'
 import ActionNeedsTokenApproval from './ActionNeedsTokenApproval'
 
@@ -19,9 +20,15 @@ export default function ActionButton({
     const tx = await write()
     postAction && tx.hash && postAction()
   }
+  const { isPreferredNetwork } = usePreferredNetwork()
+
   return (
     <>
-      {!account ? (
+      {!isPreferredNetwork ? (
+        <button className={className} disabled>
+          Wrong Network
+        </button>
+      ) : !account ? (
         <label htmlFor="web3-modal" className={`${className} modal-button`}>
           {children}
         </label>
