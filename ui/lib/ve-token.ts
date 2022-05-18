@@ -1,5 +1,7 @@
+// @ts-expect-error ts-migrate(7016) FIXME: Could not find a declaration file for module 'reac... Remove this comment to see the full error message
 import { useEffect, useState } from 'react'
 import { veNationToken } from '../lib/config'
+// @ts-expect-error ts-migrate(2732) FIXME: Cannot find module '../abis/VotingEscrow.json'. Co... Remove this comment to see the full error message
 import VotingEscrow from '../abis/VotingEscrow.json'
 import { transformNumber } from './numbers'
 import { useContractRead, useContractWrite } from './use-wagmi'
@@ -9,7 +11,8 @@ const contractParams = {
   contractInterface: VotingEscrow.abi,
 }
 
-export function useVeNationBalance(address) {
+export function useVeNationBalance(address: any) {
+  // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 3.
   return useContractRead(contractParams, 'balanceOf(address)', {
     args: [address],
     watch: true,
@@ -33,7 +36,8 @@ let gasLimits = {
   withdraw: 400000,
 }
 
-export function useVeNationLock(address) {
+export function useVeNationLock(address: any) {
+  // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 3.
   return useContractRead(contractParams, 'locked', {
     args: [address],
     watch: true,
@@ -44,7 +48,8 @@ export function useVeNationLock(address) {
   })
 }
 
-export function useVeNationCreateLock(amount, time) {
+export function useVeNationCreateLock(amount: any, time: any) {
+  // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 3.
   return useContractWrite(contractParams, 'create_lock', {
     args: [amount, time],
     overrides: {
@@ -53,7 +58,11 @@ export function useVeNationCreateLock(amount, time) {
   })
 }
 
-export function useVeNationIncreaseLock({ newAmount, currentTime, newTime }) {
+export function useVeNationIncreaseLock({
+  newAmount,
+  currentTime,
+  newTime
+}: any) {
   const { isLoading: amountLoading, write: increaseLockAmount } =
     useVeNationIncreaseLockAmount(newAmount)
   const { isLoading: timeLoading, write: increaseLockTime } =
@@ -70,7 +79,8 @@ export function useVeNationIncreaseLock({ newAmount, currentTime, newTime }) {
   return { isLoading: amountLoading || timeLoading, write }
 }
 
-export function useVeNationIncreaseLockAmount(amount) {
+export function useVeNationIncreaseLockAmount(amount: any) {
+  // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 3.
   return useContractWrite(contractParams, 'increase_amount', {
     args: [amount],
     overrides: {
@@ -79,7 +89,8 @@ export function useVeNationIncreaseLockAmount(amount) {
   })
 }
 
-export function useVeNationIncreaseLockTime(time) {
+export function useVeNationIncreaseLockTime(time: any) {
+  // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 3.
   return useContractWrite(contractParams, 'increase_unlock_time', {
     args: [time],
     overrides: {
@@ -89,6 +100,7 @@ export function useVeNationIncreaseLockTime(time) {
 }
 
 export function useVeNationWithdrawLock() {
+  // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 3.
   return useContractWrite(contractParams, 'withdraw', {
     overrides: {
       gasLimit: gasLimits.withdraw,
@@ -97,5 +109,6 @@ export function useVeNationWithdrawLock() {
 }
 
 export function useVeNationSupply() {
+  // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 2.
   return useContractRead(contractParams, 'totalSupply()')
 }

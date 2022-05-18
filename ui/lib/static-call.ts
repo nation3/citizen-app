@@ -1,3 +1,4 @@
+// @ts-expect-error ts-migrate(7016) FIXME: Could not find a declaration file for module 'reac... Remove this comment to see the full error message
 import { useState, useEffect } from 'react'
 import { useSigner, useContract } from 'wagmi'
 
@@ -9,9 +10,12 @@ export function useStaticCall({
   args,
   defaultData,
   skip = false,
-  throwOnRevert = true, // set to false if you'd like a reverted txn to be ignored and use the default data
-  genericErrorMessage = 'Error calling contract',
-}) {
+
+  // set to false if you'd like a reverted txn to be ignored and use the default data
+  throwOnRevert = true,
+
+  genericErrorMessage = 'Error calling contract'
+}: any) {
   args = args?.length === 0 ? undefined : args // args should be undefined if there are no arguments, make sure here
 
   const [loading, setLoading] = useState(true)

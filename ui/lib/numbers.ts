@@ -1,10 +1,10 @@
 import { ethers } from 'ethers'
 
-function stringToNumber(string, decimals) {
+function stringToNumber(string: any, decimals: any) {
   return Number(string).toFixed(decimals)
 }
 
-export function transformNumber(number, to, decimals) {
+export function transformNumber(number: any, to: any, decimals: any) {
   if (!number) {
     return to === 'bignumber' ? ethers.BigNumber.from('0') : 0
   }

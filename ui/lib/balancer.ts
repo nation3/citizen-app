@@ -1,10 +1,13 @@
+// @ts-expect-error ts-migrate(7016) FIXME: Could not find a declaration file for module 'reac... Remove this comment to see the full error message
 import { useState, useEffect } from 'react'
+// @ts-expect-error ts-migrate(2732) FIXME: Cannot find module '../abis/BalancerVault.json'. C... Remove this comment to see the full error message
 import BalancerVault from '../abis/BalancerVault.json'
 import { balancerVault } from './config'
 import { transformNumber } from './numbers'
 import { useContractRead } from './use-wagmi'
 
-export function useBalancerPool(id) {
+export function useBalancerPool(id: any) {
+  // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 3.
   const { data: poolData, isLoading } = useContractRead(
     {
       addressOrName: balancerVault,

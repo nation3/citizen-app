@@ -23,7 +23,9 @@ if (process.env.NEXT_PUBLIC_CHAIN !== 'mainnet') {
   config = {
     nationToken: devDeployments.nationToken || zeroAddress,
     veNationToken: devDeployments.veNationToken || zeroAddress,
+    // @ts-expect-error ts-migrate(2322) FIXME: Type 'number' is not assignable to type 'string | ... Remove this comment to see the full error message
     veNationRequiredStake: 2,
+    // @ts-expect-error ts-migrate(2322) FIXME: Type 'number' is not assignable to type 'string | ... Remove this comment to see the full error message
     veNationRewardsMultiplier: 2.5,
     balancerVault: process.env.NEXT_PUBLIC_BALANCER_VAULT_ADDRESS,
     balancerPoolId: process.env.NEXT_PUBLIC_BALANCER_NATION_ETH_POOL_ID,

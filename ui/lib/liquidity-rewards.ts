@@ -1,6 +1,9 @@
+// @ts-expect-error ts-migrate(7016) FIXME: Could not find a declaration file for module 'reac... Remove this comment to see the full error message
 import { useState, useEffect } from 'react'
 import { lpRewardsContract, balancerLPToken } from '../lib/config'
+// @ts-expect-error ts-migrate(2732) FIXME: Cannot find module '../abis/BoostedLiquidityDistri... Remove this comment to see the full error message
 import LiquidityRewardsDistributor from '../abis/BoostedLiquidityDistributor.json'
+// @ts-expect-error ts-migrate(2732) FIXME: Cannot find module '../abis/ERC20.json'. Consider ... Remove this comment to see the full error message
 import ERC20 from '../abis/ERC20.json'
 import { transformNumber } from './numbers'
 import {
@@ -16,7 +19,11 @@ const contractParams = {
   contractInterface: LiquidityRewardsDistributor.abi,
 }
 
-export function useLiquidityRewards({ nationPrice, poolValue, address }) {
+export function useLiquidityRewards({
+  nationPrice,
+  poolValue,
+  address
+}: any) {
   const { data: totalRewards, isLoading: totalRewardsLoading } =
     useContractRead(contractParams, 'totalRewards', {}, false)
   const months = 6
@@ -25,11 +32,13 @@ export function useLiquidityRewards({ nationPrice, poolValue, address }) {
     useStaticCall({
       ...contractParams,
       methodName: 'claimRewards',
+      // @ts-expect-error ts-migrate(2554) FIXME: Expected 3 arguments, but got 2.
       defaultData: transformNumber(0, 'bignumber'),
       throwOnRevert: false, // assumes a reverted transaction means no claimable rewards
       skip: !address,
     })
 
+  // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 3.
   const { data: userDeposit, isLoading: userDepositLoading } = useContractRead(
     contractParams,
     'userDeposit',
@@ -51,6 +60,7 @@ export function useLiquidityRewards({ nationPrice, poolValue, address }) {
       false
     )
 
+  // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 3.
   const { data: userBalance, isLoading: userBalanceLoading } = useContractRead(
     contractParams,
     'userBalance',
@@ -62,6 +72,7 @@ export function useLiquidityRewards({ nationPrice, poolValue, address }) {
   )
 
   const [liquidityRewardsAPY, setLiquidityRewardsAPY] = useState(
+    // @ts-expect-error ts-migrate(2554) FIXME: Expected 3 arguments, but got 2.
     transformNumber(0, 'bignumber')
   )
 
@@ -69,6 +80,7 @@ export function useLiquidityRewards({ nationPrice, poolValue, address }) {
     if (totalRewards && poolValue && totalDeposit && lpTokensSupply) {
       setLiquidityRewardsAPY(
         totalRewards
+          // @ts-expect-error ts-migrate(2554) FIXME: Expected 3 arguments, but got 2.
           .mul(transformNumber(12 / months, 'bignumber'))
           .mul(transformNumber(nationPrice, 'bignumber', 2))
           .div(poolValue.mul(totalDeposit).div(lpTokensSupply))
@@ -100,7 +112,7 @@ export function useLiquidityRewards({ nationPrice, poolValue, address }) {
   }
 }
 
-export function usePoolTokenBalance(address) {
+export function usePoolTokenBalance(address: any) {
   return useBalance({
     addressOrName: address,
     token: balancerLPToken,
@@ -118,8 +130,8 @@ export function useVeNationBoost({
   totalDeposit,
   userVeNation,
   totalVeNation,
-  userBalance,
-}) {
+  userBalance
+}: any) {
   const [boost, setBoost] = useState({
     canBoost: false,
   })
@@ -132,10 +144,15 @@ export function useVeNationBoost({
       userBalance
     ) {
       const n = {
+        // @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'string | number | BigNumber | un... Remove this comment to see the full error message
         userDeposit: parseFloat(transformNumber(userDeposit, 'number', 18)),
+        // @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'string | number | BigNumber | un... Remove this comment to see the full error message
         totalDeposit: parseFloat(transformNumber(totalDeposit, 'number', 18)),
+        // @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'string | number | BigNumber | un... Remove this comment to see the full error message
         userVeNation: parseFloat(transformNumber(userVeNation, 'number', 18)),
+        // @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'string | number | BigNumber | un... Remove this comment to see the full error message
         totalVeNation: parseFloat(transformNumber(totalVeNation, 'number', 18)),
+        // @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'string | number | BigNumber | un... Remove this comment to see the full error message
         userBalance: parseFloat(transformNumber(userBalance, 'number', 18)),
       }
 
@@ -171,13 +188,18 @@ export function useVeNationBoost({
   return boost
 }
 
-export function useBoostedAPY({ defaultAPY, boostMultiplier }) {
+export function useBoostedAPY({
+  defaultAPY,
+  boostMultiplier
+}: any) {
   const [apy, setAPY] = useState(
+    // @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'string | number | BigNumber | un... Remove this comment to see the full error message
     parseFloat(transformNumber(defaultAPY, 'number', 2))
   )
   useEffect(() => {
     if (!defaultAPY?.isZero() && !boostMultiplier?.isZero()) {
       setAPY(
+        // @ts-expect-error ts-migrate(2362) FIXME: The left-hand side of an arithmetic operation must... Remove this comment to see the full error message
         (transformNumber(defaultAPY, 'number', 2) / 10 ** 18) * boostMultiplier
       )
     }
@@ -192,14 +214,16 @@ export function useClaimRewards() {
   })
 }
 
-export function useDeposit(amount) {
+export function useDeposit(amount: any) {
+  // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 3.
   return useContractWrite(contractParams, 'deposit', {
     args: [amount],
     overrides: { gasLimit: 300000 },
   })
 }
 
-export function useWithdraw(amount) {
+export function useWithdraw(amount: any) {
+  // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 3.
   return useContractWrite(contractParams, 'withdraw', {
     args: [amount],
   })
