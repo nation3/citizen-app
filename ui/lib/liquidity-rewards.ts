@@ -1,4 +1,3 @@
-// @ts-expect-error ts-migrate(7016) FIXME: Could not find a declaration file for module 'reac... Remove this comment to see the full error message
 import { useState, useEffect } from 'react'
 import { lpRewardsContract, balancerLPToken } from '../lib/config'
 // @ts-expect-error ts-migrate(2732) FIXME: Cannot find module '../abis/BoostedLiquidityDistri... Remove this comment to see the full error message
@@ -19,11 +18,7 @@ const contractParams = {
   contractInterface: LiquidityRewardsDistributor.abi,
 }
 
-export function useLiquidityRewards({
-  nationPrice,
-  poolValue,
-  address
-}: any) {
+export function useLiquidityRewards({ nationPrice, poolValue, address }: any) {
   const { data: totalRewards, isLoading: totalRewardsLoading } =
     useContractRead(contractParams, 'totalRewards', {}, false)
   const months = 6
@@ -130,10 +125,12 @@ export function useVeNationBoost({
   totalDeposit,
   userVeNation,
   totalVeNation,
-  userBalance
+  userBalance,
 }: any) {
   const [boost, setBoost] = useState({
     canBoost: false,
+    currentBoost: {} as any,
+    potentialBoost: {} as any,
   })
   useEffect(() => {
     if (
@@ -188,10 +185,7 @@ export function useVeNationBoost({
   return boost
 }
 
-export function useBoostedAPY({
-  defaultAPY,
-  boostMultiplier
-}: any) {
+export function useBoostedAPY({ defaultAPY, boostMultiplier }: any) {
   const [apy, setAPY] = useState(
     // @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'string | number | BigNumber | un... Remove this comment to see the full error message
     parseFloat(transformNumber(defaultAPY, 'number', 2))

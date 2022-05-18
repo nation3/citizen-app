@@ -1,4 +1,3 @@
-// @ts-expect-error ts-migrate(7016) FIXME: Could not find a declaration file for module 'reac... Remove this comment to see the full error message
 import { useEffect, useState } from 'react'
 import { veNationToken } from '../lib/config'
 // @ts-expect-error ts-migrate(2732) FIXME: Cannot find module '../abis/VotingEscrow.json'. Co... Remove this comment to see the full error message
@@ -61,7 +60,7 @@ export function useVeNationCreateLock(amount: any, time: any) {
 export function useVeNationIncreaseLock({
   newAmount,
   currentTime,
-  newTime
+  newTime,
 }: any) {
   const { isLoading: amountLoading, write: increaseLockAmount } =
     useVeNationIncreaseLockAmount(newAmount)

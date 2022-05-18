@@ -1,4 +1,3 @@
-// @ts-expect-error ts-migrate(7016) FIXME: Could not find a declaration file for module 'reac... Remove this comment to see the full error message
 import { useState, useEffect } from 'react'
 // @ts-expect-error ts-migrate(2732) FIXME: Cannot find module '../abis/BalancerVault.json'. C... Remove this comment to see the full error message
 import BalancerVault from '../abis/BalancerVault.json'

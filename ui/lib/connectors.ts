@@ -3,20 +3,14 @@ import { chain } from 'wagmi'
 import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet'
 import { InjectedConnector } from 'wagmi/connectors/injected'
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
-// @ts-expect-error ts-migrate(2307) FIXME: Cannot find module '../public/icons/connectors/coi... Remove this comment to see the full error message
 import CoinbaseWalletIcon from '../public/icons/connectors/coinbase.svg'
-// @ts-expect-error ts-migrate(2307) FIXME: Cannot find module '../public/icons/connectors/fra... Remove this comment to see the full error message
 import FrameIcon from '../public/icons/connectors/frame.svg'
-// @ts-expect-error ts-migrate(2307) FIXME: Cannot find module '../public/icons/connectors/met... Remove this comment to see the full error message
 import MetaMaskIcon from '../public/icons/connectors/metamask.svg'
-// @ts-expect-error ts-migrate(2307) FIXME: Cannot find module '../public/icons/connectors/wal... Remove this comment to see the full error message
 import WalletConnectIcon from '../public/icons/connectors/walletconnect.svg'
 
 const chains = [chain.mainnet, chain.goerli, chain.localhost]
 
-export function provider({
-  chainId
-}: any) {
+export function provider({ chainId }: any) {
   if (process.env.NEXT_PUBLIC_CHAIN === 'local') {
     console.log('Provider: Connected to localhost provider')
     return new ethers.providers.JsonRpcProvider(
@@ -36,9 +30,7 @@ export function provider({
   }
 }
 
-export function connectors({
-  chainId
-}: any) {
+export function connectors({ chainId }: any) {
   return [
     new InjectedConnector({
       chains,

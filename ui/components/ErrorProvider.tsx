@@ -1,15 +1,13 @@
-// @ts-expect-error ts-migrate(7016) FIXME: Could not find a declaration file for module 'reac... Remove this comment to see the full error message
 import { createContext, useContext, useState, useEffect } from 'react'
+import React from 'react'
 import { useNetwork } from 'wagmi'
 import networkToId from '../lib/networkToId'
 
-const ErrorContext = createContext([])
+const ErrorContext = createContext({} as any)
 
-function ErrorProvider({
-  children
-}: any) {
-  const [errors, setErrors] = useState([])
-  const [count, setCount] = useState([])
+function ErrorProvider({ children }: any) {
+  const [errors, setErrors] = useState([] as any)
+  const [count, setCount] = useState(0)
   const { activeChain } = useNetwork()
 
   const addError = (newErrors: any) => {
@@ -49,7 +47,6 @@ function ErrorProvider({
 
   const context = { errors, addError, removeError }
   return (
-    // @ts-expect-error ts-migrate(17004) FIXME: Cannot use JSX unless the '--jsx' flag is provided... Remove this comment to see the full error message
     <ErrorContext.Provider value={context}>{children}</ErrorContext.Provider>
   )
 }

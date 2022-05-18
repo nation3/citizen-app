@@ -1,4 +1,3 @@
-// @ts-expect-error ts-migrate(7016) FIXME: Could not find a declaration file for module 'reac... Remove this comment to see the full error message
 import { useState, useEffect } from 'react'
 import { useSigner, useContract } from 'wagmi'
 
@@ -14,7 +13,7 @@ export function useStaticCall({
   // set to false if you'd like a reverted txn to be ignored and use the default data
   throwOnRevert = true,
 
-  genericErrorMessage = 'Error calling contract'
+  genericErrorMessage = 'Error calling contract',
 }: any) {
   args = args?.length === 0 ? undefined : args // args should be undefined if there are no arguments, make sure here
 
@@ -30,23 +29,27 @@ export function useStaticCall({
     signerOrProvider: signer,
   })
 
-  useEffect(async () => {
-    if (skip || !signer) {
-      return
-    }
-    try {
-      const result = args
-        ? await contract.callStatic[methodName](...args)
-        : await contract.callStatic[methodName]()
-      setData(result)
-    } catch (error) {
-      if (throwOnRevert) {
-        console.error(error)
-        setError({ ...error, message: genericErrorMessage })
+  useEffect(() => {
+    const call = async () => {
+      if (skip || !signer) {
+        return
       }
-    } finally {
-      setLoading(false)
+      try {
+        const result = args
+          ? await contract.callStatic[methodName](...args)
+          : await contract.callStatic[methodName]()
+        setData(result)
+      } catch (error) {
+        if (throwOnRevert) {
+          console.error(error)
+          setError({ ...(error as any), message: genericErrorMessage })
+        }
+      } finally {
+        setLoading(false)
+      }
     }
+
+    call()
   }, [
     skip,
     addressOrName,

@@ -1,4 +1,3 @@
-// @ts-expect-error ts-migrate(7016) FIXME: Could not find a declaration file for module 'reac... Remove this comment to see the full error message
 import { useState, useMemo } from 'react'
 // @ts-expect-error ts-migrate(2732) FIXME: Cannot find module '../abis/MerkleDistributor.json... Remove this comment to see the full error message
 import MerkleDistributor from '../abis/MerkleDistributor.json'
@@ -25,7 +24,11 @@ export function checkEligibility(claimsFiles: any, address: any) {
 }
 
 export function useClaimsFiles() {
-  const [data, setData] = useState({ isLoading: true })
+  const [data, setData] = useState({
+    isLoading: true as boolean,
+    data: [] as any[],
+    error: {} as any,
+  })
   useMemo(async () => {
     try {
       const claims = await Promise.all(
@@ -33,10 +36,10 @@ export function useClaimsFiles() {
           async (_, contractId) => await fetchClaimsFile(contractId)
         )
       )
-      setData({ data: claims, isLoading: false })
+      setData({ data: claims, isLoading: false, error: null })
     } catch (error) {
       console.log(error)
-      setData({ error, isLoading: false })
+      setData({ error, isLoading: false, data: [] })
     }
   }, [])
   return data
@@ -44,7 +47,7 @@ export function useClaimsFiles() {
 
 const contractParams = (contractId: any) => ({
   addressOrName: nationDropContracts[contractId],
-  contractInterface: MerkleDistributor.abi
+  contractInterface: MerkleDistributor.abi,
 })
 
 export function useIsClaimed(contractId: any, index: any) {
@@ -65,7 +68,7 @@ export function useClaimDrop({
   index,
   account,
   amount,
-  proof
+  proof,
 }: any) {
   // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 3.
   return useContractWrite(contractParams(contractId), 'claim', {

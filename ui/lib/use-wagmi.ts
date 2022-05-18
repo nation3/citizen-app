@@ -1,4 +1,3 @@
-// @ts-expect-error ts-migrate(7016) FIXME: Could not find a declaration file for module 'reac... Remove this comment to see the full error message
 import { useState, useCallback } from 'react'
 import {
   useConnect as _useConnect,
@@ -10,7 +9,6 @@ import {
   useContractWrite as _wagmiUseContractWrite,
   useSigner,
 } from 'wagmi'
-// @ts-expect-error ts-migrate(6142) FIXME: Module '../components/ErrorProvider' was resolved ... Remove this comment to see the full error message
 import { useErrorContext } from '../components/ErrorProvider'
 import { useStaticCall as _useStaticCall } from './static-call'
 import { useHandleError } from './use-handle-error'
@@ -60,7 +58,11 @@ export function useContractWrite(
   )
 }
 
-export function useWagmiContractWrite(config: any, method: any, argsAndOverrides: any) {
+export function useWagmiContractWrite(
+  config: any,
+  method: any,
+  argsAndOverrides: any
+) {
   return useHandleError(
     _wagmiUseContractWrite(config, method, argsAndOverrides)
   )
@@ -70,9 +72,9 @@ export function useWagmiContractWrite(config: any, method: any, argsAndOverrides
 function _useContractWrite(config: any, method: any, argsAndOverrides: any) {
   const errorContext = useErrorContext()
 
-  const [data, setData] = useState(null)
-  const [error, setError] = useState(null)
-  const [isLoading, setLoading] = useState(false)
+  const [data, setData] = useState(null as any)
+  const [error, setError] = useState(null as any)
+  const [isLoading, setLoading] = useState(false as boolean)
 
   const { data: signerData, error: signerError } = useSigner()
   const contract = useContract({
@@ -89,8 +91,8 @@ function _useContractWrite(config: any, method: any, argsAndOverrides: any) {
           ...(Array.isArray(argsAndOverrides.args)
             ? argsAndOverrides.args
             : argsAndOverrides.args
-              ? [argsAndOverrides.args]
-              : []),
+            ? [argsAndOverrides.args]
+            : []),
           ...(argsAndOverrides.overrides ? [argsAndOverrides.overrides] : []),
         ]
         data = await contract[method](...params)
