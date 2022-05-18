@@ -4,7 +4,7 @@ import { lpRewardsContract, balancerLPToken } from '../lib/config'
 import LiquidityRewardsDistributor from '../abis/BoostedLiquidityDistributor.json'
 // @ts-expect-error ts-migrate(2732) FIXME: Cannot find module '../abis/ERC20.json'. Consider ... Remove this comment to see the full error message
 import ERC20 from '../abis/ERC20.json'
-import { transformNumber } from './numbers'
+import { NumberType, transformNumber } from './numbers'
 import {
   useBalance,
   useStaticCall,
@@ -27,8 +27,7 @@ export function useLiquidityRewards({ nationPrice, poolValue, address }: any) {
     useStaticCall({
       ...contractParams,
       methodName: 'claimRewards',
-      // @ts-expect-error ts-migrate(2554) FIXME: Expected 3 arguments, but got 2.
-      defaultData: transformNumber(0, 'bignumber'),
+      defaultData: transformNumber(0, NumberType.bignumber),
       throwOnRevert: false, // assumes a reverted transaction means no claimable rewards
       skip: !address,
     })
@@ -67,17 +66,15 @@ export function useLiquidityRewards({ nationPrice, poolValue, address }: any) {
   )
 
   const [liquidityRewardsAPY, setLiquidityRewardsAPY] = useState(
-    // @ts-expect-error ts-migrate(2554) FIXME: Expected 3 arguments, but got 2.
-    transformNumber(0, 'bignumber')
+    transformNumber(0, NumberType.bignumber)
   )
 
   useEffect(() => {
     if (totalRewards && poolValue && totalDeposit && lpTokensSupply) {
       setLiquidityRewardsAPY(
         totalRewards
-          // @ts-expect-error ts-migrate(2554) FIXME: Expected 3 arguments, but got 2.
-          .mul(transformNumber(12 / months, 'bignumber'))
-          .mul(transformNumber(nationPrice, 'bignumber', 2))
+          .mul(transformNumber(12 / months, NumberType.bignumber))
+          .mul(transformNumber(nationPrice, NumberType.bignumber, 2))
           .div(poolValue.mul(totalDeposit).div(lpTokensSupply))
       )
     }
@@ -141,16 +138,21 @@ export function useVeNationBoost({
       userBalance
     ) {
       const n = {
-        // @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'string | number | BigNumber | un... Remove this comment to see the full error message
-        userDeposit: parseFloat(transformNumber(userDeposit, 'number', 18)),
-        // @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'string | number | BigNumber | un... Remove this comment to see the full error message
-        totalDeposit: parseFloat(transformNumber(totalDeposit, 'number', 18)),
-        // @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'string | number | BigNumber | un... Remove this comment to see the full error message
-        userVeNation: parseFloat(transformNumber(userVeNation, 'number', 18)),
-        // @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'string | number | BigNumber | un... Remove this comment to see the full error message
-        totalVeNation: parseFloat(transformNumber(totalVeNation, 'number', 18)),
-        // @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'string | number | BigNumber | un... Remove this comment to see the full error message
-        userBalance: parseFloat(transformNumber(userBalance, 'number', 18)),
+        userDeposit: parseFloat(
+          transformNumber(userDeposit, NumberType.string) as string
+        ),
+        totalDeposit: parseFloat(
+          transformNumber(totalDeposit, NumberType.string) as string
+        ),
+        userVeNation: parseFloat(
+          transformNumber(userVeNation, NumberType.string) as string
+        ),
+        totalVeNation: parseFloat(
+          transformNumber(totalVeNation, NumberType.string) as string
+        ),
+        userBalance: parseFloat(
+          transformNumber(userBalance, NumberType.string) as string
+        ),
       }
 
       const baseBalance = n.userDeposit * 0.4
@@ -172,10 +174,9 @@ export function useVeNationBoost({
       setBoost({
         currentBoost: transformNumber(
           Math.max(currentBoost, 1),
-          'bignumber',
-          18
+          NumberType.bignumber
         ),
-        potentialBoost: transformNumber(potentialBoost, 'bignumber', 18),
+        potentialBoost: transformNumber(potentialBoost, NumberType.bignumber),
         canBoost:
           Math.trunc(potentialBoost * 10) > Math.trunc(currentBoost * 10),
       })
@@ -187,14 +188,14 @@ export function useVeNationBoost({
 
 export function useBoostedAPY({ defaultAPY, boostMultiplier }: any) {
   const [apy, setAPY] = useState(
-    // @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'string | number | BigNumber | un... Remove this comment to see the full error message
-    parseFloat(transformNumber(defaultAPY, 'number', 2))
+    parseFloat(transformNumber(defaultAPY, NumberType.string) as string)
   )
   useEffect(() => {
     if (!defaultAPY?.isZero() && !boostMultiplier?.isZero()) {
       setAPY(
-        // @ts-expect-error ts-migrate(2362) FIXME: The left-hand side of an arithmetic operation must... Remove this comment to see the full error message
-        (transformNumber(defaultAPY, 'number', 2) / 10 ** 18) * boostMultiplier
+        ((transformNumber(defaultAPY, NumberType.number) as number) /
+          10 ** 18) *
+          boostMultiplier
       )
     }
   }, [defaultAPY, boostMultiplier])

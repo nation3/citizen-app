@@ -4,40 +4,46 @@ function stringToNumber(string: any, decimals: any) {
   return Number(string).toFixed(decimals)
 }
 
+export enum NumberType {
+  number = 'number',
+  bignumber = 'bignumber',
+  string = 'string',
+}
+
 export function transformNumber(
-  number: any,
-  to: any,
-  decimals: any
+  num: number | BigNumber | string,
+  to: NumberType,
+  decimals = 18
 ): BigNumber | string | number {
-  if (!number) {
-    return to === 'bignumber' ? ethers.BigNumber.from('0') : 0
+  if (!num) {
+    return to === NumberType.bignumber ? ethers.BigNumber.from('0') : 0
   }
 
-  if (to === 'bignumber') {
-    if (number instanceof ethers.BigNumber) return number
+  if (to === NumberType.bignumber) {
+    if (num instanceof ethers.BigNumber) return num
 
     return ethers.utils.parseUnits(
-      typeof number === 'string' ? number : number.toString(),
+      typeof num === 'string' ? num : num.toString(),
       decimals
     )
-  } else if (to === 'number') {
-    if (typeof number === 'number') return number
+  } else if (to === NumberType.number) {
+    if (typeof num === 'number') return num
 
-    if (number instanceof ethers.BigNumber) {
-      return stringToNumber(ethers.utils.formatUnits(number, 18), decimals)
-    } else if (typeof number === 'string') {
-      return parseFloat(number).toFixed(decimals)
+    if (num instanceof ethers.BigNumber) {
+      return stringToNumber(ethers.utils.formatUnits(num, 18), decimals)
+    } else if (typeof num === 'string') {
+      return parseFloat(num).toFixed(decimals)
     }
-  } else if (to === 'string') {
-    if (typeof number === 'string') return number
+  } else if (to === NumberType.string) {
+    if (typeof num === 'string') return num
 
-    if (number instanceof ethers.BigNumber) {
+    if (num instanceof ethers.BigNumber) {
       return stringToNumber(
-        ethers.utils.formatUnits(number, 18),
+        ethers.utils.formatUnits(num, 18),
         decimals
       ).toString()
-    } else if (typeof number === 'number') {
-      return number.toFixed(decimals).toString()
+    } else if (typeof num === 'number') {
+      return num.toFixed(decimals).toString()
     }
   }
   return 0

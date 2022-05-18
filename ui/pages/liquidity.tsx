@@ -24,7 +24,7 @@ import {
   useWithdrawAndClaim,
   useClaimRewards,
 } from '../lib/liquidity-rewards'
-import { transformNumber } from '../lib/numbers'
+import { NumberType, transformNumber } from '../lib/numbers'
 import { useAccount } from '../lib/use-wagmi'
 import { useVeNationBalance, useVeNationSupply } from '../lib/ve-token'
 import ActionButton from '../components/ActionButton'
@@ -78,9 +78,11 @@ export default function Liquidity() {
 
   const [depositValue, setDepositValue] = useState(0)
   const [withdrawalValue, setWithdrawalValue] = useState('0')
-  const deposit = useDeposit(transformNumber(depositValue, 'bignumber', 18))
+  const deposit = useDeposit(
+    transformNumber(depositValue, NumberType.bignumber)
+  )
   const withdraw = useWithdraw(
-    transformNumber(withdrawalValue, 'bignumber', 18)
+    transformNumber(withdrawalValue, NumberType.bignumber)
   )
 
   // @ts-expect-error
@@ -116,7 +118,8 @@ export default function Liquidity() {
             <div className="stat-value">
               <Balance
                 balance={
-                  (transformNumber(poolValue, 'number', 0) as number) / 1000000
+                  (transformNumber(poolValue, NumberType.number, 0) as number) /
+                  1000000
                 }
                 loading={poolLoading}
                 prefix="$"
@@ -188,12 +191,11 @@ export default function Liquidity() {
                   {transformNumber(
                     ((transformNumber(
                       liquidityRewardsAPY ?? 0,
-                      'number',
-                      18
+                      NumberType.number
                     ) as number) /
                       10 ** 18) *
                       potentialBoost,
-                    'string',
+                    NumberType.number,
                     2
                   ) + '%'}
                 </div>
@@ -314,7 +316,10 @@ export default function Liquidity() {
                       onClick={() =>
                         userDeposit &&
                         setWithdrawalValue(
-                          transformNumber(userDeposit, 'string', 18) as string
+                          transformNumber(
+                            userDeposit,
+                            NumberType.string
+                          ) as string
                         )
                       }
                     >
