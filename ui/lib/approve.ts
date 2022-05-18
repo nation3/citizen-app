@@ -1,13 +1,8 @@
-// @ts-expect-error ts-migrate(2732) FIXME: Cannot find module '../abis/ERC20.json'. Consider ... Remove this comment to see the full error message
 import ERC20 from '../abis/ERC20.json'
 import { useContractRead } from './use-wagmi'
 import { useContractWrite } from './use-wagmi'
 
-export function useTokenAllowance({
-  token,
-  address,
-  spender
-}: any) {
+export function useTokenAllowance({ token, address, spender }: any) {
   // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 3.
   return useContractRead(
     {
@@ -23,11 +18,7 @@ export function useTokenAllowance({
   )
 }
 
-export function useTokenApproval({
-  amountNeeded,
-  token,
-  spender
-}: any) {
+export function useTokenApproval({ amountNeeded, token, spender }: any) {
   // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 3.
   return useContractWrite(
     {

@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react'
-// @ts-expect-error ts-migrate(2732) FIXME: Cannot find module '../abis/BalancerVault.json'. C... Remove this comment to see the full error message
 import BalancerVault from '../abis/BalancerVault.json'
 import { balancerVault } from './config'
-import { transformNumber } from './numbers'
+import { NumberType, transformNumber } from './numbers'
 import { useContractRead } from './use-wagmi'
 
 export function useBalancerPool(id: any) {
@@ -43,8 +42,8 @@ export function useBalancerPool(id: any) {
         nationBalance = balances[0]
         wethBalance = balances[1]
       } else {
-        nationBalance = transformNumber(333, 'bignumber', 18)
-        wethBalance = transformNumber(333, 'bignumber', 18)
+        nationBalance = transformNumber(333, NumberType.bignumber)
+        wethBalance = transformNumber(333, NumberType.bignumber)
       }
 
       if (nationBalance && wethBalance) {

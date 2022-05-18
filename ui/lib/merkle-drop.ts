@@ -1,5 +1,4 @@
 import { useState, useMemo } from 'react'
-// @ts-expect-error ts-migrate(2732) FIXME: Cannot find module '../abis/MerkleDistributor.json... Remove this comment to see the full error message
 import MerkleDistributor from '../abis/MerkleDistributor.json'
 import { nationDropContracts } from './config'
 import { useContractRead, useContractWrite } from './use-wagmi'

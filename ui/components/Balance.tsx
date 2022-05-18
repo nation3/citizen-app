@@ -1,5 +1,5 @@
 import React from 'react'
-import { transformNumber } from '../lib/numbers'
+import { NumberType, transformNumber } from '../lib/numbers'
 
 export default function Balance({
   loading = false,
@@ -13,7 +13,11 @@ export default function Balance({
       {loading ? (
         <button className="btn btn-square btn-ghost btn-disabled bg-transparent loading"></button>
       ) : balance ? (
-        `${prefix}${transformNumber(balance, 'string', decimals)}${suffix}`
+        `${prefix}${transformNumber(
+          balance,
+          NumberType.string,
+          decimals
+        )}${suffix}`
       ) : (
         0
       )}

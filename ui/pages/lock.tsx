@@ -14,7 +14,7 @@ import {
   veNationRewardsMultiplier,
 } from '../lib/config'
 import { useNationBalance } from '../lib/nation-token'
-import { transformNumber } from '../lib/numbers'
+import { NumberType, transformNumber } from '../lib/numbers'
 import { useAccount } from '../lib/use-wagmi'
 import {
   useVeNationBalance,
@@ -385,8 +385,7 @@ export default function Lock() {
                         nationAmount: lockAmount && +lockAmount,
                         veNationAmount: transformNumber(
                           veNationBalance || 0,
-                          'number',
-                          18
+                          NumberType.number
                         ),
                         time: Date.parse(lockTime.formatted),
                         lockTime: Date.parse(
@@ -417,11 +416,10 @@ export default function Lock() {
                             ? (
                                 transformNumber(
                                   lockAmount,
-                                  'bignumber',
-                                  18
+                                  NumberType.bignumber
                                 ) as BigNumber
                               ).sub(veNationLock[0])
-                            : transformNumber(lockAmount, 'bignumber', 18),
+                            : transformNumber(lockAmount, NumberType.bignumber),
                         approveText: 'Approve $NATION',
                       }}
                     >

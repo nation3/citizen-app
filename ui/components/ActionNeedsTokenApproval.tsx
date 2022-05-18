@@ -1,6 +1,6 @@
 import React from 'react'
 import { useTokenAllowance, useTokenApproval } from '../lib/approve'
-import { transformNumber } from '../lib/numbers'
+import { NumberType, transformNumber } from '../lib/numbers'
 import { useAccount } from '../lib/use-wagmi'
 import ActionButton from './ActionButton'
 import { useErrorContext } from './ErrorProvider'
@@ -28,8 +28,7 @@ export default function ActionNeedsTokenApproval({
 
   const weiAmountNeeded = transformNumber(
     amountNeeded?.formatted || amountNeeded,
-    'bignumber',
-    18
+    NumberType.bignumber
   )
 
   const approve = useTokenApproval({

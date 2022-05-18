@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { veNationToken } from '../lib/config'
-// @ts-expect-error ts-migrate(2732) FIXME: Cannot find module '../abis/VotingEscrow.json'. Co... Remove this comment to see the full error message
 import VotingEscrow from '../abis/VotingEscrow.json'
 import { transformNumber } from './numbers'
 import { useContractRead, useContractWrite } from './use-wagmi'

@@ -4,7 +4,6 @@ import React from 'react'
 import { nationToken, veNationRewardsMultiplier } from '../lib/config'
 import GradientLink from '../components/GradientLink'
 import Head from '../components/Head'
-// @ts-expect-error
 import flag from '../public/flag.svg'
 
 export default function Index() {

@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react'
 import { lpRewardsContract, balancerLPToken } from '../lib/config'
-// @ts-expect-error ts-migrate(2732) FIXME: Cannot find module '../abis/BoostedLiquidityDistri... Remove this comment to see the full error message
 import LiquidityRewardsDistributor from '../abis/BoostedLiquidityDistributor.json'
-// @ts-expect-error ts-migrate(2732) FIXME: Cannot find module '../abis/ERC20.json'. Consider ... Remove this comment to see the full error message
 import ERC20 from '../abis/ERC20.json'
 import { NumberType, transformNumber } from './numbers'
 import {
