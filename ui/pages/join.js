@@ -16,12 +16,12 @@ import Head from '../components/Head'
 import MainCard from '../components/MainCard'
 
 export default function Join() {
-  const [{ data: account }] = useAccount()
-  const [{ data: nationBalance, loading: nationBalanceLoading }] =
+  const { data: account } = useAccount()
+  const { data: nationBalance, isLoading: nationBalanceLoading } =
     useNationBalance(account?.address)
-  const [{ data: veNationBalance, loading: veNationBalanceLoading }] =
+  const { data: veNationBalance, isLoading: veNationBalanceLoading } =
     useVeNationBalance(account?.address)
-  const [{ data: hasPassport, loading: hasPassportLoading }] = useHasPassport(
+  const { data: hasPassport, isLoading: hasPassportLoading } = useHasPassport(
     account?.address
   )
   const claim = useClaimPassport()

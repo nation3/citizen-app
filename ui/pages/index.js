@@ -25,7 +25,6 @@ export default function Index() {
             Here you can perform on-chain operations related to the Nation3
             communinity, such as...
           </p>
-
           <Link href="/claim">
             <a className="btn btn-lg btn-primary mb-1 normal-case font-medium">
               Claim $NATION

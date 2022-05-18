@@ -1,39 +1,52 @@
-import { chain, defaultChains, developmentChains } from 'wagmi'
+import { ethers } from 'ethers'
+import { chain } from 'wagmi'
+import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet'
 import { InjectedConnector } from 'wagmi/connectors/injected'
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
-import { WalletLinkConnector } from 'wagmi/connectors/walletLink'
 import CoinbaseWalletIcon from '../public/icons/connectors/coinbase.svg'
 import FrameIcon from '../public/icons/connectors/frame.svg'
 import MetaMaskIcon from '../public/icons/connectors/metamask.svg'
 import WalletConnectIcon from '../public/icons/connectors/walletconnect.svg'
 
-const infuraId = process.env.NEXT_PUBLIC_INFURA_ID
+const chains = [chain.mainnet, chain.goerli, chain.localhost]
 
-const chains =
-  process.env.NEXT_PUBLIC_CHAIN === 'mainnet'
-    ? defaultChains
-    : developmentChains
+export function provider({ chainId }) {
+  if (process.env.NEXT_PUBLIC_CHAIN === 'local') {
+    console.log('Provider: Connected to localhost provider')
+    return new ethers.providers.JsonRpcProvider(
+      'http://localhost:7545',
+      chain.localhost.id
+    )
+  } else {
+    console.log(
+      `Provider: Connected to the external provider on chain ${process.env.NEXT_PUBLIC_CHAIN}`
+    )
+    return ethers.getDefaultProvider(process.env.NEXT_PUBLIC_CHAIN, {
+      infura: process.env.NEXT_PUBLIC_INFURA_ID,
+      alchemy: process.env.NEXT_PUBLIC_ALCHEMY_ID,
+      etherscan: process.env.NEXT_PUBLIC_ETHERSCAN_ID,
+      quorum: 1,
+    })
+  }
+}
 
 export function connectors({ chainId }) {
-  const rpcUrl =
-    defaultChains.find((x) => x.id === chainId)?.rpcUrls?.[0] ??
-    chain.mainnet.rpcUrls[0]
   return [
     new InjectedConnector({
       chains,
       options: { shimDisconnect: true },
     }),
     new WalletConnectConnector({
+      chains,
       options: {
-        infuraId,
         qrcode: true,
       },
-      icon: WalletConnectIcon,
     }),
-    new WalletLinkConnector({
+    new CoinbaseWalletConnector({
+      chains,
       options: {
         appName: 'Nation3 app',
-        jsonRpcUrl: `${rpcUrl}/${infuraId}`,
+        chainId: chainId,
       },
     }),
   ]

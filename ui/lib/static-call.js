@@ -18,8 +18,7 @@ export function useStaticCall({
   const [error, setError] = useState(null)
   const [data, setData] = useState(defaultData)
 
-  const [{ data: signer, isError: signerError, isLoading: signerLoading }] =
-    useSigner()
+  const { data: signer } = useSigner()
 
   const contract = useContract({
     addressOrName: addressOrName,
@@ -36,12 +35,12 @@ export function useStaticCall({
         ? await contract.callStatic[methodName](...args)
         : await contract.callStatic[methodName]()
       setData(result)
-      setLoading(false)
     } catch (error) {
       if (throwOnRevert) {
         console.error(error)
         setError({ ...error, message: genericErrorMessage })
       }
+    } finally {
       setLoading(false)
     }
   }, [
@@ -54,11 +53,10 @@ export function useStaticCall({
     signer,
   ])
 
-  return [
-    { data, error, loading },
-    contract.callStatic[methodName],
-    signer,
-    signerLoading,
-    signerError,
-  ]
+  return {
+    data,
+    error,
+    loading,
+    method: contract.callStatic[methodName],
+  }
 }

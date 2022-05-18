@@ -1,3 +1,4 @@
+import usePreferredNetwork from '../lib/use-preferred-network'
 import { useAccount } from '../lib/use-wagmi'
 import ActionNeedsTokenApproval from './ActionNeedsTokenApproval'
 
@@ -9,23 +10,29 @@ export default function ActionButton({
   postAction,
   approval,
 }) {
-  const [{ data: account }] = useAccount()
-  const [{ loading }, call] = action
+  const { data: account } = useAccount()
+  const { isLoading, write } = action
   const onClick = async () => {
     preAction && preAction()
     /* Will have to change once wagmi's useContractWrite works again,
     since they return a TransactionResponse instead of already returning
     the mined transaction */
-    const tx = await call()
+    const tx = await write()
     postAction && tx.hash && postAction()
   }
+  const { isPreferredNetwork } = usePreferredNetwork()
+
   return (
     <>
-      {!account ? (
+      {!isPreferredNetwork ? (
+        <button className={className} disabled>
+          Wrong Network
+        </button>
+      ) : !account ? (
         <label htmlFor="web3-modal" className={`${className} modal-button`}>
           {children}
         </label>
-      ) : loading ? (
+      ) : isLoading ? (
         <div className={className}>
           <button className="btn btn-square btn-link btn-disabled bg-transparent loading"></button>
         </div>

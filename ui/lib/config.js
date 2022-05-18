@@ -14,7 +14,6 @@ let config = {
     process.env.NEXT_PUBLIC_NATION_DISTRIBUTOR1_CONTRACT_ADDRESS,
     process.env.NEXT_PUBLIC_NATION_DISTRIBUTOR2_CONTRACT_ADDRESS,
   ],
-  nationDropAmount: process.env.NEXT_PUBLIC_NATION_DISTRIBUTOR_DROP_AMOUNT,
 }
 
 if (process.env.NEXT_PUBLIC_CHAIN !== 'mainnet') {
@@ -35,6 +34,7 @@ if (process.env.NEXT_PUBLIC_CHAIN !== 'mainnet') {
   }
 }
 
+console.log(process.env.NEXT_PUBLIC_CHAIN)
 console.log(config)
 
 export const {

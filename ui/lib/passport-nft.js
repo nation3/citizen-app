@@ -17,19 +17,19 @@ const nftIssuerContractParams = {
 
 export function useHasPassport(address) {
   const [hasPassport, setHasPassport] = useState(false)
-  const [{ data, loading, error }] = useContractRead(
+  const { data, isLoading, error } = useContractRead(
     nftContractParams,
     'balanceOf',
     {
       args: [address],
       watch: true,
-      skip: !address,
+      enable: address,
     }
   )
   useEffect(() => {
     setHasPassport(data && data.gt(0))
-  }, [loading, data])
-  return [{ data: hasPassport, loading, error }]
+  }, [isLoading, data])
+  return [{ data: hasPassport, isLoading, error }]
 }
 
 export function useClaimPassport() {

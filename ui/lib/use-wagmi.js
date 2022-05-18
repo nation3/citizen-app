@@ -34,12 +34,27 @@ export function useBalance(params) {
   return useHandleError(_useBalance(params))
 }
 
-export function useContractRead(config, method, argsAndOverrides) {
-  return useHandleError(_useContractRead(config, method, argsAndOverrides))
+export function useContractRead(
+  config,
+  method,
+  argsAndOverrides,
+  throwOnRevert
+) {
+  return useHandleError(
+    _useContractRead(config, method, argsAndOverrides),
+    throwOnRevert
+  )
 }
 
-export function useContractWrite(config, method, argsAndOverrides) {
-  return useHandleError(_useContractWrite(config, method, argsAndOverrides))
+export function useContractWrite(
+  config,
+  method,
+  argsAndOverrides,
+  throwOnRevert
+) {
+  return useHandleError(
+    _useContractWrite(config, method, argsAndOverrides, throwOnRevert)
+  )
 }
 
 export function useWagmiContractWrite(config, method, argsAndOverrides) {
@@ -54,10 +69,9 @@ function _useContractWrite(config, method, argsAndOverrides) {
 
   const [data, setData] = useState(null)
   const [error, setError] = useState(null)
-  const [loading, setLoading] = useState(false)
+  const [isLoading, setLoading] = useState(false)
 
-  const [{ data: signerData, error: signerError, loading: signerLoading }] =
-    useSigner()
+  const { data: signerData, error: signerError } = useSigner()
   const contract = useContract({
     ...config,
     signerOrProvider: signerData,
@@ -72,8 +86,8 @@ function _useContractWrite(config, method, argsAndOverrides) {
           ...(Array.isArray(argsAndOverrides.args)
             ? argsAndOverrides.args
             : argsAndOverrides.args
-            ? [argsAndOverrides.args]
-            : []),
+              ? [argsAndOverrides.args]
+              : []),
           ...(argsAndOverrides.overrides ? [argsAndOverrides.overrides] : []),
         ]
         data = await contract[method](...params)
@@ -96,5 +110,5 @@ function _useContractWrite(config, method, argsAndOverrides) {
     }
   }, [config, argsAndOverrides])
   errorContext.addError([signerError])
-  return [{ data, error, loading }, write]
+  return { data, error, isLoading, write }
 }

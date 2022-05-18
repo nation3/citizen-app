@@ -1,10 +1,13 @@
 import { useEffect } from 'react'
 import { useErrorContext } from '../components/ErrorProvider'
 
-export function useHandleError([{ data, error, loading }, method]) {
+// for some contract interactions, a reverted call is not an error
+export function useHandleError(object, throwOnRevert = true) {
   const errorContext = useErrorContext()
   useEffect(() => {
-    errorContext.addError([error])
-  }, [error])
-  return [{ data, error, loading }, method]
+    if (throwOnRevert) {
+      errorContext.addError([object.error])
+    }
+  }, [object.error])
+  return object
 }
