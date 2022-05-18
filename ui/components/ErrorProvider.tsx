@@ -26,7 +26,11 @@ function ErrorProvider({ children }: any) {
           )
           // Don't add the error if it's "invalid address or ENS name",
           // no idea why those errors appear in the first place.
-          if (error.code && error.code === 'INVALID_ARGUMENT') {
+          if (
+            error.code &&
+            (error.code === 'INVALID_ARGUMENT' ||
+              error.code === 'MISSING_ARGUMENT')
+          ) {
             return
           }
         }
