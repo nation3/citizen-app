@@ -88,12 +88,12 @@ export default function Lock() {
   const { data: veNationLock, isLoading: veNationLockLoading } =
     useVeNationLock(account?.address)
 
-  const [hasLock, setHasLock] = useState(false)
+  const [hasLock, setHasLock] = useState<boolean>()
   useEffect(() => {
     !veNationLockLoading && setHasLock(veNationLock && veNationLock[0] != 0)
   }, [veNationLock])
 
-  const [hasExpired, setHasExpired] = useState(false)
+  const [hasExpired, setHasExpired] = useState<boolean>()
   useEffect(() => {
     !veNationLockLoading &&
       setHasExpired(
