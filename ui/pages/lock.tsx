@@ -414,11 +414,14 @@ export default function Lock() {
                           hasLock && veNationLock
                             ? (
                                 transformNumber(
-                                  lockAmount,
+                                  lockAmount ?? '0',
                                   NumberType.bignumber
                                 ) as BigNumber
                               ).sub(veNationLock[0])
-                            : transformNumber(lockAmount, NumberType.bignumber),
+                            : transformNumber(
+                                lockAmount ?? '0',
+                                NumberType.bignumber
+                              ),
                         approveText: 'Approve $NATION',
                       }}
                     >
