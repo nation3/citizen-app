@@ -28,10 +28,6 @@ The code in this repository is structured into two main parts:
 └── ui        # The user interface (UI) for interacting with the smart contracts
 ```
 
-## Run the smart contracts locally
-
-See [`contracts/README.md#local-setup`](https://github.com/nation3/app/blob/main/contracts/README.md#local-setup).
-
 ## Run the UI locally
 
 Navigate to the folder of the UI app:
@@ -59,3 +55,14 @@ Then open http://localhost:42069 in a browser.
 ## Testing against the Ethereum mainnet
 
 // TODO
+
+## Run the smart contracts locally
+
+See [`contracts/README.md#local-setup`](https://github.com/nation3/app/blob/main/contracts/README.md#local-setup).
+
+Update the `NEXT_PUBLIC_CHAIN` variable in `.env.local` to match your Ethereum [node](https://github.com/nation3/app/blob/main/contracts/README.md#running-a-node).
+
+Start the development server:
+```
+yarn dev
+```
