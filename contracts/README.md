@@ -24,7 +24,7 @@
 yarn install
 
 # Set up environment variables
-cp .env.sampe .env
+cp .env.sample .env
 
 # Install Vyper
 pip install vyper==0.2.4
