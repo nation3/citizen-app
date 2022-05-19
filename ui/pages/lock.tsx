@@ -103,7 +103,7 @@ export default function Lock() {
       )
   }, [veNationLock])
 
-  const [lockAmount, setLockAmount] = useState('0')
+  const [lockAmount, setLockAmount] = useState<string>()
 
   const oneWeekOut = dateOut(new Date(), { days: 7 })
 
