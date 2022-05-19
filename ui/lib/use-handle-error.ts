@@ -5,7 +5,7 @@ import { useErrorContext } from '../components/ErrorProvider'
 export function useHandleError(object: any, throwOnRevert = true) {
   const errorContext = useErrorContext()
   useEffect(() => {
-    if (throwOnRevert) {
+    if (throwOnRevert && object.error) {
       errorContext.addError([object.error])
     }
   }, [object.error])

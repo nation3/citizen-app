@@ -6,7 +6,6 @@ import SwitchNetworkBanner from './SwitchNetworkBanner'
 export default function PreferredNetworkWrapper({ children }: any) {
   const { activeChain } = useNetwork({})
   const { isPreferredNetwork, preferredNetwork } = usePreferredNetwork()
-  console.log(isPreferredNetwork)
 
   return (
     <>

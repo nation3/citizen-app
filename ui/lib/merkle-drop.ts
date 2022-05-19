@@ -26,7 +26,7 @@ export function useClaimsFiles() {
   const [data, setData] = useState({
     isLoading: true as boolean,
     data: [] as any[],
-    error: {} as any,
+    error: null as any,
   })
   useMemo(async () => {
     try {
