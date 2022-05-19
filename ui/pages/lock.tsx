@@ -90,8 +90,7 @@ export default function Lock() {
 
   const [hasLock, setHasLock] = useState(false)
   useEffect(() => {
-    !veNationLockLoading &&
-      setHasLock(veNationLock && !veNationLock[0].isZero())
+    !veNationLockLoading && setHasLock(veNationLock && veNationLock[0] != 0)
   }, [veNationLock])
 
   const [hasExpired, setHasExpired] = useState(false)
@@ -99,7 +98,7 @@ export default function Lock() {
     !veNationLockLoading &&
       setHasExpired(
         veNationLock &&
-          !veNationLock[1].isZero() &&
+          veNationLock[1] != 0 &&
           ethers.BigNumber.from(+new Date()).gte(veNationLock[1].mul(1000))
       )
   }, [veNationLock])

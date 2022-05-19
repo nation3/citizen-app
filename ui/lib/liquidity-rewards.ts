@@ -189,12 +189,16 @@ export function useBoostedAPY({ defaultAPY, boostMultiplier }: any) {
     parseFloat(transformNumber(defaultAPY, NumberType.string) as string)
   )
   useEffect(() => {
-    if (!defaultAPY?.isZero() && !boostMultiplier?.isZero()) {
-      setAPY(
-        ((transformNumber(defaultAPY, NumberType.number) as number) /
-          10 ** 18) *
-          boostMultiplier
-      )
+    let defaultAPYasNumber = transformNumber(
+      defaultAPY,
+      NumberType.number
+    ) as number
+    let boostMultiplierAsNumber = transformNumber(
+      boostMultiplier,
+      NumberType.number
+    ) as number
+    if (defaultAPYasNumber != 0 && boostMultiplierAsNumber != 0) {
+      setAPY((defaultAPYasNumber / 10 ** 18) * boostMultiplierAsNumber)
     }
   }, [defaultAPY, boostMultiplier])
   return apy

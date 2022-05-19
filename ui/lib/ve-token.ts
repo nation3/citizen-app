@@ -66,7 +66,7 @@ export function useVeNationIncreaseLock({
   const { isLoading: timeLoading, write: increaseLockTime } =
     useVeNationIncreaseLockTime(newTime)
   const write = () => {
-    if (!newAmount.isZero()) {
+    if (newAmount != 0) {
       increaseLockAmount(newAmount)
     }
     if (newTime && newTime.gt(currentTime)) {
