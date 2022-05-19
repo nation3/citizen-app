@@ -299,7 +299,7 @@ export default function Lock() {
               {!hasExpired ? (
                 <>
                   <p className="mb-4">
-                    Available to lock:
+                    Available to lock:{' '}
                     <Balance
                       balance={nationBalance?.formatted}
                       loading={nationBalanceLoading}
