@@ -30,7 +30,7 @@ The code in this repository is structured into two main parts:
 
 ## Run the smart contracts locally
 
-See [`contracts/README`](https://github.com/nation3/app/blob/main/contracts/README.md).
+See [`contracts/README.md#local-setup`](https://github.com/nation3/app/blob/main/contracts/README.md#local-setup).
 
 ## Run the UI locally
 
