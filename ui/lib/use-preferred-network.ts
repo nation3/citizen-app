@@ -4,8 +4,7 @@ import networkToId from './networkToId'
 import { useNetwork } from './use-wagmi'
 
 export default function usePreferredNetwork() {
-  // @ts-expect-error ts-migrate(2554) FIXME: Expected 1 arguments, but got 0.
-  const { activeChain } = useNetwork()
+  const { activeChain } = useNetwork({})
   const preferredNetwork = process.env.NEXT_PUBLIC_CHAIN
 
   const [isPreferredNetwork, setIsPreferredNetwork] = useState(false)
