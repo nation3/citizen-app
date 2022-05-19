@@ -34,9 +34,23 @@ See [`contracts/README`](https://github.com/nation3/app/blob/main/contracts/READ
 
 ## Run the UI locally
 
+Navigate to the folder of the UI app:
 ```
 cd ui/
+```
+
+Install the dependencies:
+```
 yarn install
+```
+
+Add variables to your local development environment:
+```
+cp .env.mainnet .env.local
+```
+
+Start the development server:
+```
 yarn dev
 ```
 
