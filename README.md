@@ -52,9 +52,17 @@ yarn dev
 
 Then open http://localhost:42069 in a browser.
 
-## Testing against the Ethereum mainnet
+## Testing against the Goerli Ethereum testnet
 
-// TODO
+Add Goerli testnet variables to your local development environment:
+```
+cp .env.goerli .env.local
+```
+
+Start the development server:
+```
+yarn dev
+```
 
 ## Run the smart contracts locally
 
