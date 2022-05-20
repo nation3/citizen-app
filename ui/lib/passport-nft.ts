@@ -30,7 +30,8 @@ export function useHasPassport(address: any) {
   useEffect(() => {
     setHasPassport(data && data.gt(0))
   }, [isLoading, data])
-  return { data: hasPassport, isLoading, error }
+  // TODO: Set to correct value
+  return { data: false, isLoading, error }
 }
 
 export function useClaimPassport() {

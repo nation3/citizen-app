@@ -14,7 +14,7 @@ export function provider({ chainId }: any) {
   if (process.env.NEXT_PUBLIC_CHAIN === 'local') {
     console.log('Provider: Connected to localhost provider')
     return new ethers.providers.JsonRpcProvider(
-      'http://localhost:7545',
+      'http://127.0.0.1:7545',
       chain.localhost.id
     )
   } else {

@@ -51,5 +51,4 @@ export const {
   nationPassportNFT,
   nationPassportNFTIssuer,
   nationDropContracts,
-  nationDropAmount,
 } = config

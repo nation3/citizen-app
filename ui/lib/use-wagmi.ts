@@ -8,6 +8,7 @@ import {
   useContractRead as _useContractRead,
   useContractWrite as _wagmiUseContractWrite,
   useSigner,
+  useSignTypedData as _useSignTypedData,
 } from 'wagmi'
 import { useErrorContext } from '../components/ErrorProvider'
 import { useStaticCall as _useStaticCall } from './static-call'
@@ -22,7 +23,7 @@ export function useStaticCall(params: any) {
   return useHandleError(_useStaticCall(params))
 }
 
-export function useAccount(params: any) {
+export function useAccount(params?: any) {
   return useHandleError(_useAccount(params))
 }
 
@@ -116,4 +117,10 @@ function _useContractWrite(config: any, method: any, argsAndOverrides: any) {
   }, [config, argsAndOverrides])
   errorContext.addError([signerError])
   return { data, error, isLoading, write }
+}
+
+export function useSignTypedData(params: any) {
+  return useHandleError(
+    _useSignTypedData(params)
+  )
 }

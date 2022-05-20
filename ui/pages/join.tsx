@@ -14,6 +14,8 @@ import Balance from '../components/Balance'
 import Confetti from '../components/Confetti'
 import Head from '../components/Head'
 import MainCard from '../components/MainCard'
+import { NumberType, transformNumber } from '../lib/numbers'
+import { useSignAgreement, sliceSignTypedParams, storeSignature } from '../lib/sign-agreement'
 
 export default function Join() {
   const { data: account } = useAccount()
@@ -24,7 +26,19 @@ export default function Join() {
   const { data: hasPassport, isLoading: hasPassportLoading } = useHasPassport(
     account?.address
   )
-  const claim = useClaimPassport()
+
+  const { isLoading: claimPassportLoading, write: claim } = useClaimPassport()
+  const { isLoading: signatureLoading, signTypedData } = useSignAgreement({onSuccess: async (signature: string) => {
+    console.log(sliceSignTypedParams(signature))
+    const tx = await claim({args: [sliceSignTypedParams(signature)]})
+    console.log(tx.hash)
+    await storeSignature(signature, tx.hash)
+  }})
+  
+  const signAndClaim = {
+    isLoading: signatureLoading || claimPassportLoading,
+    write: signTypedData
+  }
 
   const router = useRouter()
 
@@ -40,17 +54,18 @@ export default function Join() {
     }
   }, [hasPassport, hasPassportLoading, router])
 
-  const [action, setAction] = useState({})
+  const [action, setAction] = useState({mint: transformNumber(0, NumberType.bignumber), lockAndMint: transformNumber(0, NumberType.bignumber)})
 
   useEffect(() => {
     if (!nationBalance || !veNationBalance) return
     setAction({
-      mint: veNationBalance.gte(
-        ethers.utils.parseEther(veNationRequiredStake.toString())
-      ),
+      /*veNationBalance.gte(
+        transformNumber(veNationRequiredStake as unknown as number, NumberType.bignumber)
+      )*/
+      mint: true,
       lockAndMint: nationBalance.value
         .mul(4)
-        .gte(ethers.utils.parseEther((veNationRequiredStake / 4).toString())),
+        .gte(transformNumber(veNationRequiredStake as unknown as number/4, NumberType.bignumber)),
     })
   }, [
     nationBalance,
@@ -58,9 +73,6 @@ export default function Join() {
     veNationBalance,
     veNationBalanceLoading,
   ])
-
-  const loading =
-    nationBalanceLoading || veNationBalanceLoading || hasPassportLoading
 
   return (
     <>
@@ -127,7 +139,7 @@ export default function Join() {
             {action.mint ? (
               <ActionButton
                 className="btn btn-primary normal-case font-medium grow"
-                action={claim}
+                action={signAndClaim}
                 preAction={changeUrl}
               >
                 Claim
