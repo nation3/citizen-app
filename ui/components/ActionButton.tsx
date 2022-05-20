@@ -1,6 +1,6 @@
 import React from 'react'
 import usePreferredNetwork from '../lib/use-preferred-network'
-import { useAccount } from '../lib/use-wagmi'
+import { useAccount, useNetwork } from '../lib/use-wagmi'
 import ActionNeedsTokenApproval from './ActionNeedsTokenApproval'
 
 export default function ActionButton({
@@ -22,13 +22,15 @@ export default function ActionButton({
     const tx = await write()
     postAction && tx.hash && postAction()
   }
+
+  const { activeChain } = useNetwork({})
   const { isPreferredNetwork } = usePreferredNetwork()
 
   return (
     <>
       {!isPreferredNetwork ? (
         <button className={className} disabled>
-          Wrong Network
+          {activeChain ? 'Not Connected' : 'Wrong Network'}
         </button>
       ) : !account ? (
         <label htmlFor="web3-modal" className={`${className} modal-button`}>
