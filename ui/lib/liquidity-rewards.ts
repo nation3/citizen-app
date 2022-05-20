@@ -183,6 +183,7 @@ export function useVeNationBoost({
 }
 
 export function useBoostedAPY({ defaultAPY, boostMultiplier }: any) {
+	console.log(boostMultiplier);
   const [apy, setAPY] = useState(
     parseFloat(transformNumber(defaultAPY, NumberType.string) as string)
   )
