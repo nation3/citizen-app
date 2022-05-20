@@ -46,6 +46,9 @@ contract PassportIssuer is Initializable, Ownable {
     /// @notice The token that issues
     Passport public passToken;
 
+    string public statement = "I agree to the terms outlined here";
+    string public termsURL = "https://github.com/nation3/test";
+
     /// @notice Status of the passport issance
     bool public enabled;
     /// @notice % of minLockedBalance under which a passport is revocable (base 100)
@@ -119,12 +122,17 @@ contract PassportIssuer is Initializable, Ownable {
         enabled = status;
     }
 
-    /// @notice Allow the owner to withdraw any ERC20 sent to the contract.
+    /// @notice Allows the owner to withdraw any ERC20 sent to the contract.
     /// @param token Token to withdraw.
     /// @param to Recipient address of the tokens.
     function recoverTokens(ERC20 token, address to) external virtual onlyOwner returns (uint256 amount) {
         amount = token.balanceOf(address(this));
         token.safeTransfer(to, amount);
+    }
+
+    /// @notice Allows the owner to remove the passport of any account
+    function adminRevoke(address account) public virtual onlyOwner {
+        _withdraw(account);
     }
 
     /*///////////////////////////////////////////////////////////////
@@ -136,6 +144,54 @@ contract PassportIssuer is Initializable, Ownable {
         if (totalIssued >= maxIssuances) revert IssuancesLimitReached();
         if (hasPassport(msg.sender)) revert PassportAlreadyIssued();
         if (veToken.balanceOf(msg.sender) < minLockedBalance) revert NotEligible();
+
+        _issue(msg.sender);
+    }
+
+    function domainSeparator() public view virtual returns (bytes32) {
+        return keccak256(
+            abi.encode(
+                keccak256("EIP712Domain(string name,string version,uint256 chainId,address verifyingContract"),
+                keccak256("Nation3"),
+                keccak256("1"),
+                // block.chainid,
+                // address(this)
+                1,
+                address(0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC)
+            )
+        );
+    }
+
+    /// @notice Issues a new passport token with signature validation
+    function signedClaim(uint8 v, bytes32 r, bytes32 s) public virtual isEnabled {
+        if (totalIssued >= maxIssuances) revert IssuancesLimitReached();
+        if (hasPassport(msg.sender)) revert PassportAlreadyIssued();
+        if (veToken.balanceOf(msg.sender) < minLockedBalance) revert NotEligible();
+
+        unchecked {
+            address signer = ecrecover(
+                keccak256(
+                    abi.encodePacked(
+                        "\x19\x01",
+                        domainSeparator(),
+                        keccak256(
+                            abi.encode(
+                                keccak256(
+                                    "Message(string statement, string termsURL)"
+                                ),
+                                statement,
+                                termsURL
+                            )
+                        )
+                    )
+                ),
+                v,
+                r,
+                s
+            );
+
+            if (signer != msg.sender) revert NotEligible();
+        }
 
         _issue(msg.sender);
     }
