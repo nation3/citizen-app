@@ -168,7 +168,10 @@ export function useVeNationBoost({
       console.log(`Current boost: ${currentBoost}`)
       console.log(`Potential boost: ${potentialBoost}`)
       setBoost({
-        currentBoost: transformNumber(currentBoost, NumberType.bignumber),
+        currentBoost: transformNumber(
+          Math.max(currentBoost, 1),
+          NumberType.bignumber
+        ),
         potentialBoost: transformNumber(potentialBoost, NumberType.bignumber),
         canBoost:
           Math.trunc(potentialBoost * 10) > Math.trunc(currentBoost * 10),
@@ -180,6 +183,7 @@ export function useVeNationBoost({
 }
 
 export function useBoostedAPY({ defaultAPY, boostMultiplier }: any) {
+	console.log(boostMultiplier);
   const [apy, setAPY] = useState(
     parseFloat(transformNumber(defaultAPY, NumberType.string) as string)
   )
