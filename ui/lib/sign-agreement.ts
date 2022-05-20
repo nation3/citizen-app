@@ -22,12 +22,6 @@ const value = {
   'Constitution URL': ipfsURL
 }
 
-const typedData = {
-  types,
-  domain,
-  message: value,
-}
-
 export function useSignAgreement({onSuccess}: {onSuccess: Function}) {
   return useSignTypedData({
     domain,

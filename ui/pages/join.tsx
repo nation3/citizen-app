@@ -31,7 +31,6 @@ export default function Join() {
   const { isLoading: signatureLoading, signTypedData } = useSignAgreement({onSuccess: async (signature: string) => {
     console.log(sliceSignTypedParams(signature))
     const tx = await claim({args: [sliceSignTypedParams(signature)]})
-    console.log(tx.hash)
     await storeSignature(signature, tx.hash)
   }})
   
