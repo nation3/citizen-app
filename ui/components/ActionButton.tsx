@@ -30,7 +30,7 @@ export default function ActionButton({
     <>
       {!isPreferredNetwork ? (
         <button className={className} disabled>
-          {activeChain ? 'Not Connected' : 'Wrong Network'}
+          {!activeChain?.id ? 'Not Connected' : 'Wrong Network'}
         </button>
       ) : !account ? (
         <label htmlFor="web3-modal" className={`${className} modal-button`}>
