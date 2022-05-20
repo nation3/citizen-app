@@ -63,9 +63,7 @@ export function useLiquidityRewards({ nationPrice, poolValue, address }: any) {
     }
   )
 
-  const [liquidityRewardsAPY, setLiquidityRewardsAPY] = useState(
-    transformNumber(0, NumberType.bignumber)
-  )
+  const [liquidityRewardsAPY, setLiquidityRewardsAPY] = useState<number>()
 
   useEffect(() => {
     if (totalRewards && poolValue && totalDeposit && lpTokensSupply) {
