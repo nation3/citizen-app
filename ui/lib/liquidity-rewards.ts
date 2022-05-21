@@ -1,3 +1,4 @@
+import { BigNumber } from 'ethers'
 import { useState, useEffect } from 'react'
 import { lpRewardsContract, balancerLPToken } from '../lib/config'
 import LiquidityRewardsDistributor from '../abis/BoostedLiquidityDistributor.json'
@@ -63,7 +64,9 @@ export function useLiquidityRewards({ nationPrice, poolValue, address }: any) {
     }
   )
 
-  const [liquidityRewardsAPY, setLiquidityRewardsAPY] = useState<number>()
+  const [liquidityRewardsAPY, setLiquidityRewardsAPY] = useState<BigNumber>(
+    transformNumber(0, NumberType.bignumber) as BigNumber
+  )
 
   useEffect(() => {
     if (totalRewards && poolValue && totalDeposit && lpTokensSupply) {
@@ -120,10 +123,8 @@ export function useVeNationBoost({
   totalVeNation,
   userBalance,
 }: any) {
-  const [boost, setBoost] = useState({
+  const [boost, setBoost] = useState<any>({
     canBoost: false,
-    currentBoost: {} as any,
-    potentialBoost: {} as any,
   })
   useEffect(() => {
     if (
@@ -183,7 +184,6 @@ export function useVeNationBoost({
 }
 
 export function useBoostedAPY({ defaultAPY, boostMultiplier }: any) {
-	console.log(boostMultiplier);
   const [apy, setAPY] = useState(
     parseFloat(transformNumber(defaultAPY, NumberType.string) as string)
   )
@@ -197,7 +197,9 @@ export function useBoostedAPY({ defaultAPY, boostMultiplier }: any) {
       NumberType.number
     ) as number
 
-    setAPY((defaultAPYasNumber / 10 ** 18) * boostMultiplierAsNumber)
+    if (defaultAPYasNumber != 0 && boostMultiplierAsNumber != 0) {
+      setAPY((defaultAPYasNumber / 10 ** 18) * boostMultiplierAsNumber)
+    }
   }, [defaultAPY, boostMultiplier])
   return apy
 }
