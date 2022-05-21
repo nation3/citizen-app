@@ -17,6 +17,15 @@
 - node v16
 - working rpc node (local chain)
 
+### Install Foundry
+
+See https://book.getfoundry.sh/getting-started/installation.html
+```
+curl -L https://foundry.paradigm.xyz | bash
+brew install libusb
+foundryup
+```
+
 ### Local Setup
 
 ```zsh
