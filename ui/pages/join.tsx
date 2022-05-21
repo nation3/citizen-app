@@ -7,7 +7,7 @@ import { veNationRequiredStake, nationToken } from '../lib/config'
 import { useNationBalance } from '../lib/nation-token'
 import { useClaimPassport } from '../lib/passport-nft'
 import { useHasPassport } from '../lib/passport-nft'
-import { useAccount } from '../lib/use-wagmi'
+import { useAccount, useContractWrite } from '../lib/use-wagmi'
 import { useVeNationBalance } from '../lib/ve-token'
 import ActionButton from '../components/ActionButton'
 import Balance from '../components/Balance'
@@ -15,7 +15,7 @@ import Confetti from '../components/Confetti'
 import Head from '../components/Head'
 import MainCard from '../components/MainCard'
 import { NumberType, transformNumber } from '../lib/numbers'
-import { useSignAgreement, sliceSignTypedParams, storeSignature } from '../lib/sign-agreement'
+import { useSignAgreement, storeSignature } from '../lib/sign-agreement'
 
 export default function Join() {
   const { data: account } = useAccount()
@@ -28,15 +28,15 @@ export default function Join() {
   )
 
   const { isLoading: claimPassportLoading, write: claim } = useClaimPassport()
-  const { isLoading: signatureLoading, signTypedData } = useSignAgreement({onSuccess: async (signature: string) => {
-    console.log(sliceSignTypedParams(signature))
-    const tx = await claim({args: [sliceSignTypedParams(signature)]})
+  const { isLoading: signatureLoading, signMessage } = useSignAgreement({onSuccess: async (signature: string) => {
+    console.log(ethers.utils.splitSignature(signature))
+    const tx = await claim({args: [ethers.utils.splitSignature(signature)]})
     await storeSignature(signature, tx.hash)
   }})
   
   const signAndClaim = {
     isLoading: signatureLoading || claimPassportLoading,
-    write: signTypedData
+    write: signMessage
   }
 
   const router = useRouter()

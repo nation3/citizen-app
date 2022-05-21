@@ -60,15 +60,17 @@ contract PassportIssuerTest is DSTestPlus {
         string memory statement = "I agree to the terms outlined here";
         string memory termsURL = "https://github.com/nation3/test";
 
+        bytes32 MESSAGE_TYPEHASH = keccak256("Message(string Statement,string Agreement)");
+
+        bytes memory encoded = abi.encode(MESSAGE_TYPEHASH, statement, termsURL);
+
         bytes32 message = keccak256(
             abi.encodePacked(
-                "\x19\x01",
+                "\\x19\\x01",
                 issuer.domainSeparator(),
                 keccak256(
                     abi.encode(
-                        keccak256(
-                            "Message(string statement, string termsURL)"
-                        ),
+                        keccak256(abi.encodePacked("Message(string statement,string Agreement)")),
                         statement,
                         termsURL
                     )
@@ -77,37 +79,14 @@ contract PassportIssuerTest is DSTestPlus {
         );
 
         evm.startPrank(citiz3n);
-        (uint8 v, bytes32 r, bytes32 s) = hevm.sign(
-            privateKey,
-            message
-        );
+        (uint8 v, bytes32 r, bytes32 s) = hevm.sign(privateKey, message);
 
-        address signer = ecrecover(
-            message,
-            v,
-            r,
-            s
-        );
+        address signer = ecrecover(message, v, r, s);
 
         assertEq(signer, citiz3n);
 
         issuer.signedClaim(v, r, s);
         evm.stopPrank();
-
-        /*
-        v = uint8(28);
-        r = bytes32(0x4a51d6443058047ac81ece5bd5ceed1db6bceba0048040402813021adeb9a8dd);
-        s = bytes32(0x3d896c0c4c90715b5b7bf8c7cb1b19ff8f2226e0189c6a752112a13f7c581064);
-
-        signer = ecrecover(
-            message,
-            v,
-            r,
-            s
-        );
-
-        assertEq(signer, address(0xaB9E614e427fA90A6c99D07221f3923d9f5caab8));
-        */
     }
 
     function testWithdraw() public {

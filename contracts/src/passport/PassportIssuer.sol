@@ -110,7 +110,11 @@ contract PassportIssuer is Initializable, Ownable {
     /// @notice Sets locking required amount & period for a supply of tokens.
     /// @param supply Max number of tokens that can be issued.
     /// @param _minLockedBalance Minimum amount of voting escrow tokens required for a new issuance.
-    function setParams(uint256 supply, uint256 _minLockedBalance, uint8 _revokeUnderRatio) public virtual onlyOwner {
+    function setParams(
+        uint256 supply,
+        uint256 _minLockedBalance,
+        uint8 _revokeUnderRatio
+    ) public virtual onlyOwner {
         maxIssuances = supply;
         minLockedBalance = _minLockedBalance;
         revokeUnderRatio = _revokeUnderRatio;
@@ -149,21 +153,30 @@ contract PassportIssuer is Initializable, Ownable {
     }
 
     function domainSeparator() public view virtual returns (bytes32) {
-        return keccak256(
-            abi.encode(
-                keccak256("EIP712Domain(string name,string version,uint256 chainId,address verifyingContract"),
-                keccak256("Nation3"),
-                keccak256("1"),
-                // block.chainid,
-                // address(this)
-                1,
-                address(0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC)
-            )
-        );
+        return
+            keccak256(
+                abi.encode(
+                    keccak256(
+                        abi.encodePacked(
+                            "EIP712Domain(string name,string version,uint256 chainId,address verifyingContract"
+                        )
+                    ),
+                    keccak256("Nation3"),
+                    keccak256("1"),
+                    // block.chainid,
+                    // address(this)
+                    1,
+                    address(0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC)
+                )
+            );
     }
 
     /// @notice Issues a new passport token with signature validation
-    function signedClaim(uint8 v, bytes32 r, bytes32 s) public virtual isEnabled {
+    function signedClaim(
+        uint8 v,
+        bytes32 r,
+        bytes32 s
+    ) public virtual isEnabled {
         if (totalIssued >= maxIssuances) revert IssuancesLimitReached();
         if (hasPassport(msg.sender)) revert PassportAlreadyIssued();
         if (veToken.balanceOf(msg.sender) < minLockedBalance) revert NotEligible();
@@ -175,13 +188,7 @@ contract PassportIssuer is Initializable, Ownable {
                         "\x19\x01",
                         domainSeparator(),
                         keccak256(
-                            abi.encode(
-                                keccak256(
-                                    "Message(string statement, string termsURL)"
-                                ),
-                                statement,
-                                termsURL
-                            )
+                            abi.encode(keccak256("Message(string statement, string termsURL)"), statement, termsURL)
                         )
                     )
                 ),
@@ -203,7 +210,7 @@ contract PassportIssuer is Initializable, Ownable {
 
     /// @notice Removes the passport of a given account if it's not eligible anymore
     function revoke(address account) public virtual {
-        if (veToken.balanceOf(account) >= minLockedBalance * revokeUnderRatio / 100) revert StillEligible();
+        if (veToken.balanceOf(account) >= (minLockedBalance * revokeUnderRatio) / 100) revert StillEligible();
         _withdraw(account);
     }
 
