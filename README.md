@@ -1,14 +1,11 @@
 # Nation3 App ☁️🇺🇳
 
+![Vercel](https://vercelbadge.vercel.app/api/nation3/app)
+
 <a href="https://github.com/nation3/app/graphs/contributors" alt="Contributors">
-  <img src="https://img.shields.io/github/contributors/nation3/app" />
-</a>
+  <img src="https://img.shields.io/github/contributors/nation3/app" /></a>
 <a href="https://github.com/nation3/app/pulse" alt="Activity">
-  <img src="https://img.shields.io/github/commit-activity/m/nation3/app" />
-</a>
-<a href="https://circleci.com/gh/nation3/app/tree/main">
-  <img src="https://img.shields.io/circleci/project/github/nation3/app/main" alt="build status">
-</a>
+  <img src="https://img.shields.io/github/commit-activity/m/nation3/app" /></a>
 
 ---
 
