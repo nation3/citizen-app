@@ -63,9 +63,9 @@ yarn dev
 
 ## Run the smart contracts locally
 
-See [`contracts/README.md#local-setup`](https://github.com/nation3/app/blob/main/contracts/README.md#local-setup).
+Follow the instructions at [`contracts/README.md#local-setup`](https://github.com/nation3/app/blob/main/contracts/README.md#local-setup).
 
-Update the `NEXT_PUBLIC_CHAIN` variable in `.env.local` to match your Ethereum [node](https://github.com/nation3/app/blob/main/contracts/README.md#running-a-node).
+Update the `NEXT_PUBLIC_CHAIN` variable in `.env.local` to match your local Ethereum [node](https://github.com/nation3/app/blob/main/contracts/README.md#running-a-node).
 
 Start the development server:
 ```
