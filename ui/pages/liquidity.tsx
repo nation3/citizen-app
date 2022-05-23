@@ -89,10 +89,7 @@ export default function Liquidity() {
   const claimRewards = useClaimRewards(unclaimedRewards)
   const withdrawAndClaimRewards = useWithdrawAndClaim()
   const [activeTab, setActiveTab] = useState(0)
-  useEffect(() => {
-    console.log('boostedAPY', boostedAPY)
-    console.log('liquidityRewardsAPY', liquidityRewardsAPY)
-  }, [boostedAPY, liquidityRewardsAPY])
+
   return (
     <>
       <Head title="$NATION liquidity rewards" />

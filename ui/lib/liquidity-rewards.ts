@@ -166,8 +166,6 @@ export function useVeNationBoost({
 
       const currentBoost = n.userBalance / baseBalance
 
-      console.log(`Current boost: ${currentBoost}`)
-      console.log(`Potential boost: ${potentialBoost}`)
       setBoost({
         currentBoost: transformNumber(
           Math.max(currentBoost, 1),
@@ -177,7 +175,6 @@ export function useVeNationBoost({
         canBoost:
           Math.trunc(potentialBoost * 10) > Math.trunc(currentBoost * 10),
       })
-      console.log('boost', boost)
     }
   }, [userDeposit, totalDeposit, userVeNation, totalVeNation, userBalance])
 
@@ -199,7 +196,6 @@ export function useBoostedAPY({ defaultAPY, boostMultiplier }: any) {
     ) as number
 
     if (defaultAPYasNumber != 0 && boostMultiplierAsNumber != 0) {
-      //   setAPY((defaultAPYasNumber / 10 ** 18) * boostMultiplierAsNumber)
       setAPY(defaultAPYasNumber * boostMultiplierAsNumber)
     }
   }, [defaultAPY, boostMultiplier])
