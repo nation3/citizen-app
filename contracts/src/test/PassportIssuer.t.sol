@@ -67,50 +67,11 @@ contract PassportIssuerTest is DSTestPlus {
 
         evm.startPrank(citiz3n);
         (uint8 v, bytes32 r, bytes32 s) = getSignatures(privateKey);
-
         issuer.claim(v, r, s);
 
         assertTrue(issuer.hasPassport(citiz3n));
         assertEq(issuer.totalIssued(), 1);
         assertEq(passport.ownerOf(issuer.passportId(citiz3n)), citiz3n);
-    }
-
-    function testSignedClaim() public {
-        startIssuance();
-        uint256 privateKey = 0xDAD;
-        address citiz3n = evm.addr(privateKey);
-        getFilledAccount(citiz3n);
-
-        string memory statement = "I agree to the terms outlined here";
-        string memory termsURL = "https://github.com/nation3/test";
-
-        bytes32 MESSAGE_TYPEHASH = keccak256("Message(string Statement,string Agreement)");
-
-        bytes memory encoded = abi.encode(MESSAGE_TYPEHASH, statement, termsURL);
-
-        bytes32 message = keccak256(
-            abi.encodePacked(
-                "\x19\x01",
-                issuer.domainSeparator(),
-                keccak256(
-                    abi.encode(
-                        keccak256(abi.encodePacked("Message(string statement,string Agreement)")),
-                        keccak256(abi.encodePacked(statement)),
-                        keccak256(abi.encodePacked(termsURL))
-                    )
-                )
-            )
-        );
-
-        evm.startPrank(citiz3n);
-        (uint8 v, bytes32 r, bytes32 s) = hevm.sign(privateKey, message);
-
-        address signer = ecrecover(message, v, r, s);
-
-        assertEq(signer, citiz3n);
-
-        issuer.signedClaim(v, r, s);
-        evm.stopPrank();
     }
 
     function testWithdraw() public {
