@@ -17,6 +17,15 @@
 - node v16
 - working rpc node (local chain)
 
+### Install Foundry
+
+See https://book.getfoundry.sh/getting-started/installation.html
+```
+curl -L https://foundry.paradigm.xyz | bash
+brew install libusb
+foundryup
+```
+
 ### Local Setup
 
 ```zsh
@@ -24,7 +33,7 @@
 yarn install
 
 # Set up environment variables
-cp .env.sampe .env
+cp .env.sample .env
 
 # Install Vyper
 pip install vyper==0.2.4
