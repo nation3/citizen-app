@@ -5,7 +5,7 @@ import {
   CalculatorIcon,
   InformationCircleIcon,
 } from '@heroicons/react/outline'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import React from 'react'
 import { useBalancerPool } from '../lib/balancer'
 import {
@@ -89,7 +89,10 @@ export default function Liquidity() {
   const claimRewards = useClaimRewards(unclaimedRewards)
   const withdrawAndClaimRewards = useWithdrawAndClaim()
   const [activeTab, setActiveTab] = useState(0)
-
+  useEffect(() => {
+    console.log(boostedAPY)
+    console.log(liquidityRewardsAPY)
+  }, [boostedAPY, liquidityRewardsAPY])
   return (
     <>
       <Head title="$NATION liquidity rewards" />
