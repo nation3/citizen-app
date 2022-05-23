@@ -64,10 +64,10 @@ export default function Join() {
   useEffect(() => {
     if (!nationBalance || !veNationBalance) return
     setAction({
-      /*veNationBalance.gte(
+      mint: veNationBalance.gte(
         transformNumber(veNationRequiredStake as unknown as number, NumberType.bignumber)
-      )*/
-      mint: true,
+      ),
+      // mint: true,
       lockAndMint: nationBalance.value
         .mul(4)
         .gte(transformNumber(veNationRequiredStake as unknown as number/4, NumberType.bignumber)),
@@ -171,7 +171,7 @@ export default function Join() {
         ) : (
           <>
             <p>
-              We are honored to welcome you to Nation3 as a fellow citizen. You
+              We are delighted to welcome you to Nation3 as a fellow citizen. You
               will be taken to your passport in a few seconds ✨
             </p>
             <div className="flex place-content-center">

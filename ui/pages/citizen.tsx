@@ -6,14 +6,27 @@ import { useAccount } from '../lib/use-wagmi'
 import Head from '../components/Head'
 import Passport from '../components/Passport'
 import AddToWallet from '../public/passport/wallet.svg'
+import Confetti from '../components/Confetti'
+import { useState } from 'react'
 
 export default function Citizen() {
-  const [{ data: account }] = useAccount()
+  const { data: account } = useAccount()
 
-  const [{ data, loading }] = usePassport(account?.address)
+  const { data } = usePassport(account?.address)
+
+  const [confettiNumber, setConfettiNumber] = useState<Array<Number>>([])
+
+  const confettis = confettiNumber.map((number: Number) =>
+    <Confetti key={number.toString()} />
+  )
+
+  const addConfetti = () => {
+    setConfettiNumber([...confettiNumber, confettiNumber.length])
+  }
 
   return (
     <>
+      { confettis.map(x => (<Confetti />)) }
       <Head title="Welcome, citizen" />
       <div className="hero h-full">
         {account ? (
@@ -33,6 +46,7 @@ export default function Citizen() {
                       )}...${account.address.slice(-4)}`
                 }
                 id={transformNumber(data.id, 'number', 0)}
+                onClick={() => addConfetti()}
               />
             </div>
 

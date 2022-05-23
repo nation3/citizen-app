@@ -47,7 +47,7 @@ export function useClaimPassport() {
 
 export function usePassport(address: any) {
   // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 3.
-  const [{ data: id, loading }] = useContractRead(
+  const { data: id, isLoading } = useContractRead(
     nftIssuerContractParams,
     'passportId',
     { args: [address], skip: !address }
@@ -55,5 +55,5 @@ export function usePassport(address: any) {
   console.log(`Passport ID ${id}`)
   //const { nft, loading } = useNft(nationPassportNFT, id?.toString())
   //console.log(nft)
-  return [{ data: { id }, loading }]
+  return { data: { id }, isLoading }
 }

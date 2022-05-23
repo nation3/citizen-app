@@ -34,7 +34,6 @@ import Head from '../components/Head'
 import MainCard from '../components/MainCard'
 
 export default function Liquidity() {
-  // @ts-expect-error
   const { data: account } = useAccount()
 
   const { data: veNationBalance, isLoading: veNationBalanceLoading } =

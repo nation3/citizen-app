@@ -9,7 +9,7 @@ import PassportArt3 from '../public/passport/art3.png'
 import PassportArt4 from '../public/passport/art4.png'
 import ContactlessIcon from '../public/passport/contactless.svg'
 
-export default function Passport({ holder, id }) {
+export default function Passport({ holder, id, onClick }) {
   return (
     <Card
       style={{
@@ -18,7 +18,7 @@ export default function Passport({ holder, id }) {
         cursor: 'pointer',
         position: 'relative',
       }}
-      onClick={() => console.log('Card clicked')}
+      onClick={onClick}
     >
       <div className="bg-white absolute top-0 left-0 right-0 bottom-0 flex flex-col h-full">
         <div className="shrink h-20 flex align-middle px-4 justify-between items-center">
