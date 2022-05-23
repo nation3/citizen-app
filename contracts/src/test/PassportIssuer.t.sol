@@ -19,6 +19,8 @@ contract PassportIssuerTest is DSTestPlus {
     uint256 constant MIN_LOCKED_AMOUNT = 10 * 1e18;
     uint8 constant REVOKE_UNDER_RATIO = 80; // %
 
+    string public statement = "I agree";
+
     function setUp() public {
         passport = new Passport("Passport", "PAS3");
         veToken = new MockVotingEscrow("Nation3 Voting Escrow Token", "veNATION");
@@ -30,21 +32,43 @@ contract PassportIssuerTest is DSTestPlus {
 
     function startIssuance() public {
         issuer.setParams(MAX_PASSPORT_ISSUANCES, MIN_LOCKED_AMOUNT, REVOKE_UNDER_RATIO);
+        issuer.setStatement(statement);
         issuer.setEnabled(true);
     }
 
-    function getFilledAccount(address account) public returns (address) {
+    function getFilledAccount(uint256 key) public returns (address, uint256) {
+        address account = evm.addr(key);
         veToken.setBalance(account, MIN_LOCKED_AMOUNT * 2);
-        return account;
+        return (account, key);
+    }
+
+    function getSignatures(uint256 privateKey) public returns (uint8 v, bytes32 r, bytes32 s) {
+        bytes32 message = keccak256(
+            abi.encodePacked(
+                "\x19\x01",
+                issuer.DOMAIN_SEPARATOR(),
+                keccak256(
+                    abi.encode(
+                        keccak256(
+                            "Agreement(string statement)"
+                        ),
+                        keccak256(abi.encodePacked(statement))
+                    )
+                )
+            )
+        );
+
+        (v, r, s) = hevm.sign(privateKey, message);
     }
 
     function testClaim() public {
         startIssuance();
-        address citiz3n = address(0xBABE);
-        getFilledAccount(citiz3n);
+        (address citiz3n, uint256 privateKey) = getFilledAccount(0xDAD);
 
-        evm.prank(citiz3n);
-        issuer.claim();
+        evm.startPrank(citiz3n);
+        (uint8 v, bytes32 r, bytes32 s) = getSignatures(privateKey);
+
+        issuer.claim(v, r, s);
 
         assertTrue(issuer.hasPassport(citiz3n));
         assertEq(issuer.totalIssued(), 1);
@@ -91,11 +115,12 @@ contract PassportIssuerTest is DSTestPlus {
 
     function testWithdraw() public {
         startIssuance();
-        address citiz3n = getFilledAccount(address(0xBABE));
+        (address citiz3n, uint256 privateKey) = getFilledAccount(0xDAD);
 
         evm.startPrank(citiz3n);
+        (uint8 v, bytes32 r, bytes32 s) = getSignatures(privateKey);
 
-        issuer.claim();
+        issuer.claim(v, r, s);
         issuer.withdraw();
 
         evm.stopPrank();
@@ -110,17 +135,16 @@ contract PassportIssuerTest is DSTestPlus {
 
     function testRevoke() public {
         startIssuance();
-        address citiz3n = address(0xBABE);
+        (address citiz3n, uint256 privateKey) = getFilledAccount(0xDAD);
         address guardian = address(0xDEAD);
 
         evm.prank(guardian);
         evm.expectRevert(sig.selector("PassportNotIssued()"));
         issuer.revoke(citiz3n);
 
-        getFilledAccount(citiz3n);
-
+        (uint8 v, bytes32 r, bytes32 s) = getSignatures(privateKey);
         evm.prank(citiz3n);
-        issuer.claim();
+        issuer.claim(v, r, s);
 
         // Citizen veToken balance go under threshold
         veToken.setBalance(citiz3n, MIN_LOCKED_AMOUNT / 2);
@@ -136,28 +160,31 @@ contract PassportIssuerTest is DSTestPlus {
 
     function testCannotRevokeEligibleAccount() public {
         startIssuance();
-        address citiz3n = getFilledAccount(address(0xBABE));
+        (address citiz3n, uint256 privateKey) = getFilledAccount(0xDAD);
         address guardian = address(0xDEAD);
 
         evm.prank(citiz3n);
-        issuer.claim();
+        (uint8 v, bytes32 r, bytes32 s) = getSignatures(privateKey);
+        issuer.claim(v, r, s);
 
         evm.prank(guardian);
         evm.expectRevert(sig.selector("StillEligible()"));
         issuer.revoke(citiz3n);
     }
 
+    /*
     function testCannotClaimMoreThanOnePassport() public {
         startIssuance();
-        address citiz3n = getFilledAccount(address(0xBABE));
+        (address citiz3n, uint256 privateKey) = getFilledAccount(0xBABE);
 
         evm.startPrank(citiz3n);
-
-        issuer.claim();
+        (uint8 v, bytes32 r, bytes32 s) = getSignatures(privateKey);
+        issuer.claim(v, r, s);
 
         evm.expectRevert(sig.selector("PassportAlreadyIssued()"));
-        issuer.claim();
+        issuer.claim(v, r, s);
 
         evm.stopPrank();
     }
+    */
 }
