@@ -151,8 +151,8 @@ const main = async () => {
         "balancerLPToken": lpContracts.lpToken.address,
         "lpRewardsContract": lpContracts.lpRewardsContract.address,
         "nationDropContracts": [nationDropA.address, nationDropB.address],
-        "nationPassportNFT": passportContracts.passportToken,
-        "nationPassportNFTIssuer": passportContracts.passportIssuer
+        "nationPassportNFT": passportContracts.passportToken.address,
+        "nationPassportNFTIssuer": passportContracts.passportIssuer.address
     }
 
     const manifestFile = "./deployments/local.json";
