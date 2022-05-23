@@ -7,7 +7,7 @@ import { veNationRequiredStake, nationToken } from '../lib/config'
 import { useNationBalance } from '../lib/nation-token'
 import { useClaimPassport } from '../lib/passport-nft'
 import { useHasPassport } from '../lib/passport-nft'
-import { useAccount, useContractWrite } from '../lib/use-wagmi'
+import { useAccount } from '../lib/use-wagmi'
 import { useVeNationBalance } from '../lib/ve-token'
 import ActionButton from '../components/ActionButton'
 import Balance from '../components/Balance'
@@ -16,8 +16,11 @@ import Head from '../components/Head'
 import MainCard from '../components/MainCard'
 import { NumberType, transformNumber } from '../lib/numbers'
 import { useSignAgreement, storeSignature } from '../lib/sign-agreement'
+import { useErrorContext } from '../components/ErrorProvider'
 
 export default function Join() {
+  const errorContext = useErrorContext()
+
   const { data: account } = useAccount()
   const { data: nationBalance, isLoading: nationBalanceLoading } =
     useNationBalance(account?.address)
@@ -31,7 +34,10 @@ export default function Join() {
   const { isLoading: signatureLoading, signMessage } = useSignAgreement({onSuccess: async (signature: string) => {
     console.log(ethers.utils.splitSignature(signature))
     const tx = await claim({args: [ethers.utils.splitSignature(signature)]})
-    await storeSignature(signature, tx.hash)
+    const { error } = await storeSignature(signature, tx.hash)
+    if (error) {
+      errorContext.addError([{message: error}])
+    }
   }})
   
   const signAndClaim = {

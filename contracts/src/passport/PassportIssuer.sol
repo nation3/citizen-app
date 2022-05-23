@@ -156,11 +156,7 @@ contract PassportIssuer is Initializable, Ownable {
         return
             keccak256(
                 abi.encode(
-                    keccak256(
-                        abi.encodePacked(
-                            "EIP712Domain(string name,string version,uint256 chainId,address verifyingContract"
-                        )
-                    ),
+                    keccak256("EIP712Domain(string name,string version,uint256 chainId,address verifyingContract"),
                     keccak256("Nation3"),
                     keccak256("1"),
                     // block.chainid,

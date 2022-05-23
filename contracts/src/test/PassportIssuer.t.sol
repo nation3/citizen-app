@@ -66,13 +66,13 @@ contract PassportIssuerTest is DSTestPlus {
 
         bytes32 message = keccak256(
             abi.encodePacked(
-                "\\x19\\x01",
+                "\x19\x01",
                 issuer.domainSeparator(),
                 keccak256(
                     abi.encode(
                         keccak256(abi.encodePacked("Message(string statement,string Agreement)")),
-                        statement,
-                        termsURL
+                        keccak256(abi.encodePacked(statement)),
+                        keccak256(abi.encodePacked(termsURL))
                     )
                 )
             )

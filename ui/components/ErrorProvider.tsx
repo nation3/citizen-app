@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from 'react'
+import { createContext, useContext, useState } from 'react'
 import React from 'react'
 import { useNetwork } from 'wagmi'
 import networkToId from '../lib/networkToId'
