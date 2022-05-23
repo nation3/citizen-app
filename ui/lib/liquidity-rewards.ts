@@ -199,7 +199,8 @@ export function useBoostedAPY({ defaultAPY, boostMultiplier }: any) {
     ) as number
 
     if (defaultAPYasNumber != 0 && boostMultiplierAsNumber != 0) {
-      setAPY((defaultAPYasNumber / 10 ** 18) * boostMultiplierAsNumber)
+      //   setAPY((defaultAPYasNumber / 10 ** 18) * boostMultiplierAsNumber)
+      setAPY(defaultAPYasNumber * boostMultiplierAsNumber)
     }
   }, [defaultAPY, boostMultiplier])
   return apy
