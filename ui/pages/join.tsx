@@ -5,18 +5,18 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { veNationRequiredStake, nationToken } from '../lib/config'
 import { useNationBalance } from '../lib/nation-token'
+import { NumberType, transformNumber } from '../lib/numbers'
 import { useClaimPassport } from '../lib/passport-nft'
 import { useHasPassport } from '../lib/passport-nft'
+import { useSignAgreement, storeSignature } from '../lib/sign-agreement'
 import { useAccount } from '../lib/use-wagmi'
 import { useVeNationBalance } from '../lib/ve-token'
 import ActionButton from '../components/ActionButton'
 import Balance from '../components/Balance'
 import Confetti from '../components/Confetti'
+import { useErrorContext } from '../components/ErrorProvider'
 import Head from '../components/Head'
 import MainCard from '../components/MainCard'
-import { NumberType, transformNumber } from '../lib/numbers'
-import { useSignAgreement, storeSignature } from '../lib/sign-agreement'
-import { useErrorContext } from '../components/ErrorProvider'
 
 export default function Join() {
   const errorContext = useErrorContext()
@@ -31,18 +31,20 @@ export default function Join() {
   )
 
   const { isLoading: claimPassportLoading, write: claim } = useClaimPassport()
-  const { isLoading: signatureLoading, signMessage } = useSignAgreement({onSuccess: async (signature: string) => {
-    console.log(ethers.utils.splitSignature(signature))
-    const tx = await claim({args: [ethers.utils.splitSignature(signature)]})
-    const { error } = await storeSignature(signature, tx.hash)
-    if (error) {
-      errorContext.addError([{message: error}])
-    }
-  }})
-  
+  const { isLoading: signatureLoading, signMessage } = useSignAgreement({
+    onSuccess: async (signature: string) => {
+      console.log(ethers.utils.splitSignature(signature))
+      const tx = await claim({ args: [ethers.utils.splitSignature(signature)] })
+      const { error } = await storeSignature(signature, tx.hash)
+      if (error) {
+        errorContext.addError([{ message: error }])
+      }
+    },
+  })
+
   const signAndClaim = {
     isLoading: signatureLoading || claimPassportLoading,
-    write: signMessage
+    write: signMessage,
   }
 
   const router = useRouter()
@@ -59,18 +61,29 @@ export default function Join() {
     }
   }, [hasPassport, hasPassportLoading, router])
 
-  const [action, setAction] = useState({mint: transformNumber(0, NumberType.bignumber), lockAndMint: transformNumber(0, NumberType.bignumber)})
+  const [action, setAction] = useState({
+    mint: transformNumber(0, NumberType.bignumber),
+    lockAndMint: transformNumber(0, NumberType.bignumber),
+  })
 
   useEffect(() => {
     if (!nationBalance || !veNationBalance) return
     setAction({
       mint: veNationBalance.gte(
-        transformNumber(veNationRequiredStake as unknown as number, NumberType.bignumber)
+        transformNumber(
+          veNationRequiredStake as unknown as number,
+          NumberType.bignumber
+        )
       ),
       // mint: true,
       lockAndMint: nationBalance.value
         .mul(4)
-        .gte(transformNumber(veNationRequiredStake as unknown as number/4, NumberType.bignumber)),
+        .gte(
+          transformNumber(
+            (veNationRequiredStake as unknown as number) / 4,
+            NumberType.bignumber
+          )
+        ),
     })
   }, [
     nationBalance,
@@ -108,12 +121,12 @@ export default function Join() {
               <span className="font-semibold">
                 {veNationRequiredStake} $veNATION
               </span>
-              . This is to make sure all citizens are economically aligned
+              . This is to make sure all citizens are economically aligned.
               <br />
               <br />
-              Your $veNATION won't be taken away from you. When your lock
-              expires, you can either withdraw them or increase the lock to keep
-              citizenship.
+              Your $NATION won't be taken away from you. As your lock matures,
+              you can either withdraw your tokens or increase the lock time to
+              keep citizenship.
             </p>
 
             <div className="stats stats-vertical lg:stats-horizontal shadow my-4">
@@ -171,8 +184,8 @@ export default function Join() {
         ) : (
           <>
             <p>
-              We are delighted to welcome you to Nation3 as a fellow citizen. You
-              will be taken to your passport in a few seconds ✨
+              We are delighted to welcome you to Nation3 as a fellow citizen.
+              You will be taken to your passport in a few seconds ✨
             </p>
             <div className="flex place-content-center">
               <button className="btn btn-square btn-ghost btn-disabled btn-lg bg-transparent loading"></button>

@@ -1,13 +1,12 @@
-import { ArchiveIcon } from '@heroicons/react/outline'
 import Image from 'next/image'
+import { useState } from 'react'
 import { transformNumber } from '../lib/numbers'
 import { usePassport } from '../lib/passport-nft'
 import { useAccount } from '../lib/use-wagmi'
+import Confetti from '../components/Confetti'
 import Head from '../components/Head'
 import Passport from '../components/Passport'
 import AddToWallet from '../public/passport/wallet.svg'
-import Confetti from '../components/Confetti'
-import { useState } from 'react'
 
 export default function Citizen() {
   const { data: account } = useAccount()
@@ -16,9 +15,9 @@ export default function Citizen() {
 
   const [confettiNumber, setConfettiNumber] = useState<Array<Number>>([])
 
-  const confettis = confettiNumber.map((number: Number) =>
+  const confettis = confettiNumber.map((number: Number) => (
     <Confetti key={number.toString()} />
-  )
+  ))
 
   const addConfetti = () => {
     setConfettiNumber([...confettiNumber, confettiNumber.length])
@@ -26,7 +25,9 @@ export default function Citizen() {
 
   return (
     <>
-      { confettis.map(x => (<Confetti />)) }
+      {confettiNumber.map((number: Number) => (
+        <Confetti key={number.toString()} />
+      ))}
       <Head title="Welcome, citizen" />
       <div className="hero h-full">
         {account ? (
