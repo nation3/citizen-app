@@ -177,7 +177,7 @@ export function useVeNationBoost({
         canBoost:
           Math.trunc(potentialBoost * 10) > Math.trunc(currentBoost * 10),
       })
-	  console.log(boost);
+      console.log('boost', boost)
     }
   }, [userDeposit, totalDeposit, userVeNation, totalVeNation, userBalance])
 

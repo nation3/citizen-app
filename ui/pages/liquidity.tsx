@@ -90,8 +90,8 @@ export default function Liquidity() {
   const withdrawAndClaimRewards = useWithdrawAndClaim()
   const [activeTab, setActiveTab] = useState(0)
   useEffect(() => {
-    console.log(boostedAPY)
-    console.log(liquidityRewardsAPY)
+    console.log('boostedAPY', boostedAPY)
+    console.log('liquidityRewardsAPY', liquidityRewardsAPY)
   }, [boostedAPY, liquidityRewardsAPY])
   return (
     <>
