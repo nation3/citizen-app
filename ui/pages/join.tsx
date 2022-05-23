@@ -47,7 +47,9 @@ export default function Join() {
   const { isLoading: signatureLoading, signTypedData } = useSignAgreement({
     onSuccess: async (signature: string) => {
       const sigs = ethers.utils.splitSignature(signature)
-      // const tx2 = await verify({ args: [sigs.v, sigs.r, sigs.s] })
+      const tx2 = await verify({ args: [sigs.v, sigs.r, sigs.s] })
+      console.log(tx2)
+      return
       const tx = await claim({ args: [sigs.v, sigs.r, sigs.s] })
       console.log(tx.hash)
       const { error } = await storeSignature(signature, tx.hash)

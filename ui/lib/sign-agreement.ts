@@ -16,7 +16,7 @@ const types = {
 }
 
 const value = {
-  statement: `${process.env.NEXT_PUBLIC_AGREEMENT_STATEMENT} ${process.env.NEXT_PUBLIC_AGREEMENT_URL}`
+  statement: 'I agree'
 }
 
 console.log(value.statement)
