@@ -1,190 +1,143 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity 0.8.10;
 
+import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 import {DSTestPlus} from "./utils/DSTestPlus.sol";
 import {Hevm} from "./utils/Hevm.sol";
 import {Passport} from "../passport/Passport.sol";
-import {PassportIssuer} from "../passport/PassportIssuer.sol";
+import {Renderer} from "../passport/Renderer.sol";
 import {Signatures as sig} from "./utils/Signatures.sol";
-import {MockVotingEscrow} from "./utils/mocks/MockVotingEscrow.sol";
+import {MockERC20} from "./utils/mocks/MockERC20.sol";
 
-contract PassportIssuerTest is DSTestPlus {
+contract MockRenderer is Renderer {
+    function render(
+        uint256 tokenId,
+        address owner,
+        uint256 timestamp
+    ) public pure override returns (string memory tokenURI) {
+        tokenURI = string(
+            abi.encodePacked(
+                "Passport num. ",
+                Strings.toString(tokenId),
+                " owned by ",
+                Strings.toHexString(uint256(uint160(owner))),
+                " since ",
+                Strings.toString(timestamp)
+            )
+        );
+    }
+}
+
+contract PassportTest is DSTestPlus {
     Hevm evm = Hevm(HEVM_ADDRESS);
 
     Passport passport;
-    PassportIssuer issuer;
-    MockVotingEscrow veToken;
-
-    uint256 constant MAX_PASSPORT_ISSUANCES = 3;
-    uint256 constant MIN_LOCKED_AMOUNT = 10 * 1e18;
-    uint8 constant REVOKE_UNDER_RATIO = 80; // %
-
-    string public statement = "I agree";
 
     function setUp() public {
         passport = new Passport("Passport", "PAS3");
-        veToken = new MockVotingEscrow("Nation3 Voting Escrow Token", "veNATION");
-        issuer = new PassportIssuer();
-
-        issuer.initialize(veToken, passport);
-        passport.transferControl(address(issuer));
+        Renderer renderer = new MockRenderer();
+        passport.setRenderer(renderer);
     }
 
-    function startIssuance() public {
-        issuer.setParams(MAX_PASSPORT_ISSUANCES, MIN_LOCKED_AMOUNT, REVOKE_UNDER_RATIO);
-        issuer.setStatement(statement);
-        issuer.setEnabled(true);
+    function testMetadata() public {
+        assertEq(passport.name(), "Passport");
+        assertEq(passport.symbol(), "PAS3");
     }
 
-    function getFilledAccount(uint256 key) public returns (address, uint256) {
-        address account = evm.addr(key);
-        veToken.setBalance(account, MIN_LOCKED_AMOUNT * 2);
-        return (account, key);
-    }
+    function testMintAndBurn() public {
+        address citiz3n = address(0xBABE);
 
-    function getSignatures(uint256 privateKey) public returns (uint8 v, bytes32 r, bytes32 s) {
-        bytes32 message = keccak256(
-            abi.encodePacked(
-                "\x19\x01",
-                issuer.DOMAIN_SEPARATOR(),
-                keccak256(
-                    abi.encode(
-                        keccak256(
-                            "Agreement(string statement)"
-                        ),
-                        keccak256(abi.encodePacked(statement))
-                    )
-                )
-            )
-        );
+        passport.mint(citiz3n);
 
-        (v, r, s) = hevm.sign(privateKey, message);
-    }
+        assertEq(passport.totalSupply(), 1);
+        assertEq(passport.balanceOf(citiz3n), 1);
+        assertEq(passport.ownerOf(0), citiz3n);
 
-    function testClaim() public {
-        startIssuance();
-        (address citiz3n, uint256 privateKey) = getFilledAccount(0xDAD);
-
-        evm.startPrank(citiz3n);
-        (uint8 v, bytes32 r, bytes32 s) = getSignatures(privateKey);
-
-        issuer.claim(v, r, s);
-
-        assertTrue(issuer.hasPassport(citiz3n));
-        assertEq(issuer.totalIssued(), 1);
-        assertEq(passport.ownerOf(issuer.passportId(citiz3n)), citiz3n);
-    }
-
-    function testSignedClaim() public {
-        startIssuance();
-        uint256 privateKey = 0xDAD;
-        address citiz3n = evm.addr(privateKey);
-        getFilledAccount(citiz3n);
-
-        string memory statement = "I agree to the terms outlined here";
-        string memory termsURL = "https://github.com/nation3/test";
-
-        bytes32 MESSAGE_TYPEHASH = keccak256("Message(string Statement,string Agreement)");
-
-        bytes memory encoded = abi.encode(MESSAGE_TYPEHASH, statement, termsURL);
-
-        bytes32 message = keccak256(
-            abi.encodePacked(
-                "\x19\x01",
-                issuer.domainSeparator(),
-                keccak256(
-                    abi.encode(
-                        keccak256(abi.encodePacked("Message(string statement,string Agreement)")),
-                        keccak256(abi.encodePacked(statement)),
-                        keccak256(abi.encodePacked(termsURL))
-                    )
-                )
-            )
-        );
-
-        evm.startPrank(citiz3n);
-        (uint8 v, bytes32 r, bytes32 s) = hevm.sign(privateKey, message);
-
-        address signer = ecrecover(message, v, r, s);
-
-        assertEq(signer, citiz3n);
-
-        issuer.signedClaim(v, r, s);
-        evm.stopPrank();
-    }
-
-    function testWithdraw() public {
-        startIssuance();
-        (address citiz3n, uint256 privateKey) = getFilledAccount(0xDAD);
-
-        evm.startPrank(citiz3n);
-        (uint8 v, bytes32 r, bytes32 s) = getSignatures(privateKey);
-
-        issuer.claim(v, r, s);
-        issuer.withdraw();
-
-        evm.stopPrank();
-
-        evm.expectRevert(sig.selector("PassportNotIssued()"));
-        issuer.passportId(citiz3n);
-
+        passport.burn(0);
+        assertEq(passport.totalSupply(), 0);
         assertEq(passport.balanceOf(citiz3n), 0);
-        assertFalse(issuer.hasPassport(citiz3n));
-        assertEq(issuer.totalIssued(), 1);
+        assertEq(passport.getNextId(), 1);
+        evm.expectRevert("NOT_MINTED");
+        passport.ownerOf(0);
     }
 
-    function testRevoke() public {
-        startIssuance();
-        (address citiz3n, uint256 privateKey) = getFilledAccount(0xDAD);
-        address guardian = address(0xDEAD);
+    function testTokenURI() public {
+        address citiz3n = address(0xBABE);
 
-        evm.prank(guardian);
-        evm.expectRevert(sig.selector("PassportNotIssued()"));
-        issuer.revoke(citiz3n);
+        passport.mint(citiz3n);
 
-        (uint8 v, bytes32 r, bytes32 s) = getSignatures(privateKey);
-        evm.prank(citiz3n);
-        issuer.claim(v, r, s);
-
-        // Citizen veToken balance go under threshold
-        veToken.setBalance(citiz3n, MIN_LOCKED_AMOUNT / 2);
-
-        // Any account can revoke
-        evm.prank(guardian);
-        issuer.revoke(citiz3n);
-
-        assertEq(passport.balanceOf(citiz3n), 0);
-        assertFalse(issuer.hasPassport(citiz3n));
-        assertEq(issuer.totalIssued(), 1);
+        string memory uri = passport.tokenURI(0);
+        assertEq(uri, "Passport num. 0 owned by 0xbabe since 0");
     }
 
-    function testCannotRevokeEligibleAccount() public {
-        startIssuance();
-        (address citiz3n, uint256 privateKey) = getFilledAccount(0xDAD);
-        address guardian = address(0xDEAD);
+    function testControllerIsAlwaysAllowedToTransfer() public {
+        address citiz3nA = address(0xBABE);
+        address citiz3nB = address(0xBEEF);
+        address newController = address(0xDAD);
 
-        evm.prank(citiz3n);
-        (uint8 v, bytes32 r, bytes32 s) = getSignatures(privateKey);
-        issuer.claim(v, r, s);
+        // Mint token under default contract owner
+        passport.mint(citiz3nA);
 
-        evm.prank(guardian);
-        evm.expectRevert(sig.selector("StillEligible()"));
-        issuer.revoke(citiz3n);
-    }
+        // Transfer contract ownership
+        passport.transferControl(newController);
+        evm.startPrank(newController);
 
-    /*
-    function testCannotClaimMoreThanOnePassport() public {
-        startIssuance();
-        (address citiz3n, uint256 privateKey) = getFilledAccount(0xBABE);
+        // New controller execute transfer without previous allowance
+        passport.transferFrom(citiz3nA, citiz3nB, 0);
 
-        evm.startPrank(citiz3n);
-        (uint8 v, bytes32 r, bytes32 s) = getSignatures(privateKey);
-        issuer.claim(v, r, s);
+        assertEq(passport.balanceOf(citiz3nA), 0);
+        assertEq(passport.balanceOf(citiz3nB), 1);
+        assertEq(passport.ownerOf(0), citiz3nB);
 
-        evm.expectRevert(sig.selector("PassportAlreadyIssued()"));
-        issuer.claim(v, r, s);
+        // Transfer back using safeTransfer this time
+        passport.safeTransferFrom(citiz3nB, citiz3nA, 0);
+
+        assertEq(passport.balanceOf(citiz3nA), 1);
+        assertEq(passport.balanceOf(citiz3nB), 0);
+        assertEq(passport.ownerOf(0), citiz3nA);
 
         evm.stopPrank();
     }
-    */
+
+    function testOnlyControllerCanMint() public {
+        address notOwner = address(0xBEEF);
+
+        evm.startPrank(notOwner);
+
+        evm.expectRevert(sig.selector("CallerIsNotAuthorized()"));
+        passport.mint(address(0xBABE));
+
+        evm.expectRevert(sig.selector("CallerIsNotAuthorized()"));
+        passport.safeMint(address(0xBABE));
+
+        evm.stopPrank();
+    }
+
+    function testOnlyControllerCanBurn() public {
+        address notOwner = address(0xBEEF);
+
+        passport.mint(address(0xBABE));
+
+        evm.prank(notOwner);
+        evm.expectRevert(sig.selector("CallerIsNotAuthorized()"));
+        passport.burn(0);
+    }
+
+    function testTokenRecovery() public {
+        MockERC20 token = new MockERC20("Token", "TKN", 100 * 1e18);
+        token.transfer(address(passport), 100 * 1e18);
+
+        // Valid recovery
+        passport.recoverTokens(token, 50 * 1e18, address(0xBABE));
+        assertEq(token.balanceOf(address(0xBABE)), 50 * 1e18);
+
+        // Exceeding amount should fail
+        evm.expectRevert("TRANSFER_FAILED");
+        passport.recoverTokens(token, 100 * 1e18, address(0xBABE));
+
+        // Only owner should be able to execute
+        evm.prank(address(0xBABE));
+        evm.expectRevert(sig.selector("CallerIsNotAuthorized()"));
+        passport.recoverTokens(token, 50 * 1e18, address(0xBABE));
+    }
 }

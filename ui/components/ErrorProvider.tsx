@@ -1,7 +1,7 @@
 import { createContext, useContext, useState } from 'react'
 import React from 'react'
 import { useNetwork } from 'wagmi'
-import networkToId from '../lib/networkToId'
+import networkToId from '../lib/network-id'
 
 const ErrorContext = createContext({} as any)
 

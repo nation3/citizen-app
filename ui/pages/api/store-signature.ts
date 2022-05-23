@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { provider } from '../../lib/connectors'
 import { NFTStorage, Blob } from 'nft.storage'
 import { ethers } from 'ethers'
-import networkToId from '../../lib/networkToId'
+import networkToId from '../../lib/network-id'
 import { nationPassportNFTIssuer } from '../../lib/config'
 
 const client = new NFTStorage({ token: process.env.NEXT_PUBLIC_NFTSTORAGE_KEY })

@@ -3,7 +3,9 @@ import { ethers } from 'ethers'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
+import { useContractWrite } from 'wagmi'
 import { veNationRequiredStake, nationToken } from '../lib/config'
+import { nationPassportNFTIssuer } from '../lib/config'
 import { useNationBalance } from '../lib/nation-token'
 import { NumberType, transformNumber } from '../lib/numbers'
 import { useClaimPassport } from '../lib/passport-nft'
@@ -17,6 +19,7 @@ import Confetti from '../components/Confetti'
 import { useErrorContext } from '../components/ErrorProvider'
 import Head from '../components/Head'
 import MainCard from '../components/MainCard'
+import PassportIssuer from '../abis/PassportIssuer.json'
 
 export default function Join() {
   const errorContext = useErrorContext()
@@ -30,10 +33,24 @@ export default function Join() {
     account?.address
   )
 
+  const [signatures, setSignatures] = useState({ r: '', s: '', v: 0 })
+  const { write: verify } = useContractWrite(
+    {
+      addressOrName: nationPassportNFTIssuer,
+      contractInterface: PassportIssuer.abi,
+    },
+    'verifySignature',
+    {
+      args: [signatures.v, signatures.r, signatures.s],
+    }
+  )
+
   const { isLoading: claimPassportLoading, write: claim } = useClaimPassport()
-  const { isLoading: signatureLoading, signMessage } = useSignAgreement({
+  const { isLoading: signatureLoading, signTypedData } = useSignAgreement({
     onSuccess: async (signature: string) => {
       console.log(ethers.utils.splitSignature(signature))
+      setSignatures(ethers.utils.splitSignature(signature))
+      verify()
       const tx = await claim({ args: [ethers.utils.splitSignature(signature)] })
       const { error } = await storeSignature(signature, tx.hash)
       if (error) {
@@ -44,7 +61,7 @@ export default function Join() {
 
   const signAndClaim = {
     isLoading: signatureLoading || claimPassportLoading,
-    write: signMessage,
+    write: signTypedData,
   }
 
   const router = useRouter()
