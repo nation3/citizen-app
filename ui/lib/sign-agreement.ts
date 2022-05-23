@@ -19,6 +19,8 @@ const value = {
   statement: `${process.env.NEXT_PUBLIC_AGREEMENT_STATEMENT} ${process.env.NEXT_PUBLIC_AGREEMENT_URL}`
 }
 
+console.log(value.statement)
+
 export function useSignAgreement({onSuccess}: {onSuccess: Function}) {
   return useSignTypedData({
     domain,

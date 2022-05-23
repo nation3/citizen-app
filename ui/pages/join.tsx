@@ -34,24 +34,22 @@ export default function Join() {
   )
 
   const [signatures, setSignatures] = useState({ r: '', s: '', v: 0 })
-  const { write: verify } = useContractWrite(
+  const { writeAsync: verify } = useContractWrite(
     {
       addressOrName: nationPassportNFTIssuer,
       contractInterface: PassportIssuer.abi,
     },
-    'verifySignature',
-    {
-      args: [signatures.v, signatures.r, signatures.s],
-    }
+    'verifySignature'
   )
 
-  const { isLoading: claimPassportLoading, write: claim } = useClaimPassport()
+  const { isLoading: claimPassportLoading, writeAsync: claim } =
+    useClaimPassport()
   const { isLoading: signatureLoading, signTypedData } = useSignAgreement({
     onSuccess: async (signature: string) => {
-      console.log(ethers.utils.splitSignature(signature))
-      setSignatures(ethers.utils.splitSignature(signature))
-      verify()
-      const tx = await claim({ args: [ethers.utils.splitSignature(signature)] })
+      const sigs = ethers.utils.splitSignature(signature)
+      // const tx2 = await verify({ args: [sigs.v, sigs.r, sigs.s] })
+      const tx = await claim({ args: [sigs.v, sigs.r, sigs.s] })
+      console.log(tx.hash)
       const { error } = await storeSignature(signature, tx.hash)
       if (error) {
         errorContext.addError([{ message: error }])

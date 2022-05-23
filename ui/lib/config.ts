@@ -30,8 +30,8 @@ if (process.env.NEXT_PUBLIC_CHAIN !== 'mainnet') {
     balancerPoolId: process.env.NEXT_PUBLIC_BALANCER_NATION_ETH_POOL_ID,
     balancerLPToken: devDeployments.balancerLPToken || zeroAddress,
     lpRewardsContract: devDeployments.lpRewardsContract || zeroAddress,
-    nationPassportNFT: devDeployments.passportNFT || zeroAddress,
-    nationPassportNFTIssuer: devDeployments.passportIssuer || zeroAddress,
+    nationPassportNFT: devDeployments.nationPassportNFT || zeroAddress,
+    nationPassportNFTIssuer: devDeployments.nationPassportNFTIssuer || zeroAddress,
     nationDropContracts: devDeployments.nationDropContracts || [zeroAddress],
   }
 }

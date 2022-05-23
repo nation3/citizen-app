@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react'
 import { NftProvider, useNft } from 'use-nft'
 import { nationPassportNFT, nationPassportNFTIssuer } from './config'
 import PassportIssuer from '../abis/PassportIssuer.json'
-import PassportNFT from '../abis/PassportNFT.json'
-import { useContractRead, useContractWrite } from './use-wagmi'
+import PassportNFT from '../abis/Passport.json'
+import { useContractRead, useWagmiContractWrite } from './use-wagmi'
 
 const nftContractParams = {
   addressOrName: nationPassportNFT,
@@ -16,27 +16,21 @@ const nftIssuerContractParams = {
 }
 
 export function useHasPassport(address: any) {
-  const [hasPassport, setHasPassport] = useState(false)
-  // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 3.
-  const { data, isLoading, error } = useContractRead(
-    nftContractParams,
-    'balanceOf',
+  return useContractRead(
+    nftIssuerContractParams,
+    'hasPassport',
     {
       args: [address],
       watch: true,
       enable: address,
-    }
+    },
+    false,
   )
-  useEffect(() => {
-    setHasPassport(data && data.gt(0))
-  }, [isLoading, data])
-  // TODO: Set to correct value
-  return { data: false, isLoading, error }
 }
 
 export function useClaimPassport() {
   // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 3.
-  return useContractWrite(
+  return useWagmiContractWrite(
     {
       addressOrName: nationPassportNFTIssuer,
       contractInterface: PassportIssuer.abi,
