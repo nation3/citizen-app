@@ -47,11 +47,9 @@ contract PassportTest is DSTestPlus {
     function testMintAndBurn() public {
         address citiz3n = address(0xBABE);
 
-        passport.mint(citiz3n);
-
-        assertEq(passport.totalSupply(), 1);
-        assertEq(passport.balanceOf(citiz3n), 1);
-        assertEq(passport.ownerOf(0), citiz3n);
+        evm.startPrank(citiz3n);
+        (uint8 v, bytes32 r, bytes32 s) = getSignatures(privateKey);
+        issuer.claim(v, r, s);
 
         passport.burn(0);
         assertEq(passport.totalSupply(), 0);
@@ -61,33 +59,9 @@ contract PassportTest is DSTestPlus {
         passport.ownerOf(0);
     }
 
-    function testTokenURI() public {
-        address citiz3n = address(0xBABE);
-
-        passport.mint(citiz3n);
-
-        string memory uri = passport.tokenURI(0);
-        assertEq(uri, "Passport num. 0 owned by 0xbabe since 0");
-    }
-
-    function testControllerIsAlwaysAllowedToTransfer() public {
-        address citiz3nA = address(0xBABE);
-        address citiz3nB = address(0xBEEF);
-        address newController = address(0xDAD);
-
-        // Mint token under default contract owner
-        passport.mint(citiz3nA);
-
-        // Transfer contract ownership
-        passport.transferControl(newController);
-        evm.startPrank(newController);
-
-        // New controller execute transfer without previous allowance
-        passport.transferFrom(citiz3nA, citiz3nB, 0);
-
-        assertEq(passport.balanceOf(citiz3nA), 0);
-        assertEq(passport.balanceOf(citiz3nB), 1);
-        assertEq(passport.ownerOf(0), citiz3nB);
+    function testWithdraw() public {
+        startIssuance();
+        (address citiz3n, uint256 privateKey) = getFilledAccount(0xDAD);
 
         // Transfer back using safeTransfer this time
         passport.safeTransferFrom(citiz3nB, citiz3nA, 0);
