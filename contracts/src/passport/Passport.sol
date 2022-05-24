@@ -45,7 +45,7 @@ contract Passport is ERC721, Controlled {
     //////////////////////////////////////////////////////////////*/
 
     /// @notice Returns total number of tokens in supply.
-    function totalSupply() public view virtual returns (uint256) {
+    function totalSupply() external view virtual returns (uint256) {
         return _supply;
     }
 
@@ -63,7 +63,7 @@ contract Passport is ERC721, Controlled {
 
     /// @notice Returns the authorized signer of a token.
     /// @param id Token to retrieve signer from.
-    function signerOf(uint256 id) public view virtual returns (address) {
+    function signerOf(uint256 id) external view virtual returns (address) {
         if (_ownerOf[id] == address(0)) revert NotMinted();
         return _signerOf[id];
     }
@@ -90,7 +90,7 @@ contract Passport is ERC721, Controlled {
     //////////////////////////////////////////////////////////////*/
 
     /// @notice Allows the owner of a passport to update the signer.
-    function setSigner(uint256 id, address signer) public virtual {
+    function setSigner(uint256 id, address signer) external virtual {
         if (_ownerOf[id] != msg.sender) revert NotAuthorized();
         if (signer == address(0)) revert InvalidSigner();
         _signerOf[id] = signer;
@@ -114,7 +114,7 @@ contract Passport is ERC721, Controlled {
         if (to == address(0)) revert TargetIsZeroAddress();
         if (
             msg.sender != from &&
-            isApprovedForAll[from][msg.sender] == false &&
+            !isApprovedForAll[from][msg.sender] &&
             msg.sender != getApproved[id] &&
             msg.sender != controller()
         ) revert CallerIsNotAuthorized();

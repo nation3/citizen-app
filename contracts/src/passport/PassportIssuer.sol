@@ -36,7 +36,8 @@ contract PassportIssuer is Initializable, Ownable {
     //////////////////////////////////////////////////////////////*/
 
     event Issue(address indexed account, uint256 indexed passportId);
-    event Withdraw(address indexed amount, uint256 indexed passportId);
+    event Withdraw(address indexed account, uint256 indexed passportId);
+    event UpdateRequirements(uint256 claimRequiredBalance, uint256 revokeUnderBalance);
 
     /*///////////////////////////////////////////////////////////////
                                  STORAGE
@@ -97,7 +98,7 @@ contract PassportIssuer is Initializable, Ownable {
         IVotingEscrow _veToken,
         Passport _passToken, 
         uint256 _maxIssuances
-    ) public initializer {
+    ) external initializer {
         veToken = _veToken;
         passToken = _passToken;
         maxIssuances = _maxIssuances;
@@ -109,7 +110,7 @@ contract PassportIssuer is Initializable, Ownable {
     //////////////////////////////////////////////////////////////*/
 
     /// @notice Returns the status of an account: (0) Not issued, (1) Issued, (2) Withdrawn.
-    function passportStatus(address account) public view virtual returns (uint8) {
+    function passportStatus(address account) external view virtual returns (uint8) {
         return _status[account];
     }
 
@@ -130,7 +131,7 @@ contract PassportIssuer is Initializable, Ownable {
         uint8 v,
         bytes32 r,
         bytes32 s
-    ) public virtual isEnabled {
+    ) external virtual isEnabled {
         if (totalIssued >= maxIssuances) revert IssuancesLimitReached();
         if (_status[msg.sender] > 0) revert PassportAlreadyIssued();
         if (veToken.balanceOf(msg.sender) < claimRequiredBalance) revert NotEligible();
@@ -140,12 +141,12 @@ contract PassportIssuer is Initializable, Ownable {
     }
 
     /// @notice Removes the passport of the `msg.sender`
-    function withdraw() public virtual {
+    function withdraw() external virtual {
         _withdraw(msg.sender);
     }
 
     /// @notice Removes the passport of a given account if it's not eligible anymore.
-    function revoke(address account) public virtual {
+    function revoke(address account) external virtual {
         if (veToken.balanceOf(account) >= revokeUnderBalance) revert NonRevocable();
         _withdraw(account);
     }
@@ -159,29 +160,31 @@ contract PassportIssuer is Initializable, Ownable {
     function setParams(
         uint256 _claimRequiredBalance,
         uint256 _revokeUnderBalance
-    ) public virtual onlyOwner {
+    ) external virtual onlyOwner {
         claimRequiredBalance = _claimRequiredBalance;
         revokeUnderBalance = _revokeUnderBalance;
+
+        emit UpdateRequirements(_claimRequiredBalance, _revokeUnderBalance);
     }
 
     /// @notice Updates issuance status.
     /// @dev Can be used by the owner to halt the issuance of new passports.
-    function setEnabled(bool status) public virtual onlyOwner {
+    function setEnabled(bool status) external virtual onlyOwner {
         enabled = status;
     }
 
     /// @notice Sets the statement of the issuance agreement.
-    function setStatement(string memory _statement) public virtual onlyOwner {
+    function setStatement(string memory _statement) external virtual onlyOwner {
         statement = _statement;
     }
 
     /// @notice Sets the terms URI of the issuance agreement.
-    function setTermsURI(string memory _termsURI) public virtual onlyOwner {
+    function setTermsURI(string memory _termsURI) external virtual onlyOwner {
         termsURI = _termsURI;
     }
 
     /// @notice Allows the owner to remove the passport of any account
-    function adminRevoke(address account) public virtual onlyOwner {
+    function adminRevoke(address account) external virtual onlyOwner {
         _withdraw(account);
     }
 
