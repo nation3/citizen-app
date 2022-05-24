@@ -10,7 +10,7 @@ import WalletConnectIcon from '../public/icons/connectors/walletconnect.svg'
 
 const chains = [chain.mainnet, chain.goerli, chain.localhost]
 
-export function provider({ chainId }: any) {
+export function provider() {
   if (process.env.NEXT_PUBLIC_CHAIN === 'local') {
     console.log('Provider: Connected to localhost provider')
     return new ethers.providers.JsonRpcProvider(
@@ -30,27 +30,24 @@ export function provider({ chainId }: any) {
   }
 }
 
-export function connectors({ chainId }: any) {
-  return [
-    new InjectedConnector({
-      chains,
-      options: { shimDisconnect: true },
-    }),
-    new WalletConnectConnector({
-      chains,
-      options: {
-        qrcode: true,
-      },
-    }),
-    new CoinbaseWalletConnector({
-      chains,
-      options: {
-        appName: 'Nation3 app',
-        chainId: chainId,
-      },
-    }),
-  ]
-}
+export const connectors = [
+  new InjectedConnector({
+    chains,
+    options: { shimDisconnect: true },
+  }),
+  new WalletConnectConnector({
+    chains,
+    options: {
+      qrcode: true,
+    },
+  }),
+  new CoinbaseWalletConnector({
+    chains,
+    options: {
+      appName: 'Nation3 app',
+    },
+  }),
+]
 
 export const connectorIcons = {
   Frame: FrameIcon,
