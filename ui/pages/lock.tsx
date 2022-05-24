@@ -117,7 +117,7 @@ export default function Lock() {
 
   useEffect(() => {
     if (hasLock && veNationLock) {
-      !lockAmount &&
+      !lockAmount && // @ts-expect-error
         setLockAmount(transformNumber(veNationLock[0], NumberType.string))
       const origTime = {
         value: veNationLock[1],
@@ -165,7 +165,7 @@ export default function Lock() {
     currentAmount: veNationLock && veNationLock[0],
     newAmount:
       lockAmount &&
-      veNationLock &&
+      veNationLock && // @ts-expect-error
       transformNumber(lockAmount, NumberType.bignumber).sub(veNationLock[0]),
     currentTime: veNationLock && veNationLock[1],
     newTime: lockTime?.value.div(1000),

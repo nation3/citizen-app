@@ -50,7 +50,6 @@ const contractParams = (contractId: any) => ({
 })
 
 export function useIsClaimed(contractId: any, index: any) {
-  // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 3.
   return useContractRead(contractParams(contractId), 'isClaimed', {
     args: [index],
     watch: true,
@@ -69,7 +68,6 @@ export function useClaimDrop({
   amount,
   proof,
 }: any) {
-  // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 3.
   return useContractWrite(contractParams(contractId), 'claim', {
     args: [index, account, amount, proof],
     overrides: {
