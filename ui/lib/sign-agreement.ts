@@ -31,7 +31,6 @@ export function useSignAgreement({ onSuccess }: { onSuccess: Function }) {
 }
 
 export async function storeSignature(signature: string, tx: string) {
-  console.log(signature)
   const response = await fetch('/api/store-signature', {
     method: 'POST',
     headers: {

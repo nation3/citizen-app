@@ -30,7 +30,6 @@ export function useLiquidityRewards({ nationPrice, poolValue, address }: any) {
       skip: !address,
     })
 
-  // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 3.
   const { data: userDeposit, isLoading: userDepositLoading } = useContractRead(
     contractParams,
     'userDeposit',
@@ -52,7 +51,6 @@ export function useLiquidityRewards({ nationPrice, poolValue, address }: any) {
       false
     )
 
-  // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 3.
   const { data: userBalance, isLoading: userBalanceLoading } = useContractRead(
     contractParams,
     'userBalance',
