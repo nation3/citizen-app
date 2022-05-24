@@ -16,8 +16,8 @@ contract PassportIssuerTest is DSTestPlus {
     MockVotingEscrow veToken;
 
     uint256 constant MAX_PASSPORT_ISSUANCES = 2;
-    uint256 constant MIN_LOCKED_AMOUNT = 10 * 1e18;
-    uint8 constant REVOKE_UNDER_RATIO = 80; // %
+    uint256 constant CLAIM_REQUIRED_BALANCE = 10 * 1e18;
+    uint256 constant REVOKE_UNDER_BALANCE = 75 * 1e17;
 
     string public statement = "I agree";
     string public termsURI = "42069.url";
@@ -27,12 +27,12 @@ contract PassportIssuerTest is DSTestPlus {
         veToken = new MockVotingEscrow("Nation3 Voting Escrow Token", "veNATION");
         issuer = new PassportIssuer();
 
-        issuer.initialize(veToken, passport);
+        issuer.initialize(veToken, passport, MAX_PASSPORT_ISSUANCES);
         passport.transferControl(address(issuer));
     }
 
     function startIssuance() public {
-        issuer.setParams(MAX_PASSPORT_ISSUANCES, MIN_LOCKED_AMOUNT, REVOKE_UNDER_RATIO);
+        issuer.setParams(CLAIM_REQUIRED_BALANCE, REVOKE_UNDER_BALANCE);
         issuer.setStatement(statement);
         issuer.setTermsURI(termsURI);
         issuer.setEnabled(true);
@@ -40,7 +40,7 @@ contract PassportIssuerTest is DSTestPlus {
 
 
     function getFilledAccount(uint256 key) public returns (address, uint256) {
-        return getAccount(key, MIN_LOCKED_AMOUNT * 2);
+        return getAccount(key, CLAIM_REQUIRED_BALANCE * 2);
     }
 
     function getEmptyAccount(uint256 key) public returns (address, uint256) {
@@ -90,7 +90,7 @@ contract PassportIssuerTest is DSTestPlus {
         (address citiz3n, uint256 privateKey) = getFilledAccount(0xDAD);
         claimPassportWith(citiz3n, privateKey);
 
-        assertTrue(issuer.hasPassport(citiz3n));
+        assertEq(issuer.passportStatus(citiz3n), 1);
         assertEq(issuer.totalIssued(), 1);
         assertEq(passport.ownerOf(issuer.passportId(citiz3n)), citiz3n);
     }
@@ -121,20 +121,6 @@ contract PassportIssuerTest is DSTestPlus {
         issuer.claim(v, r, s);
     }
 
-    function testCannotClaimMoreThanOnePassport() public {
-        startIssuance();
-        (address citiz3n, uint256 privateKey) = getFilledAccount(0xBABE);
-        (uint8 v, bytes32 r, bytes32 s) = getSignatures(privateKey);
-
-        evm.startPrank(citiz3n);
-        issuer.claim(v, r, s);
-
-        evm.expectRevert(sig.selector("PassportAlreadyIssued()"));
-        issuer.claim(v, r, s);
-
-        evm.stopPrank();
-    }
-
     function testWithdraw() public {
         startIssuance();
         (address citiz3n, uint256 privateKey) = getFilledAccount(0xDAD);
@@ -144,8 +130,28 @@ contract PassportIssuerTest is DSTestPlus {
         issuer.withdraw();
 
         assertEq(passport.balanceOf(citiz3n), 0);
-        assertFalse(issuer.hasPassport(citiz3n));
+        assertEq(issuer.passportStatus(citiz3n), 2);
         assertEq(issuer.totalIssued(), 1);
+    }
+
+    function testCannotClaimMoreThanOnePassport() public {
+        startIssuance();
+        (address citiz3n, uint256 privateKey) = getFilledAccount(0xBABE);
+        (uint8 v, bytes32 r, bytes32 s) = getSignatures(privateKey);
+
+        evm.startPrank(citiz3n);
+        issuer.claim(v, r, s);
+
+        // Try to claim with an already issued passport
+        evm.expectRevert(sig.selector("PassportAlreadyIssued()"));
+        issuer.claim(v, r, s);
+
+        // Try to claim after withdraw
+        issuer.withdraw();
+        evm.expectRevert(sig.selector("PassportAlreadyIssued()"));
+        issuer.claim(v, r, s);
+
+        evm.stopPrank();
     }
 
     function testRevoke() public {
@@ -156,14 +162,14 @@ contract PassportIssuerTest is DSTestPlus {
         claimPassportWith(citiz3n, privateKey);
 
         // Citizen veToken balance goes under revoke threshold
-        veToken.setBalance(citiz3n, MIN_LOCKED_AMOUNT / 2);
+        veToken.setBalance(citiz3n, CLAIM_REQUIRED_BALANCE / 2);
 
         // Any account can revoke
         evm.prank(guardian);
         issuer.revoke(citiz3n);
 
         assertEq(passport.balanceOf(citiz3n), 0);
-        assertFalse(issuer.hasPassport(citiz3n));
+        assertEq(issuer.passportStatus(citiz3n), 2);
         assertEq(issuer.totalIssued(), 1);
     }
 
@@ -183,7 +189,7 @@ contract PassportIssuerTest is DSTestPlus {
         claimPassportWith(citiz3n, privateKey);
 
         // Citizen veToken balance goes under claim requirements but over revoke threshold
-        veToken.setBalance(citiz3n, MIN_LOCKED_AMOUNT * 9 / 10);
+        veToken.setBalance(citiz3n, CLAIM_REQUIRED_BALANCE * 9 / 10);
 
         evm.prank(guardian);
         evm.expectRevert(sig.selector("NonRevocable()"));

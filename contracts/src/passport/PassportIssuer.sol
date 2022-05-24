@@ -49,15 +49,15 @@ contract PassportIssuer is Initializable, Ownable {
 
     /// @notice Status of the passport issance.
     bool public enabled;
-    /// @notice % of minLockedBalance under which a passport is revocable (base 100).
-    uint8 public revokeUnderRatio;
 
-    /// @notice Limit of passports to issue.
+    /// @notice Limit of passports to issue, cannot be change after initialization.
     uint256 public maxIssuances;
     /// @notice Number of passports issued.
     uint256 public totalIssued;
-    /// @notice Total Amount of tokens locked.
-    uint256 public minLockedBalance;
+    /// @notice Balance of veToken required to claim.
+    uint256 public claimRequiredBalance;
+    /// @notice Balance of veToken under which a passport is revocable.
+    uint256 public revokeUnderBalance;
 
     /// @notice Agreement statement to sign before claim.
     string public statement;
@@ -67,8 +67,11 @@ contract PassportIssuer is Initializable, Ownable {
     /// @dev Domain separator hash on initialization.
     bytes32 internal INITIAL_DOMAIN_SEPARATOR;
 
-    /// @dev Map if account has a passport issued.
-    mapping(address => uint8) internal _issued;
+    /// @dev Map the passport status of an account.
+    /// @dev 0 -> Not issued
+    /// @dev 1 -> Issued
+    /// @dev 2 -> Withdrawn
+    mapping(address => uint8) internal _status;
     /// @dev Passport id issued by account.
     mapping(address => uint256) internal _passportId;
 
@@ -86,10 +89,18 @@ contract PassportIssuer is Initializable, Ownable {
                                INITIALITION
     //////////////////////////////////////////////////////////////*/
 
-    /// @notice Sets locking token & passport token.
-    function initialize(IVotingEscrow _veToken, Passport _passToken) public initializer {
+    /// @notice Sets tokens and supply.
+    /// @param _veToken Lock token which balance is required to claim.
+    /// @param _passToken NFT token to mint.
+    /// @param _maxIssuances Maxi number of tokens that can be issued with this contract.
+    function initialize(
+        IVotingEscrow _veToken,
+        Passport _passToken, 
+        uint256 _maxIssuances
+    ) public initializer {
         veToken = _veToken;
         passToken = _passToken;
+        maxIssuances = _maxIssuances;
         INITIAL_DOMAIN_SEPARATOR = computeDomainSeparator();
     }
 
@@ -97,16 +108,16 @@ contract PassportIssuer is Initializable, Ownable {
                                   VIEWS
     //////////////////////////////////////////////////////////////*/
 
-    /// @notice Returns if account has passport or not.
-    function hasPassport(address account) public view virtual returns (bool) {
-        return _issued[account] > 0;
+    /// @notice Returns the status of an account: (0) Not issued, (1) Issued, (2) Withdrawn.
+    function passportStatus(address account) public view virtual returns (uint8) {
+        return _status[account];
     }
 
     /// @notice Returns passport id of a given account.
     /// @param account Holder account of a passport.
     /// @dev Revert if the account has no passport.
     function passportId(address account) public view virtual returns (uint256) {
-        if (!hasPassport(account)) revert PassportNotIssued();
+        if (_status[account] == 0) revert PassportNotIssued();
         return _passportId[account];
     }
 
@@ -121,8 +132,8 @@ contract PassportIssuer is Initializable, Ownable {
         bytes32 s
     ) public virtual isEnabled {
         if (totalIssued >= maxIssuances) revert IssuancesLimitReached();
-        if (hasPassport(msg.sender)) revert PassportAlreadyIssued();
-        if (veToken.balanceOf(msg.sender) < minLockedBalance) revert NotEligible();
+        if (_status[msg.sender] > 0) revert PassportAlreadyIssued();
+        if (veToken.balanceOf(msg.sender) < claimRequiredBalance) revert NotEligible();
         verifySignature(v, r, s);
 
         _issue(msg.sender);
@@ -135,7 +146,7 @@ contract PassportIssuer is Initializable, Ownable {
 
     /// @notice Removes the passport of a given account if it's not eligible anymore.
     function revoke(address account) public virtual {
-        if (veToken.balanceOf(account) >= (minLockedBalance * revokeUnderRatio) / 100) revert NonRevocable();
+        if (veToken.balanceOf(account) >= revokeUnderBalance) revert NonRevocable();
         _withdraw(account);
     }
 
@@ -143,17 +154,14 @@ contract PassportIssuer is Initializable, Ownable {
                               ADMIN ACTIONS
     //////////////////////////////////////////////////////////////*/
 
-    /// @notice Sets locking required amount & period for a supply of tokens.
-    /// @param supply Max number of tokens that can be issued.
-    /// @param _minLockedBalance Minimum amount of voting escrow tokens required for a new issuance.
+    /// @notice Set requirements to claim & revoke.
+    /// @param _claimRequiredBalance Minimum amount of voting escrow tokens required for a new issuance.
     function setParams(
-        uint256 supply,
-        uint256 _minLockedBalance,
-        uint8 _revokeUnderRatio
+        uint256 _claimRequiredBalance,
+        uint256 _revokeUnderBalance
     ) public virtual onlyOwner {
-        maxIssuances = supply;
-        minLockedBalance = _minLockedBalance;
-        revokeUnderRatio = _revokeUnderRatio;
+        claimRequiredBalance = _claimRequiredBalance;
+        revokeUnderBalance = _revokeUnderBalance;
     }
 
     /// @notice Updates issuance status.
@@ -172,6 +180,11 @@ contract PassportIssuer is Initializable, Ownable {
         termsURI = _termsURI;
     }
 
+    /// @notice Allows the owner to remove the passport of any account
+    function adminRevoke(address account) public virtual onlyOwner {
+        _withdraw(account);
+    }
+
     /// @notice Allows the owner to withdraw any ERC20 sent to the contract.
     /// @param token Token to withdraw.
     /// @param to Recipient address of the tokens.
@@ -180,11 +193,6 @@ contract PassportIssuer is Initializable, Ownable {
     ) external virtual onlyOwner returns (uint256 amount) {
         amount = token.balanceOf(address(this));
         token.safeTransfer(to, amount);
-    }
-
-    /// @notice Allows the owner to remove the passport of any account
-    function adminRevoke(address account) public virtual onlyOwner {
-        _withdraw(account);
     }
 
     /*///////////////////////////////////////////////////////////////
@@ -257,7 +265,7 @@ contract PassportIssuer is Initializable, Ownable {
             totalIssued++;
         }
 
-        _issued[recipient] = 1;
+        _status[recipient] = 1;
         _passportId[recipient] = tokenId;
 
         emit Issue(recipient, tokenId);
@@ -271,7 +279,7 @@ contract PassportIssuer is Initializable, Ownable {
         // Burn passport
         passToken.burn(tokenId);
 
-        delete _issued[account];
+        _status[account] = 2;
         delete _passportId[account];
 
         emit Withdraw(account, tokenId);
