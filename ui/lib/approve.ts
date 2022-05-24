@@ -3,7 +3,6 @@ import { useContractRead } from './use-wagmi'
 import { useContractWrite } from './use-wagmi'
 
 export function useTokenAllowance({ token, address, spender }: any) {
-  // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 3.
   return useContractRead(
     {
       addressOrName: token,
@@ -19,7 +18,6 @@ export function useTokenAllowance({ token, address, spender }: any) {
 }
 
 export function useTokenApproval({ amountNeeded, token, spender }: any) {
-  // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 3.
   return useContractWrite(
     {
       addressOrName: token,

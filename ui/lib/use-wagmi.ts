@@ -6,7 +6,7 @@ import {
   useNetwork as _useNetwork,
   useContract,
   useContractRead as _useContractRead,
-  useContractWrite as _wagmiUseContractWrite,
+  useContractWrite as _useWagmiContractWrite,
   useSigner,
   useSignTypedData as _useSignTypedData,
 } from 'wagmi'
@@ -39,7 +39,7 @@ export function useContractRead(
   config: any,
   method: any,
   argsAndOverrides: any,
-  throwOnRevert: any
+  throwOnRevert?: any
 ) {
   return useHandleError(
     _useContractRead(config, method, argsAndOverrides),
@@ -51,11 +51,11 @@ export function useContractWrite(
   config: any,
   method: any,
   argsAndOverrides: any,
-  throwOnRevert: any
+  throwOnRevert?: any
 ) {
   return useHandleError(
-    // @ts-expect-error ts-migrate(2554) FIXME: Expected 3 arguments, but got 4.
-    _useContractWrite(config, method, argsAndOverrides, throwOnRevert)
+    _useWagmiContractWrite(config, method, argsAndOverrides),
+    throwOnRevert
   )
 }
 
@@ -65,7 +65,7 @@ export function useWagmiContractWrite(
   argsAndOverrides: any
 ) {
   return useHandleError(
-    _wagmiUseContractWrite(config, method, argsAndOverrides)
+    _useWagmiContractWrite(config, method, argsAndOverrides)
   )
 }
 
@@ -83,7 +83,7 @@ function _useContractWrite(config: any, method: any, argsAndOverrides: any) {
     signerOrProvider: signerData,
   })
 
-  const write = useCallback(async () => {
+  const writeAsync = useCallback(async () => {
     try {
       setLoading(true)
       let data
@@ -101,7 +101,9 @@ function _useContractWrite(config: any, method: any, argsAndOverrides: any) {
         data = await contract[method]()
       }
       setData(data)
+      console.log(data)
       await data.wait()
+      console.log('blaaaa')
       setLoading(false)
       return data
     } catch (error) {
@@ -116,11 +118,9 @@ function _useContractWrite(config: any, method: any, argsAndOverrides: any) {
     }
   }, [config, argsAndOverrides])
   errorContext.addError([signerError])
-  return { data, error, isLoading, write }
+  return { data, error, isLoading, writeAsync }
 }
 
 export function useSignTypedData(params: any) {
-  return useHandleError(
-    _useSignTypedData(params)
-  )
+  return useHandleError(_useSignTypedData(params))
 }

@@ -53,8 +53,7 @@ const calculateVeNation = ({
   lockTime,
   max,
 }: any) => {
-  // @ts-expect-error ts-migrate(2365) FIXME: Operator '>' cannot be applied to types 'boolean' ... Remove this comment to see the full error message
-  if (!nationAmount > 0) return 0
+  if (!nationAmount) return 0
 
   const vestingStart = calculateVestingStart({
     nationAmount,
@@ -76,7 +75,6 @@ const calculateVestingStart = ({
 }
 
 export default function Lock() {
-  // @ts-expect-error ts-migrate(2554) FIXME: Expected 1 arguments, but got 0.
   const { data: account } = useAccount()
 
   const { data: nationBalance, isLoading: nationBalanceLoading } =
@@ -119,7 +117,8 @@ export default function Lock() {
 
   useEffect(() => {
     if (hasLock && veNationLock) {
-      !lockAmount && setLockAmount(ethers.utils.formatEther(veNationLock[0]))
+      !lockAmount &&
+        setLockAmount(transformNumber(veNationLock[0], NumberType.string))
       const origTime = {
         value: veNationLock[1],
         formatted: dateToReadable(bigNumberToDate(veNationLock[1])),
@@ -158,15 +157,16 @@ export default function Lock() {
   }, [hasLock, lockAmount, lockTime, veNationLock])
 
   const createLock = useVeNationCreateLock(
-    lockAmount && ethers.utils.parseEther(lockAmount),
+    lockAmount && transformNumber(lockAmount, NumberType.bignumber),
     lockTime.value.div(1000)
   )
+
   const increaseLock = useVeNationIncreaseLock({
     currentAmount: veNationLock && veNationLock[0],
     newAmount:
       lockAmount &&
       veNationLock &&
-      ethers.utils.parseEther(lockAmount).sub(veNationLock[0]),
+      transformNumber(lockAmount, NumberType.bignumber).sub(veNationLock[0]),
     currentTime: veNationLock && veNationLock[1],
     newTime: lockTime?.value.div(1000),
   })

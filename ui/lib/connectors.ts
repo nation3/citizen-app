@@ -12,7 +12,6 @@ import networkToId from './network-id'
 const chains = [chain.mainnet, chain.goerli, chain.hardhat]
 
 export function provider() {
-  console.log(chain.hardhat.id)
   if (process.env.NEXT_PUBLIC_CHAIN === 'local') {
     console.log('Provider: Connected to localhost provider')
     return new ethers.providers.JsonRpcProvider(

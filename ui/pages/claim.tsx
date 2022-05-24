@@ -15,7 +15,6 @@ import Head from '../components/Head'
 import MainCard from '../components/MainCard'
 
 export default function Claim() {
-  // @ts-expect-error
   const { data: account } = useAccount()
   const [canClaim, setCanClaim] = useState(false)
   const [contractId, setContractId] = useState(0)
@@ -27,6 +26,8 @@ export default function Claim() {
     contractId,
     proofIndex
   )
+
+  console.log(nationDropAmount)
 
   useEffect(() => {
     if (account && claimsFiles) {

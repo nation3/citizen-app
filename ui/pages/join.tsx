@@ -86,13 +86,13 @@ export default function Join() {
   useEffect(() => {
     if (!nationBalance || !veNationBalance) return
     setAction({
-      /*mint: veNationBalance.gte(
+      mint: veNationBalance.gte(
         transformNumber(
           veNationRequiredStake as unknown as number,
           NumberType.bignumber
         )
-      ),*/
-      mint: true,
+      ),
+      //mint: true,
       lockAndMint: nationBalance.value
         .mul(4)
         .gte(

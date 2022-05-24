@@ -61,24 +61,24 @@ export function useVeNationIncreaseLock({
   currentTime,
   newTime,
 }: any) {
-  const { isLoading: amountLoading, write: increaseLockAmount } =
+  const { isLoading: amountLoading, writeAsync: increaseLockAmount } =
     useVeNationIncreaseLockAmount(newAmount)
-  const { isLoading: timeLoading, write: increaseLockTime } =
+  const { isLoading: timeLoading, writeAsync: increaseLockTime } =
     useVeNationIncreaseLockTime(newTime)
-  const write = () => {
+  const writeAsync = async () => {
     if (newAmount != 0) {
-      increaseLockAmount(newAmount)
+      await increaseLockAmount()
     }
     if (newTime && newTime.gt(currentTime)) {
-      increaseLockTime(newTime)
+      console.log(newTime)
+      await increaseLockTime()
     }
   }
 
-  return { isLoading: amountLoading || timeLoading, write }
+  return { isLoading: amountLoading || timeLoading, writeAsync }
 }
 
 export function useVeNationIncreaseLockAmount(amount: any) {
-  // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 3.
   return useContractWrite(contractParams, 'increase_amount', {
     args: [amount],
     overrides: {
@@ -88,7 +88,6 @@ export function useVeNationIncreaseLockAmount(amount: any) {
 }
 
 export function useVeNationIncreaseLockTime(time: any) {
-  // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 3.
   return useContractWrite(contractParams, 'increase_unlock_time', {
     args: [time],
     overrides: {

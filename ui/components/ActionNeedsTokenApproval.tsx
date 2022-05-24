@@ -15,7 +15,6 @@ export default function ActionNeedsTokenApproval({
   action,
   preAction,
 }: any) {
-  // @ts-expect-error ts-migrate(2554) FIXME: Expected 1 arguments, but got 0.
   const { data: account } = useAccount()
   const {
     data: tokenAllowance,
@@ -38,7 +37,7 @@ export default function ActionNeedsTokenApproval({
   })
   return (
     <>
-      {!tokenAllowanceLoading && !approve?.loading ? (
+      {!tokenAllowanceLoading && !approve?.isLoading ? (
         tokenAllowance?.gte(weiAmountNeeded) ? (
           <ActionButton
             className={className}

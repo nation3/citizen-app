@@ -209,7 +209,6 @@ export function useClaimRewards() {
 }
 
 export function useDeposit(amount: any) {
-  // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 3.
   return useContractWrite(contractParams, 'deposit', {
     args: [amount],
     overrides: { gasLimit: 300000 },
@@ -217,9 +216,9 @@ export function useDeposit(amount: any) {
 }
 
 export function useWithdraw(amount: any) {
-  // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 3.
   return useContractWrite(contractParams, 'withdraw', {
     args: [amount],
+    overrides: { gasLimit: 300000 },
   })
 }
 

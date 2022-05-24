@@ -11,15 +11,16 @@ export default function ActionButton({
   postAction,
   approval,
 }: any) {
-  // @ts-expect-error ts-migrate(2554) FIXME: Expected 1 arguments, but got 0.
   const { data: account } = useAccount()
-  const { isLoading, write } = action
+  console.log(action)
+  const { isLoading, writeAsync } = action
   const onClick = async () => {
     preAction && preAction()
     /* Will have to change once wagmi's useContractWrite works again,
     since they return a TransactionResponse instead of already returning
     the mined transaction */
-    const tx = await write()
+    const tx = await writeAsync()
+    console.log(tx)
     postAction && tx.hash && postAction()
   }
 
@@ -30,7 +31,7 @@ export default function ActionButton({
     <>
       {!isPreferredNetwork ? (
         <button className={className} disabled>
-          {!activeChain?.id ? 'Not Connected' : 'Wrong Network'}
+          {!activeChain?.id ? 'Not connected' : 'Wrong network'}
         </button>
       ) : !account ? (
         <label htmlFor="web3-modal" className={`${className} modal-button`}>
