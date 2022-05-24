@@ -9,27 +9,33 @@
   },
   "dependencies": {
     "@heroicons/react": "^1.0.5",
+    "@types/jest": "^27.5.1",
+    "@types/node": "^17.0.34",
+    "@types/react-dom": "^18.0.4",
     "@uniswap/merkle-distributor": "^1.0.1",
     "daisyui": "^2.13.5",
     "ethers": "^5.6.0",
-    "next": "12.0.7",
+    "next": "12.1.5-canary.7",
     "react": "17.0.2",
     "react-animated-3d-card": "^1.0.2",
     "react-blockies": "^1.4.1",
     "react-confetti": "^6.0.1",
     "react-dom": "17.0.2",
     "react-use": "^17.3.2",
+    "typescript": "^4.6.4",
     "use-nft": "^0.10.2",
     "wagmi": "^0.3.0"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^3.2.0",
+    "@types/react": "^18.0.9",
     "autoprefixer": "^10.4.0",
     "eslint": "8.4.1",
     "eslint-config-next": "12.0.7",
     "eslint-config-prettier": "^8.3.0",
     "postcss": "^8.4.5",
     "prettier": "^2.5.1",
-    "tailwindcss": "^3.0.2"
+    "tailwindcss": "^3.0.2",
+    "ts-migrate": "^0.1.28"
   }
 }
