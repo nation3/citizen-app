@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import { useState } from 'react'
-import { transformNumber } from '../lib/numbers'
+import { useEnsName } from 'wagmi'
 import { usePassport } from '../lib/passport-nft'
 import { useAccount } from '../lib/use-wagmi'
 import Confetti from '../components/Confetti'
@@ -11,7 +11,9 @@ import AddToWallet from '../public/passport/wallet.svg'
 export default function Citizen() {
   const { data: account } = useAccount()
 
-  const { data } = usePassport(account?.address)
+  const { data: ensName } = useEnsName({ address: account?.address })
+
+  const { data: passportData } = usePassport(account?.address)
 
   const [confettiNumber, setConfettiNumber] = useState<Array<Number>>([])
 
@@ -26,7 +28,7 @@ export default function Citizen() {
       ))}
       <Head title="Welcome, citizen" />
       <div className="hero h-full">
-        {account ? (
+        {account && passportData?.id ? (
           <div className="flex flex-col items-center justify-center">
             <div
               style={{
@@ -35,14 +37,14 @@ export default function Citizen() {
             >
               <Passport
                 holder={
-                  account.ens?.name
-                    ? account.ens?.name
+                  ensName
+                    ? ensName
                     : `${account.address.substring(
                         0,
                         6
                       )}...${account.address.slice(-4)}`
                 }
-                id={transformNumber(data.id, 'number', 0)}
+                id={passportData.id}
                 onClick={() => addConfetti()}
               />
             </div>

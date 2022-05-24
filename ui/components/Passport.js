@@ -25,7 +25,7 @@ export default function Passport({ holder, id, onClick }) {
           <Image src={Logo}></Image>
           <div className="text-right">
             <label className="uppercase text-xs text-gray-400 block">
-              Citizen number
+              Passport number
             </label>
             <label className="text-md text-black justify-self-end block">
               {String(id).padStart(3, '0')}

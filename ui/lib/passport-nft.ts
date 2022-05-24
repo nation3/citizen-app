@@ -43,12 +43,13 @@ export function usePassport(address: any) {
     'passportId',
     { args: [address], enable: address }
   )
-  const { data: timestamp, isLoading: loadingTimestamp } = useContractRead(
+  console.log(`Passport ID ${id}`)
+  /*const { data: timestamp, isLoading: loadingTimestamp } = useContractRead(
     nftContractParams,
-    'getNextId',
+    'timestamps',
     { args: [id], enable: id }
   )
-  console.log(`Passport ID ${id}`)
   console.log(`Passport timestamp ${timestamp}`)
-  return { data: { id, timestamp }, isLoading: loadingID && loadingTimestamp }
+  return { data: { id, timestamp }, isLoading: loadingID && loadingTimestamp }*/
+  return { data: { id }, isLoading: loadingID }
 }

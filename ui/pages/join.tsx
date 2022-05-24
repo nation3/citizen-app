@@ -104,7 +104,7 @@ export default function Join() {
           </li>
           <li
             className={`step text-sm ${
-              action.mint && !hasPassport ? 'step-primary' : ''
+              (action.mint && !hasPassport) || hasPassport ? 'step-primary' : ''
             }`}
           >
             Claim passport

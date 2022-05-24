@@ -2,21 +2,21 @@ import { nationPassportNFTIssuer } from './config'
 import networkToId from './network-id'
 import { useSignTypedData } from './use-wagmi'
 
-const domain = {
+export const domain = {
   name: 'PassportIssuer',
   version: '1',
   chainId: networkToId(process.env.NEXT_PUBLIC_CHAIN),
   verifyingContract: nationPassportNFTIssuer,
 }
 
-const types = {
+export const types = {
   Agreement: [
     { name: 'statement', type: 'string' },
     { name: 'termsURL', type: 'string' },
   ],
 }
 
-const value = {
+export const value = {
   statement: `${process.env.NEXT_PUBLIC_AGREEMENT_STATEMENT}`,
   termsURL: `${process.env.NEXT_PUBLIC_AGREEMENT_URL}`,
 }
