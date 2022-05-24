@@ -24,7 +24,7 @@ contract PassportIssuer is Initializable, Ownable {
     //////////////////////////////////////////////////////////////*/
 
     error NotEligible();
-    error StillEligible();
+    error NonRevocable();
     error InvalidSignature();
     error PassportAlreadyIssued();
     error PassportNotIssued();
@@ -42,40 +42,41 @@ contract PassportIssuer is Initializable, Ownable {
                                  STORAGE
     //////////////////////////////////////////////////////////////*/
 
-    /// @notice The token used to lock
+    /// @notice The token used to lock.
     IVotingEscrow public veToken;
-    /// @notice The token that issues
+    /// @notice The token that issues.
     Passport public passToken;
 
-    /// @notice Status of the passport issance
+    /// @notice Status of the passport issance.
     bool public enabled;
-    /// @notice % of minLockedBalance under which a passport is revocable (base 100)
+    /// @notice % of minLockedBalance under which a passport is revocable (base 100).
     uint8 public revokeUnderRatio;
 
-    /// @notice Agreement statement to sign before claim
-    string public statement;
-    /// @notice Agreement terms URL to sign before claim
-    string public termsURL;
-    /// @notice Limit of passports to issue
+    /// @notice Limit of passports to issue.
     uint256 public maxIssuances;
-    /// @notice Number of passports issued
+    /// @notice Number of passports issued.
     uint256 public totalIssued;
-    /// @notice Total Amount of tokens locked
+    /// @notice Total Amount of tokens locked.
     uint256 public minLockedBalance;
 
-    /// @dev Domain separator hash on initialization
+    /// @notice Agreement statement to sign before claim.
+    string public statement;
+    /// @notice Agreement terms URL to sign before claim.
+    string public termsURI;
+
+    /// @dev Domain separator hash on initialization.
     bytes32 internal INITIAL_DOMAIN_SEPARATOR;
 
-    /// @dev Map if account has a passport issued
+    /// @dev Map if account has a passport issued.
     mapping(address => uint8) internal _issued;
-    /// @dev Passport id issued by account
+    /// @dev Passport id issued by account.
     mapping(address => uint256) internal _passportId;
 
     /*///////////////////////////////////////////////////////////////
                                 MODIFIERS
     //////////////////////////////////////////////////////////////*/
 
-    /// @notice Requires to be enabled.
+    /// @notice Requires to be enabled before performing function.
     modifier isEnabled() {
         if (!enabled) revert IssuanceIsDisabled();
         _;
@@ -96,17 +97,46 @@ contract PassportIssuer is Initializable, Ownable {
                                   VIEWS
     //////////////////////////////////////////////////////////////*/
 
-    /// @notice Returns account has passport or not
+    /// @notice Returns if account has passport or not.
     function hasPassport(address account) public view virtual returns (bool) {
-        return _issued[account] == 1;
+        return _issued[account] > 0;
     }
 
-    /// @notice Returns passport id of a given account
-    /// @param account Holder account of a passport
-    /// @dev Revert if the account has no passport
+    /// @notice Returns passport id of a given account.
+    /// @param account Holder account of a passport.
+    /// @dev Revert if the account has no passport.
     function passportId(address account) public view virtual returns (uint256) {
         if (!hasPassport(account)) revert PassportNotIssued();
         return _passportId[account];
+    }
+
+    /*///////////////////////////////////////////////////////////////
+                                USER ACTIONS
+    //////////////////////////////////////////////////////////////*/
+
+    /// @notice Issues a new passport token with signature validation.
+    function claim(
+        uint8 v,
+        bytes32 r,
+        bytes32 s
+    ) public virtual isEnabled {
+        if (totalIssued >= maxIssuances) revert IssuancesLimitReached();
+        if (hasPassport(msg.sender)) revert PassportAlreadyIssued();
+        if (veToken.balanceOf(msg.sender) < minLockedBalance) revert NotEligible();
+        verifySignature(v, r, s);
+
+        _issue(msg.sender);
+    }
+
+    /// @notice Removes the passport of the `msg.sender`
+    function withdraw() public virtual {
+        _withdraw(msg.sender);
+    }
+
+    /// @notice Removes the passport of a given account if it's not eligible anymore.
+    function revoke(address account) public virtual {
+        if (veToken.balanceOf(account) >= (minLockedBalance * revokeUnderRatio) / 100) revert NonRevocable();
+        _withdraw(account);
     }
 
     /*///////////////////////////////////////////////////////////////
@@ -132,18 +162,22 @@ contract PassportIssuer is Initializable, Ownable {
         enabled = status;
     }
 
+    /// @notice Sets the statement of the issuance agreement.
     function setStatement(string memory _statement) public virtual onlyOwner {
         statement = _statement;
     }
 
-    function setTermsURL(string memory _termsURL) public virtual onlyOwner {
-        termsURL = _termsURL;
+    /// @notice Sets the terms URI of the issuance agreement.
+    function setTermsURI(string memory _termsURI) public virtual onlyOwner {
+        termsURI = _termsURI;
     }
 
     /// @notice Allows the owner to withdraw any ERC20 sent to the contract.
     /// @param token Token to withdraw.
     /// @param to Recipient address of the tokens.
-    function recoverTokens(ERC20 token, address to) external virtual onlyOwner returns (uint256 amount) {
+    function recoverTokens(
+        ERC20 token, address to
+    ) external virtual onlyOwner returns (uint256 amount) {
         amount = token.balanceOf(address(this));
         token.safeTransfer(to, amount);
     }
@@ -154,61 +188,33 @@ contract PassportIssuer is Initializable, Ownable {
     }
 
     /*///////////////////////////////////////////////////////////////
-                                USER ACTIONS
-    //////////////////////////////////////////////////////////////*/
-
-    /// @notice Issues a new passport token with signature validation
-    function claim(
-        uint8 v,
-        bytes32 r,
-        bytes32 s
-    ) public virtual isEnabled {
-        if (totalIssued >= maxIssuances) revert IssuancesLimitReached();
-        if (hasPassport(msg.sender)) revert PassportAlreadyIssued();
-        if (veToken.balanceOf(msg.sender) < minLockedBalance) revert NotEligible();
-        verifySignature(v, r, s);
-
-        _issue(msg.sender);
-    }
-
-    /// @notice Removes the passport of the `msg.sender`
-    function withdraw() public virtual {
-        _withdraw(msg.sender);
-    }
-
-    /// @notice Removes the passport of a given account if it's not eligible anymore
-    function revoke(address account) public virtual {
-        if (veToken.balanceOf(account) >= (minLockedBalance * revokeUnderRatio) / 100) revert StillEligible();
-        _withdraw(account);
-    }
-
-    /*///////////////////////////////////////////////////////////////
                              EIP-712 LOGIC
     //////////////////////////////////////////////////////////////*/
 
-    /// @notice Returns the domain separator hash for
+    /// @notice Returns the domain separator hash for EIP-712 signature.
     function DOMAIN_SEPARATOR() public view virtual returns (bytes32) {
         return INITIAL_DOMAIN_SEPARATOR != "" ? INITIAL_DOMAIN_SEPARATOR : computeDomainSeparator();
     }
 
+    /// @notice Verify if sender is signer of contract agreement following EIP-712.
+    /// @dev Reverts on signature missmatch.
     function verifySignature(
         uint8 v,
         bytes32 r,
         bytes32 s
     ) public virtual {
-        // Unchecked because the only math done is incrementing
-        // the owner's nonce which cannot realistically overflow.
+        // Unchecked because no math here
         unchecked {
-            address recoveredAddress = ecrecover(
+            address signer = ecrecover(
                 keccak256(
                     abi.encodePacked(
                         "\x19\x01",
                         DOMAIN_SEPARATOR(),
                         keccak256(
                             abi.encode(
-                                keccak256("Agreement(string statement,string termsURL)"),
+                                keccak256("Agreement(string statement,string termsURI)"),
                                 keccak256(abi.encodePacked(statement)),
-                                keccak256(abi.encodePacked(termsURL))
+                                keccak256(abi.encodePacked(termsURI))
                             )
                         )
                     )
@@ -218,10 +224,11 @@ contract PassportIssuer is Initializable, Ownable {
                 s
             );
 
-            require(recoveredAddress != address(0) && recoveredAddress == msg.sender, "INVALID_SIGNER");
+            if (signer != msg.sender) revert InvalidSignature();
         }
     }
 
+    // @dev Compute the EIP-712 domain's separator of the contract.
     function computeDomainSeparator() internal view virtual returns (bytes32) {
         return
             keccak256(
@@ -239,6 +246,8 @@ contract PassportIssuer is Initializable, Ownable {
                              INTERNAL LOGIC
     //////////////////////////////////////////////////////////////*/
 
+    /// @dev Mints a new passport token for the recipient.
+    /// @param recipient Address to issue the passport to.
     function _issue(address recipient) internal virtual {
         // Mint a new passport to the recipient account
         uint256 tokenId = passToken.safeMint(recipient);
