@@ -84,7 +84,6 @@ const navigation = [
 export default function Layout({ children }: any) {
   const router = useRouter()
   const { connectors, connect, error: connectError } = useConnect()
-  // @ts-expect-error
   const { data: account } = useAccount()
   const { data: hasPassport, isLoading: hasPassportLoading } = useHasPassport(
     account?.address

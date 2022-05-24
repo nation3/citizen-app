@@ -10,7 +10,6 @@ const contractParams = {
 }
 
 export function useVeNationBalance(address: any) {
-  // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 3.
   return useContractRead(contractParams, 'balanceOf(address)', {
     args: [address],
     watch: true,
@@ -35,7 +34,6 @@ let gasLimits = {
 }
 
 export function useVeNationLock(address: any) {
-  // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 3.
   return useContractRead(contractParams, 'locked', {
     args: [address],
     watch: true,
@@ -47,7 +45,6 @@ export function useVeNationLock(address: any) {
 }
 
 export function useVeNationCreateLock(amount: any, time: any) {
-  // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 3.
   return useContractWrite(contractParams, 'create_lock', {
     args: [amount, time],
     overrides: {
@@ -97,7 +94,6 @@ export function useVeNationIncreaseLockTime(time: any) {
 }
 
 export function useVeNationWithdrawLock() {
-  // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 3.
   return useContractWrite(contractParams, 'withdraw', {
     overrides: {
       gasLimit: gasLimits.withdraw,
@@ -106,6 +102,5 @@ export function useVeNationWithdrawLock() {
 }
 
 export function useVeNationSupply() {
-  // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 2.
-  return useContractRead(contractParams, 'totalSupply()')
+  return useContractRead(contractParams, 'totalSupply()', {})
 }
