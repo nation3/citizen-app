@@ -18,43 +18,63 @@ contract Passport is ERC721, Controlled {
                                ERRORS
     //////////////////////////////////////////////////////////////*/
 
+    error NotMinted();
+    error NotAuthorized();
     error InvalidFrom();
+    error InvalidSigner();
 
     /*///////////////////////////////////////////////////////////////
                             STORAGE
     //////////////////////////////////////////////////////////////*/
 
-    /// @dev Tracks the number of tokens minted & not burned
+    // @notice On-chain metadata renderer.
+    Renderer public renderer;
+
+    /// @dev Tracks the number of tokens minted & not burned.
     uint256 internal _supply;
-    /// @dev Tracks the next id to mint
+    /// @dev Tracks the next id to mint.
     uint256 internal _idTracker;
 
-    // @dev Metadata on-chain renderer
-    Renderer public renderer;
-    // @dev Mint timestamp of each token id
-    mapping(uint256 => uint256) public timestamps;
+    // @dev Timestamp of each token mint.
+    mapping(uint256 => uint256) internal _timestampOf;
+    // @dev Authorized signer of each token, it can be different from the owner.
+    mapping(uint256 => address) internal _signerOf;
 
     /*///////////////////////////////////////////////////////////////
                             VIEWS
     //////////////////////////////////////////////////////////////*/
 
-    /// @notice Returns total number of tokens in supply
+    /// @notice Returns total number of tokens in supply.
     function totalSupply() public view virtual returns (uint256) {
         return _supply;
     }
 
-    /// @notice Gets next id to mint
+    /// @notice Gets next id to mint.
     function getNextId() external view virtual returns (uint256) {
         return _idTracker;
     }
 
-    /// @notice Get encoded metadata from renderer
-    /// @param id Token to retrieve metadata from
+    /// @notice Returns the timestamp of the mint of a token.
+    /// @param id Token to retrieve timestamp from.
+    function timestampOf(uint256 id) public view virtual returns (uint256) {
+        if (_ownerOf[id] == address(0)) revert NotMinted();
+        return _timestampOf[id];
+    }
+
+    /// @notice Returns the authorized signer of a token.
+    /// @param id Token to retrieve signer from.
+    function signerOf(uint256 id) public view virtual returns (address) {
+        if (_ownerOf[id] == address(0)) revert NotMinted();
+        return _signerOf[id];
+    }
+
+    /// @notice Get encoded metadata from renderer.
+    /// @param id Token to retrieve metadata from.
     function tokenURI(uint256 id) public view override returns (string memory) {
         return renderer.render(
             id,
             ownerOf(id),
-            timestamps[id]
+            timestampOf(id)
         );
     }
 
@@ -65,7 +85,17 @@ contract Passport is ERC721, Controlled {
     /// @dev Sets name & symbol.
     constructor(string memory _name, string memory _symbol) ERC721(_name, _symbol) {}
 
-    
+    /*///////////////////////////////////////////////////////////////
+                       USER ACTIONS
+    //////////////////////////////////////////////////////////////*/
+
+    /// @notice Allows the owner of a passport to update the signer.
+    function setSigner(uint256 id, address signer) public virtual {
+        if (_ownerOf[id] != msg.sender) revert NotAuthorized();
+        if (signer == address(0)) revert InvalidSigner();
+        _signerOf[id] = signer;
+    }
+
     /*///////////////////////////////////////////////////////////////
                        CONTROLLED ACTIONS
     //////////////////////////////////////////////////////////////*/
@@ -135,6 +165,8 @@ contract Passport is ERC721, Controlled {
 
         // Realistically won't overflow;
         unchecked {
+            _timestampOf[tokenId] = block.timestamp;
+            _signerOf[tokenId] = to;
             _idTracker++;
             _supply++;
         }
@@ -147,8 +179,13 @@ contract Passport is ERC721, Controlled {
         _safeMint(to, _idTracker);
         tokenId = _idTracker;
 
-        _idTracker++;
-        _supply++;
+        // Realistically won't overflow;
+        unchecked {
+            _timestampOf[tokenId] = block.timestamp;
+            _signerOf[tokenId] = to;
+            _idTracker++;
+            _supply++;
+        }
     }
 
     /// @notice Burns the specified token.
@@ -158,12 +195,14 @@ contract Passport is ERC721, Controlled {
 
         // Would have reverted before if the token wasnt minted
         unchecked {
+            delete _timestampOf[id];
+            delete _signerOf[id];
             _supply--;
         }
     }
 
     /*///////////////////////////////////////////////////////////////
-                       OWNER ACTIONS
+                       ADMIN ACTIONS
     //////////////////////////////////////////////////////////////*/
 
    /// @notice Allow the owner to update the renderer contract

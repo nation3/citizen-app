@@ -42,30 +42,42 @@ contract PassportTest is DSTestPlus {
         assertEq(passport.symbol(), "PAS3");
     }
 
-    function testMintAndBurn() public {
+    function testMint() public {
         address citiz3n = address(0xBABE);
 
+        evm.warp(314);
         passport.mint(citiz3n);
 
         assertEq(passport.totalSupply(), 1);
         assertEq(passport.balanceOf(citiz3n), 1);
         assertEq(passport.ownerOf(0), citiz3n);
+        assertEq(passport.timestampOf(0), 314);
+        assertEq(passport.signerOf(0), citiz3n);
+    }
+
+    function testBurn() public {
+        address citiz3n = address(0xBABE);
+        passport.mint(citiz3n);
 
         passport.burn(0);
+
         assertEq(passport.totalSupply(), 0);
         assertEq(passport.balanceOf(citiz3n), 0);
         assertEq(passport.getNextId(), 1);
         evm.expectRevert("NOT_MINTED");
         passport.ownerOf(0);
+        evm.expectRevert(sig.selector("NotMinted()"));
+        passport.signerOf(0);
     }
 
     function testTokenURI() public {
         address citiz3n = address(0xBABE);
-
+        evm.warp(314);
         passport.mint(citiz3n);
 
         string memory uri = passport.tokenURI(0);
-        assertEq(uri, "Passport num. 0 owned by 0xbabe since 0");
+
+        assertEq(uri, "Passport num. 0 owned by 0xbabe since 314");
     }
 
     function testControllerIsAlwaysAllowedToTransfer() public {
@@ -137,5 +149,20 @@ contract PassportTest is DSTestPlus {
         evm.prank(address(0xBABE));
         evm.expectRevert(sig.selector("CallerIsNotAuthorized()"));
         passport.recoverTokens(token, 50 * 1e18, address(0xBABE));
+    }
+
+    function testSetSigner() public {
+        address account = address(0xBEEF);
+
+        passport.mint(account);
+        assertEq(passport.signerOf(0), account);
+
+        evm.expectRevert(sig.selector("NotAuthorized()"));
+        passport.setSigner(0, address(0xDAD));
+
+        evm.prank(account);
+        passport.setSigner(0, address(0xDAD));
+
+        assertEq(passport.signerOf(0), address(0xDAD));
     }
 }
