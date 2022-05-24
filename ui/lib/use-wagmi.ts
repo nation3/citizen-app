@@ -101,9 +101,7 @@ function _useContractWrite(config: any, method: any, argsAndOverrides: any) {
         data = await contract[method]()
       }
       setData(data)
-      console.log(data)
       await data.wait()
-      console.log('blaaaa')
       setLoading(false)
       return data
     } catch (error) {

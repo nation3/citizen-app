@@ -1,9 +1,7 @@
-import { useState, useEffect } from 'react'
-import { NftProvider, useNft } from 'use-nft'
-import { nationPassportNFT, nationPassportNFTIssuer } from './config'
-import PassportIssuer from '../abis/PassportIssuer.json'
 import PassportNFT from '../abis/Passport.json'
-import { useContractRead, useWagmiContractWrite } from './use-wagmi'
+import PassportIssuer from '../abis/PassportIssuer.json'
+import { nationPassportNFT, nationPassportNFTIssuer } from './config'
+import { useContractRead, useContractWrite } from './use-wagmi'
 
 const nftContractParams = {
   addressOrName: nationPassportNFT,
@@ -24,30 +22,33 @@ export function useHasPassport(address: any) {
       watch: true,
       enable: address,
     },
-    false,
+    false
   )
 }
 
 export function useClaimPassport() {
-  // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 3.
-  return useWagmiContractWrite(
+  return useContractWrite(
     {
       addressOrName: nationPassportNFTIssuer,
       contractInterface: PassportIssuer.abi,
     },
-    'claim'
+    'claim',
+    {}
   )
 }
 
 export function usePassport(address: any) {
-  // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 3.
-  const { data: id, isLoading } = useContractRead(
+  const { data: id, isLoading: loadingID } = useContractRead(
     nftIssuerContractParams,
     'passportId',
-    { args: [address], skip: !address }
+    { args: [address], enable: address }
+  )
+  const { data: timestamp, isLoading: loadingTimestamp } = useContractRead(
+    nftContractParams,
+    'getNextId',
+    { args: [id], enable: id }
   )
   console.log(`Passport ID ${id}`)
-  //const { nft, loading } = useNft(nationPassportNFT, id?.toString())
-  //console.log(nft)
-  return { data: { id }, isLoading }
+  console.log(`Passport timestamp ${timestamp}`)
+  return { data: { id, timestamp }, isLoading: loadingID && loadingTimestamp }
 }

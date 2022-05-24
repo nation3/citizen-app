@@ -1,13 +1,19 @@
+import {
+  UserAddIcon,
+  CurrencyDollarIcon,
+  LockClosedIcon,
+  PlusIcon,
+} from '@heroicons/react/outline'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 import { nationToken, veNationRewardsMultiplier } from '../lib/config'
 import GradientLink from '../components/GradientLink'
 import Head from '../components/Head'
+import HomeCard from '../components/HomeCard'
 import flag from '../public/flag.svg'
 
 export default function Index() {
-
   return (
     <>
       <Head title="Home" />
@@ -37,66 +43,73 @@ export default function Index() {
 
           <p>and then...</p>
 
-          <div className="flex flex-col 2xl:flex-row mt-2 gap-8">
-            <div className="card w-80 md:w-96 bg-base-100 shadow-md">
-              <div className="card-body items-stretch items-center">
-                <h2 className="card-title text-center font-medium">
-                  Get $veNATION
-                </h2>
+          <div className="grid xl:grid-cols-2 mt-2 gap-8">
+            <HomeCard
+              href="/lock"
+              icon={
+                <LockClosedIcon className="h-5 w-5 absolute right-8 text-n3blue" />
+              }
+              title="Get $veNATION"
+              linkText="Get $veNATION"
+            >
+              <p>
+                Lock your $NATION to obtain $veNATION and help govern the
+                Nation3 DAO. $veNATION will be required to mint the upcoming
+                passport NFTs to become a citizen.
+              </p>
+            </HomeCard>
 
-                <p>
-                  Lock your $NATION to obtain $veNATION and help govern the
-                  Nation3 DAO. $veNATION will be required to mint the upcoming
-                  passport NFTs to become a citizen.
-                </p>
+            <HomeCard
+              href="/join"
+              icon={
+                <UserAddIcon className="h-5 w-5 absolute right-8 text-n3blue" />
+              }
+              title="Become a citizen"
+              linkText="Claim a passport"
+            >
+              <p>
+                Once you have $veNATION, you can claim a passport. Only 420
+                Genesis passports will be launched in the beginning.
+              </p>
+            </HomeCard>
 
-                <GradientLink text="Get $veNATION" href="/lock"></GradientLink>
-              </div>
-            </div>
+            <HomeCard
+              href="/liquidity"
+              icon={
+                <CurrencyDollarIcon className="h-5 w-5 absolute right-8 text-n3blue" />
+              }
+              title="Earn LP rewards"
+              linkText="Provide liquidity"
+            >
+              <p>
+                Provide liquidity in the{' '}
+                <a
+                  href="https://app.balancer.fi/#/pool/0x0bf37157d30dfe6f56757dcadff01aed83b08cd600020000000000000000019a"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-n3blue"
+                >
+                  80% $NATION / 20% $ETH Balancer pool
+                </a>{' '}
+                and earn liquidity rewards. Boost your APY by $
+                {veNationRewardsMultiplier}x by having $veNATION.
+              </p>
+            </HomeCard>
 
-            <div className="card w-80 md:w-96 bg-base-100 shadow-md">
-              <div className="card-body items-stretch items-center">
-                <h2 className="card-title text-center font-medium">
-                  Earn LP rewards
-                </h2>
-
-                <p>
-                  Provide liquidity in the{' '}
-                  <a
-                    href="https://app.balancer.fi/#/pool/0x0bf37157d30dfe6f56757dcadff01aed83b08cd600020000000000000000019a"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-n3blue"
-                  >
-                    80% $NATION / 20% $ETH Balancer pool
-                  </a>{' '}
-                  and earn liquidity rewards. Boost your APY by $
-                  {veNationRewardsMultiplier}x by having $veNATION.
-                </p>
-                <GradientLink
-                  text="Provide liquidity"
-                  href="/liquidity"
-                ></GradientLink>
-              </div>
-            </div>
-
-            <div className="card w-80 md:w-96 bg-base-100 shadow-md">
-              <div className="card-body items-stretch items-center">
-                <h2 className="card-title text-center font-medium">
-                  Buy more $NATION
-                </h2>
-
-                <p>
-                  You can buy more $NATION and participate in liquidity rewards.
-                  You can also lock your $NATION to get $veNATION to boost your
-                  rewards, get a passport NFT, and govern the DAO.
-                </p>
-                <GradientLink
-                  text="Buy $NATION"
-                  href={`https://app.balancer.fi/#/trade/ether/${nationToken}`}
-                ></GradientLink>
-              </div>
-            </div>
+            <HomeCard
+              href={`https://app.balancer.fi/#/trade/ether/${nationToken}`}
+              icon={
+                <PlusIcon className="h-5 w-5 absolute right-8 text-n3blue" />
+              }
+              title="Buy more $NATION"
+              linkText="Buy $NATION"
+            >
+              <p>
+                You can buy more $NATION and participate in liquidity rewards.
+                You can also lock your $NATION to get $veNATION to boost your
+                rewards, get a passport NFT, and govern the DAO.
+              </p>
+            </HomeCard>
           </div>
         </div>
       </div>

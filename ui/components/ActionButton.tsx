@@ -12,15 +12,10 @@ export default function ActionButton({
   approval,
 }: any) {
   const { data: account } = useAccount()
-  console.log(action)
   const { isLoading, writeAsync } = action
   const onClick = async () => {
     preAction && preAction()
-    /* Will have to change once wagmi's useContractWrite works again,
-    since they return a TransactionResponse instead of already returning
-    the mined transaction */
     const tx = await writeAsync()
-    console.log(tx)
     postAction && tx.hash && postAction()
   }
 

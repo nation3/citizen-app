@@ -3,9 +3,7 @@ import { ethers } from 'ethers'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { useContractWrite } from 'wagmi'
 import { veNationRequiredStake, nationToken } from '../lib/config'
-import { nationPassportNFTIssuer } from '../lib/config'
 import { useNationBalance } from '../lib/nation-token'
 import { NumberType, transformNumber } from '../lib/numbers'
 import { useClaimPassport } from '../lib/passport-nft'
@@ -19,7 +17,6 @@ import Confetti from '../components/Confetti'
 import { useErrorContext } from '../components/ErrorProvider'
 import Head from '../components/Head'
 import MainCard from '../components/MainCard'
-import PassportIssuer from '../abis/PassportIssuer.json'
 
 export default function Join() {
   const errorContext = useErrorContext()
@@ -33,25 +30,12 @@ export default function Join() {
     account?.address
   )
 
-  const [signatures, setSignatures] = useState({ r: '', s: '', v: 0 })
-  const { writeAsync: verify } = useContractWrite(
-    {
-      addressOrName: nationPassportNFTIssuer,
-      contractInterface: PassportIssuer.abi,
-    },
-    'verifySignature'
-  )
-
   const { isLoading: claimPassportLoading, writeAsync: claim } =
     useClaimPassport()
   const { isLoading: signatureLoading, signTypedData } = useSignAgreement({
     onSuccess: async (signature: string) => {
       const sigs = ethers.utils.splitSignature(signature)
-      const tx2 = await verify({ args: [sigs.v, sigs.r, sigs.s] })
-      console.log(tx2)
-      return
       const tx = await claim({ args: [sigs.v, sigs.r, sigs.s] })
-      console.log(tx.hash)
       const { error } = await storeSignature(signature, tx.hash)
       if (error) {
         errorContext.addError([{ message: error }])
@@ -61,7 +45,7 @@ export default function Join() {
 
   const signAndClaim = {
     isLoading: signatureLoading || claimPassportLoading,
-    write: signTypedData,
+    writeAsync: signTypedData,
   }
 
   const router = useRouter()
