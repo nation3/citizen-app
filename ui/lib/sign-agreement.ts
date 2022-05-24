@@ -12,7 +12,7 @@ export const domain = {
 export const types = {
   Agreement: [
     { name: 'statement', type: 'string' },
-    { name: 'termsURL', type: 'string' },
+    { name: 'termsURI', type: 'string' },
   ],
 }
 
