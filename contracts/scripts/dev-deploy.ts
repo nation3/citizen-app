@@ -129,7 +129,8 @@ const deployPassport = async (governanceToken: Contract) => {
 
     await passportIssuer.connect(wallet).initialize(governanceToken.address, passportToken.address);
     await passportIssuer.connect(wallet).setParams(420, 0, 0);
-    await passportIssuer.connect(wallet).setStatement("I agree");
+    await passportIssuer.connect(wallet).setStatement("By claiming a Nation3 passport I agree to the terms defined in the following URL");
+    await passportIssuer.connect(wallet).setTermsURL("https://bafkreiadlf3apu3u7blxw7t2yxi7oyumeuzhoasq7gqmcbaaycq342xq74.ipfs.dweb.link");
     await passportIssuer.connect(wallet).setEnabled(true);
 
     return { "passportToken": passportToken, "passportIssuer": passportIssuer }

@@ -180,7 +180,7 @@ export default function Lock() {
       <MainCard title="Lock $NATION to get $veNATION">
         <p className="mb-4">
           $veNATION enables governance, minting passport NFTs and boosting
-          liquidity rewards (up to {veNationRewardsMultiplier}x).
+          liquidity rewards (up to {veNationRewardsMultiplier}x).{' '}
           <GradientLink
             text="Learn more"
             href="https://wiki.nation3.org/token/#venation"

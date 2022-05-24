@@ -12,14 +12,14 @@ const domain = {
 const types = {
   Agreement: [
     { name: "statement", type: "string" },
+    { name: "termsURL", type: "string" },
   ]
 }
 
 const value = {
-  statement: 'I agree'
+  statement: `${process.env.NEXT_PUBLIC_AGREEMENT_STATEMENT}`,
+  termsURL: `${process.env.NEXT_PUBLIC_AGREEMENT_URL}`
 }
-
-console.log(value.statement)
 
 export function useSignAgreement({onSuccess}: {onSuccess: Function}) {
   return useSignTypedData({

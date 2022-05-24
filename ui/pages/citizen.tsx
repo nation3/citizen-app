@@ -15,10 +15,6 @@ export default function Citizen() {
 
   const [confettiNumber, setConfettiNumber] = useState<Array<Number>>([])
 
-  const confettis = confettiNumber.map((number: Number) => (
-    <Confetti key={number.toString()} />
-  ))
-
   const addConfetti = () => {
     setConfettiNumber([...confettiNumber, confettiNumber.length])
   }

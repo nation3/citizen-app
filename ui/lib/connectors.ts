@@ -7,15 +7,17 @@ import CoinbaseWalletIcon from '../public/icons/connectors/coinbase.svg'
 import FrameIcon from '../public/icons/connectors/frame.svg'
 import MetaMaskIcon from '../public/icons/connectors/metamask.svg'
 import WalletConnectIcon from '../public/icons/connectors/walletconnect.svg'
+import networkToId from './network-id'
 
-const chains = [chain.mainnet, chain.goerli, chain.localhost]
+const chains = [chain.mainnet, chain.goerli, chain.hardhat]
 
 export function provider() {
+  console.log(chain.hardhat.id)
   if (process.env.NEXT_PUBLIC_CHAIN === 'local') {
     console.log('Provider: Connected to localhost provider')
     return new ethers.providers.JsonRpcProvider(
       'http://127.0.0.1:7545',
-      chain.localhost.id
+      networkToId(process.env.NEXT_PUBLIC_CHAIN)
     )
   } else {
     console.log(

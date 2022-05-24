@@ -54,6 +54,8 @@ contract PassportIssuer is Initializable, Ownable {
 
     /// @notice Agreement statement to sign before claim
     string public statement;
+    /// @notice Agreement terms URL to sign before claim
+    string public termsURL;
     /// @notice Limit of passports to issue
     uint256 public maxIssuances;
     /// @notice Number of passports issued
@@ -134,6 +136,10 @@ contract PassportIssuer is Initializable, Ownable {
         statement = _statement;
     }
 
+    function setTermsURL(string memory _termsURL) public virtual onlyOwner {
+        termsURL = _termsURL;
+    }
+
     /// @notice Allows the owner to withdraw any ERC20 sent to the contract.
     /// @param token Token to withdraw.
     /// @param to Recipient address of the tokens.
@@ -180,7 +186,7 @@ contract PassportIssuer is Initializable, Ownable {
                              EIP-712 LOGIC
     //////////////////////////////////////////////////////////////*/
 
-    /// @notice Returns the domain separator hash for 
+    /// @notice Returns the domain separator hash for
     function DOMAIN_SEPARATOR() public view virtual returns (bytes32) {
         return INITIAL_DOMAIN_SEPARATOR != "" ? INITIAL_DOMAIN_SEPARATOR : computeDomainSeparator();
     }
@@ -200,10 +206,9 @@ contract PassportIssuer is Initializable, Ownable {
                         DOMAIN_SEPARATOR(),
                         keccak256(
                             abi.encode(
-                                keccak256(
-                                    "Agreement(string statement)"
-                                ),
-                                keccak256(abi.encodePacked(statement))
+                                keccak256("Agreement(string statement,string termsURL)"),
+                                keccak256(abi.encodePacked(statement)),
+                                keccak256(abi.encodePacked(termsURL))
                             )
                         )
                     )
