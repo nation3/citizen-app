@@ -1,8 +1,12 @@
-import { useEffect, useState } from 'react'
+import { useCallback } from 'react'
 import { veNationToken } from '../lib/config'
 import VotingEscrow from '../abis/VotingEscrow.json'
 import { transformNumber } from './numbers'
-import { useContractRead, useContractWrite } from './use-wagmi'
+import {
+  useContractRead,
+  useContractWrite,
+  useCustomContractWrite,
+} from './use-wagmi'
 
 const contractParams = {
   addressOrName: veNationToken,
@@ -54,6 +58,7 @@ export function useVeNationCreateLock(amount: any, time: any) {
 }
 
 export function useVeNationIncreaseLock({
+  currentAmount,
   newAmount,
   currentTime,
   newTime,
@@ -62,17 +67,16 @@ export function useVeNationIncreaseLock({
     useVeNationIncreaseLockAmount(newAmount)
   const { isLoading: timeLoading, writeAsync: increaseLockTime } =
     useVeNationIncreaseLockTime(newTime)
-  const writeAsync = async () => {
-    if (newAmount != 0) {
+  const increaseLock = useCallback(async () => {
+    if (newAmount.gt(0)) {
       await increaseLockAmount()
     }
     if (newTime && newTime.gt(currentTime)) {
-      console.log(newTime)
       await increaseLockTime()
     }
-  }
+  }, [newAmount, newTime])
 
-  return { isLoading: amountLoading || timeLoading, writeAsync }
+  return { isLoading: amountLoading || timeLoading, writeAsync: increaseLock }
 }
 
 export function useVeNationIncreaseLockAmount(amount: any) {

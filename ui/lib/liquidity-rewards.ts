@@ -8,7 +8,6 @@ import {
   useStaticCall,
   useContractRead,
   useContractWrite,
-  useWagmiContractWrite,
 } from './use-wagmi'
 
 const contractParams = {
@@ -201,7 +200,7 @@ export function useBoostedAPY({ defaultAPY, boostMultiplier }: any) {
 
 // Using Wagmi's contractWrite directly, getting a "no signer connected" error otherwise
 export function useClaimRewards() {
-  return useWagmiContractWrite(contractParams, 'claimRewards', {
+  return useContractWrite(contractParams, 'claimRewards', {
     overrides: { gasLimit: 300000 },
   })
 }
@@ -221,7 +220,7 @@ export function useWithdraw(amount: any) {
 }
 
 export function useWithdrawAndClaim() {
-  return useWagmiContractWrite(contractParams, 'withdrawAndClaim', {
+  return useContractWrite(contractParams, 'withdrawAndClaim', {
     overrides: { gasLimit: 300000 },
   })
 }

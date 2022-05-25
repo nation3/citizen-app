@@ -117,8 +117,7 @@ export default function Lock() {
 
   useEffect(() => {
     if (hasLock && veNationLock) {
-      !lockAmount && // @ts-expect-error
-        setLockAmount(transformNumber(veNationLock[0], NumberType.string))
+      !lockAmount && setLockAmount(ethers.utils.formatEther(veNationLock[0]))
       const origTime = {
         value: veNationLock[1],
         formatted: dateToReadable(bigNumberToDate(veNationLock[1])),
@@ -157,7 +156,7 @@ export default function Lock() {
   }, [hasLock, lockAmount, lockTime, veNationLock])
 
   const createLock = useVeNationCreateLock(
-    lockAmount && transformNumber(lockAmount, NumberType.bignumber),
+    lockAmount && ethers.utils.parseEther(lockAmount),
     lockTime.value.div(1000)
   )
 
@@ -165,8 +164,8 @@ export default function Lock() {
     currentAmount: veNationLock && veNationLock[0],
     newAmount:
       lockAmount &&
-      veNationLock && // @ts-expect-error
-      transformNumber(lockAmount, NumberType.bignumber).sub(veNationLock[0]),
+      veNationLock &&
+      ethers.utils.parseEther(lockAmount).sub(veNationLock[0]),
     currentTime: veNationLock && veNationLock[1],
     newTime: lockTime?.value.div(1000),
   })

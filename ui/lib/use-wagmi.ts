@@ -6,7 +6,7 @@ import {
   useNetwork as _useNetwork,
   useContract,
   useContractRead as _useContractRead,
-  useContractWrite as _useWagmiContractWrite,
+  useContractWrite as _useContractWrite,
   useSigner,
   useSignTypedData as _useSignTypedData,
 } from 'wagmi'
@@ -54,23 +54,27 @@ export function useContractWrite(
   throwOnRevert?: any
 ) {
   return useHandleError(
-    _useWagmiContractWrite(config, method, argsAndOverrides),
+    _useContractWrite(config, method, argsAndOverrides),
     throwOnRevert
   )
 }
 
-export function useWagmiContractWrite(
+export function useCustomContractWrite(
   config: any,
   method: any,
   argsAndOverrides: any
 ) {
   return useHandleError(
-    _useWagmiContractWrite(config, method, argsAndOverrides)
+    _useCustomContractWrite(config, method, argsAndOverrides)
   )
 }
 
 // Reason for this is that wagmi's useContractWrite doesn't seem to be passing arguments to ethers correctly
-function _useContractWrite(config: any, method: any, argsAndOverrides: any) {
+function _useCustomContractWrite(
+  config: any,
+  method: any,
+  argsAndOverrides: any
+) {
   const errorContext = useErrorContext()
 
   const [data, setData] = useState(null as any)
