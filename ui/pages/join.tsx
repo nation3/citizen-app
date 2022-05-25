@@ -76,7 +76,6 @@ export default function Join() {
           NumberType.bignumber
         )
       ),
-      //mint: true,
       lockAndMint: nationBalance.value
         .mul(4)
         .gte(

@@ -16,7 +16,7 @@ const nftIssuerContractParams = {
 export function useHasPassport(address: any) {
   return useContractRead(
     nftIssuerContractParams,
-    'hasPassport',
+    'passportStatus',
     {
       args: [address],
       watch: true,

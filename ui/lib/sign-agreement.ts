@@ -18,7 +18,7 @@ export const types = {
 
 export const value = {
   statement: `${process.env.NEXT_PUBLIC_AGREEMENT_STATEMENT}`,
-  termsURL: `${process.env.NEXT_PUBLIC_AGREEMENT_URL}`,
+  termsURI: `${process.env.NEXT_PUBLIC_AGREEMENT_URL}`,
 }
 
 export function useSignAgreement({ onSuccess }: { onSuccess: Function }) {
