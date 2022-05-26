@@ -1,13 +1,11 @@
 import Image from 'next/image'
 import Card from 'react-animated-3d-card'
 import Flag from '../public/flag.svg'
-import Icon from '../public/icon.svg'
-import Logo from '../public/logo.svg'
-import PassportArt1 from '../public/passport/art1.svg'
-import PassportArt2 from '../public/passport/art2.svg'
-import PassportArt3 from '../public/passport/art3.png'
-import PassportArt4 from '../public/passport/art4.png'
+import PassportArt from '../public/passport/art.svg'
 import ContactlessIcon from '../public/passport/contactless.svg'
+import IconPlain from '../public/passport/icon-plain.svg'
+import LogoPlain from '../public/passport/logo-plain.svg'
+import QR from '../public/passport/qr.svg'
 
 export default function Passport({ holder, id, onClick }) {
   return (
@@ -22,7 +20,7 @@ export default function Passport({ holder, id, onClick }) {
     >
       <div className="bg-white absolute top-0 left-0 right-0 bottom-0 flex flex-col h-full">
         <div className="shrink h-20 flex align-middle px-4 justify-between items-center">
-          <Image src={Logo}></Image>
+          <Image src={LogoPlain} width={120} height={50}></Image>
           <div className="text-right">
             <label className="uppercase text-xs text-gray-400 block">
               Passport number
@@ -33,7 +31,7 @@ export default function Passport({ holder, id, onClick }) {
           </div>
         </div>
         <div className="shrink">
-          <Image src={PassportArt3} />
+          <Image src={PassportArt} />
         </div>
         <div className="grow p-4">
           <div className="text-left">
@@ -46,8 +44,12 @@ export default function Passport({ holder, id, onClick }) {
           </div>
         </div>
 
+        <div className="shrink flex justify-center">
+          <Image src={QR} width={136} height={136} />
+        </div>
+
         <div className="shrink h-12 px-4 flex align-middle px-4 justify-between items-center">
-          <Image src={Flag} width={24} height={24}></Image>
+          <Image src={IconPlain} width={24} height={24}></Image>
           <Image src={ContactlessIcon} width={20} height={20}></Image>
         </div>
       </div>
