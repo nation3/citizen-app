@@ -15,6 +15,7 @@ import ActionButton from '../components/ActionButton'
 import Balance from '../components/Balance'
 import Confetti from '../components/Confetti'
 import { useErrorContext } from '../components/ErrorProvider'
+import GradientLink from '../components/GradientLink'
 import Head from '../components/Head'
 import MainCard from '../components/MainCard'
 
@@ -127,6 +128,13 @@ export default function Join() {
               Your $NATION won't be taken away from you. As your lock matures,
               you can either withdraw your tokens or increase the lock time to
               keep citizenship.
+              <br />
+              <br />
+              {process.env.NEXT_PUBLIC_AGREEMENT_STATEMENT}:{' '}
+              <GradientLink
+                text="Read the terms"
+                href={process.env.NEXT_PUBLIC_AGREEMENT_URL}
+              />
             </p>
 
             <div className="stats stats-vertical lg:stats-horizontal shadow my-4">

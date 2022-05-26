@@ -104,7 +104,7 @@ export default function Layout({ children }: any) {
         }
       } else {
         if (router.pathname === '/citizen') {
-          // router.push('/join')
+          router.push('/join')
         }
       }
     }
