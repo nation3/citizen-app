@@ -5,7 +5,7 @@ import {ERC20} from "@rari-capital/solmate/src/tokens/ERC20.sol";
 import {ERC721} from "@rari-capital/solmate/src/tokens/ERC721.sol";
 import {SafeTransferLib} from "@rari-capital/solmate/src/utils/SafeTransferLib.sol";
 import {Controlled} from "../utils/Controlled.sol";
-import {Renderer} from "./Renderer.sol";
+import {Renderer} from "./render/Renderer.sol";
 
 contract Passport is ERC721, Controlled {
         /*///////////////////////////////////////////////////////////////

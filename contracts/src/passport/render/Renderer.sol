@@ -6,7 +6,7 @@ contract Renderer {
         uint256 tokenId,
         address owner,
         uint256 timestamp
-    ) public pure virtual returns (string memory tokenURI) {
+    ) public view virtual returns (string memory tokenURI) {
         tokenURI = "TODO";
     }
 }
