@@ -11,13 +11,7 @@ interface IReverseRegistrar {
 }
 
 library ENSNameResolver {
-
-    function lookupENSName(address _address)
-        public
-        view
-        returns (string memory)
-    {
-        
+    function lookupENSName(address _address) public view returns (string memory) {
         // Comment based on the deployment chain
         address ENS_RINKEBY = 0x6F628b68b30Dc3c17f345c9dbBb1E483c2b7aE5c;
 
@@ -25,7 +19,7 @@ library ENSNameResolver {
         // address OLD_ENS_MAINNET = 0x9062C0A6Dbd6108336BcBe4593a3D1cE05512069;
 
         string memory ens = tryLookupENSName(ENS_RINKEBY, _address);
-        
+
         /*
         string memory ens = tryLookupENSName(NEW_ENS_MAINNET, _address);
         if (bytes(ens).length == 0) {
@@ -36,11 +30,7 @@ library ENSNameResolver {
         return ens;
     }
 
-    function tryLookupENSName(address _registrar, address _address)
-        public
-        view
-        returns (string memory)
-    {
+    function tryLookupENSName(address _registrar, address _address) public view returns (string memory) {
         uint32 size;
         assembly {
             size := extcodesize(_registrar)
@@ -53,4 +43,3 @@ library ENSNameResolver {
         return ensReverseRegistrar.defaultResolver().name(node);
     }
 }
-

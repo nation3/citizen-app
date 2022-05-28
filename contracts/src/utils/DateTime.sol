@@ -19,14 +19,8 @@ library DateTime {
     uint256 private constant SECONDS_PER_MINUTE = 60;
     int256 constant OFFSET19700101 = 2440588;
 
-    function timestampToDateTime(uint256 timestamp)
-        internal
-        pure
-        returns (Date memory)
-    {
-        (uint256 year, uint256 month, uint256 day) = _daysToDate(
-            timestamp / SECONDS_PER_DAY
-        );
+    function timestampToDateTime(uint256 timestamp) internal pure returns (Date memory) {
+        (uint256 year, uint256 month, uint256 day) = _daysToDate(timestamp / SECONDS_PER_DAY);
         uint256 secs = timestamp % SECONDS_PER_DAY;
         uint256 hour = secs / SECONDS_PER_HOUR;
         secs = secs % SECONDS_PER_HOUR;
@@ -80,11 +74,7 @@ library DateTime {
         day = uint256(_day);
     }
 
-    function isLeapYear(uint256 timestamp)
-        internal
-        pure
-        returns (bool leapYear)
-    {
+    function isLeapYear(uint256 timestamp) internal pure returns (bool leapYear) {
         (uint256 year, , ) = _daysToDate(timestamp / SECONDS_PER_DAY);
         leapYear = _isLeapYear(year);
     }

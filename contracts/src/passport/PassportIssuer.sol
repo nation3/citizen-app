@@ -8,9 +8,8 @@ import {SafeTransferLib} from "@rari-capital/solmate/src/utils/SafeTransferLib.s
 import {IVotingEscrow} from "../governance/IVotingEscrow.sol";
 import {Passport} from "./Passport.sol";
 
-/// @notice Issues membership tokens when locking ERC20 tokens
-/// @author Nation3 (https://github.com/nation3)
-/// @dev Only issues new passports to not already issued accounts
+/// @notice Manage the issuance of Passport tokens.
+/// @author Nation3 (https://github.com/nation3/app/blob/main/contracts/contracts/passport/PassportIssuer.sol).
 contract PassportIssuer is Initializable, Ownable {
     /*///////////////////////////////////////////////////////////////
                                LIBRARIES
@@ -35,8 +34,10 @@ contract PassportIssuer is Initializable, Ownable {
                                  EVENTS
     //////////////////////////////////////////////////////////////*/
 
-    event Issue(address indexed account, uint256 indexed passportId);
-    event Withdraw(address indexed account, uint256 indexed passportId);
+    /// @dev Events inspired by EIP-4973
+    event Attest(address indexed _to, uint256 indexed _tokenId);
+    event Revoke(address indexed _to, uint256 indexed _tokenId);
+
     event UpdateRequirements(uint256 claimRequiredBalance, uint256 revokeUnderBalance);
 
     /*///////////////////////////////////////////////////////////////
@@ -68,10 +69,7 @@ contract PassportIssuer is Initializable, Ownable {
     /// @dev Domain separator hash on initialization.
     bytes32 internal INITIAL_DOMAIN_SEPARATOR;
 
-    /// @dev Map the passport status of an account.
-    /// @dev 0 -> Not issued
-    /// @dev 1 -> Issued
-    /// @dev 2 -> Withdrawn
+    /// @dev Map the passport status of an account: (0) Not issued, (1) Issued, (2) Revoked.
     mapping(address => uint8) internal _status;
     /// @dev Passport id issued by account.
     mapping(address => uint256) internal _passportId;
@@ -92,11 +90,11 @@ contract PassportIssuer is Initializable, Ownable {
 
     /// @notice Sets tokens and supply.
     /// @param _veToken Lock token which balance is required to claim.
-    /// @param _passToken NFT token to mint.
-    /// @param _maxIssuances Maxi number of tokens that can be issued with this contract.
+    /// @param _passToken Passport token to mint.
+    /// @param _maxIssuances Maximum number of tokens that can be issued with this contract.
     function initialize(
         IVotingEscrow _veToken,
-        Passport _passToken, 
+        Passport _passToken,
         uint256 _maxIssuances
     ) external initializer {
         veToken = _veToken;
@@ -109,7 +107,7 @@ contract PassportIssuer is Initializable, Ownable {
                                   VIEWS
     //////////////////////////////////////////////////////////////*/
 
-    /// @notice Returns the status of an account: (0) Not issued, (1) Issued, (2) Withdrawn.
+    /// @notice Returns the status of an account: (0) Not issued, (1) Issued, (2) Revoked.
     function passportStatus(address account) external view virtual returns (uint8) {
         return _status[account];
     }
@@ -126,7 +124,10 @@ contract PassportIssuer is Initializable, Ownable {
                                 USER ACTIONS
     //////////////////////////////////////////////////////////////*/
 
-    /// @notice Issues a new passport token with signature validation.
+    /// @notice Claims a new passport token with signature validation.
+    /// @param v Signature version.
+    /// @param r Signature fragment.
+    /// @param s Signature fragment.
     function claim(
         uint8 v,
         bytes32 r,
@@ -140,15 +141,15 @@ contract PassportIssuer is Initializable, Ownable {
         _issue(msg.sender);
     }
 
-    /// @notice Removes the passport of the `msg.sender`
-    function withdraw() external virtual {
-        _withdraw(msg.sender);
+    /// @notice Allows caller to renounce to the passport.
+    function renounce() external virtual {
+        _revoke(msg.sender);
     }
 
-    /// @notice Removes the passport of a given account if it's not eligible anymore.
+    /// @notice Revokes the passport of a given account if it's not eligible anymore.
     function revoke(address account) external virtual {
         if (veToken.balanceOf(account) >= revokeUnderBalance) revert NonRevocable();
-        _withdraw(account);
+        _revoke(account);
     }
 
     /*///////////////////////////////////////////////////////////////
@@ -157,10 +158,8 @@ contract PassportIssuer is Initializable, Ownable {
 
     /// @notice Set requirements to claim & revoke.
     /// @param _claimRequiredBalance Minimum amount of voting escrow tokens required for a new issuance.
-    function setParams(
-        uint256 _claimRequiredBalance,
-        uint256 _revokeUnderBalance
-    ) external virtual onlyOwner {
+    /// @param _revokeUnderBalance Amount of voting escrow tokens under which a passport is revocable.
+    function setParams(uint256 _claimRequiredBalance, uint256 _revokeUnderBalance) external virtual onlyOwner {
         claimRequiredBalance = _claimRequiredBalance;
         revokeUnderBalance = _revokeUnderBalance;
 
@@ -183,17 +182,15 @@ contract PassportIssuer is Initializable, Ownable {
         termsURI = _termsURI;
     }
 
-    /// @notice Allows the owner to remove the passport of any account
+    /// @notice Allows the owner to revoke the passport of any account.
     function adminRevoke(address account) external virtual onlyOwner {
-        _withdraw(account);
+        _revoke(account);
     }
 
     /// @notice Allows the owner to withdraw any ERC20 sent to the contract.
     /// @param token Token to withdraw.
     /// @param to Recipient address of the tokens.
-    function recoverTokens(
-        ERC20 token, address to
-    ) external virtual onlyOwner returns (uint256 amount) {
+    function recoverTokens(ERC20 token, address to) external virtual onlyOwner returns (uint256 amount) {
         amount = token.balanceOf(address(this));
         token.safeTransfer(to, amount);
     }
@@ -207,7 +204,7 @@ contract PassportIssuer is Initializable, Ownable {
         return INITIAL_DOMAIN_SEPARATOR != "" ? INITIAL_DOMAIN_SEPARATOR : computeDomainSeparator();
     }
 
-    /// @notice Verify if sender is signer of contract agreement following EIP-712.
+    /// @notice Verify if sender has signed the contract agreement following EIP-712.
     /// @dev Reverts on signature missmatch.
     function verifySignature(
         uint8 v,
@@ -271,12 +268,12 @@ contract PassportIssuer is Initializable, Ownable {
         _status[recipient] = 1;
         _passportId[recipient] = tokenId;
 
-        emit Issue(recipient, tokenId);
+        emit Attest(recipient, tokenId);
     }
 
-    /// @dev Burns the passport token of the account & transfer back the locked tokens.
-    /// @param account Address of the account to withdraw the passport from.
-    function _withdraw(address account) internal virtual {
+    /// @dev Burns the passport token of the account.
+    /// @param account Address of the account to revoke the passport to.
+    function _revoke(address account) internal virtual {
         uint256 tokenId = passportId(account);
 
         // Burn passport
@@ -285,6 +282,6 @@ contract PassportIssuer is Initializable, Ownable {
         _status[account] = 2;
         delete _passportId[account];
 
-        emit Withdraw(account, tokenId);
+        emit Revoke(account, tokenId);
     }
 }

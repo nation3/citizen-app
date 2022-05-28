@@ -4,8 +4,7 @@
 pragma solidity ^0.8.0;
 
 library Base64 {
-    string internal constant TABLE =
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+    string internal constant TABLE = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
     function encode(bytes memory data) internal pure returns (string memory) {
         if (data.length == 0) return "";
@@ -45,25 +44,13 @@ library Base64 {
                 let input := mload(dataPtr)
 
                 // write 4 characters
-                mstore(
-                    resultPtr,
-                    shl(248, mload(add(tablePtr, and(shr(18, input), 0x3F))))
-                )
+                mstore(resultPtr, shl(248, mload(add(tablePtr, and(shr(18, input), 0x3F)))))
                 resultPtr := add(resultPtr, 1)
-                mstore(
-                    resultPtr,
-                    shl(248, mload(add(tablePtr, and(shr(12, input), 0x3F))))
-                )
+                mstore(resultPtr, shl(248, mload(add(tablePtr, and(shr(12, input), 0x3F)))))
                 resultPtr := add(resultPtr, 1)
-                mstore(
-                    resultPtr,
-                    shl(248, mload(add(tablePtr, and(shr(6, input), 0x3F))))
-                )
+                mstore(resultPtr, shl(248, mload(add(tablePtr, and(shr(6, input), 0x3F)))))
                 resultPtr := add(resultPtr, 1)
-                mstore(
-                    resultPtr,
-                    shl(248, mload(add(tablePtr, and(input, 0x3F))))
-                )
+                mstore(resultPtr, shl(248, mload(add(tablePtr, and(input, 0x3F)))))
                 resultPtr := add(resultPtr, 1)
             }
 

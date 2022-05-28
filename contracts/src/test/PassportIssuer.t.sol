@@ -38,7 +38,6 @@ contract PassportIssuerTest is DSTestPlus {
         issuer.setEnabled(true);
     }
 
-
     function getFilledAccount(uint256 key) public returns (address, uint256) {
         return getAccount(key, CLAIM_REQUIRED_BALANCE * 2);
     }
@@ -121,13 +120,13 @@ contract PassportIssuerTest is DSTestPlus {
         issuer.claim(v, r, s);
     }
 
-    function testWithdraw() public {
+    function testRenounce() public {
         startIssuance();
         (address citiz3n, uint256 privateKey) = getFilledAccount(0xDAD);
         claimPassportWith(citiz3n, privateKey);
 
         evm.prank(citiz3n);
-        issuer.withdraw();
+        issuer.renounce();
 
         assertEq(passport.balanceOf(citiz3n), 0);
         assertEq(issuer.passportStatus(citiz3n), 2);
@@ -147,7 +146,7 @@ contract PassportIssuerTest is DSTestPlus {
         issuer.claim(v, r, s);
 
         // Try to claim after withdraw
-        issuer.withdraw();
+        issuer.renounce();
         evm.expectRevert(sig.selector("PassportAlreadyIssued()"));
         issuer.claim(v, r, s);
 
@@ -189,7 +188,7 @@ contract PassportIssuerTest is DSTestPlus {
         claimPassportWith(citiz3n, privateKey);
 
         // Citizen veToken balance goes under claim requirements but over revoke threshold
-        veToken.setBalance(citiz3n, CLAIM_REQUIRED_BALANCE * 9 / 10);
+        veToken.setBalance(citiz3n, (CLAIM_REQUIRED_BALANCE * 9) / 10);
 
         evm.prank(guardian);
         evm.expectRevert(sig.selector("NonRevocable()"));

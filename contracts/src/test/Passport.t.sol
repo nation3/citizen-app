@@ -5,7 +5,7 @@ import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 import {DSTestPlus} from "./utils/DSTestPlus.sol";
 import {Hevm} from "./utils/Hevm.sol";
 import {Passport} from "../passport/Passport.sol";
-import {Renderer} from "../passport/Renderer.sol";
+import {Renderer} from "../passport/render/Renderer.sol";
 import {Signatures as sig} from "./utils/Signatures.sol";
 import {MockERC20} from "./utils/mocks/MockERC20.sol";
 
@@ -15,14 +15,16 @@ contract MockRenderer is Renderer {
         address owner,
         uint256 timestamp
     ) public pure override returns (string memory tokenURI) {
-        tokenURI = string(abi.encodePacked(
-            'Passport num. ',
-            Strings.toString(tokenId),
-            ' owned by ',
-            Strings.toHexString(uint256(uint160(owner))),
-            ' since ',
-            Strings.toString(timestamp)
-        ));
+        tokenURI = string(
+            abi.encodePacked(
+                "Passport num. ",
+                Strings.toString(tokenId),
+                " owned by ",
+                Strings.toHexString(uint256(uint160(owner))),
+                " since ",
+                Strings.toString(timestamp)
+            )
+        );
     }
 }
 
@@ -138,17 +140,13 @@ contract PassportTest is DSTestPlus {
         token.transfer(address(passport), 100 * 1e18);
 
         // Valid recovery
-        passport.recoverTokens(token, 50 * 1e18, address(0xBABE));
-        assertEq(token.balanceOf(address(0xBABE)), 50 * 1e18);
-
-        // Exceeding amount should fail
-        evm.expectRevert("TRANSFER_FAILED");
-        passport.recoverTokens(token, 100 * 1e18, address(0xBABE));
+        passport.recoverTokens(token, address(0xBABE));
+        assertEq(token.balanceOf(address(0xBABE)), 100 * 1e18);
 
         // Only owner should be able to execute
         evm.prank(address(0xBABE));
         evm.expectRevert(sig.selector("CallerIsNotAuthorized()"));
-        passport.recoverTokens(token, 50 * 1e18, address(0xBABE));
+        passport.recoverTokens(token, address(0xBABE));
     }
 
     function testSetSigner() public {
