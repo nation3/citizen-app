@@ -127,7 +127,8 @@ export default function Join() {
               <br />
               Your $NATION won't be taken away from you. As your lock matures,
               you can either withdraw your tokens or increase the lock time to
-              keep citizenship.
+              keep citizenship. Passport NFTs represent membership and are
+              currently not transferable.
               <br />
               <br />
               {process.env.NEXT_PUBLIC_AGREEMENT_STATEMENT}:{' '}
