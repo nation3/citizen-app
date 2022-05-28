@@ -26,7 +26,7 @@ library Metadata {
     function renderName(
         uint256 id
     ) public pure returns (string memory) {
-        return string(abi.encodePacked("Genesis Passport3 #", Strings.toString(id)));
+        return string(abi.encodePacked("Nation3 Genesis Passport #", Strings.toString(id)));
     }
 
     function renderAttributes(

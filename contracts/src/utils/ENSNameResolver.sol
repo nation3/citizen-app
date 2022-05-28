@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: UNLICENSED
 pragma solidity =0.8.10;
 
 interface IDefaultResolver {
@@ -12,18 +13,18 @@ interface IReverseRegistrar {
 
 library ENSNameResolver {
     function lookupENSName(address _address) public view returns (string memory) {
-        // Comment based on the deployment chain
-        address ENS_RINKEBY = 0x6F628b68b30Dc3c17f345c9dbBb1E483c2b7aE5c;
+        
+        // Rinkeby & Goerli
+        address REGISTRAR_ADDRESS = 0x6F628b68b30Dc3c17f345c9dbBb1E483c2b7aE5c;
+        // Mainnet
+        // address REGISTRAR_ADDRESS = 0x084b1c3C81545d370f3634392De611CaaBFf8148;
+        // address OLD_REGISTRAR_ADDRESS = 0x9062C0A6Dbd6108336BcBe4593a3D1cE05512069;
 
-        // address NEW_ENS_MAINNET = 0x084b1c3C81545d370f3634392De611CaaBFf8148;
-        // address OLD_ENS_MAINNET = 0x9062C0A6Dbd6108336BcBe4593a3D1cE05512069;
-
-        string memory ens = tryLookupENSName(ENS_RINKEBY, _address);
+        string memory ens = tryLookupENSName(REGISTRAR_ADDRESS, _address);
 
         /*
-        string memory ens = tryLookupENSName(NEW_ENS_MAINNET, _address);
         if (bytes(ens).length == 0) {
-            ens = tryLookupENSName(OLD_ENS_MAINNET, _address);
+            ens = tryLookupENSName(OLD_REGISTRAR_ADDRESS, _address);
         }
         */
 
