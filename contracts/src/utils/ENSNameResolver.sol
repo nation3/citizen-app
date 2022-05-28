@@ -12,20 +12,35 @@ interface IReverseRegistrar {
 
 library ENSNameResolver {
 
-    address public constant NEW_ENS = 0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e;
-    address public constant OLD_ENS_MAINNET = 0x314159265dD8dbb310642f98f50C066173C1259b;
+    function lookupENSName(address _address)
+        public
+        view
+        returns (string memory)
+    {
+        
+        // Comment based on the deployment chain
+        address ENS_RINKEBY = 0x6F628b68b30Dc3c17f345c9dbBb1E483c2b7aE5c;
 
-    function lookupENSName(address account) public view returns(string memory) {
-        string memory ens = tryLookupENSName(NEW_ENS, account);
+        // address NEW_ENS_MAINNET = 0x084b1c3C81545d370f3634392De611CaaBFf8148;
+        // address OLD_ENS_MAINNET = 0x9062C0A6Dbd6108336BcBe4593a3D1cE05512069;
 
+        string memory ens = tryLookupENSName(ENS_RINKEBY, _address);
+        
+        /*
+        string memory ens = tryLookupENSName(NEW_ENS_MAINNET, _address);
         if (bytes(ens).length == 0) {
-            ens = tryLookupENSName(OLD_ENS_MAINNET, account);
+            ens = tryLookupENSName(OLD_ENS_MAINNET, _address);
         }
+        */
 
         return ens;
     }
 
-    function tryLookupENSName(address _registrar, address _address) internal view returns (string memory) {
+    function tryLookupENSName(address _registrar, address _address)
+        public
+        view
+        returns (string memory)
+    {
         uint32 size;
         assembly {
             size := extcodesize(_registrar)
@@ -38,3 +53,4 @@ library ENSNameResolver {
         return ensReverseRegistrar.defaultResolver().name(node);
     }
 }
+

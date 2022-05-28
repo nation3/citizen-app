@@ -81,20 +81,20 @@ contract ChainedRenderer is Renderer {
         return string(abi.encodePacked(
             '<svg x="24" y="511" width="537" height="130" viewBox="0 0 537 130" fill="none" xmlns="http://www.w3.org/2000/svg">',
             string(abi.encodePacked(
-                '<text y="24" font-family="Open Sans" font-size="24" font-weight="lighter" font-variant="all-small-caps" fill="#7395B2" >Citizen Id</text>',
-                '<text y="55" font-family="Open Sans" font-size="24" font-weight="bold" fill="#224059" >',
+                '<text y="24" font-family="Open Sans, Helvetica" font-size="24" font-weight="lighter" font-variant="all-small-caps" fill="#7395B2" >Citizen Id</text>',
+                '<text y="55" font-family="Open Sans, Helvetica" font-size="24" font-weight="bold" fill="#224059" >',
                 name,
                 '</text>'
             )),
             string(abi.encodePacked(
-                '<text x="370" y="96" text-anchor="end" font-family="Open Sans" font-size="24" font-weight="lighter" font-variant="all-small-caps" fill="#7395B2" >Issue Date</text>',
-                '<text x="370" y="126" text-anchor="end" font-family="Open Sans" font-size="23" fill="#224059" >',
+                '<text x="370" y="96" text-anchor="end" font-family="Open Sans, Helvetica" font-size="24" font-weight="lighter" font-variant="all-small-caps" fill="#7395B2" >Issue Date</text>',
+                '<text x="370" y="126" text-anchor="end" font-family="Open Sans, Helvetica" font-size="23" fill="#224059" >',
                 string(abi.encodePacked(Strings.toString(timestamp.day),'/',Strings.toString(timestamp.month),'/',Strings.toString(timestamp.year))),
                 '</text>'
             )),
             string(abi.encodePacked(
-                '<text x="537" y="96" text-anchor="end" font-family="Open Sans" font-size="24" font-weight="lighter" font-variant="all-small-caps" fill="#7395B2" >Citizen Number</text>',
-                '<text x="537" y="126" text-anchor="end" font-family="Open Sans" font-size="23" fill="#224059" >',
+                '<text x="537" y="96" text-anchor="end" font-family="Open Sans, Helvetica" font-size="24" font-weight="lighter" font-variant="all-small-caps" fill="#7395B2" >Citizen Number</text>',
+                '<text x="537" y="126" text-anchor="end" font-family="Open Sans, Helvetica" font-size="23" fill="#224059" >',
                 Strings.toString(id),
                 '</text>'
             )),
@@ -152,10 +152,8 @@ contract ChainedRenderer is Renderer {
     function genBrandStamp() internal pure returns(string memory) {
         return string(abi.encodePacked(
             '<svg x="24" y="589" width="147" height="59" viewBox="0 0 147 59" fill="none" xmlns="http://www.w3.org/2000/svg">',
-            // Logo
             '<ellipse cx="29.1838" cy="29.5" rx="29.1838" ry="29.5" fill="#69C9FF" /><path d="M29.1831 53.5919C24.9029 35.3019 11.1864 29.91 4.86328 29.5003H29.1831V53.5919Z" fill="white" /><path d="M29.184 5.40857C33.4643 23.6986 47.1807 29.0905 53.5039 29.5002H29.184V5.40857Z" fill="white" />',
-            // Type
-            '<text x="69" y="37" font-family="Open Sans" fill="#224059" font-size="20">Nation3</text>',
+            '<text x="69" y="37" font-family="Open Sans, Helvetica" fill="#224059" font-size="20">Nation3</text>',
             '</svg>'
         ));
     }
