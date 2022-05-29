@@ -65,7 +65,7 @@ export default function Liquidity() {
   const { currentBoost, potentialBoost, canBoost } = useVeNationBoost({
     userDeposit,
     totalDeposit,
-    userVeNation: veNationBalance,
+    userVeNation: veNationBalance?.value,
     totalVeNation: veNationSupply,
     userBalance,
   })
@@ -156,7 +156,7 @@ export default function Liquidity() {
 
             <div className="stat-value text-primary">
               <Balance
-                balance={veNationBalance}
+                balance={veNationBalance?.value}
                 loading={veNationBalanceLoading}
                 decimals={4}
               />

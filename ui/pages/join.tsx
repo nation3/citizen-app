@@ -74,7 +74,7 @@ export default function Join() {
   useEffect(() => {
     if (!nationBalance || !veNationBalance) return
     setAction({
-      mint: veNationBalance.gte(
+      mint: veNationBalance.value.gte(
         transformNumber(
           veNationRequiredStake as unknown as number,
           NumberType.bignumber
@@ -159,7 +159,7 @@ export default function Join() {
                 <div className="stat-value">
                   <Balance
                     loading={veNationBalanceLoading}
-                    balance={veNationBalance}
+                    balance={veNationBalance?.value}
                     decimals={2}
                   />
                 </div>

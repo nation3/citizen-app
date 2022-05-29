@@ -249,11 +249,11 @@ export default function Lock() {
                 <div className="stat-title">Your $veNATION</div>
                 <div className="stat-value text-primary">
                   <Balance
-                    balance={veNationBalance}
+                    balance={veNationBalance.value}
                     loading={veNationBalanceLoading}
                     decimals={
                       veNationBalance &&
-                      veNationBalance.gt(ethers.utils.parseEther('1'))
+                      veNationBalance.value.gt(ethers.utils.parseEther('1'))
                         ? 2
                         : 8
                     }
@@ -382,7 +382,7 @@ export default function Lock() {
                       {calculateVeNation({
                         nationAmount: lockAmount && +lockAmount,
                         veNationAmount: transformNumber(
-                          veNationBalance || 0,
+                          veNationBalance.value || 0,
                           NumberType.number
                         ),
                         time: Date.parse(lockTime.formatted),

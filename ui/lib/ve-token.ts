@@ -1,12 +1,7 @@
 import { useCallback } from 'react'
 import { veNationToken } from '../lib/config'
 import VotingEscrow from '../abis/VotingEscrow.json'
-import { transformNumber } from './numbers'
-import {
-  useContractRead,
-  useContractWrite,
-  useCustomContractWrite,
-} from './use-wagmi'
+import { useContractRead, useContractWrite, useBalance } from './use-wagmi'
 
 const contractParams = {
   addressOrName: veNationToken,
@@ -14,19 +9,12 @@ const contractParams = {
 }
 
 export function useVeNationBalance(address: any) {
-  return useContractRead(contractParams, 'balanceOf(address)', {
-    args: [address],
-    watch: true,
-    enabled: address,
-  })
-  /*
-  For some reason 'balanceOf' doens't work, therefore useBalance doesn't either
   return useBalance({
     addressOrName: address,
     token: veNationToken,
     watch: true,
     enabled: address,
-  })*/
+  })
 }
 
 let gasLimits = {
