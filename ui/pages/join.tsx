@@ -40,10 +40,9 @@ export default function Join() {
     onSuccess: async (signature: string) => {
       const sigs = ethers.utils.splitSignature(signature)
       const tx = await claim({ args: [sigs.v, sigs.r, sigs.s] })
-      const { error } = await storeSignature(signature, tx.hash)
-      if (error) {
-        errorContext.addError([{ message: error }])
-      }
+      // The signature will be stored permanently on the Ethereum blockchain,
+      // so uploading it to IPFS is only a nice to have
+      await storeSignature(signature, tx.hash)
     },
   })
 
