@@ -5,7 +5,6 @@ import { NumberType, transformNumber } from './numbers'
 import { useContractRead } from './use-wagmi'
 
 export function useBalancerPool(id: any) {
-  // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 3.
   const { data: poolData, isLoading } = useContractRead(
     {
       addressOrName: balancerVault,
@@ -14,7 +13,8 @@ export function useBalancerPool(id: any) {
     'getPoolTokens',
     {
       args: id,
-    }
+    },
+    process.env.NEXT_PUBLIC_CHAIN === 'mainnet'
   )
 
   const [poolValue, setPoolValue] = useState(0)

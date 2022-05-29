@@ -1,13 +1,13 @@
-import { createContext, useContext, useState, useEffect } from 'react'
+import { createContext, useContext, useState } from 'react'
 import React from 'react'
 import { useNetwork } from 'wagmi'
-import networkToId from '../lib/networkToId'
+import networkToId from '../lib/network-id'
 
 const ErrorContext = createContext({} as any)
 
 function ErrorProvider({ children }: any) {
   const [errors, setErrors] = useState([] as any)
-  const [count, setCount] = useState(0)
+  let [count, setCount] = useState(0)
   const { activeChain } = useNetwork()
 
   const addError = (newErrors: any) => {
@@ -17,10 +17,9 @@ function ErrorProvider({ children }: any) {
       activeChain?.id &&
       activeChain.id == networkToId(process.env.NEXT_PUBLIC_CHAIN)
     ) {
-      for (const error of newErrors) {
+      for (let error of newErrors) {
         console.error(error)
         if (error instanceof Error) {
-          // @ts-expect-error ts-migrate(2588) FIXME: Cannot assign to 'error' because it is a constant.
           error = JSON.parse(
             JSON.stringify(error, Object.getOwnPropertyNames(error))
           )
@@ -35,7 +34,6 @@ function ErrorProvider({ children }: any) {
           }
         }
         setErrors([{ key: count, ...error }, ...errors])
-        // @ts-expect-error ts-migrate(2588) FIXME: Cannot assign to 'count' because it is a constant.
         setCount(++count)
       }
     }
@@ -44,7 +42,6 @@ function ErrorProvider({ children }: any) {
   const removeError = (key: any) => {
     if (key > -1) {
       setErrors(errors.filter((error: any) => error.key !== key))
-      // @ts-expect-error ts-migrate(2588) FIXME: Cannot assign to 'count' because it is a constant.
       setCount(--count)
     }
   }
@@ -58,7 +55,7 @@ function ErrorProvider({ children }: any) {
 function useErrorContext() {
   const errors = useContext(ErrorContext)
   if (errors === undefined) {
-    throw new Error('useCount must be used within a CountProvider')
+    throw new Error('useErrorContext must be used within a ErrorProvider')
   }
   return errors
 }

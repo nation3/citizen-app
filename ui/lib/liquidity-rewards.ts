@@ -9,7 +9,6 @@ import {
   useStaticCall,
   useContractRead,
   useContractWrite,
-  useWagmiContractWrite,
 } from './use-wagmi'
 
 const contractParams = {
@@ -31,7 +30,6 @@ export function useLiquidityRewards({ nationPrice, poolValue, address }: any) {
       skip: !address,
     })
 
-  // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 3.
   const { data: userDeposit, isLoading: userDepositLoading } = useContractRead(
     contractParams,
     'userDeposit',
@@ -53,7 +51,6 @@ export function useLiquidityRewards({ nationPrice, poolValue, address }: any) {
       false
     )
 
-  // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 3.
   const { data: userBalance, isLoading: userBalanceLoading } = useContractRead(
     contractParams,
     'userBalance',
@@ -204,13 +201,12 @@ export function useBoostedAPY({ defaultAPY, boostMultiplier }: any) {
 
 // Using Wagmi's contractWrite directly, getting a "no signer connected" error otherwise
 export function useClaimRewards() {
-  return useWagmiContractWrite(contractParams, 'claimRewards', {
+  return useContractWrite(contractParams, 'claimRewards', {
     overrides: { gasLimit: 300000 },
   })
 }
 
 export function useDeposit(amount: any) {
-  // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 3.
   return useContractWrite(contractParams, 'deposit', {
     args: [amount],
     overrides: { gasLimit: 300000 },
@@ -218,14 +214,14 @@ export function useDeposit(amount: any) {
 }
 
 export function useWithdraw(amount: any) {
-  // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 3.
   return useContractWrite(contractParams, 'withdraw', {
     args: [amount],
+    overrides: { gasLimit: 300000 },
   })
 }
 
 export function useWithdrawAndClaim() {
-  return useWagmiContractWrite(contractParams, 'withdrawAndClaim', {
+  return useContractWrite(contractParams, 'withdrawAndClaim', {
     overrides: { gasLimit: 300000 },
   })
 }

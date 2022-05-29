@@ -6,6 +6,8 @@ export default function networkToId(network: any) {
       return 1
     case 'goerli':
       return 5
+    case 'local':
+      return 31337
     default:
       return 1
   }

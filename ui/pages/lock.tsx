@@ -53,8 +53,7 @@ const calculateVeNation = ({
   lockTime,
   max,
 }: any) => {
-  // @ts-expect-error ts-migrate(2365) FIXME: Operator '>' cannot be applied to types 'boolean' ... Remove this comment to see the full error message
-  if (!nationAmount > 0) return 0
+  if (!nationAmount) return 0
 
   const vestingStart = calculateVestingStart({
     nationAmount,
@@ -76,7 +75,6 @@ const calculateVestingStart = ({
 }
 
 export default function Lock() {
-  // @ts-expect-error ts-migrate(2554) FIXME: Expected 1 arguments, but got 0.
   const { data: account } = useAccount()
 
   const { data: nationBalance, isLoading: nationBalanceLoading } =
@@ -161,6 +159,7 @@ export default function Lock() {
     lockAmount && ethers.utils.parseEther(lockAmount),
     lockTime.value.div(1000)
   )
+
   const increaseLock = useVeNationIncreaseLock({
     currentAmount: veNationLock && veNationLock[0],
     newAmount:
@@ -180,7 +179,7 @@ export default function Lock() {
       <MainCard title="Lock $NATION to get $veNATION">
         <p className="mb-4">
           $veNATION enables governance, minting passport NFTs and boosting
-          liquidity rewards (up to {veNationRewardsMultiplier}x).
+          liquidity rewards (up to {veNationRewardsMultiplier}x).{' '}
           <GradientLink
             text="Learn more"
             href="https://wiki.nation3.org/token/#venation"
@@ -250,11 +249,11 @@ export default function Lock() {
                 <div className="stat-title">Your $veNATION</div>
                 <div className="stat-value text-primary">
                   <Balance
-                    balance={veNationBalance}
+                    balance={veNationBalance.value}
                     loading={veNationBalanceLoading}
                     decimals={
                       veNationBalance &&
-                      veNationBalance.gt(ethers.utils.parseEther('1'))
+                      veNationBalance.value.gt(ethers.utils.parseEther('1'))
                         ? 2
                         : 8
                     }
@@ -383,7 +382,7 @@ export default function Lock() {
                       {calculateVeNation({
                         nationAmount: lockAmount && +lockAmount,
                         veNationAmount: transformNumber(
-                          veNationBalance || 0,
+                          veNationBalance.value || 0,
                           NumberType.number
                         ),
                         time: Date.parse(lockTime.formatted),

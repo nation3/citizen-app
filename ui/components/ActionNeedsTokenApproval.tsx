@@ -3,7 +3,6 @@ import { useTokenAllowance, useTokenApproval } from '../lib/approve'
 import { NumberType, transformNumber } from '../lib/numbers'
 import { useAccount } from '../lib/use-wagmi'
 import ActionButton from './ActionButton'
-import { useErrorContext } from './ErrorProvider'
 
 export default function ActionNeedsTokenApproval({
   className,
@@ -15,16 +14,9 @@ export default function ActionNeedsTokenApproval({
   action,
   preAction,
 }: any) {
-  // @ts-expect-error ts-migrate(2554) FIXME: Expected 1 arguments, but got 0.
   const { data: account } = useAccount()
-  const {
-    data: tokenAllowance,
-    isLoading: tokenAllowanceLoading,
-    error: allowanceError,
-  } = useTokenAllowance({ token, address: account?.address, spender })
-
-  const { addError } = useErrorContext()
-  addError([allowanceError])
+  const { data: tokenAllowance, isLoading: tokenAllowanceLoading } =
+    useTokenAllowance({ token, address: account?.address, spender })
 
   const weiAmountNeeded = transformNumber(
     amountNeeded?.formatted || amountNeeded,
@@ -36,9 +28,10 @@ export default function ActionNeedsTokenApproval({
     token,
     spender,
   })
+
   return (
     <>
-      {!tokenAllowanceLoading && !approve?.loading ? (
+      {!tokenAllowanceLoading && !approve?.isLoading ? (
         tokenAllowance?.gte(weiAmountNeeded) ? (
           <ActionButton
             className={className}

@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useState } from 'react'
-import networkToId from './networkToId'
+import networkToId from './network-id'
 import { useNetwork } from './use-wagmi'
 
 export default function usePreferredNetwork() {

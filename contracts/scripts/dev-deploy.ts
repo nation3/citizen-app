@@ -7,6 +7,8 @@ import VotingEscrow from '../out/VotingEscrow.vy/VotingEscrow.json';
 import LiquidityDistributor from '../out/BoostedLiquidityDistributor.sol/BoostedLiquidityDistributor.json';
 import MockERC20 from '../out/MockERC20.sol/MockERC20.json';
 import MerkleDistributorV2 from '../out/MerkleDistributorV2.sol/MerkleDistributorV2.json';
+import Passport from '../out/Passport.sol/Passport.json';
+import PassportIssuer from '../out/PassportIssuer.sol/PassportIssuer.json';
 
 const getContractFactory = (artifact: any) => {
     return new ethers.ContractFactory(artifact.abi, artifact.bytecode.object, wallet);
@@ -104,6 +106,36 @@ const deployLiquidityDistributor = async (rewardsToken: Contract, boostToken: Co
     return { "lpToken": lpToken, "lpRewardsContract": distributor}
 }
 
+const deployPassport = async (governanceToken: Contract) => {
+    const passportFactory = getContractFactory(Passport);
+    const passportIssuerFactory = getContractFactory(PassportIssuer);
+
+    const passportToken = await deployContract({
+        name: "Passport",
+        deployer: wallet,
+        factory: passportFactory,
+        args: ["Nation3 Passport", "PASS3"]
+    })
+
+    const passportIssuer = await deployContract({
+        name: "PassportIssuer",
+        deployer: wallet,
+        factory: passportIssuerFactory,
+        args: []
+    })
+ 
+    await passportToken.connect(wallet).transferControl(passportIssuer.address);
+    // TODO: Set renderer
+
+    await passportIssuer.connect(wallet).initialize(governanceToken.address, passportToken.address, 420);
+    await passportIssuer.connect(wallet).setParams(0, 0);
+    await passportIssuer.connect(wallet).setStatement("By claiming a Nation3 passport I agree to the terms defined in the following URL");
+    await passportIssuer.connect(wallet).setTermsURI("https://bafkreiadlf3apu3u7blxw7t2yxi7oyumeuzhoasq7gqmcbaaycq342xq74.ipfs.dweb.link");
+    await passportIssuer.connect(wallet).setEnabled(true);
+
+    return { "passportToken": passportToken, "passportIssuer": passportIssuer }
+}
+
 const main = async () => {
     console.log(`Using deployer: ${wallet.address}`);
 
@@ -112,6 +144,7 @@ const main = async () => {
     const lpContracts = await deployLiquidityDistributor(NATION, veNATION);
     const nationDropA = await deployAirdropDistributor(NATION, "0xed145aa219b18aa3f2dc56afb2c4e0b148e429ca93b9c5f2c7a29d2101685aee");
     const nationDropB = await deployAirdropDistributor(NATION, "0xb8d662135979ae3791167c967cba4bf6fb681c665d0c03372745c483fe5089f8");
+    const passportContracts = await deployPassport(veNATION);
 
     const deployment = {
         "nationToken": NATION.address,
@@ -119,6 +152,8 @@ const main = async () => {
         "balancerLPToken": lpContracts.lpToken.address,
         "lpRewardsContract": lpContracts.lpRewardsContract.address,
         "nationDropContracts": [nationDropA.address, nationDropB.address],
+        "nationPassportNFT": passportContracts.passportToken.address,
+        "nationPassportNFTIssuer": passportContracts.passportIssuer.address
     }
 
     const manifestFile = "./deployments/local.json";

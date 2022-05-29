@@ -5,6 +5,7 @@ coverage.json
 typechain
 
 #Artifacts files
+temp.json
 cache
 artifacts
 out

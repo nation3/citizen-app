@@ -14,7 +14,7 @@ let config = {
     process.env.NEXT_PUBLIC_NATION_DISTRIBUTOR1_CONTRACT_ADDRESS,
     process.env.NEXT_PUBLIC_NATION_DISTRIBUTOR2_CONTRACT_ADDRESS,
   ],
-  nationDropAmount: process.env.NEXT_PUBLIC_NATION_DISTRIBUTOR_DROP_AMOUNT,
+  nationDropAmount: 1,
 }
 
 if (process.env.NEXT_PUBLIC_CHAIN !== 'mainnet') {
@@ -31,9 +31,11 @@ if (process.env.NEXT_PUBLIC_CHAIN !== 'mainnet') {
     balancerPoolId: process.env.NEXT_PUBLIC_BALANCER_NATION_ETH_POOL_ID,
     balancerLPToken: devDeployments.balancerLPToken || zeroAddress,
     lpRewardsContract: devDeployments.lpRewardsContract || zeroAddress,
-    nationPassportNFT: devDeployments.passportNFT || zeroAddress,
-    nationPassportNFTIssuer: devDeployments.passportIssuer || zeroAddress,
+    nationPassportNFT: devDeployments.nationPassportNFT || zeroAddress,
+    nationPassportNFTIssuer:
+      devDeployments.nationPassportNFTIssuer || zeroAddress,
     nationDropContracts: devDeployments.nationDropContracts || [zeroAddress],
+    nationDropAmount: 1,
   }
 }
 
