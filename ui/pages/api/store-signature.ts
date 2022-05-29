@@ -39,7 +39,7 @@ export default async function storeSignature(
   } catch (e) {
     console.error(e)
     res.status(500).json({
-      error: `Storing your signature failed. Please copy this string and send it on Discord: ${req.body.signature}`,
+      error: `Storing your signature failed. This is your signature: ${req.body.signature}`,
     })
   }
 }
