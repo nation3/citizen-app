@@ -3,7 +3,6 @@ import { useTokenAllowance, useTokenApproval } from '../lib/approve'
 import { NumberType, transformNumber } from '../lib/numbers'
 import { useAccount } from '../lib/use-wagmi'
 import ActionButton from './ActionButton'
-import { useErrorContext } from './ErrorProvider'
 
 export default function ActionNeedsTokenApproval({
   className,
@@ -16,14 +15,8 @@ export default function ActionNeedsTokenApproval({
   preAction,
 }: any) {
   const { data: account } = useAccount()
-  const {
-    data: tokenAllowance,
-    isLoading: tokenAllowanceLoading,
-    error: allowanceError,
-  } = useTokenAllowance({ token, address: account?.address, spender })
-
-  const { addError } = useErrorContext()
-  addError([allowanceError])
+  const { data: tokenAllowance, isLoading: tokenAllowanceLoading } =
+    useTokenAllowance({ token, address: account?.address, spender })
 
   const weiAmountNeeded = transformNumber(
     amountNeeded?.formatted || amountNeeded,

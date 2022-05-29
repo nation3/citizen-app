@@ -120,7 +120,9 @@ export default function Layout({ children }: any) {
               <div className="pl-6 pt-2 cursor-pointer">
                 <div className="flex-none hidden lg:block">
                   <Link href="/" passHref>
-                    <Image src={Logo} />
+                    <a>
+                      <Image src={Logo} />
+                    </a>
                   </Link>
                 </div>
                 <div className="flex-none lg:hidden">
@@ -150,7 +152,9 @@ export default function Layout({ children }: any) {
               <div className="mt-6 py-4 hidden lg:block">
                 <div className="px-8 pt-2 cursor-pointer">
                   <Link href="/" passHref>
-                    <Image src={Logo}></Image>
+                    <a>
+                      <Image src={Logo} />
+                    </a>
                   </Link>
                 </div>
               </div>

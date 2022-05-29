@@ -1,16 +1,12 @@
-import { useState, useCallback } from 'react'
 import {
   useConnect as _useConnect,
   useAccount as _useAccount,
   useBalance as _useBalance,
   useNetwork as _useNetwork,
-  useContract,
   useContractRead as _useContractRead,
   useContractWrite as _useContractWrite,
-  useSigner,
   useSignTypedData as _useSignTypedData,
 } from 'wagmi'
-import { useErrorContext } from '../components/ErrorProvider'
 import { useStaticCall as _useStaticCall } from './static-call'
 import { useHandleError } from './use-handle-error'
 
