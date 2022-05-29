@@ -60,20 +60,6 @@ export default function Index() {
             </HomeCard>
 
             <HomeCard
-              href="/join"
-              icon={
-                <UserAddIcon className="h-5 w-5 absolute right-8 text-n3blue" />
-              }
-              title="Become a citizen"
-              linkText="Claim a passport"
-            >
-              <p>
-                Once you have $veNATION, you can claim a passport. Only 420
-                Genesis passports will be launched in the beginning.
-              </p>
-            </HomeCard>
-
-            <HomeCard
               href="/liquidity"
               icon={
                 <CurrencyDollarIcon className="h-5 w-5 absolute right-8 text-n3blue" />
