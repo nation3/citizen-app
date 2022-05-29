@@ -1,4 +1,5 @@
 import React from 'react'
+import { useWaitForTransaction } from 'wagmi'
 import usePreferredNetwork from '../lib/use-preferred-network'
 import { useAccount, useNetwork } from '../lib/use-wagmi'
 import ActionNeedsTokenApproval from './ActionNeedsTokenApproval'
@@ -12,12 +13,15 @@ export default function ActionButton({
   approval,
 }: any) {
   const { data: account } = useAccount()
-  const { isLoading, writeAsync } = action
+  const { writeAsync, data, isLoadingOverride } = action
+  const { isLoading } = useWaitForTransaction({
+    hash: data?.hash,
+  })
   const onClick = async () => {
     preAction && preAction()
     const tx = await writeAsync()
-    await tx.wait()
-    postAction && tx.hash && postAction()
+    tx?.wait && (await tx.wait())
+    postAction && postAction()
   }
 
   const { activeChain } = useNetwork({})
@@ -33,7 +37,7 @@ export default function ActionButton({
         <label htmlFor="web3-modal" className={`${className} modal-button`}>
           {children}
         </label>
-      ) : isLoading ? (
+      ) : isLoading || isLoadingOverride ? (
         <div className={className}>
           <button className="btn btn-square btn-link btn-disabled bg-transparent loading"></button>
         </div>

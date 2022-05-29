@@ -58,25 +58,25 @@ export function useVeNationCreateLock(amount: any, time: any) {
 }
 
 export function useVeNationIncreaseLock({
-  currentAmount,
   newAmount,
   currentTime,
   newTime,
 }: any) {
-  const { isLoading: amountLoading, writeAsync: increaseLockAmount } =
+  const { writeAsync: increaseLockAmount, data: lockAmountData } =
     useVeNationIncreaseLockAmount(newAmount)
-  const { isLoading: timeLoading, writeAsync: increaseLockTime } =
+  const { writeAsync: increaseLockTime, data: lockTimeData } =
     useVeNationIncreaseLockTime(newTime)
-  const increaseLock = useCallback(async () => {
-    if (newAmount.gt(0)) {
-      await increaseLockAmount()
+  const action = useCallback(() => {
+    if (newAmount && newAmount.gt(0)) {
+      return { writeAsync: increaseLockAmount, data: lockAmountData }
     }
-    if (newTime && newTime.gt(currentTime)) {
-      await increaseLockTime()
+    if (newTime && currentTime && newTime.gt(currentTime)) {
+      return { writeAsync: increaseLockTime, data: lockTimeData }
     }
-  }, [newAmount, newTime])
+    return {}
+  }, [newAmount, currentTime, newTime])
 
-  return { isLoading: amountLoading || timeLoading, writeAsync: increaseLock }
+  return action()
 }
 
 export function useVeNationIncreaseLockAmount(amount: any) {

@@ -35,6 +35,7 @@ export default function ActionNeedsTokenApproval({
     token,
     spender,
   })
+
   return (
     <>
       {!tokenAllowanceLoading && !approve?.isLoading ? (

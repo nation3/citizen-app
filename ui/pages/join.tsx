@@ -3,6 +3,7 @@ import { ethers } from 'ethers'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
+import { useWaitForTransaction } from 'wagmi'
 import { veNationRequiredStake, nationToken } from '../lib/config'
 import { useNationBalance } from '../lib/nation-token'
 import { NumberType, transformNumber } from '../lib/numbers'
@@ -31,8 +32,10 @@ export default function Join() {
     account?.address
   )
 
-  const { isLoading: claimPassportLoading, writeAsync: claim } =
-    useClaimPassport()
+  const { writeAsync: claim, data: claimData } = useClaimPassport()
+  const { isLoading: claimPassportLoading } = useWaitForTransaction({
+    hash: claimData?.hash,
+  })
   const { isLoading: signatureLoading, signTypedData } = useSignAgreement({
     onSuccess: async (signature: string) => {
       const sigs = ethers.utils.splitSignature(signature)
@@ -45,7 +48,7 @@ export default function Join() {
   })
 
   const signAndClaim = {
-    isLoading: signatureLoading || claimPassportLoading,
+    isLoadingOverride: signatureLoading || claimPassportLoading,
     writeAsync: signTypedData,
   }
 
