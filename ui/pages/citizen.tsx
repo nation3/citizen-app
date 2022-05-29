@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import { useState } from 'react'
+// @ts-ignore
 import Card from 'react-animated-3d-card'
 import { usePassport } from '../lib/passport-nft'
 import { useAccount } from '../lib/use-wagmi'

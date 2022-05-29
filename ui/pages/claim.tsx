@@ -27,8 +27,6 @@ export default function Claim() {
     proofIndex
   )
 
-  console.log(nationDropAmount)
-
   useEffect(() => {
     if (account && claimsFiles) {
       const [id, index] = checkEligibility(claimsFiles, account.address)

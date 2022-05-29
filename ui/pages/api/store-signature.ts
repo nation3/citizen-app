@@ -9,7 +9,10 @@ const client = new NFTStorage({
   token: process.env.NEXT_PUBLIC_NFTSTORAGE_KEY || '',
 })
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+export default async function storeSignature(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   try {
     const prov = provider()
 

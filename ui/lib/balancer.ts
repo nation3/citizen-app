@@ -13,7 +13,8 @@ export function useBalancerPool(id: any) {
     'getPoolTokens',
     {
       args: id,
-    }
+    },
+    process.env.NEXT_PUBLIC_CHAIN === 'mainnet'
   )
 
   const [poolValue, setPoolValue] = useState(0)

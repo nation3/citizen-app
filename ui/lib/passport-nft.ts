@@ -39,6 +39,6 @@ export function usePassport(address: any) {
     { args: [address], enable: address }
   )
   console.log(`Passport ID ${id}`)
-  const { loading, nft } = useNft(nationPassportNFT, id)
+  const { loading, nft } = useNft(nationPassportNFT || '', id)
   return { data: { id, nft }, isLoading: loadingID || loading }
 }
