@@ -44,11 +44,11 @@ const navigation = [
     href: '/',
     icon: <ViewGridIcon className="h-5 w-5" />,
   },
-  {
+  /*{
     name: 'Become a citizen',
     href: '/join',
     icon: <UserAddIcon className="h-5 w-5" />,
-  },
+  },*/
   {
     name: 'Claim airdrop',
     href: '/claim',

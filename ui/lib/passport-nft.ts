@@ -36,7 +36,8 @@ export function usePassport(address: any) {
   const { data: id, isLoading: loadingID } = useContractRead(
     nftIssuerContractParams,
     'passportId',
-    { args: [address], enable: address }
+    { args: [address], enable: address },
+    false
   )
   console.log(`Passport ID ${id}`)
   const { loading, nft } = useNft(nationPassportNFT || '', id)
