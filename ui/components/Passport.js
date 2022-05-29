@@ -7,7 +7,7 @@ import IconPlain from '../public/passport/icon-plain.svg'
 import LogoPlain from '../public/passport/logo-plain.svg'
 import QR from '../public/passport/qr.svg'
 
-export default function Passport({ holder, id, onClick }) {
+/*export default function Passport({ holder, id, onClick }) {
   return (
     <Card
       style={{
@@ -53,6 +53,22 @@ export default function Passport({ holder, id, onClick }) {
           <Image src={ContactlessIcon} width={20} height={20}></Image>
         </div>
       </div>
+    </Card>
+  )
+}*/
+
+export default function Passport({ holder, id, nft, onClick }) {
+  return (
+    <Card
+      style={{
+        width: window.innerWidth > 390 ? '390px' : '320px',
+        height: window.innerWidth > 390 ? '450px' : '369px',
+        cursor: 'pointer',
+        position: 'relative',
+      }}
+      onClick={onClick}
+    >
+      <Image src={nft.image} layout="fill" />
     </Card>
   )
 }

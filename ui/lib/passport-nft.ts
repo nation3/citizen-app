@@ -1,3 +1,4 @@
+import { NftProvider, useNft } from 'use-nft'
 import PassportNFT from '../abis/Passport.json'
 import PassportIssuer from '../abis/PassportIssuer.json'
 import { nationPassportNFT, nationPassportNFTIssuer } from './config'
@@ -52,5 +53,6 @@ export function usePassport(address: any) {
   )
   console.log(`Passport timestamp ${timestamp}`)
   return { data: { id, timestamp }, isLoading: loadingID && loadingTimestamp }*/
-  return { data: { id }, isLoading: loadingID }
+  const { loading, error, nft } = useNft(nationPassportNFT, id)
+  return { data: { id, nft }, isLoading: loadingID }
 }

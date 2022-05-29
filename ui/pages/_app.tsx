@@ -1,6 +1,7 @@
 import { ethers } from 'ethers'
 import { useEffect, useState } from 'react'
 import React from 'react'
+import { NftProvider } from 'use-nft'
 import { WagmiConfig, createClient } from 'wagmi'
 import { connectors, provider as externalProvider } from '../lib/connectors'
 import { ErrorProvider } from '../components/ErrorProvider'
@@ -41,11 +42,13 @@ function App({ Component, pageProps }: any) {
     <>
       {client && (
         <WagmiConfig client={client}>
-          <ErrorProvider>
-            <Layout>
-              <Component {...pageProps} />
-            </Layout>
-          </ErrorProvider>
+          <NftProvider fetcher={['ethers', { provider: externalProvider() }]}>
+            <ErrorProvider>
+              <Layout>
+                <Component {...pageProps} />
+              </Layout>
+            </ErrorProvider>
+          </NftProvider>
         </WagmiConfig>
       )}
     </>

@@ -16,6 +16,7 @@ export default function ActionButton({
   const onClick = async () => {
     preAction && preAction()
     const tx = await writeAsync()
+    await tx.wait()
     postAction && tx.hash && postAction()
   }
 
