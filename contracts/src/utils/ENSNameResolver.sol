@@ -15,18 +15,16 @@ library ENSNameResolver {
     function lookupENSName(address _address) public view returns (string memory) {
         
         // Rinkeby & Goerli
-        address REGISTRAR_ADDRESS = 0x6F628b68b30Dc3c17f345c9dbBb1E483c2b7aE5c;
+        // address REGISTRAR_ADDRESS = 0x6F628b68b30Dc3c17f345c9dbBb1E483c2b7aE5c;
         // Mainnet
-        // address REGISTRAR_ADDRESS = 0x084b1c3C81545d370f3634392De611CaaBFf8148;
-        // address OLD_REGISTRAR_ADDRESS = 0x9062C0A6Dbd6108336BcBe4593a3D1cE05512069;
+        address REGISTRAR_ADDRESS = 0x084b1c3C81545d370f3634392De611CaaBFf8148;
+        address OLD_REGISTRAR_ADDRESS = 0x9062C0A6Dbd6108336BcBe4593a3D1cE05512069;
 
         string memory ens = tryLookupENSName(REGISTRAR_ADDRESS, _address);
 
-        /*
         if (bytes(ens).length == 0) {
             ens = tryLookupENSName(OLD_REGISTRAR_ADDRESS, _address);
         }
-        */
 
         return ens;
     }

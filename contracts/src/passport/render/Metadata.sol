@@ -38,9 +38,9 @@ library Metadata {
 
         return
             string(abi.encodePacked(
-                attributeString("Citizen ID", Strings.toHexString(uint256(uint160(owner)))),
+                attributeString("Passport Holder", Strings.toHexString(uint256(uint160(owner)))),
                 ",",
-                attributeString("Citizen Number", Strings.toString(id)),
+                attributeString("Passport Number", Strings.toString(id)),
                 ",",
                 attributeString(
                     "Issue Date",

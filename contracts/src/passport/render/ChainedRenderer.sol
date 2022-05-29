@@ -81,7 +81,7 @@ contract ChainedRenderer is Renderer {
         return string(abi.encodePacked(
             '<svg x="24" y="511" width="537" height="130" viewBox="0 0 537 130" fill="none" xmlns="http://www.w3.org/2000/svg">',
             string(abi.encodePacked(
-                '<text y="24" font-family="Open Sans, Helvetica" font-size="24" font-weight="lighter" font-variant="all-small-caps" fill="#7395B2" >Citizen Id</text>',
+                '<text y="24" font-family="Open Sans, Helvetica" font-size="24" font-weight="lighter" font-variant="all-small-caps" fill="#7395B2" >Passport Holder</text>',
                 '<text y="55" font-family="Open Sans, Helvetica" font-size="24" font-weight="bold" fill="#224059" >',
                 name,
                 '</text>'
@@ -93,7 +93,7 @@ contract ChainedRenderer is Renderer {
                 '</text>'
             )),
             string(abi.encodePacked(
-                '<text x="537" y="96" text-anchor="end" font-family="Open Sans, Helvetica" font-size="24" font-weight="lighter" font-variant="all-small-caps" fill="#7395B2" >Citizen Number</text>',
+                '<text x="537" y="96" text-anchor="end" font-family="Open Sans, Helvetica" font-size="24" font-weight="lighter" font-variant="all-small-caps" fill="#7395B2" >Passport Number</text>',
                 '<text x="537" y="126" text-anchor="end" font-family="Open Sans, Helvetica" font-size="23" fill="#224059" >',
                 Strings.toString(id),
                 '</text>'
