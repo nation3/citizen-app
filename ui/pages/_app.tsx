@@ -15,7 +15,7 @@ function App({ Component, pageProps }: any) {
     let provider = externalProvider
 
     const userProvider =
-      window.ethereum || (window as unknown as any).web3.currentProvider
+      window.ethereum || (window as unknown as any).web3?.currentProvider
     if (userProvider && process.env.NEXT_PUBLIC_CHAIN !== 'local') {
       provider = () => {
         console.log(
