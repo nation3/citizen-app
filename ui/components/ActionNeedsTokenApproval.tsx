@@ -1,4 +1,5 @@
-import React from 'react'
+import { BigNumber } from 'ethers'
+import React, { useEffect, useState } from 'react'
 import { useTokenAllowance, useTokenApproval } from '../lib/approve'
 import { NumberType, transformNumber } from '../lib/numbers'
 import { useAccount } from '../lib/use-wagmi'
@@ -17,11 +18,23 @@ export default function ActionNeedsTokenApproval({
   const { data: account } = useAccount()
   const { data: tokenAllowance, isLoading: tokenAllowanceLoading } =
     useTokenAllowance({ token, address: account?.address, spender })
-
-  const weiAmountNeeded = transformNumber(
-    amountNeeded?.formatted || amountNeeded,
-    NumberType.bignumber
+  const [approveUnlimited, setApproveUnlimited] = useState(true)
+  const [weiAmountNeeded, setWeiAmountNeeded] = useState<BigNumber>(
+    BigNumber.from(0)
   )
+
+  useEffect(() => {
+    if (approveUnlimited && amountNeeded > 0) {
+      setWeiAmountNeeded(BigNumber.from('1000000000000000000000000000'))
+    } else {
+      setWeiAmountNeeded(
+        transformNumber(
+          amountNeeded?.formatted || amountNeeded,
+          NumberType.bignumber
+        ) as BigNumber
+      )
+    }
+  }, [amountNeeded, approveUnlimited])
 
   const approve = useTokenApproval({
     amountNeeded: weiAmountNeeded,
@@ -41,9 +54,20 @@ export default function ActionNeedsTokenApproval({
             {children}
           </ActionButton>
         ) : (
-          <ActionButton className={className} action={approve}>
-            {approveText}
-          </ActionButton>
+          <div className="flex flex-col w-full">
+            <label className="label cursor-pointer w-full flex justify-end gap-2">
+              <span className="label-text">Approve unlimited</span>
+              <input
+                type="checkbox"
+                className="checkbox checkbox-primary"
+                checked={approveUnlimited}
+                onChange={(e) => setApproveUnlimited(e.target.checked)}
+              />
+            </label>
+            <ActionButton className={className} action={approve}>
+              {approveText}
+            </ActionButton>
+          </div>
         )
       ) : (
         <div className={className}>
