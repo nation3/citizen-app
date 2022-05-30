@@ -305,7 +305,15 @@ export default function Lock() {
                     $NATION
                   </p>
                   <label className="label">
-                    <span className="label-text">Lock amount</span>
+                    <span className="label-text">
+                      Lock amount
+                      <br />
+                      <span className="text-xs">
+                        This is the final total amount. To increase it, enter
+                        your current amount plus the amount you want to
+                        increase.
+                      </span>
+                    </span>
                   </label>
                   <div className="input-group mb-4">
                     <input
@@ -338,7 +346,9 @@ export default function Lock() {
                     <span className="label-text">
                       Lock expiration date
                       <br />
-                      (min. one week, max four years)
+                      <span className="text-xs">
+                        Minimum one week, maximum four years from now.
+                      </span>
                     </span>
                   </label>
                   <input
