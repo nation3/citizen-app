@@ -50,7 +50,7 @@ export default function Citizen() {
                   className="stat"
                   rel="noopener noreferrer"
                   target="_blank"
-                  href=""
+                  href="https://discord.gg/rvrqvUWPDy"
                 >
                   <div className="stat-title">Access gated channels on</div>
                   <div className="stat-value text-indigo-500">Discord</div>
@@ -60,7 +60,7 @@ export default function Citizen() {
                   className="stat"
                   rel="noopener noreferrer"
                   target="_blank"
-                  href=""
+                  href="https://snapshot.org/#/nation3.eth"
                 >
                   <div className="stat-title">Vote on</div>
                   <div className="stat-value text-yellow-400">Snapshot</div>
