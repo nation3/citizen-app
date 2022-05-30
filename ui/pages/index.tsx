@@ -59,7 +59,7 @@ export default function Index() {
               </p>
             </HomeCard>
 
-            {/*<HomeCard
+            <HomeCard
               href="/join"
               icon={
                 <UserAddIcon className="h-5 w-5 absolute right-8 text-n3blue" />
@@ -71,7 +71,7 @@ export default function Index() {
                 Once you have $veNATION, you can claim a passport. Only 420
                 Genesis passports will be launched in the beginning.
               </p>
-            </HomeCard>*/}
+            </HomeCard>
 
             <HomeCard
               href="/liquidity"
