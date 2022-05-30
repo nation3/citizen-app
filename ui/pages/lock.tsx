@@ -335,7 +335,13 @@ export default function Lock() {
                     <button
                       className="btn btn-outline"
                       onClick={() => {
-                        setLockAmount(nationBalance?.formatted)
+                        setLockAmount(
+                          veNationLock
+                            ? ethers.utils.formatEther(
+                                veNationLock[0].add(nationBalance?.value)
+                              )
+                            : nationBalance?.formatted
+                        )
                         setWantsToIncrease(true)
                       }}
                     >

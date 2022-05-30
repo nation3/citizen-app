@@ -15,14 +15,11 @@ import { useVeNationBalance } from '../lib/ve-token'
 import ActionButton from '../components/ActionButton'
 import Balance from '../components/Balance'
 import Confetti from '../components/Confetti'
-import { useErrorContext } from '../components/ErrorProvider'
 import GradientLink from '../components/GradientLink'
 import Head from '../components/Head'
 import MainCard from '../components/MainCard'
 
 export default function Join() {
-  const errorContext = useErrorContext()
-
   const { data: account } = useAccount()
   const { data: nationBalance, isLoading: nationBalanceLoading } =
     useNationBalance(account?.address)
