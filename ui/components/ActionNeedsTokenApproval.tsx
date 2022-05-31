@@ -55,14 +55,19 @@ export default function ActionNeedsTokenApproval({
           </ActionButton>
         ) : (
           <div className="flex flex-col w-full">
-            <label className="label cursor-pointer w-full flex justify-end gap-2">
-              <span className="label-text">Approve unlimited</span>
-              <input
-                type="checkbox"
-                className="checkbox checkbox-primary"
-                checked={approveUnlimited}
-                onChange={(e) => setApproveUnlimited(e.target.checked)}
-              />
+            <label className="label cursor-pointer w-full flex justify-end">
+              <div
+                className="tooltip tooltip-left flex items-center gap-2"
+                data-tip="Check this to avoid having to approve for your veNATION to be locked in the future."
+              >
+                <span className="label-text">Approve unlimited</span>
+                <input
+                  type="checkbox"
+                  className="checkbox checkbox-primary"
+                  checked={approveUnlimited}
+                  onChange={(e) => setApproveUnlimited(e.target.checked)}
+                />
+              </div>
             </label>
             <ActionButton className={className} action={approve}>
               {approveText}
