@@ -58,7 +58,7 @@ export default function ActionNeedsTokenApproval({
           <div className="flex flex-col w-full">
             <label className="label cursor-pointer w-full flex justify-end">
               <div
-                className="tooltip tooltip-left flex items-center gap-2"
+                className="tooltip tooltip-top md:tooltip-left flex items-center gap-2"
                 data-tip="Check this to avoid having to approve your veNATION on future locks."
               >
                 <span className="label-text flex items-center gap-1">
