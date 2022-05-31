@@ -134,7 +134,7 @@ export default function Lock() {
     if (hasLock && veNationLock) {
       setMinMaxLockTime({
         min: dateToReadable(
-          dateOut(bigNumberToDate(veNationLock[1]), { days: 8 })
+          oneWeekOut
         ),
         max: dateToReadable(dateOut(new Date(), { years: 4 })),
       })
