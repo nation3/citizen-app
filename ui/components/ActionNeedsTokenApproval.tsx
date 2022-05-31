@@ -58,7 +58,7 @@ export default function ActionNeedsTokenApproval({
             <label className="label cursor-pointer w-full flex justify-end">
               <div
                 className="tooltip tooltip-left flex items-center gap-2"
-                data-tip="Check this to avoid having to approve for your veNATION to be locked in the future."
+                data-tip="Check this to avoid having to approve your veNATION to be locked in the future."
               >
                 <span className="label-text">Approve unlimited</span>
                 <input
