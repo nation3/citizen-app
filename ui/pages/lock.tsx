@@ -291,7 +291,7 @@ export default function Lock() {
           </>
         )}
 
-        <div className="card bg-base-100 shadow">
+        <div className="card bg-base-100 shadow overflow-visible">
           <div className="card-body">
             <div className="form-control">
               {!hasExpired ? (

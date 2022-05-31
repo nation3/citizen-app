@@ -1,3 +1,4 @@
+import { InformationCircleIcon } from '@heroicons/react/outline'
 import { BigNumber } from 'ethers'
 import React, { useEffect, useState } from 'react'
 import { useTokenAllowance, useTokenApproval } from '../lib/approve'
@@ -58,9 +59,12 @@ export default function ActionNeedsTokenApproval({
             <label className="label cursor-pointer w-full flex justify-end">
               <div
                 className="tooltip tooltip-left flex items-center gap-2"
-                data-tip="Check this to avoid having to approve your veNATION to be locked in the future."
+                data-tip="Check this to avoid having to approve your veNATION on future locks."
               >
-                <span className="label-text">Approve unlimited</span>
+                <span className="label-text flex items-center gap-1">
+                  Approve unlimited{' '}
+                  <InformationCircleIcon className="w-4 h-4" />
+                </span>
                 <input
                   type="checkbox"
                   className="checkbox checkbox-primary"
