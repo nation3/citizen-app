@@ -12,7 +12,7 @@ export default function MainCard({
         <div className="hero-content pb-24 lg:pb-2">
           <div className="max-w-md md:max-w-xl">
             <div
-              className={`card min-w-80 md:w-full bg-base-100 shadow-md ${
+              className={`card min-w-80 md:w-full bg-base-100 shadow-md overflow-visible ${
                 gradientBg && 'bg-gradient-to-r from-n3blue to-n3green'
               }`}
             >
