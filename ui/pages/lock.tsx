@@ -227,11 +227,11 @@ export default function Lock() {
               <div>
                 <InformationCircleIcon className="h-24 w-24 text-n3blue" />
                 <span>
-                  Make sure to obtain more than {veNationRequiredStake}{' '}
-                  $veNATION if you want to mint a passport NFT on launch, since
-                  $veNATION balance drops over time. If it falls below 2
-                  $veNATION, your passport can be revoked. You can always lock
-                  more $NATION later.
+                  We suggest you to obtain at least{' '}
+                  {veNationRequiredStake + 0.5} SveNATION if you want to mint a
+                  passport NFT, since $veNATION balance drops over time. If it
+                  falls below the required threshold, your passport can be
+                  revoked. You can always lock more $NATION later.
                 </span>
               </div>
             </div>
