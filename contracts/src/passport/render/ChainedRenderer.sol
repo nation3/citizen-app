@@ -93,7 +93,7 @@ contract ChainedRenderer is Renderer {
                 '</text>'
             )),
             string(abi.encodePacked(
-                '<text x="537" y="96" text-anchor="end" font-family="Open Sans, Helvetica" font-size="24" font-weight="lighter" font-variant="all-small-caps" fill="#7395B2" >Passport Number</text>',
+                '<text x="537" y="96" text-anchor="end" font-family="Open Sans, Helvetica" font-size="24" font-weight="lighter" font-variant="all-small-caps" fill="#7395B2" >Number</text>',
                 '<text x="537" y="126" text-anchor="end" font-family="Open Sans, Helvetica" font-size="23" fill="#224059" >',
                 Strings.toString(id),
                 '</text>'
