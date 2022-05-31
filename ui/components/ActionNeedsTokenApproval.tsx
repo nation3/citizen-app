@@ -62,8 +62,8 @@ export default function ActionNeedsTokenApproval({
                 data-tip="Check this to avoid having to approve your veNATION on future locks."
               >
                 <span className="label-text flex items-center gap-1">
-                  Approve unlimited{' '}
                   <InformationCircleIcon className="w-4 h-4" />
+                  Approve unlimited
                 </span>
                 <input
                   type="checkbox"
