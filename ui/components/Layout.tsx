@@ -85,7 +85,7 @@ export default function Layout({ children }: any) {
   const router = useRouter()
   const { connectors, connect, error: connectError } = useConnect()
   const { data: account } = useAccount()
-  const { data: hasPassport, isLoading: hasPassportLoading } = useHasPassport(
+  const { hasPassport, isLoading: hasPassportLoading } = useHasPassport(
     account?.address
   )
   const { data: ensName } = useEnsName({ address: account?.address })

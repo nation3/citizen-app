@@ -25,7 +25,7 @@ export default function Join() {
     useNationBalance(account?.address)
   const { data: veNationBalance, isLoading: veNationBalanceLoading } =
     useVeNationBalance(account?.address)
-  const { data: hasPassport, isLoading: hasPassportLoading } = useHasPassport(
+  const { hasPassport, isLoading: hasPassportLoading } = useHasPassport(
     account?.address
   )
 
@@ -95,7 +95,7 @@ export default function Join() {
   return (
     <>
       <Head title="Become a citizen" />
-      {hasPassport && <Confetti />}
+      { hasPassport && <Confetti />}
       <MainCard title="Become a Nation3 citizen">
         <ul className="steps steps-vertical lg:steps-horizontal my-8">
           <li className={`step text-sm ${action.mint ? 'step-primary' : ''}`}>
@@ -113,7 +113,7 @@ export default function Join() {
           </li>
         </ul>
 
-        {!hasPassport ? (
+        { !hasPassport ? (
           <>
             <p>
               To become a citizen, you need to mint a passport NFT by holding at
@@ -199,7 +199,8 @@ export default function Join() {
               <button className="btn btn-square btn-ghost btn-disabled btn-lg bg-transparent loading"></button>
             </div>
           </>
-        )}
+        )
+        }
       </MainCard>
     </>
   )
