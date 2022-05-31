@@ -2,7 +2,7 @@ import Link from 'next/link'
 import React from 'react'
 
 export default function GradientLink({ text, href, textSize }: any) {
-  if (href.charAt(0) === '/') {
+  if (href?.charAt(0) === '/') {
     return (
       <Link href={href}>
         <a

@@ -156,7 +156,7 @@ export default function Join() {
                   <Balance
                     loading={veNationBalanceLoading}
                     balance={veNationBalance?.value}
-                    decimals={2}
+                    decimals={4}
                   />
                 </div>
                 <div className="stat-desc">$veNATION</div>
