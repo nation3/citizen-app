@@ -40,7 +40,6 @@ const config: Config = {
   nationDropContracts: JSON.parse(process.env.NEXT_PUBLIC_NATION_DISTRIBUTOR_CONTRACT_ADDRESS || "null") || defaultConfig.nationDropContracts || [zeroAddress],
   nationDropAmount: Number(process.env.NEXT_NATION_DROP_AMOUNT) || 1
 }
-console.log(config)
 
 export const {
   nationToken,
