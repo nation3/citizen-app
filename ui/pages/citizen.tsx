@@ -7,6 +7,7 @@ import { useAccount } from '../lib/use-wagmi'
 import Confetti from '../components/Confetti'
 import Head from '../components/Head'
 import AddToWallet from '../public/passport/wallet.svg'
+import { useSignMessage } from 'wagmi'
 
 export default function Citizen() {
   const { data: account } = useAccount()
@@ -16,6 +17,19 @@ export default function Citizen() {
   const addConfetti = () => {
     setConfettiNumber([...confettiNumber, confettiNumber.length])
   }
+
+  const { signMessage: signMessageAndDownloadPass } = useSignMessage({
+    message: 'I am the holder of this Nation3 passport',
+    onSuccess(data) {
+      console.log('signMessageAndDownloadPass data:', data)
+      const downloadPassURI : string = `https://mobile-passport.vercel.app/api/downloadPass?address=${account.address}&signature=${data}&platform=Apple`
+      console.log('downloadPassURI:', downloadPassURI)
+      window.location.href = downloadPassURI
+    },
+    onError(error) {
+      console.error('signMessageAndDownloadPass error:', error)
+    }
+  })
 
   return (
     <>
@@ -67,8 +81,7 @@ export default function Citizen() {
                 </a>
               </div>
               <div className="mt-8 flex flex-col text-center justify-center">
-                <p className="mb-2">And, coming soon...</p>
-                <a href="#" onClick={() => alert('Coming soon!')}>
+                <a href="#" onClick={() => signMessageAndDownloadPass()}>
                   <Image src={AddToWallet} width={220} height={68} />
                 </a>
               </div>
