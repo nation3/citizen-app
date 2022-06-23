@@ -22,7 +22,7 @@ export default function Citizen() {
     message: 'I am the holder of this Nation3 passport',
     onSuccess(data) {
       console.log('signMessageAndDownloadPass data:', data)
-      const downloadPassURI : string = `https://mobile-passport.vercel.app/api/downloadPass?address=${account.address}&signature=${data}&platform=Apple`
+      const downloadPassURI : string = `https://passports.nation3.org/api/downloadPass?address=${account.address}&signature=${data}&platform=Apple`
       console.log('downloadPassURI:', downloadPassURI)
       window.location.href = downloadPassURI
     },
