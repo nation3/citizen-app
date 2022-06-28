@@ -2,12 +2,12 @@ import Image from 'next/image'
 import { useState } from 'react'
 // @ts-ignore
 import Card from 'react-animated-3d-card'
+import { useSignMessage } from 'wagmi'
 import { usePassport } from '../lib/passport-nft'
 import { useAccount } from '../lib/use-wagmi'
 import Confetti from '../components/Confetti'
 import Head from '../components/Head'
 import AddToWallet from '../public/passport/wallet.svg'
-import { useSignMessage } from 'wagmi'
 
 export default function Citizen() {
   const { data: account } = useAccount()
@@ -22,13 +22,13 @@ export default function Citizen() {
     message: 'I am the holder of this Nation3 passport',
     onSuccess(data) {
       console.log('signMessageAndDownloadPass data:', data)
-      const downloadPassURI : string = `https://passports.nation3.org/api/downloadPass?address=${account.address}&signature=${data}&platform=Apple`
+      const downloadPassURI: string = `https://passports.nation3.org/api/downloadPass?address=${account.address}&signature=${data}&platform=Apple`
       console.log('downloadPassURI:', downloadPassURI)
       window.location.href = downloadPassURI
     },
     onError(error) {
       console.error('signMessageAndDownloadPass error:', error)
-    }
+    },
   })
 
   return (
@@ -81,9 +81,9 @@ export default function Citizen() {
                 </a>
               </div>
               <div className="mt-8 flex flex-col text-center justify-center">
-                <a href="#" onClick={() => signMessageAndDownloadPass()}>
+                <button onClick={() => signMessageAndDownloadPass()}>
                   <Image src={AddToWallet} width={220} height={68} />
-                </a>
+                </button>
               </div>
             </div>
           ) : (
