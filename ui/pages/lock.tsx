@@ -398,7 +398,7 @@ export default function Lock() {
                       {calculateVeNation({
                         nationAmount: lockAmount && +lockAmount,
                         veNationAmount: transformNumber(
-                          veNationBalance.value || 0,
+                          veNationBalance?.value || 0,
                           NumberType.number
                         ),
                         time: Date.parse(lockTime.formatted),
