@@ -64,7 +64,7 @@ export default function Citizen() {
                   className="stat"
                   rel="noopener noreferrer"
                   target="_blank"
-                  href="https://discord.gg/rvrqvUWPDy"
+                  href="https://discord.gg/nation3"
                 >
                   <div className="stat-title">Access gated channels on</div>
                   <div className="stat-value text-indigo-500">Discord</div>
