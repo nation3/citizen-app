@@ -5,12 +5,17 @@ export default function MainCard({
   title,
   loading,
   gradientBg,
+  maxWidthClassNames,
 }: any) {
   return (
     <div className="hero h-full">
       {!loading ? (
         <div className="hero-content pb-24 lg:pb-2">
-          <div className="max-w-md md:max-w-xl">
+          <div
+            className={
+              !maxWidthClassNames ? 'max-w-md md:max-w-xl' : maxWidthClassNames
+            }
+          >
             <div
               className={`card min-w-80 md:w-full bg-base-100 shadow-md overflow-visible ${
                 gradientBg && 'bg-gradient-to-r from-n3blue to-n3green'
