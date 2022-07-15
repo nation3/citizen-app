@@ -61,13 +61,13 @@ export default function Citizen() {
         <div className="flex flex-col md:flex-row justify-between">
           <div
             style={{
-              width: window.innerWidth > 390 ? '390px' : '320px',
+              width: window.innerWidth > 420 ? '390px' : '280px',
             }}
           >
             <Card
               style={{
-                width: window.innerWidth > 390 ? '390px' : '320px',
-                height: window.innerWidth > 390 ? '450px' : '369px',
+                width: window.innerWidth > 420 ? '390px' : '280px',
+                height: window.innerWidth > 420 ? '450px' : '320px',
                 cursor: 'pointer',
                 position: 'relative',
               }}
