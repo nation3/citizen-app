@@ -74,7 +74,7 @@ export default function Citizen() {
                   className="stat"
                   rel="noopener noreferrer"
                   target="_blank"
-                  href="https://snapshot.org/#/nation3.eth"
+                  href="https://vote.nation3.org"
                 >
                   <div className="stat-title">Vote on</div>
                   <div className="stat-value text-yellow-400">Snapshot</div>
