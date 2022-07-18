@@ -73,7 +73,9 @@ export default function Citizen() {
               }}
               onClick={() => addConfetti()}
             >
-              <Image src={passportData?.nft?.image} layout="fill" />
+              {passportData?.nft?.image && (
+                <Image src={passportData.nft.image} layout="fill" />
+              )}
             </Card>
           </div>
           <div className="flex flex-row md:flex-col justify-center items-between content-end mt-8 gap-4">
