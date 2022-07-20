@@ -1,6 +1,10 @@
-import { useAccount, useNetwork, usePreferredNetwork } from '@nation3/utils'
+import {
+  useAccount,
+  useNetwork,
+  usePreferredNetwork,
+  useWaitForTransaction,
+} from '@nation3/utils'
 import React from 'react'
-import { useWaitForTransaction } from 'wagmi'
 import ActionNeedsTokenApproval from './ActionNeedsTokenApproval'
 
 export default function ActionButton({
@@ -13,7 +17,8 @@ export default function ActionButton({
 }: any) {
   const { data: account } = useAccount()
   const { writeAsync, data, isLoadingOverride } = action
-  const { isLoading } = useWaitForTransaction({
+
+  const { loading } = useWaitForTransaction({
     hash: data?.hash,
   })
   const onClick = async () => {
@@ -36,7 +41,7 @@ export default function ActionButton({
         <label htmlFor="web3-modal" className={`${className} modal-button`}>
           {children}
         </label>
-      ) : isLoading || isLoadingOverride ? (
+      ) : loading || isLoadingOverride ? (
         <div className={className}>
           <button className="btn btn-square btn-link btn-disabled bg-transparent loading"></button>
         </div>
