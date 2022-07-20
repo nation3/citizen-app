@@ -20,13 +20,13 @@ export default function Citizen() {
 
   const { signMessage: signMessageAndDownloadPass } = useSignMessage({
     message: 'I am the holder of this Nation3 passport',
-    onSuccess(data) {
+    onSuccess(data: any) {
       console.log('signMessageAndDownloadPass data:', data)
       const downloadPassURI: string = `https://passports.nation3.org/api/downloadPass?address=${account.address}&signature=${data}&platform=Apple`
       console.log('downloadPassURI:', downloadPassURI)
       window.location.href = downloadPassURI
     },
-    onError(error) {
+    onError(error: any) {
       console.error('signMessageAndDownloadPass error:', error)
     },
   })
