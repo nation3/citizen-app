@@ -17,9 +17,8 @@ export default function Index() {
   return (
     <>
       <Head title="Home" />
-
       <div className="hero h-full">
-        <div className="hero-content flex-col pb-24">
+        <div className="hero-content flex-col">
           <h1 className="card-title text-center text-3xl font-semibold mb-2">
             Welcome to Nation3
             <Image src={flag} width={36} height={36} />

@@ -9,7 +9,7 @@ export default function MainCard({
   return (
     <div className="hero h-full">
       {!loading ? (
-        <div className="hero-content pb-24 lg:pb-2">
+        <div className="hero-content">
           <div className="max-w-md md:max-w-xl">
             <div
               className={`card min-w-80 md:w-full bg-base-100 shadow-md overflow-visible ${

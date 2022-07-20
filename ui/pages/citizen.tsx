@@ -38,7 +38,7 @@ export default function Citizen() {
       ))}
       <Head title="Welcome, citizen" />
       <div className="hero h-full">
-        <div className="hero-content pb-24 lg:pb-2">
+        <div className="hero-content">
           {account && passportData?.id && passportData?.nft ? (
             <div className="flex flex-col items-center justify-center">
               <div
