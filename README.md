@@ -37,6 +37,11 @@ Install the dependencies:
 yarn install
 ```
 
+Copy environment variables:
+```
+cp .env.mainnet .env.local
+```
+
 Build:
 ```
 yarn build
