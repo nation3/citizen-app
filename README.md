@@ -47,6 +47,11 @@ Build:
 yarn build
 ```
 
+Lint:
+```
+yarn lint
+```
+
 Add variables to your local development environment:
 ```
 cp .env.mainnet .env.local
