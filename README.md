@@ -37,7 +37,7 @@ Install the dependencies:
 yarn install
 ```
 
-Copy environment variables:
+Add variables to your local development environment:
 ```
 cp .env.mainnet .env.local
 ```
@@ -50,11 +50,6 @@ yarn build
 Lint:
 ```
 yarn lint
-```
-
-Add variables to your local development environment:
-```
-cp .env.mainnet .env.local
 ```
 
 Start the development server:
