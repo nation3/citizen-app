@@ -1,4 +1,4 @@
-name: /ui CI
+name: /ui (Goerli) CI
 
 on:
   push:
@@ -30,5 +30,6 @@ jobs:
         cache-dependency-path: ui/yarn.lock
     - run: npm install --global yarn
     - run: echo $(yarn --version)
+    - run: cp .env.goerli .env.local
     - run: yarn install
     - run: yarn build
