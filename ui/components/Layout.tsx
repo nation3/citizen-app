@@ -308,7 +308,8 @@ export default function Layout({ children }: any) {
                 {connectorData.connectors?.map((connector) => (
                   <li key={connector.id}>
                     <button
-                      disabled={!connector.ready}
+                      // The injected connection does not properly get marked as ready
+                      disabled={!connector.ready && connector.id != 'injected'}
                       onClick={() => connect(connector)}
                     >
                       {(connectorIcons as Indexable)[connector.name] ? (

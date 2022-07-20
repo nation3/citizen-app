@@ -1733,10 +1733,10 @@
     "multiformats" "^9.5.4"
     "murmurhash3js-revisited" "^3.0.0"
 
-"@nation3/utils@^1.0.24":
-  "integrity" "sha512-3T/VJLj+TFeGlphpPffBF+/lR37XVbHf+0WVxhGkhy15ntBDosPyH1LWKJ3ijXrWjjKZ6YTp2npwJkzxJk//IA=="
-  "resolved" "https://registry.npmjs.org/@nation3/utils/-/utils-1.0.24.tgz"
-  "version" "1.0.24"
+"@nation3/utils@^1.0.25":
+  "integrity" "sha512-M0aEDidR/1Vnmc64B+XhVneTKvEsrz08MdD4auosNro4pdXbGiocacQF1+4GBWGa5IXaCRrZTLsUNowPDSZNHw=="
+  "resolved" "https://registry.npmjs.org/@nation3/utils/-/utils-1.0.25.tgz"
+  "version" "1.0.25"
   dependencies:
     "@gnosis.pm/safe-core-sdk" "2.1.0"
     "@gnosis.pm/safe-ethers-adapters" "0.1.0-alpha.9"
