@@ -27,7 +27,8 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-        cache-dependency-path: ui/package-lock.json
+        cache-dependency-path: ui/yarn.lock
     - run: npm install --global yarn
+    - run: echo $(yarn --version)
     - run: yarn install
     - run: yarn build
