@@ -16,6 +16,13 @@ import {
   ChevronDownIcon,
   ExternalLinkIcon,
 } from '@heroicons/react/outline'
+import {
+  useHasPassport,
+  useAccount,
+  useErrorContext,
+  useConnect,
+  useEnsName,
+} from '@nation3/utils'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -24,15 +31,21 @@ import React from 'react'
 import { useState, useEffect } from 'react'
 // @ts-expect-error ts-migrate(7016) FIXME: Could not find a declaration file for module 'reac... Remove this comment to see the full error message
 import Blockies from 'react-blockies'
-import { useConnect, useEnsName, useDisconnect } from 'wagmi'
-import { nationToken } from '../lib/config'
-import { connectorIcons } from '../lib/connectors'
-import { useHasPassport } from '../lib/passport-nft'
-import { useAccount } from '../lib/use-wagmi'
+import { nationToken } from '../config'
+import CoinbaseWalletIcon from '../public/icons/connectors/coinbase.svg'
+import FrameIcon from '../public/icons/connectors/frame.svg'
+import MetaMaskIcon from '../public/icons/connectors/metamask.svg'
+import WalletConnectIcon from '../public/icons/connectors/walletconnect.svg'
 import Logo from '../public/logo.svg'
 import ErrorCard from './ErrorCard'
-import { useErrorContext } from './ErrorProvider'
 import PreferredNetworkWrapper from './PreferredNetworkWrapper'
+
+export const connectorIcons = {
+  Frame: FrameIcon,
+  MetaMask: MetaMaskIcon,
+  WalletConnect: WalletConnectIcon,
+  'Coinbase Wallet': CoinbaseWalletIcon,
+}
 
 type Indexable = {
   [key: string]: any
@@ -83,13 +96,15 @@ const navigation = [
 
 export default function Layout({ children }: any) {
   const router = useRouter()
-  const { connectors, connect, error: connectError } = useConnect()
+  const { data: connectorData, connect, error: connectError } = useConnect()
   const { data: account } = useAccount()
-  const { hasPassport, isLoading: hasPassportLoading } = useHasPassport(
+  const { data: hasPassport, loading: hasPassportLoading } = useHasPassport(
     account?.address
   )
   const { data: ensName } = useEnsName({ address: account?.address })
-  const { disconnect } = useDisconnect()
+  const disconnect = () => {
+    console.log('TODO: Add disconnect')
+  }
   const [nav, setNav] = useState(navigation)
   const errorContext = useErrorContext()
 
@@ -290,7 +305,7 @@ export default function Layout({ children }: any) {
               )}
 
               <ul className="menu bg-base-100 p-2 -m-2 rounded-box">
-                {connectors.map((connector) => (
+                {connectorData.connectors?.map((connector) => (
                   <li key={connector.id}>
                     <button
                       disabled={!connector.ready}

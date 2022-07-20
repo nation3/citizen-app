@@ -4,31 +4,32 @@ import {
   ClockIcon,
   InformationCircleIcon,
 } from '@heroicons/react/outline'
-import { BigNumber, ethers } from 'ethers'
-import { useEffect, useState } from 'react'
-import React from 'react'
 import {
-  nationToken,
-  veNationToken,
-  veNationRequiredStake,
-  veNationRewardsMultiplier,
-} from '../lib/config'
-import { useNationBalance } from '../lib/nation-token'
-import { NumberType, transformNumber } from '../lib/numbers'
-import { useAccount } from '../lib/use-wagmi'
-import {
+  useNationBalance,
+  NumberType,
+  transformNumber,
+  useAccount,
   useVeNationBalance,
   useVeNationLock,
   useVeNationCreateLock,
   useVeNationIncreaseLock,
   useVeNationWithdrawLock,
-} from '../lib/ve-token'
+} from '@nation3/utils'
+import { BigNumber, ethers } from 'ethers'
+import { useEffect, useState } from 'react'
+import React from 'react'
 import ActionButton from '../components/ActionButton'
 import Balance from '../components/Balance'
 import GradientLink from '../components/GradientLink'
 import Head from '../components/Head'
 import MainCard from '../components/MainCard'
 import TimeRange from '../components/TimeRange'
+import {
+  nationToken,
+  veNationToken,
+  veNationRequiredStake,
+  veNationRewardsMultiplier,
+} from '../config'
 
 const dateToReadable = (date: any) => {
   return date && date.toISOString().substring(0, 10)
@@ -77,14 +78,15 @@ const calculateVestingStart = ({
 export default function Lock() {
   const { data: account } = useAccount()
 
-  const { data: nationBalance, isLoading: nationBalanceLoading } =
+  const { data: nationBalance, loading: nationBalanceLoading } =
     useNationBalance(account?.address)
 
-  const { data: veNationBalance, isLoading: veNationBalanceLoading } =
+  const { data: veNationBalance, loading: veNationBalanceLoading } =
     useVeNationBalance(account?.address)
 
-  const { data: veNationLock, isLoading: veNationLockLoading } =
-    useVeNationLock(account?.address)
+  const { data: veNationLock, loading: veNationLockLoading } = useVeNationLock(
+    account?.address
+  )
 
   const [hasLock, setHasLock] = useState<boolean>()
   useEffect(() => {
@@ -133,9 +135,7 @@ export default function Lock() {
   useEffect(() => {
     if (hasLock && veNationLock) {
       setMinMaxLockTime({
-        min: dateToReadable(
-          oneWeekOut
-        ),
+        min: dateToReadable(oneWeekOut),
         max: dateToReadable(dateOut(new Date(), { years: 4 })),
       })
       setCanIncrease({
@@ -249,7 +249,7 @@ export default function Lock() {
                 <div className="stat-title">Your $veNATION</div>
                 <div className="stat-value text-primary">
                   <Balance
-                    balance={veNationBalance.value}
+                    balance={veNationBalance?.value}
                     loading={veNationBalanceLoading}
                     decimals={
                       veNationBalance &&

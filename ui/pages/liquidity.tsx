@@ -5,16 +5,8 @@ import {
   CalculatorIcon,
   InformationCircleIcon,
 } from '@heroicons/react/outline'
-import { useEffect, useState } from 'react'
-import React from 'react'
-import { useBalancerPool } from '../lib/balancer'
 import {
-  balancerPoolId,
-  balancerLPToken,
-  lpRewardsContract,
-  veNationRewardsMultiplier,
-} from '../lib/config'
-import {
+  useBalancerPool,
   useLiquidityRewards,
   usePoolTokenBalance,
   useVeNationBoost,
@@ -23,28 +15,40 @@ import {
   useWithdraw,
   useWithdrawAndClaim,
   useClaimRewards,
-} from '../lib/liquidity-rewards'
-import { NumberType, transformNumber } from '../lib/numbers'
-import { useAccount } from '../lib/use-wagmi'
-import { useVeNationBalance, useVeNationSupply } from '../lib/ve-token'
+  NumberType,
+  transformNumber,
+  useAccount,
+  useVeNationBalance,
+  useVeNationSupply,
+} from '@nation3/utils'
+import { BigNumber } from 'ethers'
+import { useState } from 'react'
+import React from 'react'
 import ActionButton from '../components/ActionButton'
 import Balance from '../components/Balance'
 import GradientLink from '../components/GradientLink'
 import Head from '../components/Head'
 import MainCard from '../components/MainCard'
+import {
+  balancerPoolId,
+  balancerLPToken,
+  balancerVault,
+  lpRewardsContract,
+  veNationRewardsMultiplier,
+} from '../config'
 
 export default function Liquidity() {
   const { data: account } = useAccount()
 
-  const { data: veNationBalance, isLoading: veNationBalanceLoading } =
+  const { data: veNationBalance, loading: veNationBalanceLoading } =
     useVeNationBalance(account?.address)
   const {
     poolValue,
     nationPrice,
     isLoading: poolLoading,
-  } = useBalancerPool(balancerPoolId)
+  } = useBalancerPool(balancerPoolId, balancerVault)
 
-  const { data: poolTokenBalance, isLoading: poolTokenBalanceLoading } =
+  const { data: poolTokenBalance, loading: poolTokenBalanceLoading } =
     usePoolTokenBalance(account?.address)
 
   const {
@@ -270,7 +274,12 @@ export default function Liquidity() {
                       className="btn btn-outline"
                       onClick={() =>
                         poolTokenBalance &&
-                        setDepositValue(poolTokenBalance?.formatted)
+                        setDepositValue(
+                          transformNumber(
+                            poolTokenBalance?.value,
+                            NumberType.number
+                          ) as number
+                        )
                       }
                     >
                       Max
@@ -316,7 +325,7 @@ export default function Liquidity() {
                         userDeposit &&
                         setWithdrawalValue(
                           transformNumber(
-                            userDeposit,
+                            userDeposit as unknown as BigNumber,
                             NumberType.string
                           ) as string
                         )

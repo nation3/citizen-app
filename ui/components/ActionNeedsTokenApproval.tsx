@@ -1,9 +1,13 @@
 import { InformationCircleIcon } from '@heroicons/react/outline'
+import {
+  useTokenAllowance,
+  useTokenApproval,
+  transformNumber,
+  NumberType,
+  useAccount,
+} from '@nation3/utils'
 import { BigNumber } from 'ethers'
 import React, { useEffect, useState } from 'react'
-import { useTokenAllowance, useTokenApproval } from '../lib/approve'
-import { NumberType, transformNumber } from '../lib/numbers'
-import { useAccount } from '../lib/use-wagmi'
 import ActionButton from './ActionButton'
 
 export default function ActionNeedsTokenApproval({
@@ -17,7 +21,7 @@ export default function ActionNeedsTokenApproval({
   preAction,
 }: any) {
   const { data: account } = useAccount()
-  const { data: tokenAllowance, isLoading: tokenAllowanceLoading } =
+  const { data: tokenAllowance, loading: tokenAllowanceLoading } =
     useTokenAllowance({ token, address: account?.address, spender })
   const [approveUnlimited, setApproveUnlimited] = useState(true)
   const [weiAmountNeeded, setWeiAmountNeeded] = useState<BigNumber>(
@@ -45,7 +49,7 @@ export default function ActionNeedsTokenApproval({
 
   return (
     <>
-      {!tokenAllowanceLoading && !approve?.isLoading ? (
+      {!tokenAllowanceLoading && !approve?.loading ? (
         tokenAllowance?.gte(weiAmountNeeded) ? (
           <ActionButton
             className={className}

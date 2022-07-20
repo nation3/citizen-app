@@ -1,31 +1,36 @@
 import { SparklesIcon, LockClosedIcon } from '@heroicons/react/outline'
+import {
+  useNationBalance,
+  NumberType,
+  transformNumber,
+  useAccount,
+  useVeNationBalance,
+  useHasPassport,
+  useClaimPassport,
+  useSignAgreement,
+  storeSignature,
+  useHandleError,
+} from '@nation3/utils'
 import { ethers } from 'ethers'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { useWaitForTransaction } from 'wagmi'
-import { veNationRequiredStake, nationToken } from '../lib/config'
-import { useNationBalance } from '../lib/nation-token'
-import { NumberType, transformNumber } from '../lib/numbers'
-import { useClaimPassport } from '../lib/passport-nft'
-import { useHasPassport } from '../lib/passport-nft'
-import { useSignAgreement, storeSignature } from '../lib/sign-agreement'
-import { useAccount } from '../lib/use-wagmi'
-import { useVeNationBalance } from '../lib/ve-token'
 import ActionButton from '../components/ActionButton'
 import Balance from '../components/Balance'
 import Confetti from '../components/Confetti'
 import GradientLink from '../components/GradientLink'
 import Head from '../components/Head'
 import MainCard from '../components/MainCard'
+import { veNationRequiredStake, nationToken } from '../config'
 
 export default function Join() {
   const { data: account } = useAccount()
-  const { data: nationBalance, isLoading: nationBalanceLoading } =
+  const { data: nationBalance, loading: nationBalanceLoading } =
     useNationBalance(account?.address)
-  const { data: veNationBalance, isLoading: veNationBalanceLoading } =
+  const { data: veNationBalance, loading: veNationBalanceLoading } =
     useVeNationBalance(account?.address)
-  const { hasPassport, isLoading: hasPassportLoading } = useHasPassport(
+  const { data: hasPassport, loading: hasPassportLoading } = useHasPassport(
     account?.address
   )
 
@@ -33,15 +38,20 @@ export default function Join() {
   const { isLoading: claimPassportLoading } = useWaitForTransaction({
     hash: claimData?.hash,
   })
-  const { isLoading: signatureLoading, signTypedData } = useSignAgreement({
-    onSuccess: async (signature: string) => {
-      const sigs = ethers.utils.splitSignature(signature)
-      const tx = await claim({ args: [sigs.v, sigs.r, sigs.s] })
-      // The signature will be stored permanently on the Ethereum blockchain,
-      // so uploading it to IPFS is only a nice to have
-      await storeSignature(signature, tx.hash)
-    },
-  })
+  const { loading: signatureLoading, writeAsync: signTypedData } =
+    useSignAgreement({
+      onSuccess: async (signature: string) => {
+        const sigs = ethers.utils.splitSignature(signature)
+        const { data: tx } = await claim({ args: [sigs.v, sigs.r, sigs.s] })
+        // The signature will be stored permanently on the Ethereum blockchain,
+        // so uploading it to IPFS is only a nice to have
+        if (tx) {
+          await storeSignature(signature, tx.hash)
+        } else {
+          useHandleError({ error: new Error('Failed to claim passport') })
+        }
+      },
+    })
 
   const signAndClaim = {
     isLoadingOverride: signatureLoading || claimPassportLoading,
@@ -63,8 +73,8 @@ export default function Join() {
   }, [hasPassport, hasPassportLoading, router])
 
   const [action, setAction] = useState({
-    mint: transformNumber(0, NumberType.bignumber),
-    lockAndMint: transformNumber(0, NumberType.bignumber),
+    mint: false,
+    lockAndMint: false,
   })
 
   useEffect(() => {
@@ -95,7 +105,7 @@ export default function Join() {
   return (
     <>
       <Head title="Become a citizen" />
-      { hasPassport && <Confetti />}
+      {hasPassport && <Confetti />}
       <MainCard title="Become a Nation3 citizen">
         <ul className="steps steps-vertical lg:steps-horizontal my-8">
           <li className={`step text-sm ${action.mint ? 'step-primary' : ''}`}>
@@ -113,7 +123,7 @@ export default function Join() {
           </li>
         </ul>
 
-        { !hasPassport ? (
+        {!hasPassport ? (
           <>
             <p>
               To become a citizen, you need to mint a passport NFT by holding at
@@ -199,8 +209,7 @@ export default function Join() {
               <button className="btn btn-square btn-ghost btn-disabled btn-lg bg-transparent loading"></button>
             </div>
           </>
-        )
-        }
+        )}
       </MainCard>
     </>
   )

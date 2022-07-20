@@ -1,15 +1,14 @@
+import { useNetwork, usePreferredNetwork } from '@nation3/utils'
 import React from 'react'
-import usePreferredNetwork from '../lib/use-preferred-network'
-import { useNetwork } from '../lib/use-wagmi'
 import SwitchNetworkBanner from './SwitchNetworkBanner'
 
 export default function PreferredNetworkWrapper({ children }: any) {
-  const { activeChain } = useNetwork({})
+  const { data: chainData } = useNetwork()
   const { isPreferredNetwork, preferredNetwork } = usePreferredNetwork()
 
   return (
     <>
-      {!isPreferredNetwork && activeChain?.id && (
+      {!isPreferredNetwork && chainData.chain?.id && (
         <SwitchNetworkBanner newNetwork={preferredNetwork} />
       )}
       {children}

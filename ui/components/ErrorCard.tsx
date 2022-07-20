@@ -1,5 +1,5 @@
+import { useErrorContext } from '@nation3/utils'
 import React from 'react'
-import { useErrorContext } from './ErrorProvider'
 
 export default function ErrorCard({ error }: any) {
   const { removeError } = useErrorContext()

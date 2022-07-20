@@ -1,18 +1,18 @@
-import { useState, useEffect } from 'react'
-import React from 'react'
-import { nationDropAmount, nationToken } from '../lib/config'
 import {
+  useAccount,
+  useHandleError,
   useClaimsFiles,
   checkEligibility,
   useIsClaimed,
   useClaimDrop,
-} from '../lib/merkle-drop'
-import { useHandleError } from '../lib/use-handle-error'
-import { useAccount } from '../lib/use-wagmi'
+} from '@nation3/utils'
+import { useState, useEffect } from 'react'
+import React from 'react'
 import ActionButton from '../components/ActionButton'
 import Confetti from '../components/Confetti'
 import Head from '../components/Head'
 import MainCard from '../components/MainCard'
+import { nationDropAmount, nationToken } from '../config'
 
 export default function Claim() {
   const { data: account } = useAccount()
@@ -22,7 +22,7 @@ export default function Claim() {
   const [justClaimed, setJustClaimed] = useState(false)
 
   const { data: claimsFiles } = useHandleError(useClaimsFiles())
-  const { data: isClaimed, isLoading: isClaimedLoading } = useIsClaimed(
+  const { data: isClaimed, loading: isClaimedLoading } = useIsClaimed(
     contractId,
     proofIndex
   )
@@ -44,11 +44,11 @@ export default function Claim() {
     account: account?.address,
     amount:
       canClaim && claimsFiles
-        ? claimsFiles[contractId].claims[account?.address]?.amount
+        ? claimsFiles[contractId].claims[account?.address ?? '']?.amount
         : 0,
     proof:
       canClaim && claimsFiles
-        ? claimsFiles[contractId].claims[account?.address]?.proof
+        ? claimsFiles[contractId].claims[account?.address ?? '']?.proof
         : {},
   })
 
