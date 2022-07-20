@@ -27,7 +27,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-        cache-dependency-path: server/package-lock.json
+        cache-dependency-path: ui/package-lock.json
     - run: npm install yarn
     - run: npx yarn install
     - run: npx yarn build
