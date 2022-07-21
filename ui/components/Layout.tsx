@@ -128,8 +128,8 @@ export default function Layout({ children }: any) {
   return (
     <div className="mx-auto bg-n3bg font-display">
       <Script src="https://cdn.splitbee.io/sb.js" />
-      <div className="flex flex-col h-screen">
-        <div className="navbar bg-base-100 border-slate-100 border-b-2 py-0 pl-0 lg:hidden">
+      <div className="h-screen">
+        <div className="navbar bg-base-100 border-slate-100 border-b-2 py-0 pl-0 lg:hidden sticky z-10">
           <div className="navbar-start border-slate-100 pl-0">
             <div className="w-80 border-slate-100 py-4 box-content">
               <div className="pl-6 pt-2 cursor-pointer">
@@ -153,10 +153,16 @@ export default function Layout({ children }: any) {
           </div>
         </div>
 
-        <div className="drawer drawer-mobile w-full h-full grow max-h-screen flex-1">
+        <div className="drawer drawer-mobile">
           <input id="side-drawer" type="checkbox" className="drawer-toggle" />
-          <div className="drawer-content flex flex-col overflow-auto">
-            <PreferredNetworkWrapper>{children}</PreferredNetworkWrapper>
+          <div className="drawer-content fixed top-0 left-0 right-0 bottom-0 lg:static pt-24 lg:pt-0 z-0 max-h-screen">
+            <div className="flex flex-col w-full h-full">
+              <div className="hero h-full">
+                <div className="hero-content">
+                  <PreferredNetworkWrapper>{children}</PreferredNetworkWrapper>
+                </div>
+              </div>
+            </div>
           </div>
           <div className="drawer-side">
             <label

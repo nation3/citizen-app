@@ -36,60 +36,56 @@ export default function Citizen() {
         <Confetti key={number.toString()} />
       ))}
       <Head title="Welcome, citizen" />
-      <div className="hero h-full">
-        <div className="hero-content pb-24 lg:pb-2">
-          {account && passportData?.id && passportData?.nft ? (
-            <div className="flex flex-col items-center justify-center">
-              <div
-                style={{
-                  width: window.innerWidth > 390 ? '390px' : '320px',
-                }}
-              >
-                <Card
-                  style={{
-                    width: window.innerWidth > 390 ? '390px' : '320px',
-                    height: window.innerWidth > 390 ? '450px' : '369px',
-                    cursor: 'pointer',
-                    position: 'relative',
-                  }}
-                  onClick={() => addConfetti()}
-                >
-                  <Image src={passportData.nft.image} layout="fill" />
-                </Card>
-              </div>
+      {account && passportData?.id && passportData?.nft ? (
+        <div className="flex flex-col items-center justify-center">
+          <div
+            style={{
+              width: window.innerWidth > 390 ? '390px' : '320px',
+            }}
+          >
+            <Card
+              style={{
+                width: window.innerWidth > 390 ? '390px' : '320px',
+                height: window.innerWidth > 390 ? '450px' : '369px',
+                cursor: 'pointer',
+                position: 'relative',
+              }}
+              onClick={() => addConfetti()}
+            >
+              <Image src={passportData.nft.image} layout="fill" />
+            </Card>
+          </div>
 
-              <div className="stats stats-vertical md:stats-horizontal shadow mt-20">
-                <a
-                  className="stat"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                  href="https://discord.gg/nation3"
-                >
-                  <div className="stat-title">Access gated channels on</div>
-                  <div className="stat-value text-indigo-500">Discord</div>
-                </a>
+          <div className="stats stats-vertical md:stats-horizontal shadow mt-20">
+            <a
+              className="stat"
+              rel="noopener noreferrer"
+              target="_blank"
+              href="https://discord.gg/nation3"
+            >
+              <div className="stat-title">Access gated channels on</div>
+              <div className="stat-value text-indigo-500">Discord</div>
+            </a>
 
-                <a
-                  className="stat"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                  href="https://vote.nation3.org"
-                >
-                  <div className="stat-title">Vote on</div>
-                  <div className="stat-value text-yellow-400">Snapshot</div>
-                </a>
-              </div>
-              <div className="mt-8 flex flex-col text-center justify-center">
-                <button onClick={() => signMessageAndDownloadPass()}>
-                  <Image src={AddToWallet} width={220} height={68} />
-                </button>
-              </div>
-            </div>
-          ) : (
-            <button className="btn btn-square btn-ghost btn-disabled btn-lg bg-transparent loading"></button>
-          )}
+            <a
+              className="stat"
+              rel="noopener noreferrer"
+              target="_blank"
+              href="https://vote.nation3.org"
+            >
+              <div className="stat-title">Vote on</div>
+              <div className="stat-value text-yellow-400">Snapshot</div>
+            </a>
+          </div>
+          <div className="mt-8 flex flex-col text-center justify-center">
+            <button onClick={() => signMessageAndDownloadPass()}>
+              <Image src={AddToWallet} width={220} height={68} />
+            </button>
+          </div>
         </div>
-      </div>
+      ) : (
+        <button className="btn btn-square btn-ghost btn-disabled btn-lg bg-transparent loading"></button>
+      )}
     </>
   )
 }
