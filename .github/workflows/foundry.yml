@@ -14,6 +14,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v3
+      with:
+        submodules: recursive
     - uses: foundry-rs/foundry-toolchain@v1
       with:
         version: nightly
