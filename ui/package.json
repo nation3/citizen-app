@@ -5,7 +5,8 @@
     "dev": "PORT=42069 next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "cypress": "cypress open"
   },
   "dependencies": {
     "@heroicons/react": "^1.0.5",
