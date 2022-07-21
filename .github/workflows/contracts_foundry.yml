@@ -1,4 +1,4 @@
-name: Foundry CI
+name: /contracts Foundry CI
 
 on:
   push:
