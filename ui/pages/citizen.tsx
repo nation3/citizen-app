@@ -1,9 +1,8 @@
-import { usePassport, useAccount } from '@nation3/utils'
+import { usePassport, useAccount, useSignMessage } from '@nation3/utils'
 import Image from 'next/image'
 import { useState } from 'react'
 // @ts-ignore
 import Card from 'react-animated-3d-card'
-import { useSignMessage } from 'wagmi'
 import Confetti from '../components/Confetti'
 import Head from '../components/Head'
 import AddToWallet from '../public/passport/wallet.svg'

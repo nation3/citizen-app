@@ -10,12 +10,12 @@ import {
   useSignAgreement,
   storeSignature,
   useHandleError,
+  useWaitForTransaction,
 } from '@nation3/utils'
 import { ethers } from 'ethers'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { useWaitForTransaction } from 'wagmi'
 import ActionButton from '../components/ActionButton'
 import Balance from '../components/Balance'
 import Confetti from '../components/Confetti'
@@ -35,7 +35,7 @@ export default function Join() {
   )
 
   const { writeAsync: claim, data: claimData } = useClaimPassport()
-  const { isLoading: claimPassportLoading } = useWaitForTransaction({
+  const { loading: claimPassportLoading } = useWaitForTransaction({
     hash: claimData?.hash,
   })
   const { loading: signatureLoading, writeAsync: signTypedData } =

@@ -1,9 +1,8 @@
+import { domain, types, value, externalProvider } from '@nation3/utils'
 import { ethers } from 'ethers'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { NFTStorage, Blob } from 'nft.storage'
-import { nationPassportNFTIssuer } from '../../lib/config'
-import { provider } from '../../lib/connectors'
-import { domain, types, value } from '../../lib/sign-agreement'
+import { nationPassportNFTIssuer } from '../../config'
 
 const client = new NFTStorage({
   token: process.env.NEXT_PUBLIC_NFTSTORAGE_KEY || '',
@@ -14,7 +13,7 @@ export default async function storeSignature(
   res: NextApiResponse
 ) {
   try {
-    const prov = provider()
+    const prov = externalProvider()
 
     const sender = ethers.utils.verifyTypedData(
       domain,
