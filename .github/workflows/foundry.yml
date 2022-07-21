@@ -8,14 +8,15 @@ on:
 
 jobs:
   build:
+    defaults:
+      run:
+        working-directory: contracts
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v3
-      with:
-        submodules: recursive
     - uses: foundry-rs/foundry-toolchain@v1
       with:
         version: nightly
