@@ -47,8 +47,6 @@ export default function Join() {
         // so uploading it to IPFS is only a nice to have
         if (tx) {
           await storeSignature(signature, tx.hash)
-        } else {
-          useHandleError({ error: new Error('Failed to claim passport') })
         }
       },
     })
