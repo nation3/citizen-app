@@ -16,3 +16,5 @@ describe('Navigation', () => {
     cy.get('h2').contains('Become a Nation3 citizen')
   })
 })
+
+export {}
