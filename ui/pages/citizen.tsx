@@ -52,12 +52,12 @@ export default function Citizen() {
       ))}
       <Head title="Welcome, citizen" />
       {passportData?.nft ? (
-        <div className="w-full h-full max-w-5xl m-auto flex flex-row items-center">
+        <div className="w-full h-full max-w-5xl m-auto flex flex-row items-center justify-center">
           <div className="pt-64 pb-24 md:pt-4 lg:pb-2 overflow-auto">
             <h2 className="text-center md:text-left text-3xl font-medium mx-4 lg:mx-32 mb-8">
               Welcome, citizen
             </h2>
-            <div className="flex flex-col md:flex-row justify-between items-center gap-8 px-4 lg:px-0 lg:mx-32">
+            <div className="flex flex-col xl:flex-row justify-between items-center gap-8 px-4 lg:px-0 lg:mx-32">
               <div>
                 <Card
                   style={{
@@ -71,34 +71,34 @@ export default function Citizen() {
                   <Image src={passportData.nft.image} layout="fill" />
                 </Card>
               </div>
-              <div className="card shadow-md flex flex-row md:flex-col justify-center gap-4 p-4 bg-white h-fit">
+              <div className="card shadow-md flex flex-row xl:flex-col justify-between gap-4 p-4 bg-white h-fit max-w-sm w-full xl:w-fit">
                 <button
                   onClick={() => signMessageAndDownloadPass()}
-                  className="w-40 md:w-full"
+                  className="w-40 xl:w-full"
                 >
                   <Image src={AddToWallet} layout="responsive" />
                 </button>
                 <a
-                  className="btn btn-primary gap-2"
+                  className="btn btn-primary gap-2 flex-1"
                   rel="noopener noreferrer"
                   target="_blank"
                   href="https://discord.gg/nation3"
                 >
                   <Image src={DiscordIcon} width={24} height={24} />
-                  <span className="hidden md:block">Access gated channels</span>
+                  <span className="hidden xl:block">Access gated channels</span>
                 </a>
                 <a
-                  className="btn btn-primary gap-2"
+                  className="btn btn-primary gap-2 flex-1"
                   rel="noopener noreferrer"
                   target="_blank"
                   href="https://vote.nation3.org"
                 >
                   <Image src={BallotIcon} width={24} height={24} />
-                  <span className="hidden md:block">Vote on proposals</span>
+                  <span className="hidden xl:block">Vote on proposals</span>
                 </a>
               </div>
             </div>
-            <div className="card shadow-md p-4 bg-white mt-8 mx-4 lg:mx-32">
+            <div className="card shadow-md p-4 bg-white mt-8 mx-4 lg:mx-32 max-w-sm xl:max-w-full">
               <div className="form-control w-full">
                 <h2 className="text-xl">Settings</h2>
                 <label className="label">
