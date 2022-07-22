@@ -27,11 +27,11 @@ import Blockies from 'react-blockies'
 import { useConnect, useEnsName, useDisconnect } from 'wagmi'
 import { nationToken } from '../lib/config'
 import { connectorIcons } from '../lib/connectors'
-import { useHasPassport } from '../lib/passport-nft'
 import { useAccount } from '../lib/use-wagmi'
 import Logo from '../public/logo.svg'
 import ErrorCard from './ErrorCard'
 import { useErrorContext } from './ErrorProvider'
+import PassportCheck from './PassportCheck'
 import PreferredNetworkWrapper from './PreferredNetworkWrapper'
 
 type Indexable = {
@@ -85,32 +85,28 @@ export default function Layout({ children }: any) {
   const router = useRouter()
   const { connectors, connect, error: connectError } = useConnect()
   const { data: account } = useAccount()
-  const { hasPassport, isLoading: hasPassportLoading } = useHasPassport(
-    account?.address
-  )
-  const { data: ensName } = useEnsName({ address: account?.address })
+
+  const { data: ensName } = useEnsName({ address: account?.address ?? '' })
   const { disconnect } = useDisconnect()
   const [nav, setNav] = useState(navigation)
   const errorContext = useErrorContext()
 
-  useEffect(() => {
-    if (!hasPassportLoading) {
-      if (hasPassport) {
-        navigation[1].name = 'Welcome citizen'
-        navigation[1].href = '/citizen'
-        setNav(navigation)
-        if (router.pathname === '/join' && !router.query.mintingPassport) {
-          router.push('/citizen')
-        }
-      } else {
-        if (router.pathname === '/citizen') {
-          router.push('/join')
-        }
+  const onPassportChecked = (hasPassport: boolean) => {
+    if (hasPassport) {
+      navigation[1].name = 'Welcome citizen'
+      navigation[1].href = '/citizen'
+      setNav(navigation)
+      if (router.pathname === '/join' && !router.query.mintingPassport) {
+        router.push('/citizen')
+      }
+    } else {
+      if (router.pathname === '/citizen') {
+        router.push('/join')
       }
     }
-  }, [hasPassport, hasPassportLoading, router.pathname])
+  }
 
-  return (
+  const layout = (
     <div className="mx-auto bg-n3bg font-display">
       <Script src="https://cdn.splitbee.io/sb.js" />
       <div className="h-screen">
@@ -358,4 +354,17 @@ export default function Layout({ children }: any) {
       )}
     </div>
   )
+
+  if (account?.address) {
+    return (
+      <PassportCheck
+        address={account.address}
+        onPassportChecked={onPassportChecked}
+      >
+        {layout}
+      </PassportCheck>
+    )
+  } else {
+    return layout
+  }
 }
