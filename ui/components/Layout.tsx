@@ -142,11 +142,11 @@ export default function Layout({ children }: any) {
           <input id="side-drawer" type="checkbox" className="drawer-toggle" />
           <div className="drawer-content fixed top-0 left-0 right-0 bottom-0 lg:static pt-24 lg:pt-0 z-0 max-h-screen">
             <div className="flex flex-col w-full h-full">
-              <div className="hero h-full">
-                <div className="hero-content">
-                  <PreferredNetworkWrapper>{children}</PreferredNetworkWrapper>
+              <PreferredNetworkWrapper>
+                <div className="hero h-full">
+                  <div className="hero-content">{children}</div>
                 </div>
-              </div>
+              </PreferredNetworkWrapper>
             </div>
           </div>
           <div className="drawer-side">
