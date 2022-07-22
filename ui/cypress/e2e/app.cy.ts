@@ -13,6 +13,16 @@ describe('Nation3 App UI', () => {
   it('should load the /claim page', () => {
     cy.visit('/claim')
     cy.get('h2').contains('$NATION tweetdrop')
+  }),
+
+  it('should load the /lock page', () => {
+    cy.visit('/lock')
+    cy.get('h2').contains('Lock $NATION to get $veNATION')
+  }),
+
+  it('should load the /liquidity page', () => {
+    cy.visit('/liquidity')
+    cy.get('h2').contains('$NATION liquidity rewards')
   })
 })
 
