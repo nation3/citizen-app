@@ -42,6 +42,16 @@ Add variables to your local development environment:
 cp .env.mainnet .env.local
 ```
 
+Build:
+```
+yarn build
+```
+
+Lint:
+```
+yarn lint
+```
+
 Start the development server:
 ```
 yarn dev
