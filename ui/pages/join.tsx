@@ -12,7 +12,7 @@ import {
   useHandleError,
   useWaitForTransaction,
 } from '@nation3/utils'
-import { ethers } from 'ethers'
+import { BigNumber, ethers } from 'ethers'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
@@ -76,15 +76,15 @@ export default function Join() {
   })
 
   useEffect(() => {
-    if (!nationBalance || !veNationBalance) return
+    if (!nationBalance && !veNationBalance) return
     setAction({
-      mint: veNationBalance.value.gte(
+      mint: (veNationBalance?.value ?? BigNumber.from(0)).gte(
         transformNumber(
           veNationRequiredStake as unknown as number,
           NumberType.bignumber
         )
       ),
-      lockAndMint: nationBalance.value
+      lockAndMint: (nationBalance?.value ?? BigNumber.from(0))
         .mul(4)
         .gte(
           transformNumber(
