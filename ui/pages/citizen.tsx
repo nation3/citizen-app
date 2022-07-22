@@ -51,94 +51,55 @@ export default function Citizen() {
         <Confetti key={number.toString()} />
       ))}
       <Head title="Welcome, citizen" />
-      {passportData?.nft ? (
-        <div className="w-full h-full max-w-5xl m-auto flex flex-row items-center justify-center">
-          <div className="pt-64 pb-24 md:pt-4 lg:pb-2 overflow-auto">
-            <h2 className="text-center md:text-left text-3xl font-medium mx-4 lg:mx-32 mb-8">
-              Welcome, citizen
-            </h2>
-            <div className="flex flex-col xl:flex-row justify-between items-center gap-8 px-4 lg:px-0 lg:mx-32">
-              <div>
-                <Card
-                  style={{
-                    width: window.innerWidth > 420 ? '390px' : '340px',
-                    height: window.innerWidth > 420 ? '450px' : '400px',
-                    cursor: 'pointer',
-                    position: 'relative',
-                  }}
-                  onClick={() => addConfetti()}
-                >
-                  <Image src={passportData.nft.image} layout="fill" />
-                </Card>
-              </div>
-              <div className="card shadow-md flex flex-row xl:flex-col justify-between gap-4 p-4 bg-white h-fit max-w-sm w-full xl:w-fit">
-                <button
-                  onClick={() => signMessageAndDownloadPass()}
-                  className="w-40 xl:w-full"
-                >
-                  <Image src={AddToWallet} layout="responsive" />
-                </button>
-                <a
-                  className="btn btn-primary gap-2 flex-1"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                  href="https://discord.gg/nation3"
-                >
-                  <Image src={DiscordIcon} width={24} height={24} />
-                  <span className="hidden xl:block">Access gated channels</span>
-                </a>
-                <a
-                  className="btn btn-primary gap-2 flex-1"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                  href="https://vote.nation3.org"
-                >
-                  <Image src={BallotIcon} width={24} height={24} />
-                  <span className="hidden xl:block">Vote on proposals</span>
-                </a>
-              </div>
-            </div>
-            <div className="card shadow-md p-4 bg-white mt-8 mx-4 lg:mx-32 max-w-sm xl:max-w-full">
-              <div className="form-control w-full">
-                <h2 className="text-xl">Settings</h2>
-                <label className="label">
-                  <span className="label-text">
-                    Signer account
-                    <br />
-                    <span className="text-xs">
-                      You can specify another account as a signer. This feature
-                      will be used in the future so you can participate in votes
-                      on the go, or authenticate yourself at in-person events
-                      without carrying your main private key.
-                    </span>
-                  </span>
-                </label>
-                <input
-                  type="text"
-                  placeholder="Passport signer"
-                  className="input input-bordered w-full"
-                  value={passportSigner}
-                  onChange={(e: any) => {
-                    setPassportSigner(e.target.value)
-                  }}
-                />
+      {account && passportData?.id && passportData?.nft ? (
+        <div className="flex flex-col items-center justify-center">
+          <div
+            style={{
+              width: window.innerWidth > 390 ? '390px' : '320px',
+            }}
+          >
+            <Card
+              style={{
+                width: window.innerWidth > 390 ? '390px' : '320px',
+                height: window.innerWidth > 390 ? '450px' : '369px',
+                cursor: 'pointer',
+                position: 'relative',
+              }}
+              onClick={() => addConfetti()}
+            >
+              <Image src={passportData.nft.image} layout="fill" />
+            </Card>
+          </div>
 
-                <div className="card-actions mt-4">
-                  <ActionButton
-                    className="btn btn-primary normal-case font-medium w-full"
-                    action={updatePassportSigner}
-                  >
-                    Set passport signer
-                  </ActionButton>
-                </div>
-              </div>
-            </div>
+          <div className="stats stats-vertical md:stats-horizontal shadow mt-20">
+            <a
+              className="stat"
+              rel="noopener noreferrer"
+              target="_blank"
+              href="https://discord.gg/nation3"
+            >
+              <div className="stat-title">Access gated channels on</div>
+              <div className="stat-value text-indigo-500">Discord</div>
+            </a>
+
+            <a
+              className="stat"
+              rel="noopener noreferrer"
+              target="_blank"
+              href="https://vote.nation3.org"
+            >
+              <div className="stat-title">Vote on</div>
+              <div className="stat-value text-yellow-400">Snapshot</div>
+            </a>
+          </div>
+          <div className="mt-8 flex flex-col text-center justify-center">
+            <button onClick={() => signMessageAndDownloadPass()}>
+              <Image src={AddToWallet} width={220} height={68} />
+            </button>
           </div>
         </div>
       ) : (
-        <div className="w-full h-full flex flex-row items-center justify-center">
-          <button className="btn btn-square btn-ghost btn-disabled bg-transparent loading"></button>
-        </div>
+        <button className="btn btn-square btn-ghost btn-disabled btn-lg bg-transparent loading"></button>
       )}
     </>
   )
