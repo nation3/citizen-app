@@ -27,37 +27,7 @@ The code in this repository is structured into two main parts:
 
 ## Run the UI locally
 
-Navigate to the folder of the UI app:
-```
-cd ui/
-```
-
-Install the dependencies:
-```
-yarn install
-```
-
-Add variables to your local development environment:
-```
-cp .env.mainnet .env.local
-```
-
-Build:
-```
-yarn build
-```
-
-Lint:
-```
-yarn lint
-```
-
-Start the development server:
-```
-yarn dev
-```
-
-Then open http://localhost:42069 in a browser.
+See [ui/README.md](ui/README.md)
 
 ## Testing against the Goerli Ethereum testnet
 
