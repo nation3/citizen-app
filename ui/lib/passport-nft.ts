@@ -79,7 +79,7 @@ export function useSetPassportSigner(id: number, signerAddress: string) {
   return useContractWrite(
     {
       addressOrName: nationPassportNFT,
-      contractInterface: PassporNFT.abi,
+      contractInterface: PassportNFT.abi,
     },
     'setSigner',
     {
