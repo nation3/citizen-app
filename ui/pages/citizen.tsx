@@ -3,15 +3,23 @@ import { useState } from 'react'
 // @ts-ignore
 import Card from 'react-animated-3d-card'
 import { useSignMessage } from 'wagmi'
-import { usePassport } from '../lib/passport-nft'
+import {
+  usePassport,
+  usePassportSigner,
+  useSetPassportSigner,
+} from '../lib/passport-nft'
 import { useAccount } from '../lib/use-wagmi'
+import ActionButton from '../components/ActionButton'
 import Confetti from '../components/Confetti'
 import Head from '../components/Head'
+import BallotIcon from '../public/passport/ballot.svg'
+import DiscordIcon from '../public/passport/discord.svg'
 import AddToWallet from '../public/passport/wallet.svg'
 
 export default function Citizen() {
   const { data: account } = useAccount()
   const { data: passportData } = usePassport(account?.address)
+  const { data: passportSignerData } = usePassportSigner(passportData?.id)
   const [confettiNumber, setConfettiNumber] = useState<Array<Number>>([])
 
   const addConfetti = () => {
@@ -30,6 +38,12 @@ export default function Citizen() {
       console.error('signMessageAndDownloadPass error:', error)
     },
   })
+
+  const [passportSigner, setPassportSigner] = useState(passportSignerData)
+  const updatePassportSigner = useSetPassportSigner(
+    passportData?.id,
+    passportSigner
+  )
 
   return (
     <>
