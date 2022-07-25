@@ -64,7 +64,7 @@ export function usePassportSigner(id: number) {
   return useContractRead(
     {
       addressOrName: nationPassportNFT,
-      contractInterface: PassporNFT.abi,
+      contractInterface: PassportNFT.abi,
     },
     'signerOf',
     {
