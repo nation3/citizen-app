@@ -38,6 +38,7 @@ import MetaMaskIcon from '../public/icons/connectors/metamask.svg'
 import WalletConnectIcon from '../public/icons/connectors/walletconnect.svg'
 import Logo from '../public/logo.svg'
 import ErrorCard from './ErrorCard'
+import PassportCheck from './PassportCheck'
 import PreferredNetworkWrapper from './PreferredNetworkWrapper'
 
 export const connectorIcons = {
@@ -98,34 +99,29 @@ export default function Layout({ children }: any) {
   const router = useRouter()
   const { data: connectorData, connect, error: connectError } = useConnect()
   const { data: account } = useAccount()
-  const { data: hasPassport, loading: hasPassportLoading } = useHasPassport(
-    account?.address
-  )
-  const { data: ensName } = useEnsName({ address: account?.address })
+  const { data: ensName } = useEnsName({ address: account?.address ?? '' })
   const disconnect = () => {
     console.log('TODO: Add disconnect')
   }
   const [nav, setNav] = useState(navigation)
   const errorContext = useErrorContext()
 
-  useEffect(() => {
-    if (!hasPassportLoading) {
-      if (hasPassport) {
-        navigation[1].name = 'Welcome citizen'
-        navigation[1].href = '/citizen'
-        setNav(navigation)
-        if (router.pathname === '/join' && !router.query.mintingPassport) {
-          router.push('/citizen')
-        }
-      } else {
-        if (router.pathname === '/citizen') {
-          router.push('/join')
-        }
+  const onPassportChecked = (hasPassport: boolean) => {
+    if (hasPassport) {
+      navigation[1].name = 'Welcome citizen'
+      navigation[1].href = '/citizen'
+      setNav(navigation)
+      if (router.pathname === '/join' && !router.query.mintingPassport) {
+        router.push('/citizen')
+      }
+    } else {
+      if (router.pathname === '/citizen') {
+        router.push('/join')
       }
     }
-  }, [hasPassport, hasPassportLoading, router.pathname])
+  }
 
-  return (
+  const layout = (
     <div className="mx-auto bg-n3bg font-display">
       <Script src="https://cdn.splitbee.io/sb.js" />
       <div className="h-screen">
@@ -157,11 +153,11 @@ export default function Layout({ children }: any) {
           <input id="side-drawer" type="checkbox" className="drawer-toggle" />
           <div className="drawer-content fixed top-0 left-0 right-0 bottom-0 lg:static pt-24 lg:pt-0 z-0 max-h-screen">
             <div className="flex flex-col w-full h-full">
-              <div className="hero h-full">
-                <div className="hero-content">
-                  <PreferredNetworkWrapper>{children}</PreferredNetworkWrapper>
+              <PreferredNetworkWrapper>
+                <div className="hero h-full">
+                  <div className="hero-content">{children}</div>
                 </div>
-              </div>
+              </PreferredNetworkWrapper>
             </div>
           </div>
           <div className="drawer-side">
@@ -374,4 +370,17 @@ export default function Layout({ children }: any) {
       )}
     </div>
   )
+
+  if (account?.address) {
+    return (
+      <PassportCheck
+        address={account.address}
+        onPassportChecked={onPassportChecked}
+      >
+        {layout}
+      </PassportCheck>
+    )
+  } else {
+    return layout
+  }
 }

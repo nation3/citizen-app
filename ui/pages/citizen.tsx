@@ -1,4 +1,10 @@
-import { usePassport, useAccount, useSignMessage } from '@nation3/utils'
+import {
+  usePassport,
+  useAccount,
+  useSignMessage,
+  usePassportSigner,
+  useSetPassportSigner,
+} from '@nation3/utils'
 import Image from 'next/image'
 import { useState } from 'react'
 // @ts-ignore
@@ -10,6 +16,7 @@ import AddToWallet from '../public/passport/wallet.svg'
 export default function Citizen() {
   const { data: account } = useAccount()
   const { data: passportData } = usePassport(account?.address ?? '')
+  const { data: passportSignerData } = usePassportSigner(passportData?.id)
   const [confettiNumber, setConfettiNumber] = useState<Array<Number>>([])
 
   const addConfetti = () => {
@@ -28,6 +35,12 @@ export default function Citizen() {
       console.error('signMessageAndDownloadPass error:', error)
     },
   })
+
+  const [passportSigner, setPassportSigner] = useState(passportSignerData)
+  const updatePassportSigner = useSetPassportSigner(
+    passportData?.id,
+    passportSigner
+  )
 
   return (
     <>
