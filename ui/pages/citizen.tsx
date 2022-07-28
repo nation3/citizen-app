@@ -16,7 +16,9 @@ import AddToWallet from '../public/passport/wallet.svg'
 export default function Citizen() {
   const { data: account } = useAccount()
   const { data: passportData } = usePassport(account?.address ?? '')
-  const { data: passportSignerData } = usePassportSigner(passportData?.id)
+  const { data: passportSignerData } = usePassportSigner(
+    passportData?.id as any
+  )
   const [confettiNumber, setConfettiNumber] = useState<Array<Number>>([])
 
   const addConfetti = () => {
@@ -38,8 +40,8 @@ export default function Citizen() {
 
   const [passportSigner, setPassportSigner] = useState(passportSignerData)
   const updatePassportSigner = useSetPassportSigner(
-    passportData?.id,
-    passportSigner
+    passportData?.id as any,
+    passportSigner as any
   )
 
   return (

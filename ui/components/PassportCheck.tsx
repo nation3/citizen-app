@@ -1,6 +1,6 @@
+import { useHasPassport } from '@nation3/utils'
 import { useRouter } from 'next/router'
 import React, { useEffect } from 'react'
-import { useHasPassport } from '../lib/passport-nft'
 
 export default function PassportCheck({
   children,
@@ -10,10 +10,11 @@ export default function PassportCheck({
   address: string
   onPassportChecked: (hasPassport: boolean) => void
 }>) {
-  const { hasPassport, isLoading: hasPassportLoading } = useHasPassport(address)
+  const { data: hasPassport, loading: hasPassportLoading } =
+    useHasPassport(address)
   useEffect(() => {
     if (!hasPassportLoading) {
-      onPassportChecked(hasPassport)
+      onPassportChecked(hasPassport as any as boolean)
     }
   }, [hasPassport, hasPassportLoading])
 
