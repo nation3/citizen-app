@@ -60,7 +60,6 @@ export function usePassport(address: any) {
 }
 
 export function usePassportSigner(id: number) {
-  console.log(id)
   return useContractRead(
     {
       addressOrName: nationPassportNFT,
