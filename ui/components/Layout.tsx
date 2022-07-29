@@ -98,11 +98,8 @@ const navigation = [
 export default function Layout({ children }: any) {
   const router = useRouter()
   const { data: connectorData, connect, error: connectError } = useConnect()
-  const { data: account } = useAccount()
+  const { data: account, disconnect } = useAccount()
   const { data: ensName } = useEnsName({ address: account?.address ?? '' })
-  const disconnect = () => {
-    console.log('TODO: Add disconnect')
-  }
   const [nav, setNav] = useState(navigation)
   const errorContext = useErrorContext()
 
