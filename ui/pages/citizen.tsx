@@ -9,8 +9,11 @@ import Image from 'next/image'
 import { useState } from 'react'
 // @ts-ignore
 import Card from 'react-animated-3d-card'
+import ActionButton from '../components/ActionButton'
 import Confetti from '../components/Confetti'
 import Head from '../components/Head'
+import BallotIcon from '../public/passport/ballot.svg'
+import DiscordIcon from '../public/passport/discord.svg'
 import AddToWallet from '../public/passport/wallet.svg'
 
 export default function Citizen() {
