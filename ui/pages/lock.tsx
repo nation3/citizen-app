@@ -1,34 +1,26 @@
 import {
-  SparklesIcon,
-  LockClosedIcon,
   ClockIcon,
-  InformationCircleIcon,
+  InformationCircleIcon, LockClosedIcon, SparklesIcon
 } from '@heroicons/react/outline'
 import { BigNumber, ethers } from 'ethers'
 import { useEffect, useState } from 'react'
-import React from 'react'
-import {
-  nationToken,
-  veNationToken,
-  veNationRequiredStake,
-  veNationRewardsMultiplier,
-} from '../lib/config'
-import { useNationBalance } from '../lib/nation-token'
-import { NumberType, transformNumber } from '../lib/numbers'
-import { useAccount } from '../lib/use-wagmi'
-import {
-  useVeNationBalance,
-  useVeNationLock,
-  useVeNationCreateLock,
-  useVeNationIncreaseLock,
-  useVeNationWithdrawLock,
-} from '../lib/ve-token'
 import ActionButton from '../components/ActionButton'
 import Balance from '../components/Balance'
 import GradientLink from '../components/GradientLink'
 import Head from '../components/Head'
 import MainCard from '../components/MainCard'
 import TimeRange from '../components/TimeRange'
+import {
+  nationToken, veNationRequiredStake,
+  veNationRewardsMultiplier, veNationToken
+} from '../lib/config'
+import { useNationBalance } from '../lib/nation-token'
+import { NumberType, transformNumber } from '../lib/numbers'
+import { useAccount } from '../lib/use-wagmi'
+import {
+  useVeNationBalance, useVeNationCreateLock,
+  useVeNationIncreaseLock, useVeNationLock, useVeNationWithdrawLock
+} from '../lib/ve-token'
 
 const dateToReadable = (date: any) => {
   return date && date.toISOString().substring(0, 10)
@@ -89,7 +81,7 @@ export default function Lock() {
   const [hasLock, setHasLock] = useState<boolean>()
   useEffect(() => {
     !veNationLockLoading && setHasLock(veNationLock && veNationLock[0] != 0)
-  }, [veNationLock])
+  }, [veNationLock, veNationLockLoading])
 
   const [hasExpired, setHasExpired] = useState<boolean>()
   useEffect(() => {
@@ -99,7 +91,7 @@ export default function Lock() {
           veNationLock[1] != 0 &&
           ethers.BigNumber.from(+new Date()).gte(veNationLock[1].mul(1000))
       )
-  }, [veNationLock])
+  }, [veNationLock, veNationLockLoading])
 
   const [lockAmount, setLockAmount] = useState<string>()
 
@@ -128,7 +120,7 @@ export default function Lock() {
         orig: origTime,
       })
     }
-  }, [hasLock, veNationLock])
+  }, [hasLock, veNationLock, lockAmount, lockTime])
 
   useEffect(() => {
     if (hasLock && veNationLock) {
@@ -153,7 +145,7 @@ export default function Lock() {
         max: dateToReadable(dateOut(new Date(), { years: 4 })),
       })
     }
-  }, [hasLock, lockAmount, lockTime, veNationLock])
+  }, [hasLock, lockAmount, lockTime, veNationLock, oneWeekOut])
 
   const createLock = useVeNationCreateLock(
     lockAmount && ethers.utils.parseEther(lockAmount),

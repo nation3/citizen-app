@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import { useSigner, useContract } from 'wagmi'
+import { useEffect, useState } from 'react'
+import { useContract, useSigner } from 'wagmi'
 
 // Hook for calling a contract write method without executing, getting the result without changing state (and thus gas fees)
 export function useStaticCall({
@@ -56,8 +56,10 @@ export function useStaticCall({
     contractInterface,
     methodName,
     genericErrorMessage,
-    JSON.stringify(args),
     signer,
+    args,
+    contract.callStatic,
+    throwOnRevert
   ])
 
   return {

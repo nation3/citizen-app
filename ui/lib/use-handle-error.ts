@@ -8,6 +8,6 @@ export function useHandleError(object: any, throwOnRevert = true) {
     if (throwOnRevert && object.error) {
       errorContext.addError([object.error])
     }
-  }, [object.error, throwOnRevert])
+  }, [object.error, throwOnRevert, errorContext])
   return object
 }

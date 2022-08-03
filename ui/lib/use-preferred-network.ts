@@ -1,5 +1,4 @@
-import { useEffect } from 'react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import networkToId from './network-id'
 import { useNetwork } from './use-wagmi'
 
@@ -15,7 +14,7 @@ export default function usePreferredNetwork() {
     } else {
       setIsPreferredNetwork(false)
     }
-  }, [activeChain?.id])
+  }, [activeChain?.id, preferredNetwork])
 
   return { isPreferredNetwork, preferredNetwork }
 }

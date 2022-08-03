@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
-import { veNationToken } from '../lib/config'
 import VotingEscrow from '../abis/VotingEscrow.json'
-import { useContractRead, useContractWrite, useBalance } from './use-wagmi'
+import { veNationToken } from '../lib/config'
+import { useBalance, useContractRead, useContractWrite } from './use-wagmi'
 
 const contractParams = {
   addressOrName: veNationToken,
@@ -62,7 +62,7 @@ export function useVeNationIncreaseLock({
       return { writeAsync: increaseLockTime, data: lockTimeData }
     }
     return {}
-  }, [newAmount, currentTime, newTime])
+  }, [newAmount, currentTime, newTime, increaseLockAmount, increaseLockTime, lockAmountData, lockTimeData])
 
   return action()
 }
