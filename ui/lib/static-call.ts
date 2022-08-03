@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useContract, useSigner } from 'wagmi'
 
 // Hook for calling a contract write method without executing, getting the result without changing state (and thus gas fees)
@@ -29,6 +29,7 @@ export function useStaticCall({
     signerOrProvider: signer,
   })
 
+  const stringifiedArgs = useMemo(() => JSON.stringify(args), [args]);
   useEffect(() => {
     const call = async () => {
       if (skip || !signer) {
@@ -50,6 +51,7 @@ export function useStaticCall({
     }
 
     call()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     skip,
     addressOrName,
@@ -57,9 +59,7 @@ export function useStaticCall({
     methodName,
     genericErrorMessage,
     signer,
-    args,
-    contract.callStatic,
-    throwOnRevert
+    stringifiedArgs,
   ])
 
   return {

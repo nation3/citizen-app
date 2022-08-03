@@ -3,7 +3,7 @@ import {
   InformationCircleIcon, LockClosedIcon, SparklesIcon
 } from '@heroicons/react/outline'
 import { BigNumber, ethers } from 'ethers'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import ActionButton from '../components/ActionButton'
 import Balance from '../components/Balance'
 import GradientLink from '../components/GradientLink'
@@ -95,7 +95,7 @@ export default function Lock() {
 
   const [lockAmount, setLockAmount] = useState<string>()
 
-  const oneWeekOut = dateOut(new Date(), { days: 7 })
+  const oneWeekOut = useMemo(() => dateOut(new Date(), { days: 7 }), [])
 
   const [lockTime, setLockTime] = useState({
     value: ethers.BigNumber.from(+oneWeekOut),
