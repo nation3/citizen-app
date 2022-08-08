@@ -184,6 +184,8 @@ export default function Lock() {
     approveText: 'Approve $NATION',
   }), [hasLock, veNationLock, lockAmount])
 
+  const passportExpirationDate = usePassportExpirationDate()
+
   return (
     <>
       <Head title="$veNATION" />
