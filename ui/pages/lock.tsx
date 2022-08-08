@@ -1,38 +1,29 @@
 import {
-  SparklesIcon,
-  LockClosedIcon,
   ClockIcon,
-  InformationCircleIcon,
+  InformationCircleIcon, LockClosedIcon, SparklesIcon
 } from '@heroicons/react/outline'
 import { BigNumber, ethers } from 'ethers'
 import { useEffect, useState } from 'react'
-import React from 'react'
-import {
-  nationToken,
-  veNationToken,
-  veNationRequiredStake,
-  veNationRewardsMultiplier,
-} from '../lib/config'
-import { useNationBalance } from '../lib/nation-token'
-import { NumberType, transformNumber } from '../lib/numbers'
-import { useAccount } from '../lib/use-wagmi'
-import {
-  useVeNationBalance,
-  useVeNationLock,
-  useVeNationCreateLock,
-  useVeNationIncreaseLock,
-  useVeNationWithdrawLock,
-} from '../lib/ve-token'
 import ActionButton from '../components/ActionButton'
 import Balance from '../components/Balance'
 import GradientLink from '../components/GradientLink'
 import Head from '../components/Head'
 import MainCard from '../components/MainCard'
+import PassportExpiration from '../components/PassportExpiration'
 import TimeRange from '../components/TimeRange'
-
-const dateToReadable = (date: any) => {
-  return date && date.toISOString().substring(0, 10)
-}
+import {
+  nationToken, veNationRequiredStake,
+  veNationRewardsMultiplier, veNationToken
+} from '../lib/config'
+import { dateToReadable } from '../lib/date'
+import { useNationBalance } from '../lib/nation-token'
+import { NumberType, transformNumber } from '../lib/numbers'
+import { usePassportExpirationDate } from '../lib/password-expiration'
+import { useAccount } from '../lib/use-wagmi'
+import {
+  useVeNationBalance, useVeNationCreateLock,
+  useVeNationIncreaseLock, useVeNationLock, useVeNationWithdrawLock
+} from '../lib/ve-token'
 
 const bigNumberToDate = (bigNumber: any) => {
   return bigNumber && new Date(bigNumber.mul(1000).toNumber())
@@ -97,7 +88,7 @@ export default function Lock() {
       setHasExpired(
         veNationLock &&
           veNationLock[1] != 0 &&
-          ethers.BigNumber.from(+new Date()).gte(veNationLock[1].mul(1000))
+          ethers.BigNumber.from(Date.now()).gte(veNationLock[1].mul(1000))
       )
   }, [veNationLock])
 
@@ -171,6 +162,8 @@ export default function Lock() {
   })
 
   const withdraw = useVeNationWithdrawLock()
+
+  const passportExpirationDate = usePassportExpirationDate()
 
   return (
     <>
@@ -255,7 +248,7 @@ export default function Lock() {
                       veNationBalance &&
                       veNationBalance.value.gt(ethers.utils.parseEther('1'))
                         ? 2
-                        : 8
+                        : 6
                     }
                   />
                 </div>
@@ -288,6 +281,8 @@ export default function Lock() {
                 </div>
               </div>
             </div>
+
+            <PassportExpiration date={passportExpirationDate} />
           </>
         )}
 
