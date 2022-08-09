@@ -124,9 +124,7 @@ export default function Lock() {
   useEffect(() => {
     if (hasLock && veNationLock) {
       setMinMaxLockTime({
-        min: dateToReadable(
-          oneWeekOut
-        ),
+        min: dateToReadable(bigNumberToDate(veNationLock[1])),
         max: dateToReadable(dateOut(new Date(), { years: 4 })),
       })
       setCanIncrease({
