@@ -4,7 +4,7 @@ import {
 } from '@heroicons/react/outline'
 import { BigNumber, ethers } from 'ethers'
 import { useEffect, useMemo, useState } from 'react'
-import ActionButton from '../components/ActionButton'
+import ActionButton, { ActionButtonProps } from '../components/ActionButton'
 import Balance from '../components/Balance'
 import GradientLink from '../components/GradientLink'
 import Head from '../components/Head'
@@ -81,7 +81,8 @@ export default function Lock() {
   const [hasLock, setHasLock] = useState<boolean>()
   useEffect(() => {
     !veNationLockLoading && setHasLock(veNationLock && veNationLock[0] != 0)
-  }, [veNationLock, veNationLockLoading])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [veNationLock])
 
   const [hasExpired, setHasExpired] = useState<boolean>()
   useEffect(() => {
@@ -91,7 +92,8 @@ export default function Lock() {
           veNationLock[1] != 0 &&
           ethers.BigNumber.from(+new Date()).gte(veNationLock[1].mul(1000))
       )
-  }, [veNationLock, veNationLockLoading])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [veNationLock])
 
   const [lockAmount, setLockAmount] = useState<string>()
 
@@ -120,7 +122,8 @@ export default function Lock() {
         orig: origTime,
       })
     }
-  }, [hasLock, veNationLock, lockAmount, lockTime])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hasLock, veNationLock])
 
   useEffect(() => {
     if (hasLock && veNationLock) {
@@ -163,6 +166,24 @@ export default function Lock() {
   })
 
   const withdraw = useVeNationWithdrawLock()
+
+  const approval = useMemo<ActionButtonProps['approval']>(() => ({
+    token: nationToken,
+    spender: veNationToken,
+    amountNeeded:
+      hasLock && veNationLock[0]
+        ? (
+            transformNumber(
+              lockAmount ?? '0',
+              NumberType.bignumber
+            ) as BigNumber
+          ).sub(veNationLock[0])
+        : transformNumber(
+            lockAmount ?? '0',
+            NumberType.bignumber
+          ),
+    approveText: 'Approve $NATION',
+  }), [hasLock, veNationLock, lockAmount])
 
   return (
     <>
@@ -414,23 +435,7 @@ export default function Lock() {
                           : ''
                       }`}
                       action={hasLock ? increaseLock : createLock}
-                      approval={{
-                        token: nationToken,
-                        spender: veNationToken,
-                        amountNeeded:
-                          hasLock && veNationLock
-                            ? (
-                                transformNumber(
-                                  lockAmount ?? '0',
-                                  NumberType.bignumber
-                                ) as BigNumber
-                              ).sub(veNationLock[0])
-                            : transformNumber(
-                                lockAmount ?? '0',
-                                NumberType.bignumber
-                              ),
-                        approveText: 'Approve $NATION',
-                      }}
+                      approval={approval}
                     >
                       {!hasLock
                         ? 'Lock'
