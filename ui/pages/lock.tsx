@@ -352,7 +352,7 @@ export default function Lock() {
                       Lock expiration date
                       <br />
                       <span className="text-xs">
-                        Minimum one week, maximum four years from now.
+                        The minimum lock expiration date is the greater of one week from now or, if you have an existing lock, your existing lock expiration date. The maximum lock time is four years from now.
                       </span>
                     </span>
                   </label>
