@@ -358,7 +358,9 @@ export default function Lock() {
                     min={minMaxLockTime.min}
                     max={minMaxLockTime.max}
                     onChange={(e: any) => {
-                      if(e.target.value < minMaxLockTime.min) { return false;}
+                      if (e.target.value < minMaxLockTime.min) {
+                        return false;
+                      }
                       setLockTime({
                         ...lockTime,
                         formatted: e.target.value
