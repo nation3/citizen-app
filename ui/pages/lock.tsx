@@ -117,16 +117,19 @@ export default function Lock() {
 
   useEffect(() => {
     if (hasLock && veNationLock) {
-      !lockAmount && setLockAmount(ethers.utils.formatEther(veNationLock[0]))
+      const [amountLocked, lockDeadline] = veNationLock;
+      !lockAmount && setLockAmount(ethers.utils.formatEther(amountLocked))
       const origTime = {
-        value: veNationLock[1],
-        formatted: dateToReadable(bigNumberToDate(veNationLock[1])),
+        value: lockDeadline,
+        formatted: dateToReadable(bigNumberToDate(lockDeadline)),
       }
-      !lockTime && lockTime.orig
-      setLockTime({
-        ...origTime,
-        orig: origTime,
-      })
+
+      if (!lockTime || !lockTime.orig) {
+        setLockTime({
+          ...origTime,
+          orig: origTime,
+        })
+      }
     }
   }, [hasLock, veNationLock])
 
