@@ -338,7 +338,12 @@ export default function Liquidity() {
                       className="btn btn-primary normal-case font-medium w-full"
                       action={withdrawAndClaimRewards}
                     >
-                      Withdraw all and claim
+                      <div
+                        className="tooltip tooltip-top md:tooltip-left flex items-center gap-2"
+                        data-tip="This action will withdraw ALL of your tokens"
+                      >
+                        <InformationCircleIcon className="h-6 w-6 text-white pl-2" />
+                      </div>
                     </ActionButton>
                   </div>
                 </>
