@@ -107,7 +107,7 @@ export default function Lock() {
   const [wantsToIncrease, setWantsToIncrease] = useState(false)
 
   useEffect(() => {
-    if (hasLock && veNationLock) {
+    if (hasLock && veNationLock && !wantsToIncrease) {
       !lockAmount && setLockAmount(ethers.utils.formatEther(veNationLock[0]))
       const origTime = {
         value: veNationLock[1],
