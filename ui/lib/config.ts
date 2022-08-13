@@ -17,6 +17,7 @@ interface Config {
   veNationToken: string,
   veNationRequiredStake: number,
   veNationRewardsMultiplier: number,
+  balancerDomain: string,
   balancerVault: string,
   balancerPoolId: string,
   balancerLPToken: string,
@@ -34,6 +35,7 @@ const config: Config = {
   veNationToken: process.env.NEXT_PUBLIC_VENATION_ADDRESS || defaultConfig.veNationToken || zeroAddress,
   veNationRequiredStake: Number(process.env.NEXT_PUBLIC_VENATION_REQUIRED_STAKE) || 2,
   veNationRewardsMultiplier: Number(process.env.NEXT_PUBLIC_VENATION_REWARDS_MULTIPLIER) || 2.5,
+  balancerDomain: chain === 'goerli' ? 'https://goerli.balancer.fi' : 'https://app.balancer.fi',
   balancerVault: process.env.NEXT_PUBLIC_BALANCER_VAULT_ADDRESS || defaultConfig.balancerVault || zeroAddress,
   balancerPoolId: process.env.NEXT_PUBLIC_BALANCER_NATION_ETH_POOL_ID || defaultConfig.balancerPoolId || zeroAddress,
   balancerLPToken: process.env.NEXT_PUBLIC_BALANCER_NATION_ETH_POOL_TOKEN || defaultConfig.balancerLPToken || zeroAddress,
@@ -44,13 +46,14 @@ const config: Config = {
   nationDropAmount: Number(process.env.NEXT_NATION_DROP_AMOUNT) || 1
 }
 
-console.log(config)
+console.log(config, chain)
 
 export const {
   nationToken,
   veNationToken,
   veNationRequiredStake,
   veNationRewardsMultiplier,
+  balancerDomain,
   balancerVault,
   balancerPoolId,
   balancerLPToken,

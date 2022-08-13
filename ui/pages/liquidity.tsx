@@ -13,6 +13,7 @@ import {
   balancerLPToken,
   lpRewardsContract,
   veNationRewardsMultiplier,
+  balancerDomain,
 } from '../lib/config'
 import {
   useLiquidityRewards,
@@ -97,7 +98,7 @@ export default function Liquidity() {
         <p>
           Provide liquidity in the pool and then deposit the pool token here.{' '}
           <GradientLink
-            href="https://app.balancer.fi/#/pool/0x0bf37157d30dfe6f56757dcadff01aed83b08cd600020000000000000000019a"
+            href={`${balancerDomain}/#/pool/0x0bf37157d30dfe6f56757dcadff01aed83b08cd600020000000000000000019a`}
             text="Balancer pool"
             textSize="md"
           />
