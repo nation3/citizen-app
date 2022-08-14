@@ -225,7 +225,7 @@ export default function Liquidity() {
           </div>
         </div>
 
-        <div className="card bg-base-100 shadow">
+        <div className="card bg-base-100 shadow overflow-visible">
           <div className="card-body">
             <div className="tabs flex justify-center bg-white mb-4">
               <a
@@ -340,7 +340,7 @@ export default function Liquidity() {
                     >
                       Withdraw all and claim
                       <div
-                        className="tooltip tooltip-top md:tooltip-left flex items-center gap-2"
+                        className="tooltip tooltip-top md:tooltip-top flex items-center gap-2"
                         data-tip="This action will withdraw ALL of your tokens"
                       >
                         <InformationCircleIcon className="h-6 w-6 text-white pl-2" />
