@@ -46,7 +46,7 @@ const config: Config = {
   nationDropAmount: Number(process.env.NEXT_NATION_DROP_AMOUNT) || 1
 }
 
-console.log(config, chain)
+console.log(config)
 
 export const {
   nationToken,
