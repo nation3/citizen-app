@@ -1,4 +1,3 @@
-import { useRouter } from 'next/router'
 import React, { useEffect } from 'react'
 import { useHasPassport } from '../lib/passport-nft'
 
@@ -15,7 +14,7 @@ export default function PassportCheck({
     if (!hasPassportLoading) {
       onPassportChecked(hasPassport)
     }
-  }, [hasPassport, hasPassportLoading])
+  }, [hasPassport, hasPassportLoading, onPassportChecked])
 
   return <>{children}</>
 }
