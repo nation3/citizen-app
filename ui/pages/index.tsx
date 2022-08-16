@@ -7,7 +7,7 @@ import {
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
-import { balancerDomain, nationToken, veNationRewardsMultiplier } from '../lib/config'
+import { balancerDomain, balancerPoolId, nationToken, veNationRewardsMultiplier } from '../lib/config'
 import GradientLink from '../components/GradientLink'
 import Head from '../components/Head'
 import HomeCard from '../components/HomeCard'
@@ -82,7 +82,7 @@ export default function Index() {
             <p>
               Provide liquidity in the{' '}
               <a
-                href={`${balancerDomain}/#/pool/0x0bf37157d30dfe6f56757dcadff01aed83b08cd600020000000000000000019a`}
+                href={`${balancerDomain}/#/pool/${balancerPoolId}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-n3blue"
