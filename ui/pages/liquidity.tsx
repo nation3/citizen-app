@@ -336,7 +336,8 @@ export default function Liquidity() {
 
                     <ActionButton
                       className="btn btn-primary normal-case font-medium w-full"
-                      action={()=> {
+                      action={withdrawAndClaimRewards}
+                      preAction={() =>
                         userDeposit &&
                         setWithdrawalValue(
                           transformNumber(
@@ -344,8 +345,7 @@ export default function Liquidity() {
                             NumberType.string
                           ) as string
                         )
-                        withdrawAndClaimRewards()
-                      }}
+                      }
                     >
                       Withdraw all and claim
                       <div
