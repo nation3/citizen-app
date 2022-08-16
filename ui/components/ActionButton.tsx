@@ -1,8 +1,23 @@
-import React from 'react'
+import { BigNumber } from 'ethers'
+import { ReactNode } from 'react'
 import { useWaitForTransaction } from 'wagmi'
 import usePreferredNetwork from '../lib/use-preferred-network'
 import { useAccount, useNetwork } from '../lib/use-wagmi'
 import ActionNeedsTokenApproval from './ActionNeedsTokenApproval'
+
+export interface ActionButtonProps {
+  className?: string;
+  children: ReactNode;
+  action: any;
+  preAction?: Function;
+  postAction?: Function;
+  approval?: {
+    token: string;
+    spender: string;
+    amountNeeded: BigNumber | number | string;
+    approveText: string;
+  }
+}
 
 export default function ActionButton({
   className,
@@ -11,7 +26,7 @@ export default function ActionButton({
   preAction,
   postAction,
   approval,
-}: any) {
+}: ActionButtonProps) {
   const { data: account } = useAccount()
   const { writeAsync, data, isLoadingOverride } = action
   const { isLoading } = useWaitForTransaction({
