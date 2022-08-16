@@ -132,10 +132,9 @@ export default function Lock() {
 
   useEffect(() => {
     if (hasLock && veNationLock) {
+      const originalLockDate = dateToReadable(bigNumberToDate(veNationLock[1]));
       setMinMaxLockTime({
-        min: dateToReadable(
-          oneWeekOut
-        ),
+        min: originalLockDate,
         max: dateToReadable(dateOut(new Date(), { years: 4 })),
       })
       setCanIncrease({
@@ -353,7 +352,7 @@ export default function Lock() {
                       Lock expiration date
                       <br />
                       <span className="text-xs">
-                        Minimum one week, maximum four years from now.
+                        { hasLock && veNationLock ? "Maximum four years from your existing lock expiration date." : "Minimum one week, maximum four years from now."}
                       </span>
                     </span>
                   </label>
@@ -365,6 +364,9 @@ export default function Lock() {
                     min={minMaxLockTime.min}
                     max={minMaxLockTime.max}
                     onChange={(e: any) => {
+                      if (e.target.value < minMaxLockTime.min) {
+                        return false;
+                      }
                       setLockTime({
                         ...lockTime,
                         formatted: e.target.value
