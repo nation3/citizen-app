@@ -37,7 +37,7 @@ export default function TimeRange({
         ) : (
           <>
             {' '}
-            <span>Now</span>
+            <span>{new Date(min).toISOString().substring(0, 10)}</span>
             <span></span>
             <span></span>
             <span></span>
