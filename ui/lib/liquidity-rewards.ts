@@ -36,7 +36,7 @@ export function useLiquidityRewards({ nationPrice, poolValue, address }: any) {
     {
       args: [address],
       watch: true,
-      enabled: address,
+      enabled: Boolean(address),
     }
   )
 
@@ -57,7 +57,7 @@ export function useLiquidityRewards({ nationPrice, poolValue, address }: any) {
     {
       args: [address],
       watch: true,
-      enabled: address,
+      enabled: Boolean(address),
     }
   )
 
