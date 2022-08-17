@@ -3,6 +3,7 @@
   "rules": {
     "sort-imports": 0,
     "react/no-unescaped-entities": 0,
-    "jsx-a11y/alt-text": [0]
+    "jsx-a11y/alt-text": [0],
+    "react-hooks/exhaustive-deps": "error"
   }
 }

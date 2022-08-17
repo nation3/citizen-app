@@ -1,11 +1,11 @@
-import { useEffect } from 'react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import networkToId from './network-id'
 import { useNetwork } from './use-wagmi'
 
+const preferredNetwork = process.env.NEXT_PUBLIC_CHAIN
+
 export default function usePreferredNetwork() {
   const { activeChain } = useNetwork({})
-  const preferredNetwork = process.env.NEXT_PUBLIC_CHAIN
 
   const [isPreferredNetwork, setIsPreferredNetwork] = useState(false)
 

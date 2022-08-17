@@ -1,7 +1,7 @@
-import { useCallback } from 'react'
-import { veNationToken } from '../lib/config'
+import { useMemo } from 'react'
 import VotingEscrow from '../abis/VotingEscrow.json'
-import { useContractRead, useContractWrite, useBalance } from './use-wagmi'
+import { veNationToken } from '../lib/config'
+import { useBalance, useContractRead, useContractWrite } from './use-wagmi'
 
 const contractParams = {
   addressOrName: veNationToken,
@@ -54,7 +54,7 @@ export function useVeNationIncreaseLock({
     useVeNationIncreaseLockAmount(newAmount)
   const { writeAsync: increaseLockTime, data: lockTimeData } =
     useVeNationIncreaseLockTime(newTime)
-  const action = useCallback(() => {
+  return useMemo(() => {
     if (newAmount && newAmount.gt(0)) {
       return { writeAsync: increaseLockAmount, data: lockAmountData }
     }
@@ -62,9 +62,7 @@ export function useVeNationIncreaseLock({
       return { writeAsync: increaseLockTime, data: lockTimeData }
     }
     return {}
-  }, [newAmount, currentTime, newTime])
-
-  return action()
+  }, [newAmount, currentTime, newTime, increaseLockAmount, increaseLockTime, lockAmountData, lockTimeData])
 }
 
 export function useVeNationIncreaseLockAmount(amount: any) {

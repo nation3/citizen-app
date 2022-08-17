@@ -30,7 +30,7 @@ export function usePassportStatus(address: any) {
     {
       args: [address],
       watch: true,
-      enable: address,
+      enabled: Boolean(address),
     },
     false
   )
