@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import React from 'react'
-import { nationDropAmount, nationToken } from '../lib/config'
+import { balancerDomain, nationDropAmount, nationToken } from '../lib/config'
 import {
   useClaimsFiles,
   checkEligibility,
@@ -81,7 +81,7 @@ export default function Claim() {
                 ) : (
                   <a
                     className="btn btn-primary normal-case font-medium grow"
-                    href={`https://app.balancer.fi/#/trade/ether/${nationToken}`}
+                    href={`${balancerDomain}/#/trade/ether/${nationToken}`}
                     rel="noopener noreferrer"
                     target="_blank"
                   >
