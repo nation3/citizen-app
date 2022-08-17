@@ -7,7 +7,7 @@ import {
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
-import { nationToken, veNationRewardsMultiplier } from '../lib/config'
+import { balancerDomain, balancerPoolId, nationToken, veNationRewardsMultiplier } from '../lib/config'
 import GradientLink from '../components/GradientLink'
 import Head from '../components/Head'
 import HomeCard from '../components/HomeCard'
@@ -82,7 +82,7 @@ export default function Index() {
             <p>
               Provide liquidity in the{' '}
               <a
-                href="https://app.balancer.fi/#/pool/0x0bf37157d30dfe6f56757dcadff01aed83b08cd600020000000000000000019a"
+                href={`${balancerDomain}/#/pool/${balancerPoolId}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-n3blue"
@@ -95,7 +95,7 @@ export default function Index() {
           </HomeCard>
 
           <HomeCard
-            href={`https://app.balancer.fi/#/trade/ether/${nationToken}`}
+            href={`${balancerDomain}/#/trade/ether/${nationToken}`}
             icon={<PlusIcon className="h-5 w-5 absolute right-8 text-n3blue" />}
             title="Buy more $NATION"
             linkText="Buy $NATION"
