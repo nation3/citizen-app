@@ -3,8 +3,8 @@ import {
   InformationCircleIcon, LockClosedIcon, SparklesIcon
 } from '@heroicons/react/outline'
 import { BigNumber, ethers } from 'ethers'
-import { useEffect, useState } from 'react'
-import ActionButton from '../components/ActionButton'
+import { useEffect, useMemo, useState } from 'react'
+import ActionButton, { ActionButtonProps } from '../components/ActionButton'
 import Balance from '../components/Balance'
 import GradientLink from '../components/GradientLink'
 import Head from '../components/Head'
@@ -80,6 +80,7 @@ export default function Lock() {
   const [hasLock, setHasLock] = useState<boolean>()
   useEffect(() => {
     !veNationLockLoading && setHasLock(veNationLock && veNationLock[0] != 0)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [veNationLock])
 
   const [hasExpired, setHasExpired] = useState<boolean>()
@@ -90,11 +91,12 @@ export default function Lock() {
           veNationLock[1] != 0 &&
           ethers.BigNumber.from(Date.now()).gte(veNationLock[1].mul(1000))
       )
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [veNationLock])
 
   const [lockAmount, setLockAmount] = useState<string>()
 
-  const oneWeekOut = dateOut(new Date(), { days: 7 })
+  const oneWeekOut = useMemo(() => dateOut(new Date(), { days: 7 }), [])
 
   const [lockTime, setLockTime] = useState({
     value: ethers.BigNumber.from(+oneWeekOut),
@@ -107,7 +109,7 @@ export default function Lock() {
   const [wantsToIncrease, setWantsToIncrease] = useState(false)
 
   useEffect(() => {
-    if (hasLock && veNationLock) {
+    if (hasLock && veNationLock && !wantsToIncrease) {
       !lockAmount && setLockAmount(ethers.utils.formatEther(veNationLock[0]))
       const origTime = {
         value: veNationLock[1],
@@ -119,14 +121,14 @@ export default function Lock() {
         orig: origTime,
       })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasLock, veNationLock])
 
   useEffect(() => {
     if (hasLock && veNationLock) {
+      const originalLockDate = dateToReadable(bigNumberToDate(veNationLock[1]));
       setMinMaxLockTime({
-        min: dateToReadable(
-          oneWeekOut
-        ),
+        min: originalLockDate,
         max: dateToReadable(dateOut(new Date(), { years: 4 })),
       })
       setCanIncrease({
@@ -144,7 +146,7 @@ export default function Lock() {
         max: dateToReadable(dateOut(new Date(), { years: 4 })),
       })
     }
-  }, [hasLock, lockAmount, lockTime, veNationLock])
+  }, [hasLock, lockAmount, lockTime, veNationLock, oneWeekOut])
 
   const createLock = useVeNationCreateLock(
     lockAmount && ethers.utils.parseEther(lockAmount),
@@ -164,6 +166,23 @@ export default function Lock() {
   const withdraw = useVeNationWithdrawLock()
 
   const passportExpirationDate = usePassportExpirationDate()
+  const approval = useMemo<ActionButtonProps['approval']>(() => ({
+    token: nationToken,
+    spender: veNationToken,
+    amountNeeded:
+      hasLock && veNationLock[0]
+        ? (
+            transformNumber(
+              lockAmount ?? '0',
+              NumberType.bignumber
+            ) as BigNumber
+          ).sub(veNationLock[0])
+        : transformNumber(
+            lockAmount ?? '0',
+            NumberType.bignumber
+          ),
+    approveText: 'Approve $NATION',
+  }), [hasLock, veNationLock, lockAmount])
 
   return (
     <>
@@ -348,7 +367,7 @@ export default function Lock() {
                       Lock expiration date
                       <br />
                       <span className="text-xs">
-                        Minimum one week, maximum four years from now.
+                        { hasLock && veNationLock ? "Maximum four years from your existing lock expiration date." : "Minimum one week, maximum four years from now."}
                       </span>
                     </span>
                   </label>
@@ -360,6 +379,9 @@ export default function Lock() {
                     min={minMaxLockTime.min}
                     max={minMaxLockTime.max}
                     onChange={(e: any) => {
+                      if (e.target.value < minMaxLockTime.min) {
+                        return false;
+                      }
                       setLockTime({
                         ...lockTime,
                         formatted: e.target.value
@@ -417,23 +439,7 @@ export default function Lock() {
                           : ''
                       }`}
                       action={hasLock ? increaseLock : createLock}
-                      approval={{
-                        token: nationToken,
-                        spender: veNationToken,
-                        amountNeeded:
-                          hasLock && veNationLock
-                            ? (
-                                transformNumber(
-                                  lockAmount ?? '0',
-                                  NumberType.bignumber
-                                ) as BigNumber
-                              ).sub(veNationLock[0])
-                            : transformNumber(
-                                lockAmount ?? '0',
-                                NumberType.bignumber
-                              ),
-                        approveText: 'Approve $NATION',
-                      }}
+                      approval={approval}
                     >
                       {!hasLock
                         ? 'Lock'
