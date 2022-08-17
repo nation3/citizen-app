@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { useWaitForTransaction } from 'wagmi'
-import { veNationRequiredStake, nationToken } from '../lib/config'
+import { veNationRequiredStake, nationToken, balancerDomain } from '../lib/config'
 import { useNationBalance } from '../lib/nation-token'
 import { NumberType, transformNumber } from '../lib/numbers'
 import { useClaimPassport } from '../lib/passport-nft'
@@ -181,7 +181,7 @@ export default function Join() {
             ) : (
               <a
                 className="btn btn-primary normal-case font-medium grow"
-                href={`https://app.balancer.fi/#/trade/ether/${nationToken}`}
+                href={`${balancerDomain}/#/trade/ether/${nationToken}`}
                 rel="noopener noreferrer"
                 target="_blank"
               >

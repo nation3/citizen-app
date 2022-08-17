@@ -18,6 +18,10 @@ Add variables to your local development environment:
 ```
 cp .env.mainnet .env.local
 ```
+or
+```
+cp .env.goerli .env.local
+```
 
 Build:
 ```
