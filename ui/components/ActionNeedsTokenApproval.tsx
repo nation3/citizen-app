@@ -25,20 +25,16 @@ export default function ActionNeedsTokenApproval({
   )
 
   useEffect(() => {
-    if (approveUnlimited && amountNeeded > 0) {
-      setWeiAmountNeeded(BigNumber.from('1000000000000000000000000000'))
-    } else {
       setWeiAmountNeeded(
         transformNumber(
           amountNeeded?.formatted || amountNeeded,
           NumberType.bignumber
         ) as BigNumber
       )
-    }
-  }, [amountNeeded, approveUnlimited])
+  }, [amountNeeded])
 
   const approve = useTokenApproval({
-    amountNeeded: weiAmountNeeded,
+    amountNeeded: approveUnlimited ? BigNumber.from('1000000000000000000000000000') :  weiAmountNeeded,
     token,
     spender,
   })
