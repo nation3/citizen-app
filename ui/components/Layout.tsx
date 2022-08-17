@@ -25,7 +25,7 @@ import { useState, useEffect } from 'react'
 // @ts-expect-error ts-migrate(7016) FIXME: Could not find a declaration file for module 'reac... Remove this comment to see the full error message
 import Blockies from 'react-blockies'
 import { useConnect, useEnsName, useDisconnect } from 'wagmi'
-import { nationToken } from '../lib/config'
+import { balancerDomain, nationToken } from '../lib/config'
 import { connectorIcons } from '../lib/connectors'
 import { useAccount } from '../lib/use-wagmi'
 import Logo from '../public/logo.svg'
@@ -66,7 +66,7 @@ const navigation = [
   },
   {
     name: 'Buy $NATION',
-    href: `https://app.balancer.fi/#/trade/ether/${nationToken}`,
+    href: `${balancerDomain}/#/trade/ether/${nationToken}`,
     icon: <PlusIcon className="h-5 w-5" />,
   },
   {
