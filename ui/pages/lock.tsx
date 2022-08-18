@@ -9,7 +9,6 @@ import Balance from '../components/Balance'
 import GradientLink from '../components/GradientLink'
 import Head from '../components/Head'
 import MainCard from '../components/MainCard'
-import PassportExpiration from '../components/PassportExpiration'
 import TimeRange from '../components/TimeRange'
 import {
   nationToken, veNationRequiredStake,
@@ -18,7 +17,6 @@ import {
 import { dateToReadable } from '../lib/date'
 import { useNationBalance } from '../lib/nation-token'
 import { NumberType, transformNumber } from '../lib/numbers'
-import { usePassportExpirationDate } from '../lib/password-expiration'
 import { useAccount } from '../lib/use-wagmi'
 import {
   useVeNationBalance, useVeNationCreateLock,
@@ -165,7 +163,6 @@ export default function Lock() {
 
   const withdraw = useVeNationWithdrawLock()
 
-  const passportExpirationDate = usePassportExpirationDate()
   const approval = useMemo<ActionButtonProps['approval']>(() => ({
     token: nationToken,
     spender: veNationToken,
@@ -300,8 +297,6 @@ export default function Lock() {
                 </div>
               </div>
             </div>
-
-            <PassportExpiration date={passportExpirationDate} />
           </>
         )}
 

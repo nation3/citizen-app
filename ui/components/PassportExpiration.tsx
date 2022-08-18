@@ -7,15 +7,13 @@ interface Props {
 
 export default function PassportExpiration({date}: Props) {
   return (
-    <div className="stats stats-vertical lg:stats-horizontal shadow mb-4">
-      <div className="stat">
-        <div className="stat-figure">
-          <ClockIcon className="h-8 w-8" />
-        </div>
-        <div className="stat-title">Passport expiration date</div>
-        <div className="stat-value">
-          {!!date ? (date > new Date()) ? dateToReadable(date) : 'Expired' : '-'}
-        </div>
+    <div className="stat">
+      <div className="stat-figure">
+        <ClockIcon className="h-8 w-8" />
+      </div>
+      <div className="stat-title">Passport expiration date</div>
+      <div className="stat-value">
+        {!!date ? (date > new Date()) ? dateToReadable(date) : 'Expired' : '-'}
       </div>
     </div>
   )

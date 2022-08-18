@@ -3,15 +3,17 @@ import { useState } from 'react'
 // @ts-ignore
 import Card from 'react-animated-3d-card'
 import { useSignMessage } from 'wagmi'
-import {
-  usePassport,
-  usePassportSigner,
-  useSetPassportSigner,
-} from '../lib/passport-nft'
-import { useAccount } from '../lib/use-wagmi'
 import ActionButton from '../components/ActionButton'
 import Confetti from '../components/Confetti'
 import Head from '../components/Head'
+import PassportExpiration from '../components/PassportExpiration'
+import {
+  usePassport,
+  usePassportSigner,
+  useSetPassportSigner
+} from '../lib/passport-nft'
+import { usePassportExpirationDate } from '../lib/password-expiration'
+import { useAccount } from '../lib/use-wagmi'
 import BallotIcon from '../public/passport/ballot.svg'
 import DiscordIcon from '../public/passport/discord.svg'
 import AddToWallet from '../public/passport/wallet.svg'
@@ -44,6 +46,8 @@ export default function Citizen() {
     passportData?.id,
     passportSigner
   )
+
+  const passportExpirationDate = usePassportExpirationDate()
 
   return (
     <>
@@ -96,6 +100,7 @@ export default function Citizen() {
                   <Image src={BallotIcon} width={24} height={24} />
                   <span className="hidden xl:block">Vote on proposals</span>
                 </a>
+                <PassportExpiration date={passportExpirationDate} />
               </div>
             </div>
             <div className="card shadow-md p-4 bg-white mt-8 mx-4 lg:mx-32 max-w-sm xl:max-w-full">
