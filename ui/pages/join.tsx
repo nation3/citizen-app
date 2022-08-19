@@ -10,10 +10,12 @@ import Confetti from '../components/Confetti'
 import GradientLink from '../components/GradientLink'
 import Head from '../components/Head'
 import MainCard from '../components/MainCard'
+import PassportExpiration from '../components/PassportExpiration'
 import { balancerDomain, nationToken, veNationRequiredStake } from '../lib/config'
 import { useNationBalance } from '../lib/nation-token'
 import { NumberType, transformNumber } from '../lib/numbers'
 import { useClaimPassport, useHasPassport } from '../lib/passport-nft'
+import { usePassportExpirationDate } from '../lib/password-expiration'
 import { storeSignature, useSignAgreement } from '../lib/sign-agreement'
 import { useAccount } from '../lib/use-wagmi'
 import { useVeNationBalance } from '../lib/ve-token'
@@ -91,6 +93,8 @@ export default function Join() {
     veNationBalanceLoading,
   ])
 
+  const passportExpirationDate = usePassportExpirationDate()
+
   return (
     <>
       <Head title="Become a citizen" />
@@ -160,7 +164,10 @@ export default function Join() {
                 </div>
                 <div className="stat-desc">$veNATION</div>
               </div>
+
             </div>
+            <PassportExpiration date={passportExpirationDate} />
+
             {action.mint ? (
               <ActionButton
                 className="btn btn-primary normal-case font-medium grow"
