@@ -101,7 +101,7 @@ export default function Claim() {
           </div>
         </MainCard>
       ) : (
-        <MainCard title="Welcome new $NATION holder!" gradientBg={true}>
+        <MainCard title="Welcome, new $NATION holder!" gradientBg={true}>
           <p className="text-white">
             Your $NATION was claimed successfully! 🎉
           </p>

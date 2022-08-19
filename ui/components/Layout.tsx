@@ -93,7 +93,7 @@ export default function Layout({ children }: any) {
 
   const onPassportChecked = (hasPassport: boolean) => {
     if (hasPassport) {
-      navigation[1].name = 'Welcome citizen'
+      navigation[1].name = 'Welcome, citizen'
       navigation[1].href = '/citizen'
       setNav(navigation)
       if (router.pathname === '/join' && !router.query.mintingPassport) {
