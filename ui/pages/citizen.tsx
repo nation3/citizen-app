@@ -7,12 +7,12 @@ import ActionButton from '../components/ActionButton'
 import Confetti from '../components/Confetti'
 import Head from '../components/Head'
 import PassportExpiration from '../components/PassportExpiration'
+import { usePassportExpirationDate } from '../lib/passport-expiration'
 import {
   usePassport,
   usePassportSigner,
   useSetPassportSigner
 } from '../lib/passport-nft'
-import { usePassportExpirationDate } from '../lib/password-expiration'
 import { useAccount } from '../lib/use-wagmi'
 import BallotIcon from '../public/passport/ballot.svg'
 import DiscordIcon from '../public/passport/discord.svg'
