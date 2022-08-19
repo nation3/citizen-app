@@ -1,16 +1,15 @@
-import { createContext, useContext, useState } from 'react'
-import React from 'react'
+import { createContext, useCallback, useContext, useState } from 'react'
 import { useNetwork } from 'wagmi'
 import networkToId from '../lib/network-id'
 
 const ErrorContext = createContext({} as any)
 
 function ErrorProvider({ children }: any) {
-  const [errors, setErrors] = useState([] as any)
+  const [errors, setErrors] = useState([] as any[])
   let [count, setCount] = useState(0)
   const { activeChain } = useNetwork()
 
-  const addError = (newErrors: any) => {
+  const addError = useCallback((newErrors: any) => {
     if (
       newErrors &&
       newErrors[0] &&
@@ -33,11 +32,11 @@ function ErrorProvider({ children }: any) {
             return
           }
         }
-        setErrors([{ key: count, ...error }, ...errors])
-        setCount(++count)
+        setErrors((prev) => [...prev, {key: prev.length, ...error}]);
+        setCount((prev) => prev + 1)
       }
     }
-  }
+  }, [activeChain?.id]);
 
   const removeError = (key: any) => {
     if (key > -1) {
