@@ -4,7 +4,7 @@ import { useAccount } from "./use-wagmi";
 import { useVeNationLock } from "./ve-token";
 
 const decimalThreshold = Number(process.env.NEXT_PUBLIC_CITIZENSHIP_REVOKE_THRESHOLD)
-const threshold = ethers.BigNumber.from(decimalThreshold ** 18);
+const threshold = ethers.BigNumber.from(String(decimalThreshold * 10 ** 18));
 const maxLockPeriod = ethers.BigNumber.from(31556926 * 4);
 
 export function usePassportExpirationDate(): Date | undefined {
