@@ -33,6 +33,11 @@ Lint:
 yarn lint
 ```
 
+Run tests:
+```
+yarn test
+```
+
 Start the development server:
 ```
 yarn dev
