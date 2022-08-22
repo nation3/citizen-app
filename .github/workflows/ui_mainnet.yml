@@ -34,5 +34,5 @@ jobs:
     - run: yarn install
     - run: yarn build
     - run: yarn lint
-    - run: yarn test
     - run: yarn cypress:headless
+    - run: yarn test
