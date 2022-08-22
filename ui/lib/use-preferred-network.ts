@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import networkToId from './network-id'
+import { networkToId } from './network-id'
 import { useNetwork } from './use-wagmi'
 
 const preferredNetwork = process.env.NEXT_PUBLIC_CHAIN
