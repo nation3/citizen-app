@@ -33,6 +33,7 @@ import Balance from '../components/Balance'
 import GradientLink from '../components/GradientLink'
 import Head from '../components/Head'
 import MainCard from '../components/MainCard'
+import EthersInput from '../components/EthersInput'
 
 export default function Liquidity() {
   const { data: account } = useAccount()
@@ -257,14 +258,12 @@ export default function Liquidity() {
                   </p>
 
                   <div className="input-group">
-                    <input
+                    <EthersInput
                       type="number"
                       placeholder="Amount"
                       className="input input-bordered w-full"
                       value={depositValue}
-                      onChange={(e: any) => {
-                        setDepositValue(e.target.value)
-                      }}
+                      onChange={setDepositValue}
                     />
 
                     <button
@@ -301,7 +300,7 @@ export default function Liquidity() {
                   </p>
 
                   <div className="input-group">
-                    <input
+                    <EthersInput
                       type="number"
                       placeholder="Amount"
                       className="input input-bordered w-full"

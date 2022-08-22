@@ -6,6 +6,7 @@ import { BigNumber, ethers } from 'ethers'
 import { useEffect, useMemo, useState } from 'react'
 import ActionButton, { ActionButtonProps } from '../components/ActionButton'
 import Balance from '../components/Balance'
+import EthersInput from '../components/EthersInput'
 import GradientLink from '../components/GradientLink'
 import Head from '../components/Head'
 import MainCard from '../components/MainCard'
@@ -328,7 +329,7 @@ export default function Lock() {
                     </span>
                   </label>
                   <div className="input-group mb-4">
-                    <input
+                    <EthersInput
                       type="number"
                       placeholder="0"
                       className="input input-bordered w-full"
@@ -338,8 +339,8 @@ export default function Lock() {
                           ? ethers.utils.formatEther(veNationLock[0])
                           : 0
                       }
-                      onChange={(e: any) => {
-                        setLockAmount(e.target.value)
+                      onChange={(value: any) => {
+                        setLockAmount(value)
                         setWantsToIncrease(true)
                       }}
                     />
