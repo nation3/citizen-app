@@ -33,11 +33,6 @@ Lint:
 yarn lint
 ```
 
-Run tests:
-```
-yarn test
-```
-
 Start the development server:
 ```
 yarn dev
@@ -55,4 +50,11 @@ yarn cypress
 Run the integration tests headlessly:
 ```
 yarn cypress:headless
+```
+
+## Unit Testing
+
+Run unit tests:
+```
+yarn test
 ```
