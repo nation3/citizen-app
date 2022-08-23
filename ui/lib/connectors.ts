@@ -7,7 +7,7 @@ import CoinbaseWalletIcon from '../public/icons/connectors/coinbase.svg'
 import FrameIcon from '../public/icons/connectors/frame.svg'
 import MetaMaskIcon from '../public/icons/connectors/metamask.svg'
 import WalletConnectIcon from '../public/icons/connectors/walletconnect.svg'
-import networkToId from './network-id'
+import { networkToId } from './network-id'
 
 const chains = [chain.mainnet, chain.goerli, chain.hardhat]
 
