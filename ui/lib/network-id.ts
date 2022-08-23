@@ -1,4 +1,4 @@
-export default function networkToId(network: any) {
+export function networkToId(network: any) {
   switch (network.toLowerCase()) {
     case 'mainnet':
       return 1

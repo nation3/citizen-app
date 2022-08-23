@@ -51,3 +51,10 @@ Run the integration tests headlessly:
 ```
 yarn cypress:headless
 ```
+
+## Unit Testing
+
+Run unit tests:
+```
+yarn test
+```
