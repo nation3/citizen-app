@@ -1,6 +1,6 @@
 import { describe, expect, test } from '@jest/globals'
 import { BigNumber } from 'ethers'
-import { NumberType, transformNumber } from '../../lib/numbers'
+import { NumberType, transformNumber } from './numbers'
 
 test("transformNumber to Number", () => {
   const actual = transformNumber(333, NumberType.number)

@@ -1,5 +1,5 @@
 import { describe, expect, test } from '@jest/globals'
-import { networkToId } from '../../lib/network-id'
+import { networkToId } from './network-id'
 
 test("networkToId goerli", () => {
   const actual = networkToId('goerli')
