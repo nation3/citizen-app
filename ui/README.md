@@ -58,3 +58,10 @@ Run unit tests:
 ```
 yarn test
 ```
+
+## Code Coverage
+
+Run code coverage:
+```
+yarn test:coverage
+```

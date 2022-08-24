@@ -36,3 +36,4 @@ jobs:
     - run: yarn lint
     - run: yarn cypress:headless
     - run: yarn test
+    - run: yarn test:coverage
