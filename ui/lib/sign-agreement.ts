@@ -1,5 +1,5 @@
 import { nationPassportNFTIssuer } from './config'
-import networkToId from './network-id'
+import { networkToId } from './network-id'
 import { useSignTypedData } from './use-wagmi'
 
 export const domain = {
