@@ -1,9 +1,10 @@
 import React from 'react'
+import { isFixedDecimalsNumber } from '../lib/numbers'
 
 export default function EthersInput({ onChange, ...props}: any) {
     const onInputChange = (e: any) => {
         const value = e.target.value
-        const isValid = value.toString().match(/^(\d*\.{0,1}\d{0,18}$)/)
+        const isValid = isFixedDecimalsNumber(value)
         if (isValid) {
             onChange(value)
         }
