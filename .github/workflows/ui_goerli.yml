@@ -34,7 +34,7 @@ jobs:
     - run: yarn install
     - run: yarn build
     - run: yarn lint
-    - run: yarn cypress:headless
+    - run: yarn e2e:headless
     - run: yarn test
     - run: yarn test:coverage
     - uses: codecov/codecov-action@v3
