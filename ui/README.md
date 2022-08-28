@@ -58,3 +58,12 @@ Run unit tests:
 ```
 yarn test
 ```
+
+## Code Coverage
+
+[![codecov](https://codecov.io/gh/nation3/app/branch/main/graph/badge.svg)](https://codecov.io/gh/nation3/app)
+
+Run code coverage:
+```
+yarn test:coverage
+```
