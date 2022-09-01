@@ -305,8 +305,8 @@ export default function Liquidity() {
                       placeholder="Amount"
                       className="input input-bordered w-full"
                       value={withdrawalValue}
-                      onChange={(e: any) => {
-                        setWithdrawalValue(e.target.value)
+                      onChange={(value: any) => {
+                        setWithdrawalValue(value)
                       }}
                     />
 
