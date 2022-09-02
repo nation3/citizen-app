@@ -296,7 +296,7 @@ export default function Layout({ children }: any) {
                   <li key={connector.id}>
                     <button
                       disabled={!connector.ready}
-                      onClick={() => connect(connector)}
+                      onClick={() => connect({ connector })}
                     >
                       {(connectorIcons as Indexable)[connector.name] ? (
                         <div className="h-5 w-5">
