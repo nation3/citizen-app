@@ -67,16 +67,16 @@ const calculateVestingStart = ({
 }
 
 export default function Lock() {
-  const { data: account } = useAccount()
+  const { address } = useAccount()
 
   const { data: nationBalance, isLoading: nationBalanceLoading } =
-    useNationBalance(account?.address)
+    useNationBalance(address)
 
   const { data: veNationBalance, isLoading: veNationBalanceLoading } =
-    useVeNationBalance(account?.address)
+    useVeNationBalance(address)
 
   const { data: veNationLock, isLoading: veNationLockLoading } =
-    useVeNationLock(account?.address)
+    useVeNationLock(address)
 
   const [hasLock, setHasLock] = useState<boolean>()
   useEffect(() => {
