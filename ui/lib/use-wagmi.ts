@@ -3,6 +3,7 @@ import {
   useAccount as _useAccount,
   useBalance as _useBalance,
   useNetwork as _useNetwork,
+  useSwitchNetwork as _useSwitchNetwork,
   useContractRead as _useContractRead,
   useContractWrite as _useContractWrite,
   useSignTypedData as _useSignTypedData,
@@ -23,8 +24,12 @@ export function useAccount(params?: any) {
   return useHandleError(_useAccount(params))
 }
 
-export function useNetwork(params: any) {
-  return useHandleError(_useNetwork(params))
+export function useNetwork() {
+  return useHandleError(_useNetwork())
+}
+
+export function useSwitchNetwork(){
+  return useHandleError(_useSwitchNetwork)
 }
 
 export function useBalance(params: any) {

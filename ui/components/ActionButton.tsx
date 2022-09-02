@@ -39,14 +39,14 @@ export default function ActionButton({
     postAction && postAction()
   }
 
-  const { activeChain } = useNetwork({})
+  const { chain } = useNetwork()
   const { isPreferredNetwork } = usePreferredNetwork()
 
   return (
     <>
       {!isPreferredNetwork ? (
         <button className={className} disabled>
-          {!activeChain?.id ? 'Not connected' : 'Wrong network'}
+          {!chain?.id ? 'Not connected' : 'Wrong network'}
         </button>
       ) : !address ? (
         <label htmlFor="web3-modal" className={`${className} modal-button`}>
