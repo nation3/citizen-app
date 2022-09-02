@@ -18,8 +18,9 @@ export function useTokenApproval({ amountNeeded, token, spender }: any) {
     {
       addressOrName: token,
       contractInterface: ERC20.abi,
+      functionName: 'approve',
+      args: [spender, amountNeeded] 
     },
-    'approve',
-    { args: [spender, amountNeeded] }
+    
   )
 }

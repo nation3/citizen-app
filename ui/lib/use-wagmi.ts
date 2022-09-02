@@ -37,12 +37,10 @@ export function useContractRead(config: any, throwOnRevert?: any) {
 
 export function useContractWrite(
   config: any,
-  method: any,
-  argsAndOverrides: any,
   throwOnRevert?: any
 ) {
   return useHandleError(
-    _useContractWrite(config, method, argsAndOverrides),
+    _useContractWrite(config),
     throwOnRevert
   )
 }

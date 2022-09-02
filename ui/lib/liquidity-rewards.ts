@@ -205,27 +205,35 @@ export function useBoostedAPY({ defaultAPY, boostMultiplier }: any) {
 
 // Using Wagmi's contractWrite directly, getting a "no signer connected" error otherwise
 export function useClaimRewards() {
-  return useContractWrite(contractParams, 'claimRewards', {
+  return useContractWrite({
+    ...contractParams,
+    functionName: 'claimRewards',
     overrides: { gasLimit: 300000 },
   })
 }
 
 export function useDeposit(amount: any) {
-  return useContractWrite(contractParams, 'deposit', {
+  return useContractWrite({
+    ...contractParams,
+    functionName: 'deposit',
     args: [amount],
     overrides: { gasLimit: 300000 },
   })
 }
 
 export function useWithdraw(amount: any) {
-  return useContractWrite(contractParams, 'withdraw', {
+  return useContractWrite({
+    ...contractParams,
+    functionName: 'withdraw',
     args: [amount],
     overrides: { gasLimit: 300000 },
   })
 }
 
 export function useWithdrawAndClaim() {
-  return useContractWrite(contractParams, 'withdrawAndClaim', {
+  return useContractWrite({
+    ...contractParams,
+    functionName: 'withdrawAndClaim',
     overrides: { gasLimit: 300000 },
   })
 }

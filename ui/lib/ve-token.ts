@@ -39,7 +39,9 @@ export function useVeNationLock(address: any) {
 }
 
 export function useVeNationCreateLock(amount: any, time: any) {
-  return useContractWrite(contractParams, 'create_lock', {
+  return useContractWrite({
+    ...contractParams,
+    functionName: 'create_lock',
     args: [amount, time],
     overrides: {
       gasLimit: gasLimits.create_lock,
@@ -76,7 +78,9 @@ export function useVeNationIncreaseLock({
 }
 
 export function useVeNationIncreaseLockAmount(amount: any) {
-  return useContractWrite(contractParams, 'increase_amount', {
+  return useContractWrite({
+    ...contractParams,
+    functionName: 'increase_amount',
     args: [amount],
     overrides: {
       gasLimit: gasLimits.increase_amount,
@@ -85,7 +89,9 @@ export function useVeNationIncreaseLockAmount(amount: any) {
 }
 
 export function useVeNationIncreaseLockTime(time: any) {
-  return useContractWrite(contractParams, 'increase_unlock_time', {
+  return useContractWrite({
+    ...contractParams,
+    functionName: 'increase_unlock_time',
     args: [time],
     overrides: {
       gasLimit: gasLimits.increase_unlock_time,
@@ -94,7 +100,9 @@ export function useVeNationIncreaseLockTime(time: any) {
 }
 
 export function useVeNationWithdrawLock() {
-  return useContractWrite(contractParams, 'withdraw', {
+  return useContractWrite({
+    ...contractParams,
+    functionName: 'withdraw',
     overrides: {
       gasLimit: gasLimits.withdraw,
     },

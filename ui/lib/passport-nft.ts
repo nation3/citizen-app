@@ -37,14 +37,11 @@ export function usePassportStatus(address: any) {
 }
 
 export function useClaimPassport() {
-  return useContractWrite(
-    {
-      addressOrName: nationPassportNFTIssuer,
-      contractInterface: PassportIssuer.abi,
-    },
-    'claim',
-    {}
-  )
+  return useContractWrite({
+    addressOrName: nationPassportNFTIssuer,
+    contractInterface: PassportIssuer.abi,
+    functionName: 'claim',
+  })
 }
 
 export function usePassport(address: any) {
@@ -74,14 +71,10 @@ export function usePassportSigner(id: number) {
 }
 
 export function useSetPassportSigner(id: number, signerAddress: string) {
-  return useContractWrite(
-    {
-      addressOrName: nationPassportNFT,
-      contractInterface: PassportNFT.abi,
-    },
-    'setSigner',
-    {
-      args: [id, signerAddress],
-    }
-  )
+  return useContractWrite({
+    addressOrName: nationPassportNFT,
+    functionName: 'setSigner',
+    contractInterface: PassportNFT.abi,
+    args: [id, signerAddress],
+  })
 }

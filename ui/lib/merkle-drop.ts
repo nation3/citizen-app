@@ -70,7 +70,9 @@ export function useClaimDrop({
   amount,
   proof,
 }: any) {
-  return useContractWrite(contractParams(contractId), 'claim', {
+  return useContractWrite({
+    ...contractParams(contractId),
+    functionName: 'claim',
     args: [index, account, amount, proof],
     overrides: {
       gasLimit: 150000,
