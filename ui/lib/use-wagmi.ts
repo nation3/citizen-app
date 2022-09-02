@@ -7,6 +7,7 @@ import {
   useContractRead as _useContractRead,
   useContractWrite as _useContractWrite,
   useSignTypedData as _useSignTypedData,
+  usePrepareContractWrite as _usePrepareContractWrite,
 } from 'wagmi'
 import { useStaticCall as _useStaticCall } from './static-call'
 import { useHandleError } from './use-handle-error'
@@ -28,7 +29,7 @@ export function useNetwork() {
   return useHandleError(_useNetwork())
 }
 
-export function useSwitchNetwork(){
+export function useSwitchNetwork() {
   return useHandleError(_useSwitchNetwork)
 }
 
@@ -40,14 +41,11 @@ export function useContractRead(config: any, throwOnRevert?: any) {
   return useHandleError(_useContractRead(config), throwOnRevert)
 }
 
-export function useContractWrite(
-  config: any,
-  throwOnRevert?: any
-) {
-  return useHandleError(
-    _useContractWrite(config),
-    throwOnRevert
-  )
+export function useContractWrite(config: any, throwOnRevert?: any) {
+  const { config: contractWriteConfig } = _usePrepareContractWrite({
+    ...config,
+  })
+  return useHandleError(_useContractWrite(contractWriteConfig), throwOnRevert)
 }
 
 export function useSignTypedData(params: any) {
