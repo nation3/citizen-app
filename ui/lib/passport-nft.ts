@@ -25,9 +25,9 @@ export function useHasPassport(address: any) {
 
 export function usePassportStatus(address: any) {
   return useContractRead(
-    nftIssuerContractParams,
-    'passportStatus',
     {
+      ...nftIssuerContractParams,
+      functionName: 'passportStatus',
       args: [address],
       watch: true,
       enabled: Boolean(address),
@@ -49,9 +49,12 @@ export function useClaimPassport() {
 
 export function usePassport(address: any) {
   const { data: id, isLoading: loadingID } = useContractRead(
-    nftIssuerContractParams,
-    'passportId',
-    { args: [address], enable: address },
+    {
+      ...nftIssuerContractParams,
+      functionName: 'passportId',
+      args: [address],
+      enable: address,
+    },
     false
   )
   console.log(`Passport ID ${id}`)
@@ -60,18 +63,14 @@ export function usePassport(address: any) {
 }
 
 export function usePassportSigner(id: number) {
-  return useContractRead(
-    {
-      addressOrName: nationPassportNFT,
-      contractInterface: PassportNFT.abi,
-    },
-    'signerOf',
-    {
-      args: [id],
-      watch: true,
-      enable: id,
-    }
-  )
+  return useContractRead({
+    addressOrName: nationPassportNFT,
+    contractInterface: PassportNFT.abi,
+    functionName: 'signerOf',
+    args: [id],
+    watch: true,
+    enable: id,
+  })
 }
 
 export function useSetPassportSigner(id: number, signerAddress: string) {

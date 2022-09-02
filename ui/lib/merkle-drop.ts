@@ -50,7 +50,9 @@ const contractParams = (contractId: any) => ({
 })
 
 export function useIsClaimed(contractId: any, index: any) {
-  return useContractRead(contractParams(contractId), 'isClaimed', {
+  return useContractRead({
+    ...contractParams(contractId),
+    functionName: 'isClaimed',
     args: [index],
     watch: true,
     enabled: contractId && index,

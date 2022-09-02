@@ -31,16 +31,8 @@ export function useBalance(params: any) {
   return useHandleError(_useBalance(params))
 }
 
-export function useContractRead(
-  config: any,
-  method: any,
-  argsAndOverrides: any,
-  throwOnRevert?: any
-) {
-  return useHandleError(
-    _useContractRead(config, method, argsAndOverrides),
-    throwOnRevert
-  )
+export function useContractRead(config: any, throwOnRevert?: any) {
+  return useHandleError(_useContractRead(config), throwOnRevert)
 }
 
 export function useContractWrite(
