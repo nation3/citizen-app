@@ -21,6 +21,5 @@ export function useTokenApproval({ amountNeeded, token, spender }: any) {
       functionName: 'approve',
       args: [spender, amountNeeded] 
     },
-    
   )
 }
