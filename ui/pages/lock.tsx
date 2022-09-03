@@ -332,6 +332,7 @@ export default function Lock() {
                     <EthersInput
                       type="number"
                       placeholder="0"
+                      id="lockAmount"
                       className="input input-bordered w-full"
                       value={lockAmount}
                       min={
