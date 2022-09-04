@@ -6,7 +6,7 @@ import { provider } from '../../lib/connectors'
 import { domain, types, value } from '../../lib/sign-agreement'
 
 const client = new NFTStorage({
-  token: process.env.NEXT_PUBLIC_NFTSTORAGE_KEY || '',
+  token: process.env.NFTSTORAGE_KEY || '',
 })
 
 export default async function storeSignature(
