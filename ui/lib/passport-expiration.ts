@@ -11,14 +11,14 @@ const maxLockPeriod = ethers.BigNumber.from(fourYearsInSeconds);
 
 export function usePassportExpirationDate(): Date | undefined {
   const { data: account } = useAccount()
-  const { data: veNationLock } =
-    useVeNationLock(account?.address)
+  const { data: veNationLock } = useVeNationLock(account?.address)
     
   return useMemo(() => {
       // threshold <= (lock amount) * (lock end - expiration) / (max lock period)
       // threshold * (max lock period) / (lock amount) <= (lock end - expiration)
       // expiration <= (lock end) - threshold * (max lock period) / (lock amount)
-      if (!veNationLock) return undefined;
+      if (!veNationLock)
+        return undefined;
       const [lockAmount, lockEnd]: [ethers.BigNumber, ethers.BigNumber] = veNationLock;
       if (lockAmount.isZero()) return undefined;
       const expiration = lockEnd.sub(threshold.mul(maxLockPeriod).div(lockAmount));
