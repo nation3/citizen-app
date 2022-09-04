@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { useWaitForTransaction } from 'wagmi'
-import { veNationRequiredStake, nationToken, balancerDomain } from '../lib/config'
+import { veNationRequiredStake, nationToken, balancerDomain, AGREEMENT_STATEMENT, AGREEMENT_URL } from '../lib/config'
 import { useNationBalance } from '../lib/nation-token'
 import { NumberType, transformNumber } from '../lib/numbers'
 import { useClaimPassport } from '../lib/passport-nft'
@@ -130,10 +130,10 @@ export default function Join() {
               currently not transferable.
               <br />
               <br />
-              {process.env.NEXT_PUBLIC_AGREEMENT_STATEMENT}:{' '}
+              {AGREEMENT_STATEMENT}:{' '}
               <GradientLink
                 text="Read the terms"
-                href={process.env.NEXT_PUBLIC_AGREEMENT_URL}
+                href={AGREEMENT_URL}
               />
             </p>
 
