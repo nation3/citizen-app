@@ -1,3 +1,7 @@
+## North Star Metric: Number of Active Citizens
+
+<!--- Please describe how this PR will increase the number of active citizens. -->
+
 ## Dework Task
 
 <!--- Please link to the Dework task here. -->
