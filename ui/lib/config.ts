@@ -10,6 +10,8 @@ interface DeploymentConfig {
   lpRewardsContract: string,
   nationPassportNFT: string,
   nationPassportNFTIssuer: string
+  nationPassportAgreementStatement: string,
+  nationPassportAgreementURI: string
 }
 
 interface Config {
@@ -24,6 +26,8 @@ interface Config {
   lpRewardsContract: string,
   nationPassportNFT: string,
   nationPassportNFTIssuer: string,
+  nationPassportAgreementStatement: string,
+  nationPassportAgreementURI: string,
   nationDropContracts: string[],
   nationDropAmount: number,
 }
@@ -42,12 +46,12 @@ const config: Config = {
   lpRewardsContract: defaultConfig.lpRewardsContract || zeroAddress,
   nationPassportNFT: defaultConfig.nationPassportNFT || zeroAddress,
   nationPassportNFTIssuer: defaultConfig.nationPassportNFTIssuer || zeroAddress,
+  nationPassportAgreementStatement: defaultConfig.nationPassportAgreementStatement || "",
+  nationPassportAgreementURI: defaultConfig.nationPassportAgreementURI || "",
   nationDropContracts: defaultConfig.nationDropContracts || [zeroAddress],
   nationDropAmount: 1
 }
 
-export const AGREEMENT_STATEMENT = "By claiming a Nation3 passport I agree to the terms defined in the following URL"
-export const AGREEMENT_URL = "https://bafkreiadlf3apu3u7blxw7t2yxi7oyumeuzhoasq7gqmcbaaycq342xq74.ipfs.dweb.link"
 export const rpcURL = chain === 'goerli' ? 'https://rpc.ankr.com/eth_goerli' : 'https://rpc.ankr.com/eth';
 
 console.log(config)
@@ -64,6 +68,8 @@ export const {
   lpRewardsContract,
   nationPassportNFT,
   nationPassportNFTIssuer,
+  nationPassportAgreementStatement,
+  nationPassportAgreementURI,
   nationDropContracts,
   nationDropAmount,
 } = config
