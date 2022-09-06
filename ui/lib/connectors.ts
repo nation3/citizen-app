@@ -23,7 +23,7 @@ export function provider() {
     console.log(
       `Provider: Connected to the external provider on chain ${process.env.NEXT_PUBLIC_CHAIN}`
     )
-    return new ethers.providers.JsonRpcProvider(rpcURL);
+    return new ethers.providers.JsonRpcProvider(rpcURL, networkToId(process.env.NEXT_PUBLIC_CHAIN));
   }
 }
 
