@@ -93,7 +93,7 @@ export default function Lock() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [veNationLock])
 
-  const [lockAmount, setLockAmount] = useState<string>()
+  const [lockAmount, setLockAmount] = useState<string>("")
 
   const oneWeekOut = useMemo(() => dateOut(new Date(), { days: 7 }), [])
 
@@ -351,7 +351,7 @@ export default function Lock() {
                             ? ethers.utils.formatEther(
                                 veNationLock[0].add(nationBalance?.value)
                               )
-                            : nationBalance?.formatted
+                            : (nationBalance?.formatted || '')
                         )
                         setWantsToIncrease(true)
                       }}
