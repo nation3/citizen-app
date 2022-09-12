@@ -15,6 +15,7 @@ import Head from '../components/Head'
 import BallotIcon from '../public/passport/ballot.svg'
 import DiscordIcon from '../public/passport/discord.svg'
 import AddToWallet from '../public/passport/wallet.svg'
+import { mobilePassportDomain } from '../lib/config'
 
 export default function Citizen() {
   const { data: account } = useAccount()
@@ -30,7 +31,7 @@ export default function Citizen() {
     message: 'I am the holder of this Nation3 passport',
     onSuccess(data) {
       console.log('signMessageAndDownloadPass data:', data)
-      const downloadPassURI: string = `https://passports.nation3.org/api/downloadPass?address=${account.address}&signature=${data}&platform=Apple`
+      const downloadPassURI: string = `${mobilePassportDomain}/api/downloadPass?address=${account.address}&signature=${data}&platform=Apple`
       console.log('downloadPassURI:', downloadPassURI)
       window.location.href = downloadPassURI
     },
