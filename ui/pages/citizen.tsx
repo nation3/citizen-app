@@ -7,7 +7,7 @@ import ActionButton from '../components/ActionButton'
 import Confetti from '../components/Confetti'
 import Head from '../components/Head'
 import PassportExpiration from '../components/PassportExpiration'
-import { usePassportExpirationDate } from '../lib/passport-expiration'
+import { usePassportExpirationDate } from '../lib/passport-expiration-hook'
 import {
   usePassport,
   usePassportSigner,
