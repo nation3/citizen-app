@@ -7,7 +7,6 @@ import CoinbaseWalletIcon from '../public/icons/connectors/coinbase.svg'
 import FrameIcon from '../public/icons/connectors/frame.svg'
 import MetaMaskIcon from '../public/icons/connectors/metamask.svg'
 import WalletConnectIcon from '../public/icons/connectors/walletconnect.svg'
-import { rpcURL } from './config'
 import { networkToId } from './network-id'
 
 const chains = [chain.mainnet, chain.goerli, chain.hardhat]
@@ -23,7 +22,12 @@ export function provider() {
     console.log(
       `Provider: Connected to the external provider on chain ${process.env.NEXT_PUBLIC_CHAIN}`
     )
-    return new ethers.providers.JsonRpcProvider(rpcURL, networkToId(process.env.NEXT_PUBLIC_CHAIN));
+    return ethers.getDefaultProvider(process.env.NEXT_PUBLIC_CHAIN, {
+      infura: process.env.NEXT_PUBLIC_INFURA_ID,
+      alchemy: process.env.NEXT_PUBLIC_ALCHEMY_ID,
+      etherscan: process.env.NEXT_PUBLIC_ETHERSCAN_ID,
+      quorum: 1,
+    });
   }
 }
 

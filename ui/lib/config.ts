@@ -54,8 +54,6 @@ const config: Config = {
   nationDropAmount: 1
 }
 
-export const rpcURL = chain === 'goerli' ? 'https://rpc.ankr.com/eth_goerli' : 'https://rpc.ankr.com/eth';
-
 console.log(config)
 
 export const {
