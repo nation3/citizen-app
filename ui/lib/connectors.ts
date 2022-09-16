@@ -23,9 +23,9 @@ export function provider() {
       `Provider: Connected to the external provider on chain ${process.env.NEXT_PUBLIC_CHAIN}`
     )
     return ethers.getDefaultProvider(process.env.NEXT_PUBLIC_CHAIN, {
-      infura: process.env.NEXT_PUBLIC_INFURA_ID,
-      alchemy: process.env.NEXT_PUBLIC_ALCHEMY_ID,
-      etherscan: process.env.NEXT_PUBLIC_ETHERSCAN_ID,
+      infura: process.env.INFURA_ID,
+      alchemy: process.env.ALCHEMY_ID,
+      etherscan: process.env.ETHERSCAN_ID,
       quorum: 1,
     });
   }
