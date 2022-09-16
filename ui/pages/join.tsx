@@ -5,7 +5,7 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { useWaitForTransaction } from 'wagmi'
 import {
-    veNationRequiredStake,
+    nationPassportRequiredBalance,
     nationToken,
     balancerDomain,
     nationPassportAgreementStatement,
@@ -78,7 +78,7 @@ export default function Join() {
     setAction({
       mint: veNationBalance.value.gte(
         transformNumber(
-          veNationRequiredStake as unknown as number,
+          nationPassportRequiredBalance as unknown as number,
           NumberType.bignumber
         )
       ),
@@ -86,7 +86,7 @@ export default function Join() {
         .mul(4)
         .gte(
           transformNumber(
-            (veNationRequiredStake as unknown as number) / 4,
+            (nationPassportRequiredBalance as unknown as number) / 4,
             NumberType.bignumber
           )
         ),
@@ -125,7 +125,7 @@ export default function Join() {
               To become a citizen, you need to mint a passport NFT by holding at
               least{' '}
               <span className="font-semibold">
-                {veNationRequiredStake} $veNATION
+                {nationPassportRequiredBalance} $veNATION
               </span>
               . This is to make sure all citizens are economically aligned.
               <br />
@@ -149,7 +149,7 @@ export default function Join() {
                   <LockClosedIcon className="h-8 w-8" />
                 </div>
                 <div className="stat-title">Needed balance</div>
-                <div className="stat-value">{veNationRequiredStake}</div>
+                <div className="stat-value">{nationPassportRequiredBalance}</div>
                 <div className="stat-desc">$veNATION</div>
               </div>
 
