@@ -27,7 +27,7 @@ export function provider() {
       alchemy: process.env.NEXT_PUBLIC_ALCHEMY_ID,
       etherscan: process.env.NEXT_PUBLIC_ETHERSCAN_ID,
       quorum: 1,
-    })
+    });
   }
 }
 
