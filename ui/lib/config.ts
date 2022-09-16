@@ -9,15 +9,15 @@ interface DeploymentConfig {
   balancerLPToken: string,
   lpRewardsContract: string,
   nationPassportNFT: string,
-  nationPassportNFTIssuer: string
+  nationPassportNFTIssuer: string,
   nationPassportAgreementStatement: string,
-  nationPassportAgreementURI: string
+  nationPassportAgreementURI: string,
+  nationPassportRequiredBalance: string,
 }
 
 interface Config {
   nationToken: string,
   veNationToken: string,
-  veNationRequiredStake: number,
   veNationRewardsMultiplier: number,
   balancerDomain: string,
   balancerVault: string,
@@ -29,6 +29,7 @@ interface Config {
   nationPassportNFTIssuer: string,
   nationPassportAgreementStatement: string,
   nationPassportAgreementURI: string,
+  nationPassportRequiredBalance: number,
   nationDropContracts: string[],
   nationDropAmount: number,
 }
@@ -38,7 +39,6 @@ const defaultConfig = require(`../../contracts/deployments/${chain}.json`) as De
 const config: Config = {
   nationToken: defaultConfig.nationToken || zeroAddress,
   veNationToken: defaultConfig.veNationToken || zeroAddress,
-  veNationRequiredStake: 2,
   veNationRewardsMultiplier: 2.5,
   balancerDomain: chain === 'goerli' ? 'https://goerli.balancer.fi' : 'https://app.balancer.fi',
   balancerVault: defaultConfig.balancerVault || zeroAddress,
@@ -50,6 +50,7 @@ const config: Config = {
   nationPassportNFTIssuer: defaultConfig.nationPassportNFTIssuer || zeroAddress,
   nationPassportAgreementStatement: defaultConfig.nationPassportAgreementStatement || "",
   nationPassportAgreementURI: defaultConfig.nationPassportAgreementURI || "",
+  nationPassportRequiredBalance: Number(defaultConfig.nationPassportRequiredBalance),
   nationDropContracts: defaultConfig.nationDropContracts || [zeroAddress],
   nationDropAmount: 1
 }
@@ -59,7 +60,6 @@ console.log(config)
 export const {
   nationToken,
   veNationToken,
-  veNationRequiredStake,
   veNationRewardsMultiplier,
   balancerDomain,
   balancerVault,
@@ -71,6 +71,7 @@ export const {
   nationPassportNFTIssuer,
   nationPassportAgreementStatement,
   nationPassportAgreementURI,
+  nationPassportRequiredBalance,
   nationDropContracts,
   nationDropAmount,
 } = config
