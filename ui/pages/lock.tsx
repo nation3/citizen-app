@@ -15,6 +15,7 @@ import {
   nationToken, nationPassportRequiredBalance,
   veNationRewardsMultiplier, veNationToken
 } from '../lib/config'
+import { dateToReadable } from '../lib/date'
 import { useNationBalance } from '../lib/nation-token'
 import { NumberType, transformNumber } from '../lib/numbers'
 import { useAccount } from '../lib/use-wagmi'
@@ -22,10 +23,6 @@ import {
   useVeNationBalance, useVeNationCreateLock,
   useVeNationIncreaseLock, useVeNationLock, useVeNationWithdrawLock
 } from '../lib/ve-token'
-
-const dateToReadable = (date: any) => {
-  return date && date.toISOString().substring(0, 10)
-}
 
 const bigNumberToDate = (bigNumber: any) => {
   return bigNumber && new Date(bigNumber.mul(1000).toNumber())
@@ -91,7 +88,7 @@ export default function Lock() {
       setHasExpired(
         veNationLock &&
           veNationLock[1] != 0 &&
-          ethers.BigNumber.from(+new Date()).gte(veNationLock[1].mul(1000))
+          ethers.BigNumber.from(Date.now()).gte(veNationLock[1].mul(1000))
       )
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [veNationLock])
@@ -268,7 +265,7 @@ export default function Lock() {
                       veNationBalance &&
                       veNationBalance.value.gt(ethers.utils.parseEther('1'))
                         ? 2
-                        : 8
+                        : 6
                     }
                   />
                 </div>
