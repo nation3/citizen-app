@@ -13,6 +13,7 @@ interface DeploymentConfig {
   nationPassportAgreementStatement: string,
   nationPassportAgreementURI: string,
   nationPassportRequiredBalance: string,
+  nationPassportRevokeUnderBalance: string,
 }
 
 interface Config {
@@ -30,6 +31,7 @@ interface Config {
   nationPassportAgreementStatement: string,
   nationPassportAgreementURI: string,
   nationPassportRequiredBalance: number,
+  nationPassportRevokeUnderBalance: number,
   nationDropContracts: string[],
   nationDropAmount: number,
 }
@@ -51,6 +53,7 @@ const config: Config = {
   nationPassportAgreementStatement: defaultConfig.nationPassportAgreementStatement || "",
   nationPassportAgreementURI: defaultConfig.nationPassportAgreementURI || "",
   nationPassportRequiredBalance: Number(defaultConfig.nationPassportRequiredBalance),
+  nationPassportRevokeUnderBalance: Number(defaultConfig.nationPassportRevokeUnderBalance),
   nationDropContracts: defaultConfig.nationDropContracts || [zeroAddress],
   nationDropAmount: 1
 }
@@ -72,6 +75,7 @@ export const {
   nationPassportAgreementStatement,
   nationPassportAgreementURI,
   nationPassportRequiredBalance,
+  nationPassportRevokeUnderBalance,
   nationDropContracts,
   nationDropAmount,
 } = config
