@@ -107,6 +107,9 @@ const deployLiquidityDistributor = async (rewardsToken: Contract, boostToken: Co
 }
 
 const deployPassport = async (governanceToken: Contract) => {
+    const agreementStatement = "By claiming a Nation3 passport I agree to the terms defined in the following URL";
+    const agreementURI = "https://bafkreiadlf3apu3u7blxw7t2yxi7oyumeuzhoasq7gqmcbaaycq342xq74.ipfs.dweb.link";
+
     const passportFactory = getContractFactory(Passport);
     const passportIssuerFactory = getContractFactory(PassportIssuer);
 
@@ -129,11 +132,11 @@ const deployPassport = async (governanceToken: Contract) => {
 
     await passportIssuer.connect(wallet).initialize(governanceToken.address, passportToken.address, 420);
     await passportIssuer.connect(wallet).setParams(0, 0);
-    await passportIssuer.connect(wallet).setStatement("By claiming a Nation3 passport I agree to the terms defined in the following URL");
-    await passportIssuer.connect(wallet).setTermsURI("https://bafkreiadlf3apu3u7blxw7t2yxi7oyumeuzhoasq7gqmcbaaycq342xq74.ipfs.dweb.link");
+    await passportIssuer.connect(wallet).setStatement(agreementStatement);
+    await passportIssuer.connect(wallet).setTermsURI(agreementURI);
     await passportIssuer.connect(wallet).setEnabled(true);
 
-    return { "passportToken": passportToken, "passportIssuer": passportIssuer }
+    return { "passportToken": passportToken, "passportIssuer": passportIssuer, "agreementStatement": agreementStatement, "agreementURI": agreementURI }
 }
 
 const main = async () => {
@@ -144,6 +147,7 @@ const main = async () => {
     const lpContracts = await deployLiquidityDistributor(NATION, veNATION);
     const nationDropA = await deployAirdropDistributor(NATION, "0xed145aa219b18aa3f2dc56afb2c4e0b148e429ca93b9c5f2c7a29d2101685aee");
     const nationDropB = await deployAirdropDistributor(NATION, "0xb8d662135979ae3791167c967cba4bf6fb681c665d0c03372745c483fe5089f8");
+
     const passportContracts = await deployPassport(veNATION);
 
     const deployment = {
@@ -154,6 +158,8 @@ const main = async () => {
         "nationDropContracts": [nationDropA.address, nationDropB.address],
         "nationPassportNFT": passportContracts.passportToken.address,
         "nationPassportNFTIssuer": passportContracts.passportIssuer.address
+        "nationPassportAgreementStatement": passportContracts.agreementStatement,
+        "nationPassportAgreementURI": passportContracts.agreementURI,
     }
 
     const manifestFile = "./deployments/local.json";

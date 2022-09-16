@@ -7,5 +7,9 @@
   "balancerLPToken": "0x6f57329d43f3de9ff39d4424576db920b55060b3",
   "lpRewardsContract": "0x5e9a1c70391711408e064104292ace9d0b9763b6",
   "nationPassportNFT": "0x51F728c58697aFf9582cFDe3cBD00EC83E9ae7FC",
-  "nationPassportNFTIssuer": "0x8c16926819AB30B8b29A8E23F5C230d164337093"
+  "nationPassportNFTIssuer": "0x8c16926819AB30B8b29A8E23F5C230d164337093",
+  "nationPassportAgreementStatement": "By claiming a Nation3 passport I agree to the terms defined in the following URL",
+  "nationPassportAgreementURI": "https://bafkreiadlf3apu3u7blxw7t2yxi7oyumeuzhoasq7gqmcbaaycq342xq74.ipfs.dweb.link",
+  "nationPassportRequiredBalance": 2,
+  "nationPassportRevokeUnderBalance": 1.5
 }

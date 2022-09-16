@@ -1,4 +1,8 @@
-import { nationPassportNFTIssuer } from './config'
+import {
+    nationPassportNFTIssuer,
+    nationPassportAgreementStatement,
+    nationPassportAgreementURI
+} from './config'
 import { networkToId } from './network-id'
 import { useSignTypedData } from './use-wagmi'
 
@@ -17,8 +21,8 @@ export const types = {
 }
 
 export const value = {
-  statement: `${process.env.NEXT_PUBLIC_AGREEMENT_STATEMENT}`,
-  termsURI: `${process.env.NEXT_PUBLIC_AGREEMENT_URL}`,
+  statement: `${nationPassportAgreementStatement}`,
+  termsURI: `${nationPassportAgreementURI}`,
 }
 
 export function useSignAgreement({ onSuccess }: { onSuccess: Function }) {
