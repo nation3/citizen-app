@@ -12,9 +12,10 @@ import Head from '../components/Head'
 import MainCard from '../components/MainCard'
 import TimeRange from '../components/TimeRange'
 import {
-  nationToken, veNationRequiredStake,
+  nationToken, nationPassportRequiredBalance,
   veNationRewardsMultiplier, veNationToken
 } from '../lib/config'
+import { dateToReadable } from '../lib/date'
 import { useNationBalance } from '../lib/nation-token'
 import { NumberType, transformNumber } from '../lib/numbers'
 import { useAccount } from '../lib/use-wagmi'
@@ -22,10 +23,6 @@ import {
   useVeNationBalance, useVeNationCreateLock,
   useVeNationIncreaseLock, useVeNationLock, useVeNationWithdrawLock
 } from '../lib/ve-token'
-
-const dateToReadable = (date: any) => {
-  return date && date.toISOString().substring(0, 10)
-}
 
 const bigNumberToDate = (bigNumber: any) => {
   return bigNumber && new Date(bigNumber.mul(1000).toNumber())
@@ -91,7 +88,7 @@ export default function Lock() {
       setHasExpired(
         veNationLock &&
           veNationLock[1] != 0 &&
-          ethers.BigNumber.from(+new Date()).gte(veNationLock[1].mul(1000))
+          ethers.BigNumber.from(Date.now()).gte(veNationLock[1].mul(1000))
       )
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [veNationLock])
@@ -211,27 +208,27 @@ export default function Lock() {
               <br />
               <br />
               <span className="font-semibold">
-                {veNationRequiredStake} $veNATION
+                {nationPassportRequiredBalance} $veNATION
               </span>{' '}
               will be needed to mint a passport NFT.
               <br />
               <br />
-              Some examples of how to get to {veNationRequiredStake} $veNATION:
+              Some examples of how to get to {nationPassportRequiredBalance} $veNATION:
             </p>
 
             <ul className="list-disc list-inside mb-4">
               <li>
-                At least {veNationRequiredStake as unknown as number} $NATION
+                At least {nationPassportRequiredBalance as unknown as number} $NATION
                 locked for 4 years, or
               </li>
 
               <li>
-                At least {(veNationRequiredStake as unknown as number) * 2}{' '}
+                At least {(nationPassportRequiredBalance as unknown as number) * 2}{' '}
                 $NATION locked for 2 years, or
               </li>
 
               <li>
-                At least {(veNationRequiredStake as unknown as number) * 4}{' '}
+                At least {(nationPassportRequiredBalance as unknown as number) * 4}{' '}
                 $NATION locked for 1 year
               </li>
             </ul>
@@ -241,7 +238,7 @@ export default function Lock() {
                 <InformationCircleIcon className="h-24 w-24 text-n3blue" />
                 <span>
                   We suggest you to obtain at least{' '}
-                  {veNationRequiredStake || 0 + 0.5} $veNATION if you want to
+                  {nationPassportRequiredBalance || 0 + 0.5} $veNATION if you want to
                   mint a passport NFT, since $veNATION balance drops over time.
                   If it falls below the required threshold, your passport can be
                   revoked. You can always lock more $NATION later.
@@ -268,7 +265,7 @@ export default function Lock() {
                       veNationBalance &&
                       veNationBalance.value.gt(ethers.utils.parseEther('1'))
                         ? 2
-                        : 8
+                        : 6
                     }
                   />
                 </div>

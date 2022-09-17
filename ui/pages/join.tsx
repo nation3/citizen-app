@@ -1,23 +1,30 @@
-import { SparklesIcon, LockClosedIcon } from '@heroicons/react/outline'
+import { LockClosedIcon, SparklesIcon } from '@heroicons/react/outline'
 import { ethers } from 'ethers'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { useWaitForTransaction } from 'wagmi'
-import { veNationRequiredStake, nationToken, balancerDomain } from '../lib/config'
-import { useNationBalance } from '../lib/nation-token'
-import { NumberType, transformNumber } from '../lib/numbers'
-import { useClaimPassport } from '../lib/passport-nft'
-import { useHasPassport } from '../lib/passport-nft'
-import { useSignAgreement, storeSignature } from '../lib/sign-agreement'
-import { useAccount } from '../lib/use-wagmi'
-import { useVeNationBalance } from '../lib/ve-token'
 import ActionButton from '../components/ActionButton'
 import Balance from '../components/Balance'
 import Confetti from '../components/Confetti'
 import GradientLink from '../components/GradientLink'
 import Head from '../components/Head'
 import MainCard from '../components/MainCard'
+import PassportExpiration from '../components/PassportExpiration'
+import {
+    nationPassportRequiredBalance,
+    nationToken,
+    balancerDomain,
+    nationPassportAgreementStatement,
+    nationPassportAgreementURI
+} from '../lib/config'
+import { useNationBalance } from '../lib/nation-token'
+import { NumberType, transformNumber } from '../lib/numbers'
+import { usePassportExpirationDate } from '../lib/passport-expiration-hook'
+import { useClaimPassport, useHasPassport } from '../lib/passport-nft'
+import { storeSignature, useSignAgreement } from '../lib/sign-agreement'
+import { useAccount } from '../lib/use-wagmi'
+import { useVeNationBalance } from '../lib/ve-token'
 
 export default function Join() {
   const { data: account } = useAccount()
@@ -72,7 +79,7 @@ export default function Join() {
     setAction({
       mint: veNationBalance.value.gte(
         transformNumber(
-          veNationRequiredStake as unknown as number,
+          nationPassportRequiredBalance as unknown as number,
           NumberType.bignumber
         )
       ),
@@ -80,7 +87,7 @@ export default function Join() {
         .mul(4)
         .gte(
           transformNumber(
-            (veNationRequiredStake as unknown as number) / 4,
+            (nationPassportRequiredBalance as unknown as number) / 4,
             NumberType.bignumber
           )
         ),
@@ -91,6 +98,8 @@ export default function Join() {
     veNationBalance,
     veNationBalanceLoading,
   ])
+
+  const passportExpirationDate = usePassportExpirationDate()
 
   return (
     <>
@@ -119,7 +128,7 @@ export default function Join() {
               To become a citizen, you need to mint a passport NFT by holding at
               least{' '}
               <span className="font-semibold">
-                {veNationRequiredStake} $veNATION
+                {nationPassportRequiredBalance} $veNATION
               </span>
               . This is to make sure all citizens are economically aligned.
               <br />
@@ -130,10 +139,10 @@ export default function Join() {
               currently not transferable.
               <br />
               <br />
-              {process.env.NEXT_PUBLIC_AGREEMENT_STATEMENT}:{' '}
+              {nationPassportAgreementStatement}:{' '}
               <GradientLink
                 text="Read the terms"
-                href={process.env.NEXT_PUBLIC_AGREEMENT_URL}
+                href={nationPassportAgreementURI}
               />
             </p>
 
@@ -143,7 +152,7 @@ export default function Join() {
                   <LockClosedIcon className="h-8 w-8" />
                 </div>
                 <div className="stat-title">Needed balance</div>
-                <div className="stat-value">{veNationRequiredStake}</div>
+                <div className="stat-value">{nationPassportRequiredBalance}</div>
                 <div className="stat-desc">$veNATION</div>
               </div>
 
@@ -161,7 +170,10 @@ export default function Join() {
                 </div>
                 <div className="stat-desc">$veNATION</div>
               </div>
+
             </div>
+            <PassportExpiration date={passportExpirationDate} />
+
             {action.mint ? (
               <ActionButton
                 className="btn btn-primary normal-case font-medium grow"

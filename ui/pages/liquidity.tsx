@@ -188,7 +188,7 @@ export default function Liquidity() {
 
               <div>
                 You can boost your APY to{' '}
-                <div className="text-n3blue font-semibold">
+                <span className="text-n3blue font-semibold">
                   {transformNumber(
                     ((transformNumber(
                       liquidityRewardsAPY ?? 0,
@@ -199,7 +199,7 @@ export default function Liquidity() {
                     NumberType.number,
                     2
                   ) + '%'}
-                </div>
+                </span>
                 . To do so, claim your current rewards.
               </div>
             </div>
