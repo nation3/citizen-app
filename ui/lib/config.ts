@@ -3,7 +3,6 @@ const zeroAddress = '0x0000000000000000000000000000000000000000'
 interface DeploymentConfig {
   nationToken: string,
   veNationToken: string,
-  nationDropContracts: string[],
   balancerVault: string,
   balancerPoolId: string,
   balancerLPToken: string,
@@ -31,9 +30,7 @@ interface Config {
   nationPassportAgreementStatement: string,
   nationPassportAgreementURI: string,
   nationPassportRequiredBalance: number,
-  nationPassportRevokeUnderBalance: number,
-  nationDropContracts: string[],
-  nationDropAmount: number,
+  nationPassportRevokeUnderBalance: number
 }
 
 const chain = process.env.NEXT_PUBLIC_CHAIN || "goerli";
@@ -53,9 +50,7 @@ const config: Config = {
   nationPassportAgreementStatement: defaultConfig.nationPassportAgreementStatement || "",
   nationPassportAgreementURI: defaultConfig.nationPassportAgreementURI || "",
   nationPassportRequiredBalance: Number(defaultConfig.nationPassportRequiredBalance),
-  nationPassportRevokeUnderBalance: Number(defaultConfig.nationPassportRevokeUnderBalance),
-  nationDropContracts: defaultConfig.nationDropContracts || [zeroAddress],
-  nationDropAmount: 1
+  nationPassportRevokeUnderBalance: Number(defaultConfig.nationPassportRevokeUnderBalance)
 }
 
 console.log(config)
@@ -75,8 +70,6 @@ export const {
   nationPassportAgreementStatement,
   nationPassportAgreementURI,
   nationPassportRequiredBalance,
-  nationPassportRevokeUnderBalance,
-  nationDropContracts,
-  nationDropAmount,
+  nationPassportRevokeUnderBalance
 } = config
 

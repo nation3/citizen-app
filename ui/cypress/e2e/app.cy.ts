@@ -10,11 +10,6 @@ describe('Nation3 App UI', () => {
     cy.get('h2').contains('Become a Nation3 citizen')
   }),
 
-  it('should load the /claim page', () => {
-    cy.visit('/claim')
-    cy.get('h2').contains('$NATION tweetdrop')
-  }),
-
   it('should load the /lock page', () => {
     cy.visit('/lock')
     cy.get('h2').contains('Lock $NATION to get $veNATION')
