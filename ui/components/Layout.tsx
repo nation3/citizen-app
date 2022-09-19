@@ -312,7 +312,7 @@ export default function Layout({ children }: any) {
                 <br />
                 By using this software, you agree to{' '}
                 <a
-                  href="https://github.com/nation3/app/blob/master/LICENSE.md"
+                  href="https://github.com/nation3/app/blob/main/LICENSE.md"
                   rel="noreferrer noopener"
                   target="_blank"
                   className="underline text-n3blue"
