@@ -114,7 +114,7 @@ export default function Lock() {
         value: veNationLock[1],
         formatted: dateToReadable(bigNumberToDate(veNationLock[1])),
       }
-      !lockTime && lockTime.orig
+      !lockTime.orig &&
       setLockTime({
         ...origTime,
         orig: origTime,
@@ -416,11 +416,7 @@ export default function Lock() {
                           NumberType.number
                         ),
                         time: Date.parse(lockTime.formatted),
-                        lockTime: Date.parse(
-                          hasLock && lockTime?.orig
-                            ? lockTime.orig.formatted
-                            : new Date()
-                        ),
+                        lockTime: Date.parse(new Date().toString()),
                         max: Date.parse(minMaxLockTime.max),
                       })}{' '}
                       $veNATION
