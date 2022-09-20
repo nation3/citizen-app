@@ -364,7 +364,7 @@ export default function Lock() {
                       Lock expiration date
                       <br />
                       <span className="text-xs">
-                        { hasLock && veNationLock ? "Maximum four years from your existing lock expiration date." : "Minimum one week, maximum four years from now."}
+                        { hasLock && veNationLock ? "Maximum four years from now." : "Minimum one week, maximum four years from now."}
                       </span>
                     </span>
                   </label>
