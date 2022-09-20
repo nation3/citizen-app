@@ -1,30 +1,14 @@
 import {
-  UserAddIcon,
-  SparklesIcon,
-  CurrencyDollarIcon,
-  HomeIcon,
-  NewspaperIcon,
-  KeyIcon,
-  UserIcon,
-  LogoutIcon,
-  XCircleIcon,
-  MenuIcon,
-  LockClosedIcon,
-  PlusIcon,
-  ViewGridIcon,
-  ChevronRightIcon,
-  ChevronDownIcon,
-  ExternalLinkIcon,
+  ChevronDownIcon, ChevronRightIcon, CurrencyDollarIcon, ExternalLinkIcon, HomeIcon, KeyIcon, LockClosedIcon, LogoutIcon, MenuIcon, NewspaperIcon, PlusIcon, SparklesIcon, UserAddIcon, UserIcon, ViewGridIcon, XCircleIcon
 } from '@heroicons/react/outline'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import Script from 'next/script'
-import React from 'react'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 // @ts-expect-error ts-migrate(7016) FIXME: Could not find a declaration file for module 'reac... Remove this comment to see the full error message
 import Blockies from 'react-blockies'
-import { useConnect, useEnsName, useDisconnect } from 'wagmi'
+import { useConnect, useDisconnect, useEnsName } from 'wagmi'
 import { balancerDomain, nationToken } from '../lib/config'
 import { connectorIcons } from '../lib/connectors'
 import { useAccount } from '../lib/use-wagmi'
@@ -328,7 +312,7 @@ export default function Layout({ children }: any) {
                 <br />
                 By using this software, you agree to{' '}
                 <a
-                  href="https://github.com/nation3/app/blob/master/LICENSE.md"
+                  href="https://github.com/nation3/app/blob/main/LICENSE.md"
                   rel="noreferrer noopener"
                   target="_blank"
                   className="underline text-n3blue"
