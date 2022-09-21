@@ -27,7 +27,7 @@ export default function ActionButton({
   postAction,
   approval,
 }: ActionButtonProps) {
-  const { data: account } = useAccount()
+  const { address } = useAccount()
   const { writeAsync, data, isLoadingOverride } = action
   const { isLoading } = useWaitForTransaction({
     hash: data?.hash,
@@ -39,16 +39,16 @@ export default function ActionButton({
     postAction && postAction()
   }
 
-  const { activeChain } = useNetwork({})
+  const { chain } = useNetwork()
   const { isPreferredNetwork } = usePreferredNetwork()
 
   return (
     <>
       {!isPreferredNetwork ? (
         <button className={className} disabled>
-          {!activeChain?.id ? 'Not connected' : 'Wrong network'}
+          {!chain?.id ? 'Not connected' : 'Wrong network'}
         </button>
-      ) : !account ? (
+      ) : !address ? (
         <label htmlFor="web3-modal" className={`${className} modal-button`}>
           {children}
         </label>
