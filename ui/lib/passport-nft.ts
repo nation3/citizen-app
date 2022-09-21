@@ -25,9 +25,9 @@ export function useHasPassport(address: any) {
 
 export function usePassportStatus(address: any) {
   return useContractRead(
-    nftIssuerContractParams,
-    'passportStatus',
     {
+      ...nftIssuerContractParams,
+      functionName: 'passportStatus',
       args: [address],
       watch: true,
       enabled: Boolean(address),
@@ -37,21 +37,21 @@ export function usePassportStatus(address: any) {
 }
 
 export function useClaimPassport() {
-  return useContractWrite(
-    {
-      addressOrName: nationPassportNFTIssuer,
-      contractInterface: PassportIssuer.abi,
-    },
-    'claim',
-    {}
-  )
+  return useContractWrite({
+    addressOrName: nationPassportNFTIssuer,
+    contractInterface: PassportIssuer.abi,
+    functionName: 'claim',
+  })
 }
 
 export function usePassport(address: any) {
   const { data: id, isLoading: loadingID } = useContractRead(
-    nftIssuerContractParams,
-    'passportId',
-    { args: [address], enable: address },
+    {
+      ...nftIssuerContractParams,
+      functionName: 'passportId',
+      args: [address],
+      enable: address,
+    },
     false
   )
   console.log(`Passport ID ${id}`)
@@ -60,29 +60,21 @@ export function usePassport(address: any) {
 }
 
 export function usePassportSigner(id: number) {
-  return useContractRead(
-    {
-      addressOrName: nationPassportNFT,
-      contractInterface: PassportNFT.abi,
-    },
-    'signerOf',
-    {
-      args: [id],
-      watch: true,
-      enable: id,
-    }
-  )
+  return useContractRead({
+    addressOrName: nationPassportNFT,
+    contractInterface: PassportNFT.abi,
+    functionName: 'signerOf',
+    args: [id],
+    watch: true,
+    enable: id,
+  })
 }
 
 export function useSetPassportSigner(id: number, signerAddress: string) {
-  return useContractWrite(
-    {
-      addressOrName: nationPassportNFT,
-      contractInterface: PassportNFT.abi,
-    },
-    'setSigner',
-    {
-      args: [id, signerAddress],
-    }
-  )
+  return useContractWrite({
+    addressOrName: nationPassportNFT,
+    functionName: 'setSigner',
+    contractInterface: PassportNFT.abi,
+    args: [id, signerAddress],
+  })
 }

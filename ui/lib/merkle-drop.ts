@@ -50,7 +50,9 @@ const contractParams = (contractId: any) => ({
 })
 
 export function useIsClaimed(contractId: any, index: any) {
-  return useContractRead(contractParams(contractId), 'isClaimed', {
+  return useContractRead({
+    ...contractParams(contractId),
+    functionName: 'isClaimed',
     args: [index],
     watch: true,
     enabled: contractId && index,
@@ -68,7 +70,9 @@ export function useClaimDrop({
   amount,
   proof,
 }: any) {
-  return useContractWrite(contractParams(contractId), 'claim', {
+  return useContractWrite({
+    ...contractParams(contractId),
+    functionName: 'claim',
     args: [index, account, amount, proof],
     overrides: {
       gasLimit: 150000,
