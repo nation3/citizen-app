@@ -7,14 +7,14 @@ const ErrorContext = createContext({} as any)
 function ErrorProvider({ children }: any) {
   const [errors, setErrors] = useState([] as any[])
   let [count, setCount] = useState(0)
-  const { activeChain } = useNetwork()
+  const { chain } = useNetwork()
 
   const addError = useCallback((newErrors: any) => {
     if (
       newErrors &&
       newErrors[0] &&
-      activeChain?.id &&
-      activeChain.id == networkToId(process.env.NEXT_PUBLIC_CHAIN)
+      chain?.id &&
+      chain.id == networkToId(process.env.NEXT_PUBLIC_CHAIN)
     ) {
       for (let error of newErrors) {
         console.error(error)
@@ -36,7 +36,7 @@ function ErrorProvider({ children }: any) {
         setCount((prev) => prev + 1)
       }
     }
-  }, [activeChain?.id]);
+  }, [chain?.id]);
 
   const removeError = (key: any) => {
     if (key > -1) {

@@ -2,7 +2,7 @@ import { ethers } from 'ethers'
 import { useEffect, useState } from 'react'
 import React from 'react'
 import { NftProvider } from 'use-nft'
-import { WagmiConfig, createClient } from 'wagmi'
+import { WagmiConfig, createClient, defaultChains } from 'wagmi'
 import { connectors, provider as externalProvider } from '../lib/connectors'
 import { ErrorProvider } from '../components/ErrorProvider'
 import Layout from '../components/Layout'
@@ -33,7 +33,7 @@ function App({ Component, pageProps }: any) {
       createClient({
         autoConnect: true,
         connectors,
-        provider: provider(),
+        provider: Object.assign(provider(), { chains: defaultChains }),
       })
     )
   }, [])

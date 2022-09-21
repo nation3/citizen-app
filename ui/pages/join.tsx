@@ -27,13 +27,13 @@ import { useAccount } from '../lib/use-wagmi'
 import { useVeNationBalance } from '../lib/ve-token'
 
 export default function Join() {
-  const { data: account } = useAccount()
+  const { address } = useAccount()
   const { data: nationBalance, isLoading: nationBalanceLoading } =
-    useNationBalance(account?.address)
+    useNationBalance(address)
   const { data: veNationBalance, isLoading: veNationBalanceLoading } =
-    useVeNationBalance(account?.address)
+    useVeNationBalance(address)
   const { hasPassport, isLoading: hasPassportLoading } = useHasPassport(
-    account?.address
+    address
   )
 
   const { writeAsync: claim, data: claimData } = useClaimPassport()
