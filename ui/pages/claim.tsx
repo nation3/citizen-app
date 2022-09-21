@@ -15,7 +15,7 @@ import Head from '../components/Head'
 import MainCard from '../components/MainCard'
 
 export default function Claim() {
-  const { data: account } = useAccount()
+  const { address } = useAccount()
   const [canClaim, setCanClaim] = useState(false)
   const [contractId, setContractId] = useState(0)
   const [proofIndex, setProofIndex] = useState(0)
@@ -28,27 +28,27 @@ export default function Claim() {
   )
 
   useEffect(() => {
-    if (account && claimsFiles) {
-      const [id, index] = checkEligibility(claimsFiles, account.address)
+    if (address && claimsFiles) {
+      const [id, index] = checkEligibility(claimsFiles, address)
       if (typeof index === 'number') {
         setContractId(id)
         setProofIndex(index)
         typeof isClaimed !== 'undefined' && setCanClaim(!isClaimed)
       }
     }
-  }, [account, claimsFiles, isClaimed, isClaimedLoading])
+  }, [address, claimsFiles, isClaimed, isClaimedLoading])
 
   const claimDrop = useClaimDrop({
     contractId: contractId,
     index: proofIndex,
-    account: account?.address,
+    account: address,
     amount:
       canClaim && claimsFiles
-        ? claimsFiles[contractId].claims[account?.address]?.amount
+        ? claimsFiles[contractId].claims[address]?.amount
         : 0,
     proof:
       canClaim && claimsFiles
-        ? claimsFiles[contractId].claims[account?.address]?.proof
+        ? claimsFiles[contractId].claims[address]?.proof
         : {},
   })
 
@@ -59,7 +59,7 @@ export default function Claim() {
       {!justClaimed ? (
         <MainCard title="$NATION tweetdrop">
           <p>
-            {!account
+            {!address
               ? `Connect your account to see if you are eligible ⚡️`
               : canClaim
               ? `You are eligible to claim ${nationDropAmount} $NATION 🎉`

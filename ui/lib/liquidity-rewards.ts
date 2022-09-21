@@ -18,7 +18,13 @@ const contractParams = {
 
 export function useLiquidityRewards({ nationPrice, poolValue, address }: any) {
   const { data: totalRewards, isLoading: totalRewardsLoading } =
-    useContractRead(contractParams, 'totalRewards', {}, false)
+    useContractRead(
+      {
+        ...contractParams,
+        functionName: 'totalRewards',
+      },
+      false
+    )
   const months = 6
 
   const { data: unclaimedRewards, loading: unclaimedRewardsLoading } =
@@ -30,36 +36,34 @@ export function useLiquidityRewards({ nationPrice, poolValue, address }: any) {
       skip: !address,
     })
 
-  const { data: userDeposit, isLoading: userDepositLoading } = useContractRead(
-    contractParams,
-    'userDeposit',
-    {
-      args: [address],
-      watch: true,
-      enabled: Boolean(address),
-    }
-  )
+  const { data: userDeposit, isLoading: userDepositLoading } = useContractRead({
+    ...contractParams,
+    functionName: 'userDeposit',
+    args: [address],
+    watch: true,
+    enabled: Boolean(address),
+  })
 
   const { data: totalDeposit, isLoading: totalDepositLoading } =
-    useContractRead(contractParams, 'totalDeposit', {}, false)
+    useContractRead({ ...contractParams, functionName: 'totalDeposit' }, false)
 
   const { data: lpTokensSupply, isLoading: lpTokensSupplyLoading } =
     useContractRead(
-      { addressOrName: balancerLPToken, contractInterface: ERC20.abi },
-      'totalSupply',
-      {},
+      {
+        addressOrName: balancerLPToken,
+        contractInterface: ERC20.abi,
+        functionName: 'totalSupply',
+      },
       false
     )
 
-  const { data: userBalance, isLoading: userBalanceLoading } = useContractRead(
+  const { data: userBalance, isLoading: userBalanceLoading } = useContractRead({
     contractParams,
-    'userBalance',
-    {
-      args: [address],
-      watch: true,
-      enabled: Boolean(address),
-    }
-  )
+    args: [address],
+    watch: true,
+    functionName: 'userBalance',
+    enabled: Boolean(address),
+  })
 
   const [liquidityRewardsAPY, setLiquidityRewardsAPY] = useState<BigNumber>(
     transformNumber(0, NumberType.bignumber) as BigNumber
@@ -201,27 +205,35 @@ export function useBoostedAPY({ defaultAPY, boostMultiplier }: any) {
 
 // Using Wagmi's contractWrite directly, getting a "no signer connected" error otherwise
 export function useClaimRewards() {
-  return useContractWrite(contractParams, 'claimRewards', {
+  return useContractWrite({
+    ...contractParams,
+    functionName: 'claimRewards',
     overrides: { gasLimit: 300000 },
   })
 }
 
 export function useDeposit(amount: any) {
-  return useContractWrite(contractParams, 'deposit', {
+  return useContractWrite({
+    ...contractParams,
+    functionName: 'deposit',
     args: [amount],
     overrides: { gasLimit: 300000 },
   })
 }
 
 export function useWithdraw(amount: any) {
-  return useContractWrite(contractParams, 'withdraw', {
+  return useContractWrite({
+    ...contractParams,
+    functionName: 'withdraw',
     args: [amount],
     overrides: { gasLimit: 300000 },
   })
 }
 
 export function useWithdrawAndClaim() {
-  return useContractWrite(contractParams, 'withdrawAndClaim', {
+  return useContractWrite({
+    ...contractParams,
+    functionName: 'withdrawAndClaim',
     overrides: { gasLimit: 300000 },
   })
 }

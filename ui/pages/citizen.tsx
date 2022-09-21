@@ -20,8 +20,8 @@ import AddToWallet from '../public/passport/wallet.svg'
 import { mobilePassportDomain } from '../lib/config'
 
 export default function Citizen() {
-  const { data: account } = useAccount()
-  const { data: passportData } = usePassport(account?.address)
+  const { address } = useAccount()
+  const { data: passportData } = usePassport(address)
   const { data: passportSignerData } = usePassportSigner(passportData?.id)
   const [confettiNumber, setConfettiNumber] = useState<Array<Number>>([])
 
@@ -33,7 +33,7 @@ export default function Citizen() {
     message: 'I am the holder of this Nation3 passport',
     onSuccess(data) {
       console.log('signMessageAndDownloadPass data:', data)
-      const downloadPassURI: string = `${mobilePassportDomain}/api/downloadPass?address=${account.address}&signature=${data}&platform=Apple`
+      const downloadPassURI: string = `${mobilePassportDomain}/api/downloadPass?address=${address}&signature=${data}&platform=Apple`
       console.log('downloadPassURI:', downloadPassURI)
       window.location.href = downloadPassURI
     },
