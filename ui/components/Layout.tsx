@@ -1,5 +1,5 @@
 import {
-  ChevronDownIcon, ChevronRightIcon, CurrencyDollarIcon, ExternalLinkIcon, HomeIcon, KeyIcon, LockClosedIcon, LogoutIcon, MenuIcon, NewspaperIcon, PlusIcon, SparklesIcon, UserAddIcon, UserIcon, ViewGridIcon, XCircleIcon
+  ChevronDownIcon, ChevronRightIcon, CurrencyDollarIcon, ExternalLinkIcon, HomeIcon, KeyIcon, LockClosedIcon, LogoutIcon, MenuIcon, NewspaperIcon, PlusIcon, UserAddIcon, UserIcon, ViewGridIcon, XCircleIcon
 } from '@heroicons/react/outline'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -32,11 +32,6 @@ const navigation = [
     name: 'Become a citizen',
     href: '/join',
     icon: <UserAddIcon className="h-5 w-5" />,
-  },
-  {
-    name: 'Claim airdrop',
-    href: '/claim',
-    icon: <SparklesIcon className="h-5 w-5" />,
   },
   {
     name: 'Lock tokens',
