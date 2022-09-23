@@ -259,7 +259,7 @@ export default function Lock() {
                 <div className="stat-title">Your $veNATION</div>
                 <div className="stat-value text-primary">
                   <Balance
-                    balance={veNationBalance.value}
+                    balance={veNationBalance && veNationBalance.value}
                     loading={veNationBalanceLoading}
                     decimals={
                       veNationBalance &&
