@@ -23,6 +23,7 @@ interface Config {
   balancerVault: string,
   balancerPoolId: string,
   balancerLPToken: string,
+  etherscanDomain: string,
   lpRewardsContract: string,
   mobilePassportDomain: string,
   nationPassportNFT: string,
@@ -30,7 +31,7 @@ interface Config {
   nationPassportAgreementStatement: string,
   nationPassportAgreementURI: string,
   nationPassportRequiredBalance: number,
-  nationPassportRevokeUnderBalance: number
+  nationPassportRevokeUnderBalance: number,
 }
 
 const chain = process.env.NEXT_PUBLIC_CHAIN || "goerli";
@@ -43,6 +44,7 @@ const config: Config = {
   balancerVault: defaultConfig.balancerVault || zeroAddress,
   balancerPoolId: defaultConfig.balancerPoolId || zeroAddress,
   balancerLPToken: defaultConfig.balancerLPToken || zeroAddress,
+  etherscanDomain: chain === 'goerli' ? 'https://goerli.etherscan.io' : 'https://etherscan.io',
   lpRewardsContract: defaultConfig.lpRewardsContract || zeroAddress,
   mobilePassportDomain: chain === 'goerli' ? 'https://mobile-passport-goerli.vercel.app' : 'https://passports.nation3.org',
   nationPassportNFT: defaultConfig.nationPassportNFT || zeroAddress,
@@ -63,6 +65,7 @@ export const {
   balancerVault,
   balancerPoolId,
   balancerLPToken,
+  etherscanDomain,
   lpRewardsContract,
   mobilePassportDomain,
   nationPassportNFT,
