@@ -168,7 +168,7 @@ export default function Lock() {
     token: nationToken,
     spender: veNationToken,
     amountNeeded:
-      hasLock && veNationLock[0]
+      hasLock && veNationLock
         ? (
             transformNumber(
               lockAmount ?? '0',
