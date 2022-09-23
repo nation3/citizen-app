@@ -9,7 +9,7 @@ import { useState } from 'react'
 // @ts-expect-error ts-migrate(7016) FIXME: Could not find a declaration file for module 'reac... Remove this comment to see the full error message
 import Blockies from 'react-blockies'
 import { useConnect, useDisconnect, useEnsName } from 'wagmi'
-import { balancerDomain, nationToken } from '../lib/config'
+import { balancerDomain, etherscanDomain, nationToken } from '../lib/config'
 import { connectorIcons } from '../lib/connectors'
 import { useAccount } from '../lib/use-wagmi'
 import Logo from '../public/logo.svg'
@@ -230,7 +230,7 @@ export default function Layout({ children }: any) {
               <ul className="menu bg-base-100 p-2 -m-2 rounded-box">
                 <li key="address">
                   <a
-                    href={`https://etherscan.io/address/${address}`}
+                    href={`${etherscanDomain}/address/${address}`}
                     rel="noreferrer noopener"
                     target="_blank"
                   >
