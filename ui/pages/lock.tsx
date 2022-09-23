@@ -168,7 +168,7 @@ export default function Lock() {
     token: nationToken,
     spender: veNationToken,
     amountNeeded:
-      hasLock && veNationLock[0]
+      hasLock && veNationLock && veNationLock[0]
         ? (
             transformNumber(
               lockAmount ?? '0',
@@ -259,7 +259,7 @@ export default function Lock() {
                 <div className="stat-title">Your $veNATION</div>
                 <div className="stat-value text-primary">
                   <Balance
-                    balance={veNationBalance.value}
+                    balance={veNationBalance?.value}
                     loading={veNationBalanceLoading}
                     decimals={
                       veNationBalance &&
