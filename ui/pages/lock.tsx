@@ -1,7 +1,7 @@
 import {
   ClockIcon,
   InformationCircleIcon, LockClosedIcon, SparklesIcon
-} from '@heroicons/react/outline'
+} from '@heroicons/react/24/outline'
 import { BigNumber, ethers } from 'ethers'
 import { useEffect, useMemo, useState } from 'react'
 import ActionButton, { ActionButtonProps } from '../components/ActionButton'

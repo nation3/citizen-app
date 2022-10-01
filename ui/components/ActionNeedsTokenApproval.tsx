@@ -1,4 +1,4 @@
-import { InformationCircleIcon } from '@heroicons/react/outline'
+import { InformationCircleIcon } from '@heroicons/react/24/outline'
 import { BigNumber } from 'ethers'
 import { useEffect, useState } from 'react'
 import { useTokenAllowance, useTokenApproval } from '../lib/approve'
