@@ -51,8 +51,9 @@ export default function Index() {
 
           <HomeCard
             href="/join"
-            // 
-            
+            icon={
+              <UserPlusIcon className="h-5 w-5 absolute right-8 text-n3blue" />
+            }
             title="Become a citizen"
             linkText="Claim a passport"
           >
