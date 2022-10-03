@@ -1,9 +1,9 @@
 import {
-  UserAddIcon,
+  UserPlusIcon,
   CurrencyDollarIcon,
   LockClosedIcon,
   PlusIcon,
-} from '@heroicons/react/outline'
+} from '@heroicons/react/24/outline'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
@@ -52,7 +52,7 @@ export default function Index() {
           <HomeCard
             href="/join"
             icon={
-              <UserAddIcon className="h-5 w-5 absolute right-8 text-n3blue" />
+              <UserPlusIcon className="h-5 w-5 absolute right-8 text-n3blue" />
             }
             title="Become a citizen"
             linkText="Claim a passport"

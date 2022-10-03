@@ -1,10 +1,10 @@
 import {
-  TrendingUpIcon,
+  ArrowTrendingUpIcon,
   CurrencyDollarIcon,
   SparklesIcon,
   CalculatorIcon,
   InformationCircleIcon,
-} from '@heroicons/react/outline'
+} from '@heroicons/react/24/outline'
 import { useEffect, useState } from 'react'
 import React from 'react'
 import { useBalancerPool } from '../lib/balancer'
@@ -132,7 +132,7 @@ export default function Liquidity() {
 
           <div className="stat">
             <div className="stat-figure">
-              <TrendingUpIcon className="h-8 w-8" />
+              <ArrowTrendingUpIcon className="h-8 w-8" />
             </div>
 
             <div className="stat-title">Rewards APY</div>

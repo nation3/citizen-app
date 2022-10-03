@@ -1,4 +1,4 @@
-import { LockClosedIcon, SparklesIcon } from '@heroicons/react/outline'
+import { LockClosedIcon, SparklesIcon } from '@heroicons/react/24/outline'
 import { ethers } from 'ethers'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
