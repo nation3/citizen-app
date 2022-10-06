@@ -9,7 +9,9 @@ export function useBalancerPool(id: any) {
     {
       addressOrName: balancerVault,
       contractInterface: BalancerVault.abi,
-      functionName: 'getPoolTokens',
+    },
+    'getPoolTokens',
+    {
       args: id,
     },
     process.env.NEXT_PUBLIC_CHAIN === 'mainnet'

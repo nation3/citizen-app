@@ -16,9 +16,9 @@ export default function ActionNeedsTokenApproval({
   action,
   preAction,
 }: any) {
-  const { address } = useAccount()
+  const { data: account } = useAccount()
   const { data: tokenAllowance, isLoading: tokenAllowanceLoading } =
-    useTokenAllowance({ token, address, spender })
+    useTokenAllowance({ token, address: account?.address, spender })
   const [approveUnlimited, setApproveUnlimited] = useState(true)
   const [weiAmountNeeded, setWeiAmountNeeded] = useState<BigNumber>(
     BigNumber.from(0)

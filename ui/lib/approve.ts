@@ -3,14 +3,18 @@ import { useContractRead } from './use-wagmi'
 import { useContractWrite } from './use-wagmi'
 
 export function useTokenAllowance({ token, address, spender }: any) {
-  return useContractRead({
-    addressOrName: token,
-    contractInterface: ERC20.abi,
-    functionName: 'allowance',
-    args: [address, spender],
-    watch: true,
-    enabled: token && address && spender
-  })
+  return useContractRead(
+    {
+      addressOrName: token,
+      contractInterface: ERC20.abi,
+    },
+    'allowance',
+    {
+      args: [address, spender],
+      watch: true,
+      enabled: token && address && spender,
+    }
+  )
 }
 
 export function useTokenApproval({ amountNeeded, token, spender }: any) {
@@ -18,8 +22,8 @@ export function useTokenApproval({ amountNeeded, token, spender }: any) {
     {
       addressOrName: token,
       contractInterface: ERC20.abi,
-      functionName: 'approve',
-      args: [spender, amountNeeded] 
     },
+    'approve',
+    { args: [spender, amountNeeded] }
   )
 }

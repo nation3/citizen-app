@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
-import { veNationToken } from '../lib/config'
 import VotingEscrow from '../abis/VotingEscrow.json'
+import { veNationToken } from '../lib/config'
 import { useBalance, useContractRead, useContractWrite } from './use-wagmi'
 
 const contractParams = {
@@ -26,9 +26,7 @@ let gasLimits = {
 }
 
 export function useVeNationLock(address: any) {
-  return useContractRead({
-    ...contractParams,
-    functionName: 'locked',
+  return useContractRead(contractParams, 'locked', {
     args: [address],
     watch: true,
     enabled: !!address,
@@ -39,9 +37,7 @@ export function useVeNationLock(address: any) {
 }
 
 export function useVeNationCreateLock(amount: any, time: any) {
-  return useContractWrite({
-    ...contractParams,
-    functionName: 'create_lock',
+  return useContractWrite(contractParams, 'create_lock', {
     args: [amount, time],
     overrides: {
       gasLimit: gasLimits.create_lock,
@@ -66,21 +62,11 @@ export function useVeNationIncreaseLock({
       return { writeAsync: increaseLockTime, data: lockTimeData }
     }
     return {}
-  }, [
-    newAmount,
-    currentTime,
-    newTime,
-    increaseLockAmount,
-    increaseLockTime,
-    lockAmountData,
-    lockTimeData,
-  ])
+  }, [newAmount, currentTime, newTime, increaseLockAmount, increaseLockTime, lockAmountData, lockTimeData])
 }
 
 export function useVeNationIncreaseLockAmount(amount: any) {
-  return useContractWrite({
-    ...contractParams,
-    functionName: 'increase_amount',
+  return useContractWrite(contractParams, 'increase_amount', {
     args: [amount],
     overrides: {
       gasLimit: gasLimits.increase_amount,
@@ -89,9 +75,7 @@ export function useVeNationIncreaseLockAmount(amount: any) {
 }
 
 export function useVeNationIncreaseLockTime(time: any) {
-  return useContractWrite({
-    ...contractParams,
-    functionName: 'increase_unlock_time',
+  return useContractWrite(contractParams, 'increase_unlock_time', {
     args: [time],
     overrides: {
       gasLimit: gasLimits.increase_unlock_time,
@@ -100,9 +84,7 @@ export function useVeNationIncreaseLockTime(time: any) {
 }
 
 export function useVeNationWithdrawLock() {
-  return useContractWrite({
-    ...contractParams,
-    functionName: 'withdraw',
+  return useContractWrite(contractParams, 'withdraw', {
     overrides: {
       gasLimit: gasLimits.withdraw,
     },
@@ -110,5 +92,5 @@ export function useVeNationWithdrawLock() {
 }
 
 export function useVeNationSupply() {
-  return useContractRead({ ...contractParams, functionName: 'totalSupply()' })
+  return useContractRead(contractParams, 'totalSupply()', {})
 }

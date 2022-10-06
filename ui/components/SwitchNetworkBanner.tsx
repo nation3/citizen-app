@@ -1,6 +1,6 @@
 import { ExclamationCircleIcon } from '@heroicons/react/24/outline'
 import React from 'react'
-import { useSwitchNetwork } from '../lib/use-wagmi'
+import { useNetwork } from '../lib/use-wagmi'
 
 const chainIds = {
   mainnet: 1,
@@ -12,7 +12,8 @@ type Indexable = {
 }
 
 export default function SwitchNetworkBanner({ newNetwork }: any) {
-  const { switchNetwork } = useSwitchNetwork()
+  // @ts-expect-error
+  const { switchNetwork } = useNetwork()
 
   const capitalized = (network: any) =>
     network.charAt(0).toUpperCase() + network.slice(1)
