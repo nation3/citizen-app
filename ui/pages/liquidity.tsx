@@ -36,10 +36,10 @@ import MainCard from '../components/MainCard'
 import EthersInput from '../components/EthersInput'
 
 export default function Liquidity() {
-  const { address } = useAccount()
+  const { data: account } = useAccount()
 
   const { data: veNationBalance, isLoading: veNationBalanceLoading } =
-    useVeNationBalance(address)
+    useVeNationBalance(account?.address)
   const {
     poolValue,
     nationPrice,
@@ -47,7 +47,7 @@ export default function Liquidity() {
   } = useBalancerPool(balancerPoolId)
 
   const { data: poolTokenBalance, isLoading: poolTokenBalanceLoading } =
-    usePoolTokenBalance(address)
+    usePoolTokenBalance(account?.address)
 
   const {
     liquidityRewardsAPY,
@@ -59,7 +59,7 @@ export default function Liquidity() {
   } = useLiquidityRewards({
     nationPrice,
     poolValue,
-    address,
+    address: account?.address,
   })
 
   const { data: veNationSupply } = useVeNationSupply()
