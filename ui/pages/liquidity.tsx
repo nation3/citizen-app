@@ -295,7 +295,7 @@ export default function Liquidity() {
               ) : (
                 <>
                   <p className="mb-4">
-                    Available to withdraw: <Balance balance={userDeposit} /> LP
+                    Available to withdraw: <Balance balance={userDeposit} decimals={18} /> LP
                     tokens
                   </p>
 
