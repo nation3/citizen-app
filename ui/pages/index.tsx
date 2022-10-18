@@ -30,7 +30,7 @@ export default function Index() {
           <br />
           <br />
           Here you can perform on-chain operations related to the Nation3
-          communinity, such as...
+          community, such as...
         </p>
 
         <div className="grid xl:grid-cols-2 mt-2 gap-8">
