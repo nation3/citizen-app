@@ -15,26 +15,29 @@ export default function ActionNeedsTokenApproval({
   approveText,
   action,
   preAction,
+  allowUnlimited = true,
 }: any) {
   const { data: account } = useAccount()
   const { data: tokenAllowance, isLoading: tokenAllowanceLoading } =
     useTokenAllowance({ token, address: account?.address, spender })
-  const [approveUnlimited, setApproveUnlimited] = useState(true)
+  const [approveUnlimited, setApproveUnlimited] = useState(allowUnlimited)
   const [weiAmountNeeded, setWeiAmountNeeded] = useState<BigNumber>(
     BigNumber.from(0)
   )
 
   useEffect(() => {
-      setWeiAmountNeeded(
-        transformNumber(
-          amountNeeded?.formatted || amountNeeded,
-          NumberType.bignumber
-        ) as BigNumber
-      )
+    setWeiAmountNeeded(
+      transformNumber(
+        amountNeeded?.formatted || amountNeeded,
+        NumberType.bignumber
+      ) as BigNumber
+    )
   }, [amountNeeded])
 
   const approve = useTokenApproval({
-    amountNeeded: approveUnlimited ? BigNumber.from('1000000000000000000000000000') :  weiAmountNeeded,
+    amountNeeded: approveUnlimited
+      ? BigNumber.from('1000000000000000000000000000')
+      : weiAmountNeeded,
     token,
     spender,
   })
@@ -52,23 +55,25 @@ export default function ActionNeedsTokenApproval({
           </ActionButton>
         ) : (
           <div className="flex flex-col w-full">
-            <label className="label cursor-pointer w-full flex justify-end">
-              <div
-                className="tooltip tooltip-top md:tooltip-left flex items-center gap-2"
-                data-tip="Check this to avoid having to approve your veNATION on future locks."
-              >
-                <span className="label-text flex items-center gap-1">
-                  <InformationCircleIcon className="w-4 h-4" />
-                  Approve unlimited
-                </span>
-                <input
-                  type="checkbox"
-                  className="checkbox checkbox-primary"
-                  checked={approveUnlimited}
-                  onChange={(e) => setApproveUnlimited(e.target.checked)}
-                />
-              </div>
-            </label>
+            {allowUnlimited && (
+              <label className="label cursor-pointer w-full flex justify-end">
+                <div
+                  className="tooltip tooltip-top md:tooltip-left flex items-center gap-2"
+                  data-tip="Check this to avoid having to approve your veNATION on future locks."
+                >
+                  <span className="label-text flex items-center gap-1">
+                    <InformationCircleIcon className="w-4 h-4" />
+                    Approve unlimited
+                  </span>
+                  <input
+                    type="checkbox"
+                    className="checkbox checkbox-primary"
+                    checked={approveUnlimited}
+                    onChange={(e) => setApproveUnlimited(e.target.checked)}
+                  />
+                </div>
+              </label>
+            )}
             <ActionButton className={className} action={approve}>
               {approveText}
             </ActionButton>
