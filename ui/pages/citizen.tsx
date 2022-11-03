@@ -76,31 +76,34 @@ export default function Citizen() {
                                     <Image src={passportData.nft.image} layout="fill" />
                                 </Card>
                             </div>
-                            <div className="card shadow-md flex flex-row xl:flex-col justify-between gap-4 p-4 bg-white h-fit max-w-sm w-full xl:w-fit">
-                                <button
-                                    onClick={() => signMessageAndDownloadPass()}
-                                    className="w-40 xl:w-full"
-                                >
-                                    <Image src={AddToWallet} layout="responsive" />
-                                </button>
-                                <a
-                                    className="btn btn-primary gap-2 flex-1"
-                                    rel="noopener noreferrer"
-                                    target="_blank"
-                                    href="https://discord.gg/nation3"
-                                >
-                                    <Image src={DiscordIcon} width={24} height={24} />
-                                    <span className="hidden xl:block">Access gated channels</span>
-                                </a>
-                                <a
-                                    className="btn btn-primary gap-2 flex-1"
-                                    rel="noopener noreferrer"
-                                    target="_blank"
-                                    href="https://vote.nation3.org"
-                                >
-                                    <Image src={BallotIcon} width={24} height={24} />
-                                    <span className="hidden xl:block">Vote on proposals</span>
-                                </a>
+
+                            <div className="card shadow-md flex flex-row flex-col align-center justify-between gap-2 p-4 bg-white h-fit max-w-sm w-full xl:w-fit">
+                                <div className="flex xl:flex-col w-full gap-2 justify-center">
+                                    <button
+                                        onClick={() => signMessageAndDownloadPass()}
+                                        className="w-40 xl:w-full"
+                                    >
+                                        <Image src={AddToWallet} layout="responsive" />
+                                    </button>
+                                    <a
+                                        className="btn btn-primary gap-2 flex-1"
+                                        rel="noopener noreferrer"
+                                        target="_blank"
+                                        href="https://discord.gg/nation3"
+                                    >
+                                        <Image src={DiscordIcon} width={24} height={24} />
+                                        <span className="hidden xl:block">Access gated channels</span>
+                                    </a>
+                                    <a
+                                        className="btn btn-primary gap-2 flex-1"
+                                        rel="noopener noreferrer"
+                                        target="_blank"
+                                        href="https://vote.nation3.org"
+                                    >
+                                        <Image src={BallotIcon} width={24} height={24} />
+                                        <span className="hidden xl:block">Vote on proposals</span>
+                                    </a>
+                                </div>
                                 <PassportExpiration date={passportExpirationDate} />
                             </div>
                         </div>
@@ -139,13 +142,14 @@ export default function Citizen() {
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
+                    </div >
+                </div >
             ) : (
                 <div className="w-full h-full flex flex-row items-center justify-center">
                     <button className="btn btn-square btn-ghost btn-disabled bg-transparent loading"></button>
                 </div>
-            )}
+            )
+            }
         </>
     )
 }
