@@ -12,7 +12,7 @@ export function useTokenAllowance({ token, address, spender }: any) {
     {
       args: [address, spender],
       watch: true,
-      enabled: token && address && spender,
+      enabled: Boolean(token && address && spender),
     }
   )
 }
