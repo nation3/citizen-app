@@ -7,7 +7,12 @@ import {
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
-import { balancerDomain, balancerPoolId, nationToken, veNationRewardsMultiplier } from '../lib/config'
+import {
+  balancerDomain,
+  balancerPoolId,
+  nationToken,
+  veNationRewardsMultiplier,
+} from '../lib/config'
 import GradientLink from '../components/GradientLink'
 import Head from '../components/Head'
 import HomeCard from '../components/HomeCard'

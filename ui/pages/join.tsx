@@ -4,18 +4,12 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { useWaitForTransaction } from 'wagmi'
-import ActionButton from '../components/ActionButton'
-import Balance from '../components/Balance'
-import Confetti from '../components/Confetti'
-import GradientLink from '../components/GradientLink'
-import Head from '../components/Head'
-import MainCard from '../components/MainCard'
 import {
-    nationPassportRequiredBalance,
-    nationToken,
-    balancerDomain,
-    nationPassportAgreementStatement,
-    nationPassportAgreementURI
+  nationPassportRequiredBalance,
+  nationToken,
+  balancerDomain,
+  nationPassportAgreementStatement,
+  nationPassportAgreementURI,
 } from '../lib/config'
 import { useNationBalance } from '../lib/nation-token'
 import { NumberType, transformNumber } from '../lib/numbers'
@@ -23,6 +17,12 @@ import { useClaimPassport, useHasPassport } from '../lib/passport-nft'
 import { storeSignature, useSignAgreement } from '../lib/sign-agreement'
 import { useAccount } from '../lib/use-wagmi'
 import { useVeNationBalance } from '../lib/ve-token'
+import ActionButton from '../components/ActionButton'
+import Balance from '../components/Balance'
+import Confetti from '../components/Confetti'
+import GradientLink from '../components/GradientLink'
+import Head from '../components/Head'
+import MainCard from '../components/MainCard'
 
 export default function Join() {
   const { data: account } = useAccount()
@@ -100,7 +100,7 @@ export default function Join() {
   return (
     <>
       <Head title="Become a citizen" />
-      { hasPassport && <Confetti />}
+      {hasPassport && <Confetti />}
       <MainCard title="Become a Nation3 citizen">
         <ul className="steps steps-vertical lg:steps-horizontal my-8">
           <li className={`step text-sm ${action.mint ? 'step-primary' : ''}`}>
@@ -118,7 +118,7 @@ export default function Join() {
           </li>
         </ul>
 
-        { !hasPassport ? (
+        {!hasPassport ? (
           <>
             <p>
               To become a citizen, you need to mint a passport NFT by holding at
@@ -148,7 +148,9 @@ export default function Join() {
                   <LockClosedIcon className="h-8 w-8" />
                 </div>
                 <div className="stat-title">Needed balance</div>
-                <div className="stat-value">{nationPassportRequiredBalance}</div>
+                <div className="stat-value">
+                  {nationPassportRequiredBalance}
+                </div>
                 <div className="stat-desc">$veNATION</div>
               </div>
 
@@ -166,7 +168,6 @@ export default function Join() {
                 </div>
                 <div className="stat-desc">$veNATION</div>
               </div>
-
             </div>
 
             {action.mint ? (
@@ -206,8 +207,7 @@ export default function Join() {
               <button className="btn btn-square btn-ghost btn-disabled btn-lg bg-transparent loading"></button>
             </div>
           </>
-        )
-        }
+        )}
       </MainCard>
     </>
   )
