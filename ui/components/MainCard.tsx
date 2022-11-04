@@ -10,9 +10,10 @@ export default function MainCard({
   return (
     <>
       {!loading ? (
-        <div className={
-              !maxWidthClassNames ? 'max-w-md md:max-w-xl' : maxWidthClassNames
-            }
+        <div
+          className={
+            !maxWidthClassNames ? 'max-w-md md:max-w-xl' : maxWidthClassNames
+          }
         >
           <div
             className={`card min-w-80 md:w-full bg-base-100 shadow-md overflow-visible ${

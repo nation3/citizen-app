@@ -12,6 +12,5 @@
     "^[./](?!.*.css$).*$",
     "^.*(css)$"
   ],
-  "importOrderSeparation": false,
-  "experimentalBabelParserPluginsList": ["jsx"]
+  "importOrderSeparation": false
 }

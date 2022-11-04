@@ -30,10 +30,10 @@ import { useAccount } from '../lib/use-wagmi'
 import { useVeNationBalance, useVeNationSupply } from '../lib/ve-token'
 import ActionButton from '../components/ActionButton'
 import Balance from '../components/Balance'
+import EthersInput from '../components/EthersInput'
 import GradientLink from '../components/GradientLink'
 import Head from '../components/Head'
 import MainCard from '../components/MainCard'
-import EthersInput from '../components/EthersInput'
 
 export default function Liquidity() {
   const { data: account } = useAccount()
@@ -295,8 +295,8 @@ export default function Liquidity() {
               ) : (
                 <>
                   <p className="mb-4">
-                    Available to withdraw: <Balance balance={userDeposit} decimals={18} /> LP
-                    tokens
+                    Available to withdraw:{' '}
+                    <Balance balance={userDeposit} decimals={18} /> LP tokens
                   </p>
 
                   <div className="input-group">
