@@ -49,6 +49,7 @@ const deployVeNation = async (nationToken: Contract) => {
         args: [nationToken.address, "Vote-escrowed NATION", "veNATION", "veNATION_1.0.0"]
     })
 
+    console.log(`Deployment veNATION with address ${nationToken.address}`)
     return veNATION;
 }
 
@@ -136,6 +137,8 @@ const deployPassport = async (governanceToken: Contract) => {
     await passportIssuer.connect(wallet).setTermsURI(agreementURI);
     await passportIssuer.connect(wallet).setEnabled(true);
 
+    console.log(`Deployment passport with address ${passportIssuer.address}`)
+
     return { "passportToken": passportToken, "passportIssuer": passportIssuer, "agreementStatement": agreementStatement, "agreementURI": agreementURI }
 }
 
@@ -157,7 +160,7 @@ const main = async () => {
         "lpRewardsContract": lpContracts.lpRewardsContract.address,
         "nationDropContracts": [nationDropA.address, nationDropB.address],
         "nationPassportNFT": passportContracts.passportToken.address,
-        "nationPassportNFTIssuer": passportContracts.passportIssuer.address
+        "nationPassportNFTIssuer": passportContracts.passportIssuer.address,
         "nationPassportAgreementStatement": passportContracts.agreementStatement,
         "nationPassportAgreementURI": passportContracts.agreementURI,
     }

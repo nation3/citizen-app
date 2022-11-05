@@ -14,7 +14,10 @@ if (process.env.DEPLOYER_PRIVATE_KEY === undefined) {
 }
 if (!validConfig) process.exit(1);
 
+console.debug("Try to create provider with RPC_URL: " + process.env.RPC_URL)
 export const provider = new ethers.providers.JsonRpcProvider(process.env.RPC_URL)
+
+console.debug("Try to create wallet with PRIVATE_KEY: " + process.env.DEPLOYER_PRIVATE_KEY)
 export const wallet = new ethers.Wallet(process.env.DEPLOYER_PRIVATE_KEY ?? "", provider)
 
 // Deployment helpers
