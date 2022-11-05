@@ -1,35 +1,27 @@
 const zeroAddress = '0x0000000000000000000000000000000000000000'
 
+type Address = `0x{string}`
+
 interface DeploymentConfig {
-  nationToken: string,
-  veNationToken: string,
-  balancerVault: string,
-  balancerPoolId: string,
-  balancerLPToken: string,
-  lpRewardsContract: string,
-  nationPassportNFT: string,
-  nationPassportNFTIssuer: string,
+  nationToken: Address,
+  veNationToken: Address,
+  balancerVault: Address,
+  balancerPoolId: Address,
+  balancerLPToken: Address,
+  lpRewardsContract: Address,
+  nationPassportNFT: Address,
+  nationPassportNFTIssuer: Address,
   nationPassportAgreementStatement: string,
   nationPassportAgreementURI: string,
   nationPassportRequiredBalance: string,
   nationPassportRevokeUnderBalance: string,
 }
 
-interface Config {
-  nationToken: string,
-  veNationToken: string,
+interface Config extends Omit<DeploymentConfig, 'nationPassportRequiredBalance' | 'nationPassportRevokeUnderBalance'> {
   veNationRewardsMultiplier: number,
   balancerDomain: string,
-  balancerVault: string,
-  balancerPoolId: string,
-  balancerLPToken: string,
   etherscanDomain: string,
-  lpRewardsContract: string,
   mobilePassportDomain: string,
-  nationPassportNFT: string,
-  nationPassportNFTIssuer: string,
-  nationPassportAgreementStatement: string,
-  nationPassportAgreementURI: string,
   nationPassportRequiredBalance: number,
   nationPassportRevokeUnderBalance: number,
 }

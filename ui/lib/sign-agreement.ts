@@ -4,7 +4,7 @@ import {
     nationPassportAgreementURI
 } from './config'
 import { networkToId } from './network-id'
-import { useSignTypedData } from './use-wagmi'
+import { useSignTypedData } from 'wagmi'
 
 export const domain = {
   name: 'PassportIssuer',
@@ -25,7 +25,7 @@ export const value = {
   termsURI: `${nationPassportAgreementURI}`,
 }
 
-export function useSignAgreement({ onSuccess }: { onSuccess: Function }) {
+export function useSignAgreement({ onSuccess }: { onSuccess: (signature: string) => unknown }) {
   return useSignTypedData({
     domain,
     types,

@@ -1,29 +1,28 @@
-import ERC20 from '../abis/ERC20.json'
-import { useContractRead } from './use-wagmi'
-import { useContractWrite } from './use-wagmi'
+import ERC20 from '../abis/ERC20'
+import { Address, useContractRead, useContractWrite } from 'wagmi'
+import { BigNumber, BigNumberish } from 'ethers'
 
-export function useTokenAllowance({ token, address, spender }: any) {
-  return useContractRead(
-    {
-      addressOrName: token,
-      contractInterface: ERC20.abi,
-    },
-    'allowance',
-    {
-      args: [address, spender],
-      watch: true,
-      enabled: Boolean(token && address && spender),
-    }
-  )
+export function useTokenAllowance({ token, address, spender, enabled}: { token: Address, address: Address, spender: Address, enabled: boolean }) {
+    return useContractRead(
+        {
+            address: token,
+            abi: ERC20,
+            functionName: 'allowance',
+            args: [address, spender],
+            enabled,
+            watch: true,
+        }
+    )
 }
 
-export function useTokenApproval({ amountNeeded, token, spender }: any) {
-  return useContractWrite(
-    {
-      addressOrName: token,
-      contractInterface: ERC20.abi,
-    },
-    'approve',
-    { args: [spender, amountNeeded] }
-  )
+export function useTokenApproval({ amountNeeded, token, spender }: { token: Address, spender: Address, amountNeeded: BigNumberish }) {
+    return useContractWrite(
+        {
+            mode: 'recklesslyUnprepared',
+            address: token,
+            abi: ERC20,
+            functionName: 'approve',
+            args: [spender, BigNumber.from(amountNeeded)]
+        }
+    )
 }

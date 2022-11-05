@@ -1,58 +1,51 @@
-import { useState, useEffect } from 'react'
-import BalancerVault from '../abis/BalancerVault.json'
+import { useState, useEffect, useMemo } from 'react'
+import BalancerVault from '../abis/BalancerVault'
 import { balancerVault } from './config'
-import { NumberType, transformNumber } from './numbers'
-import { useContractRead } from './use-wagmi'
+import { Address, useContractRead } from 'wagmi'
+import { BigNumber, utils } from 'ethers'
 
-export function useBalancerPool(id: any) {
-  const { data: poolData, isLoading } = useContractRead(
-    {
-      addressOrName: balancerVault,
-      contractInterface: BalancerVault.abi,
-    },
-    'getPoolTokens',
-    {
-      args: id,
-    },
-    process.env.NEXT_PUBLIC_CHAIN === 'mainnet'
-  )
+export function useBalancerPool({id}: {id: Address}) {
+    const { data: poolData, isLoading } = useContractRead({
+        address: balancerVault,
+        abi: BalancerVault,
+        functionName: 'getPoolTokens',
+        args: [id],
+    })
 
-  const [poolValue, setPoolValue] = useState(0)
-  const [nationPrice, setNationPrice] = useState(0)
-  const [ethPrice, setEthPrice] = useState(0)
+    const balances: { nation: BigNumber, weth: BigNumber } = useMemo(() => {
+        const nation = poolData?.balances[0] || BigNumber.from(333);
+        const weth = poolData?.balances[1] || BigNumber.from(333);
+        return { nation, weth }
+    }, [poolData])
 
-  useEffect(() => {
-    async function fetchData() {
-      const priceRes = await fetch(
-        'https://api.coingecko.com/api/v3/simple/price?ids=nation3,ethereum&vs_currencies=usd'
-      )
-      const { nation3, ethereum } = await priceRes.json()
-      setNationPrice(nation3.usd)
-      setEthPrice(ethereum.usd)
-    }
-    fetchData()
-  }, [])
+    const [poolValue, setPoolValue] = useState(0)
+    const [nationPrice, setNationPrice] = useState(0)
+    const [ethPrice, setEthPrice] = useState(0)
 
-  useEffect(() => {
-    if (!isLoading && poolData && nationPrice && ethPrice) {
-      let nationBalance
-      let wethBalance
-      if (process.env.NEXT_PUBLIC_CHAIN === 'mainnet') {
-        const balances = poolData[1]
-        nationBalance = balances[0]
-        wethBalance = balances[1]
-      } else {
-        nationBalance = transformNumber(333, NumberType.bignumber)
-        wethBalance = transformNumber(333, NumberType.bignumber)
-      }
+    useEffect(() => {
+        async function fetchData() {
+            const priceRes = await fetch(
+                'https://api.coingecko.com/api/v3/simple/price?ids=nation3,ethereum&vs_currencies=usd'
+            )
+            const { nation3, ethereum } = await priceRes.json()
+            setNationPrice(nation3.usd)
+            setEthPrice(ethereum.usd)
+        }
+        fetchData()
+    }, [])
 
-      if (nationBalance && wethBalance) {
-        const nationValue = nationBalance.mul(Math.round(nationPrice))
-        const ethValue = wethBalance.mul(Math.round(ethPrice))
-        const totalValue = nationValue.add(ethValue)
-        setPoolValue(totalValue)
-      }
-    }
-  }, [isLoading, poolData, ethPrice, nationPrice])
-  return { poolValue, nationPrice, isLoading }
+    useEffect(() => {
+        if (!isLoading && poolData && nationPrice && ethPrice) {
+            const nationBalance = balances.nation
+            const wethBalance = balances.weth
+
+            if (nationBalance && wethBalance) {
+                const nationValue = nationBalance.mul(Math.round(nationPrice))
+                const ethValue = wethBalance.mul(Math.round(ethPrice))
+                const totalValue = nationValue.add(ethValue)
+                setPoolValue(Number(utils.formatUnits(totalValue)))
+            }
+        }
+    }, [isLoading, poolData, ethPrice, nationPrice, balances.nation, balances.weth])
+    return { poolValue, nationPrice, isLoading }
 }

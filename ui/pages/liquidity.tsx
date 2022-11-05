@@ -7,6 +7,7 @@ import {
 } from '@heroicons/react/24/outline'
 import { useEffect, useState } from 'react'
 import React from 'react'
+import { useAccount } from 'wagmi'
 import { useBalancerPool } from '../lib/balancer'
 import {
   balancerPoolId,
@@ -26,7 +27,6 @@ import {
   useClaimRewards,
 } from '../lib/liquidity-rewards'
 import { NumberType, transformNumber } from '../lib/numbers'
-import { useAccount } from '../lib/use-wagmi'
 import { useVeNationBalance, useVeNationSupply } from '../lib/ve-token'
 import ActionButton from '../components/ActionButton'
 import Balance from '../components/Balance'
@@ -34,20 +34,21 @@ import EthersInput from '../components/EthersInput'
 import GradientLink from '../components/GradientLink'
 import Head from '../components/Head'
 import MainCard from '../components/MainCard'
+import { BigNumber } from 'ethers'
 
 export default function Liquidity() {
-  const { data: account } = useAccount()
+  const { address } = useAccount()
 
   const { data: veNationBalance, isLoading: veNationBalanceLoading } =
-    useVeNationBalance(account?.address)
+    useVeNationBalance({address})
   const {
     poolValue,
     nationPrice,
     isLoading: poolLoading,
-  } = useBalancerPool(balancerPoolId)
+  } = useBalancerPool({id: balancerPoolId})
 
   const { data: poolTokenBalance, isLoading: poolTokenBalanceLoading } =
-    usePoolTokenBalance(account?.address)
+    usePoolTokenBalance({address})
 
   const {
     liquidityRewardsAPY,
@@ -59,7 +60,7 @@ export default function Liquidity() {
   } = useLiquidityRewards({
     nationPrice,
     poolValue,
-    address: account?.address,
+    address,
   })
 
   const { data: veNationSupply } = useVeNationSupply()
@@ -77,7 +78,7 @@ export default function Liquidity() {
     boostMultiplier: currentBoost,
   })
 
-  const [depositValue, setDepositValue] = useState(0)
+  const [depositValue, setDepositValue] = useState(BigNumber.from(0))
   const [withdrawalValue, setWithdrawalValue] = useState('0')
   const deposit = useDeposit(
     transformNumber(depositValue, NumberType.bignumber)
@@ -189,16 +190,17 @@ export default function Liquidity() {
               <div>
                 You can boost your APY to{' '}
                 <span className="text-n3blue font-semibold">
-                  {transformNumber(
-                    ((transformNumber(
+                {/*
+                  {transformNumber((
+                    transformNumber(
                       liquidityRewardsAPY ?? 0,
                       NumberType.number
-                    ) as number) /
-                      10 ** 18) *
-                      potentialBoost,
+                    ) as number /
+                      10 ** 18 * (potentialBoost ?? 1)),
                     NumberType.number,
                     2
                   ) + '%'}
+                  */}
                 </span>
                 . To do so, claim your current rewards.
               </div>
@@ -270,7 +272,7 @@ export default function Liquidity() {
                       className="btn btn-outline"
                       onClick={() =>
                         poolTokenBalance &&
-                        setDepositValue(poolTokenBalance?.formatted)
+                        setDepositValue(poolTokenBalance?.value)
                       }
                     >
                       Max

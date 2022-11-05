@@ -1,13 +1,16 @@
-import { ethers } from "ethers";
+import { constants, ethers } from "ethers";
 import { useMemo } from "react";
+import { useAccount } from "wagmi";
 import { getPassportExpirationDate } from "./passport-expiration";
-import { useAccount } from "./use-wagmi";
 import { useVeNationLock } from "./ve-token";
 import { nationPassportRevokeUnderBalance } from "../lib/config";
 
 export function usePassportExpirationDate(): Date | undefined {
-  const { data: account } = useAccount()
-  const { data: veNationLock } = useVeNationLock(account?.address)
+  const { address, isConnected } = useAccount()
+  const { data: veNationLock } = useVeNationLock({
+      address: address || constants.AddressZero,
+      enabled: isConnected
+  })
 
   const threshold = ethers.BigNumber.from(String(nationPassportRevokeUnderBalance * 10 ** 18));
     
@@ -16,7 +19,8 @@ export function usePassportExpirationDate(): Date | undefined {
         return undefined;
       }
 
-      const [lockAmount, lockEnd]: [ethers.BigNumber, ethers.BigNumber] = veNationLock;
-      return getPassportExpirationDate(lockAmount, lockEnd, threshold);
+      const { amount, end } = veNationLock;
+      return getPassportExpirationDate(amount, end, threshold);
+
   }, [veNationLock, threshold]);
 }

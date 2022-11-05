@@ -1,21 +1,21 @@
 import { useEffect, useState } from 'react'
 import { networkToId } from './network-id'
-import { useNetwork } from './use-wagmi'
+import { useNetwork } from 'wagmi'
 
 const preferredNetwork = process.env.NEXT_PUBLIC_CHAIN
 
 export default function usePreferredNetwork() {
-  const { activeChain } = useNetwork({})
+  const { chain } = useNetwork()
 
   const [isPreferredNetwork, setIsPreferredNetwork] = useState(false)
 
   useEffect(() => {
-    if (activeChain?.id && activeChain?.id == networkToId(preferredNetwork)) {
+    if (chain?.id && chain?.id == networkToId(preferredNetwork)) {
       setIsPreferredNetwork(true)
     } else {
       setIsPreferredNetwork(false)
     }
-  }, [activeChain?.id])
+  }, [chain?.id])
 
   return { isPreferredNetwork, preferredNetwork }
 }

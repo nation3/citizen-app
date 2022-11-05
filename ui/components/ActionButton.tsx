@@ -1,34 +1,33 @@
 import { BigNumber } from 'ethers'
 import { ReactNode } from 'react'
-import { useWaitForTransaction } from 'wagmi'
+import { Address, useWaitForTransaction, useAccount, useNetwork } from 'wagmi'
 import usePreferredNetwork from '../lib/use-preferred-network'
-import { useAccount, useNetwork } from '../lib/use-wagmi'
 import ActionNeedsTokenApproval from './ActionNeedsTokenApproval'
 
 export interface ActionButtonProps {
-  className?: string
   children: ReactNode
   action: any
   preAction?: Function
   postAction?: Function
   approval?: {
-    token: string
-    spender: string
-    amountNeeded: BigNumber | number | string
-    approveText: string
-    allowUnlimited?: boolean
+    token: Address,
+    spender: Address,
+    amountNeeded: BigNumber,
+    approveText: string,
+    allowUnlimited?: boolean,
   }
+  className?: string
 }
 
-export default function ActionButton({
+const ActionButton = ({
   className,
   children,
   action,
   preAction,
   postAction,
   approval,
-}: ActionButtonProps) {
-  const { data: account } = useAccount()
+}: ActionButtonProps) => {
+  const { address } = useAccount()
   const { writeAsync, data, isLoadingOverride } = action
   const { isLoading } = useWaitForTransaction({
     hash: data?.hash,
@@ -40,16 +39,16 @@ export default function ActionButton({
     postAction && postAction()
   }
 
-  const { activeChain } = useNetwork({})
+  const { chain } = useNetwork()
   const { isPreferredNetwork } = usePreferredNetwork()
 
   return (
     <>
       {!isPreferredNetwork ? (
         <button className={className} disabled>
-          {!activeChain?.id ? 'Not connected' : 'Wrong network'}
+          {!chain?.id ? 'Not connected' : 'Wrong network'}
         </button>
-      ) : !account ? (
+      ) : !address ? (
         <label htmlFor="web3-modal" className={`${className} modal-button`}>
           {children}
         </label>
@@ -74,3 +73,5 @@ export default function ActionButton({
     </>
   )
 }
+
+export default ActionButton;

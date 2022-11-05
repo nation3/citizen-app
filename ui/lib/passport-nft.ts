@@ -1,88 +1,83 @@
 import { useEffect, useState } from 'react'
+import { Address, useContractRead, useContractWrite } from 'wagmi'
 import { useNft } from 'use-nft'
-import PassportNFT from '../abis/Passport.json'
-import PassportIssuer from '../abis/PassportIssuer.json'
+
+import PassportNFT from '../abis/Passport'
+import PassportIssuer from '../abis/PassportIssuer'
 import { nationPassportNFT, nationPassportNFTIssuer } from './config'
-import { useContractRead, useContractWrite } from './use-wagmi'
+import { constants, BigNumber, BigNumberish } from 'ethers'
 
-const nftIssuerContractParams = {
-  addressOrName: nationPassportNFTIssuer,
-  contractInterface: PassportIssuer.abi,
+interface PassportIssuerHooksProps {address: Address | undefined, enabled?: boolean}
+interface PassportTokenHooksProps {id: BigNumberish | undefined, enabled?: boolean}
+
+export function useHasPassport({address, enabled}: PassportIssuerHooksProps) {
+    const [hasPassport, setHasPassport] = useState(false)
+    const { data: passportStatus, isLoading } = usePassportStatus({address, enabled})
+
+    useEffect(() => {
+        if (passportStatus == 1) {
+            setHasPassport(true)
+        }
+    }, [passportStatus, isLoading])
+
+    return { hasPassport, isLoading }
 }
 
-export function useHasPassport(address: any) {
-  const [hasPassport, setHasPassport] = useState(false)
-  const { data: passportStatus, isLoading } = usePassportStatus(address)
-
-  useEffect(() => {
-    if (passportStatus == 1) {
-      setHasPassport(true)
-    }
-  }, [passportStatus, isLoading])
-
-  return { hasPassport, isLoading }
+export function usePassportStatus({address, enabled = true}: PassportIssuerHooksProps) {
+    return useContractRead({
+        address: nationPassportNFTIssuer,
+        abi: PassportIssuer,
+        functionName: 'passportStatus',
+        args: [address || constants.AddressZero],
+        enabled: typeof address !== "undefined" && enabled,
+        watch: true
+    })
 }
 
-export function usePassportStatus(address: any) {
-  return useContractRead(
-    nftIssuerContractParams,
-    'passportStatus',
-    {
-      args: [address],
-      watch: true,
-      enabled: Boolean(address),
-    },
-    false
-  )
+export function usePassport({address, enabled = true}: PassportIssuerHooksProps) {
+    const { data: id, isLoading: loadingID } = useContractRead({
+        address: nationPassportNFTIssuer,
+        abi: PassportIssuer,
+        functionName: 'passportId',
+        enabled: typeof address !== "undefined" && enabled
+    })
+
+    console.log(`Passport ID ${id}`)
+    const { loading, nft } = useNft(nationPassportNFT, String(id))
+    return { id, nft, isLoading: loadingID || loading }
 }
+
 
 export function useClaimPassport() {
-  return useContractWrite(
-    {
-      addressOrName: nationPassportNFTIssuer,
-      contractInterface: PassportIssuer.abi,
-    },
-    'claim',
-    {}
-  )
+    return useContractWrite({
+        mode: "recklesslyUnprepared",
+        address: nationPassportNFTIssuer,
+        abi: PassportIssuer,
+        functionName: 'claim',
+    })
 }
 
-export function usePassport(address: any) {
-  const { data: id, isLoading: loadingID } = useContractRead(
-    nftIssuerContractParams,
-    'passportId',
-    { args: [address], enable: address },
-    false
-  )
-  console.log(`Passport ID ${id}`)
-  const { loading, nft } = useNft(nationPassportNFT || '', id)
-  return { data: { id, nft }, isLoading: loadingID || loading }
+export function usePassportSigner({id}: PassportTokenHooksProps) {
+    return useContractRead({
+        address: nationPassportNFT,
+        abi: PassportNFT,
+        functionName: 'signerOf',
+        args: [BigNumber.from(id)],
+        watch: true,
+        enabled: typeof id !== "undefined",
+    })
 }
 
-export function usePassportSigner(id: number) {
-  return useContractRead(
-    {
-      addressOrName: nationPassportNFT,
-      contractInterface: PassportNFT.abi,
-    },
-    'signerOf',
-    {
-      args: [id],
-      watch: true,
-      enable: id,
-    }
-  )
+interface SetPassportSignerProps extends Omit<PassportTokenHooksProps, 'enabled'> {
+    signer: Address
 }
 
-export function useSetPassportSigner(id: number, signerAddress: string) {
-  return useContractWrite(
-    {
-      addressOrName: nationPassportNFT,
-      contractInterface: PassportNFT.abi,
-    },
-    'setSigner',
-    {
-      args: [id, signerAddress],
-    }
-  )
+export function useSetPassportSigner({id, signer}: SetPassportSignerProps) {
+    return useContractWrite({
+        mode: "recklesslyUnprepared",
+        address: nationPassportNFT,
+        abi: PassportNFT,
+        functionName: 'setSigner',
+        args: [BigNumber.from(id), signer],
+    })
 }

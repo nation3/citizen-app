@@ -1,4 +1,4 @@
-import { BigNumber, ethers } from 'ethers'
+import { BigNumber, BigNumberish, ethers } from 'ethers'
 
 function stringToNumber(string: any, decimals: any) {
   return Number(string).toFixed(decimals)
@@ -11,7 +11,7 @@ export enum NumberType {
 }
 
 export function transformNumber(
-  num: number | BigNumber | string,
+  num: BigNumberish,
   to: NumberType,
   decimals = 18
 ): BigNumber | string | number {

@@ -1,96 +1,119 @@
 import { useMemo } from 'react'
-import VotingEscrow from '../abis/VotingEscrow.json'
+import VotingEscrow from '../abis/VotingEscrow'
 import { veNationToken } from '../lib/config'
-import { useBalance, useContractRead, useContractWrite } from './use-wagmi'
+import { Address, useBalance, useContractRead, useContractWrite } from 'wagmi'
+import { BigNumber, BigNumberish } from 'ethers'
 
-const contractParams = {
-  addressOrName: veNationToken,
-  contractInterface: VotingEscrow.abi,
-}
-
-export function useVeNationBalance(address: any) {
-  return useBalance({
-    addressOrName: address,
-    token: veNationToken,
-    watch: true,
-    enabled: address,
-  })
+export function useVeNationBalance({ address }: { address: Address | undefined }) {
+    return useBalance({
+        addressOrName: address,
+        token: veNationToken,
+        watch: true,
+        enabled: typeof address !== "undefined",
+    })
 }
 
 let gasLimits = {
-  locked: 330000,
-  create_lock: 600000,
-  increase_amount: 600000,
-  increase_unlock_time: 600000,
-  withdraw: 400000,
+    locked: 330000,
+    create_lock: 600000,
+    increase_amount: 600000,
+    increase_unlock_time: 600000,
+    withdraw: 400000,
 }
 
-export function useVeNationLock(address: any) {
-  return useContractRead(contractParams, 'locked', {
-    args: [address],
-    watch: true,
-    enabled: !!address,
-    overrides: {
-      gasLimit: gasLimits.locked,
-    },
-  })
+export function useVeNationLock({ address, enabled = true }: { address: Address | undefined, enabled?: boolean }) {
+    return useContractRead({
+        address: veNationToken,
+        abi: VotingEscrow,
+        functionName: 'locked',
+        args: [address as Address],
+        watch: true,
+        enabled: typeof address !== "undefined" && enabled,
+        overrides: {
+            gasLimit: BigNumber.from(gasLimits.locked),
+        },
+    })
 }
 
-export function useVeNationCreateLock(amount: any, time: any) {
-  return useContractWrite(contractParams, 'create_lock', {
-    args: [amount, time],
-    overrides: {
-      gasLimit: gasLimits.create_lock,
-    },
-  })
-}
+export function useVeNationCreateLock() {
+    const { write, ...args } = useContractWrite({
+        mode: "recklesslyUnprepared",
+        address: veNationToken,
+        abi: VotingEscrow,
+        functionName: 'create_lock',
+        // args: [BigNumber.from(amount), BigNumber.from(time)],
+        overrides: {
+            gasLimit: BigNumber.from(gasLimits.create_lock),
+        },
+    })
 
-export function useVeNationIncreaseLock({
-  newAmount,
-  currentTime,
-  newTime,
-}: any) {
-  const { writeAsync: increaseLockAmount, data: lockAmountData } =
-    useVeNationIncreaseLockAmount(newAmount)
-  const { writeAsync: increaseLockTime, data: lockTimeData } =
-    useVeNationIncreaseLockTime(newTime)
-  return useMemo(() => {
-    if (newAmount && newAmount.gt(0)) {
-      return { writeAsync: increaseLockAmount, data: lockAmountData }
+    const createLock = (amount: BigNumberish, time: BigNumberish) => {
+        return write?.({
+            recklesslySetUnpreparedArgs: [BigNumber.from(amount), BigNumber.from(time)]
+        })
     }
-    if (newTime && currentTime && newTime.gt(currentTime)) {
-      return { writeAsync: increaseLockTime, data: lockTimeData }
+
+    return { createLock, ...args }
+}
+
+export function useVeNationIncreaseLock({ currentAmount, currentTime }: { currentAmount: BigNumber, currentTime: BigNumber }) {
+    const { write: increaseLockAmount } =
+        useVeNationIncreaseLockAmount()
+    const { write: increaseLockTime } =
+        useVeNationIncreaseLockTime()
+
+    const increaseLock = (amount: BigNumberish, time: BigNumberish) => {
+        if (BigNumber.from(amount).gt(currentAmount)) {
+            return increaseLockAmount?.({ recklesslySetUnpreparedArgs: [BigNumber.from(amount)] })
+        }
+        if (BigNumber.from(time).gt(currentTime)) {
+            return increaseLockTime?.({ recklesslySetUnpreparedArgs: [BigNumber.from(time)] })
+        }
     }
-    return {}
-  }, [newAmount, currentTime, newTime, increaseLockAmount, increaseLockTime, lockAmountData, lockTimeData])
+
+    return { increaseLock }
 }
 
-export function useVeNationIncreaseLockAmount(amount: any) {
-  return useContractWrite(contractParams, 'increase_amount', {
-    args: [amount],
-    overrides: {
-      gasLimit: gasLimits.increase_amount,
-    },
-  })
+export function useVeNationIncreaseLockAmount() {
+    return useContractWrite({
+        mode: "recklesslyUnprepared",
+        address: veNationToken,
+        abi: VotingEscrow,
+        functionName: 'increase_amount',
+        overrides: {
+            gasLimit: BigNumber.from(gasLimits.increase_amount),
+        },
+    })
 }
 
-export function useVeNationIncreaseLockTime(time: any) {
-  return useContractWrite(contractParams, 'increase_unlock_time', {
-    args: [time],
-    overrides: {
-      gasLimit: gasLimits.increase_unlock_time,
-    },
-  })
+export function useVeNationIncreaseLockTime() {
+    return useContractWrite({
+        mode: "recklesslyUnprepared",
+        address: veNationToken,
+        abi: VotingEscrow,
+        functionName: 'increase_unlock_time',
+        overrides: {
+            gasLimit: BigNumber.from(gasLimits.increase_unlock_time),
+        },
+    })
 }
 
 export function useVeNationWithdrawLock() {
-  return useContractWrite(contractParams, 'withdraw', {
-    overrides: {
-      gasLimit: gasLimits.withdraw,
-    },
-  })
+    return useContractWrite({
+        mode: "recklesslyUnprepared",
+        address: veNationToken,
+        abi: VotingEscrow,
+        functionName: 'withdraw',
+        overrides: {
+            gasLimit: BigNumber.from(gasLimits.withdraw),
+        },
+    })
 }
 
 export function useVeNationSupply() {
-  return useContractRead(contractParams, 'totalSupply()', {})
+    return useContractRead({
+        address: veNationToken,
+        abi: VotingEscrow,
+        functionName: 'totalSupply'
+    })
 }
