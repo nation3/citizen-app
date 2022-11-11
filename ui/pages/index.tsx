@@ -7,7 +7,12 @@ import {
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
-import { balancerDomain, balancerPoolId, nationToken, veNationRewardsMultiplier } from '../lib/config'
+import {
+  balancerDomain,
+  balancerPoolId,
+  nationToken,
+  veNationRewardsMultiplier,
+} from '../lib/config'
 import GradientLink from '../components/GradientLink'
 import Head from '../components/Head'
 import HomeCard from '../components/HomeCard'
@@ -30,7 +35,7 @@ export default function Index() {
           <br />
           <br />
           Here you can perform on-chain operations related to the Nation3
-          communinity, such as...
+          community, such as...
         </p>
 
         <div className="grid xl:grid-cols-2 mt-2 gap-8">

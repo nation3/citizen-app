@@ -6,16 +6,17 @@ import { useAccount, useNetwork } from '../lib/use-wagmi'
 import ActionNeedsTokenApproval from './ActionNeedsTokenApproval'
 
 export interface ActionButtonProps {
-  className?: string;
-  children: ReactNode;
-  action: any;
-  preAction?: Function;
-  postAction?: Function;
+  className?: string
+  children: ReactNode
+  action: any
+  preAction?: Function
+  postAction?: Function
   approval?: {
-    token: string;
-    spender: string;
-    amountNeeded: BigNumber | number | string;
-    approveText: string;
+    token: string
+    spender: string
+    amountNeeded: BigNumber | number | string
+    approveText: string
+    allowUnlimited?: boolean
   }
 }
 

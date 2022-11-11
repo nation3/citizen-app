@@ -3,21 +3,21 @@ import { useState } from 'react'
 // @ts-ignore
 import Card from 'react-animated-3d-card'
 import { useSignMessage } from 'wagmi'
-import ActionButton from '../components/ActionButton'
-import Confetti from '../components/Confetti'
-import Head from '../components/Head'
-import PassportExpiration from '../components/PassportExpiration'
+import { mobilePassportDomain } from '../lib/config'
 import { usePassportExpirationDate } from '../lib/passport-expiration-hook'
 import {
   usePassport,
   usePassportSigner,
-  useSetPassportSigner
+  useSetPassportSigner,
 } from '../lib/passport-nft'
 import { useAccount } from '../lib/use-wagmi'
+import ActionButton from '../components/ActionButton'
+import Confetti from '../components/Confetti'
+import Head from '../components/Head'
+import PassportExpiration from '../components/PassportExpiration'
 import BallotIcon from '../public/passport/ballot.svg'
 import DiscordIcon from '../public/passport/discord.svg'
 import AddToWallet from '../public/passport/wallet.svg'
-import { mobilePassportDomain } from '../lib/config'
 
 export default function Citizen() {
   const { data: account } = useAccount()
@@ -76,31 +76,36 @@ export default function Citizen() {
                   <Image src={passportData.nft.image} layout="fill" />
                 </Card>
               </div>
-              <div className="card shadow-md flex flex-row xl:flex-col justify-between gap-4 p-4 bg-white h-fit max-w-sm w-full xl:w-fit">
-                <button
-                  onClick={() => signMessageAndDownloadPass()}
-                  className="w-40 xl:w-full"
-                >
-                  <Image src={AddToWallet} layout="responsive" />
-                </button>
-                <a
-                  className="btn btn-primary gap-2 flex-1"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                  href="https://discord.gg/nation3"
-                >
-                  <Image src={DiscordIcon} width={24} height={24} />
-                  <span className="hidden xl:block">Access gated channels</span>
-                </a>
-                <a
-                  className="btn btn-primary gap-2 flex-1"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                  href="https://vote.nation3.org"
-                >
-                  <Image src={BallotIcon} width={24} height={24} />
-                  <span className="hidden xl:block">Vote on proposals</span>
-                </a>
+
+              <div className="card shadow-md flex flex-row flex-col align-center justify-between gap-2 p-4 bg-white h-fit max-w-sm w-full xl:w-fit">
+                <div className="flex xl:flex-col w-full gap-2 justify-center">
+                  <button
+                    onClick={() => signMessageAndDownloadPass()}
+                    className="w-40 xl:w-full"
+                  >
+                    <Image src={AddToWallet} layout="responsive" />
+                  </button>
+                  <a
+                    className="btn btn-primary gap-2 flex-1"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                    href="https://discord.gg/nation3"
+                  >
+                    <Image src={DiscordIcon} width={24} height={24} />
+                    <span className="hidden xl:block">
+                      Access gated channels
+                    </span>
+                  </a>
+                  <a
+                    className="btn btn-primary gap-2 flex-1"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                    href="https://vote.nation3.org"
+                  >
+                    <Image src={BallotIcon} width={24} height={24} />
+                    <span className="hidden xl:block">Vote on proposals</span>
+                  </a>
+                </div>
                 <PassportExpiration date={passportExpirationDate} />
               </div>
             </div>

@@ -9,34 +9,37 @@ function ErrorProvider({ children }: any) {
   let [count, setCount] = useState(0)
   const { activeChain } = useNetwork()
 
-  const addError = useCallback((newErrors: any) => {
-    if (
-      newErrors &&
-      newErrors[0] &&
-      activeChain?.id &&
-      activeChain.id == networkToId(process.env.NEXT_PUBLIC_CHAIN)
-    ) {
-      for (let error of newErrors) {
-        console.error(error)
-        if (error instanceof Error) {
-          error = JSON.parse(
-            JSON.stringify(error, Object.getOwnPropertyNames(error))
-          )
-          // Don't add the error if it's "invalid address or ENS name",
-          // no idea why those errors appear in the first place.
-          if (
-            error.code &&
-            (error.code === 'INVALID_ARGUMENT' ||
-              error.code === 'MISSING_ARGUMENT')
-          ) {
-            return
+  const addError = useCallback(
+    (newErrors: any) => {
+      if (
+        newErrors &&
+        newErrors[0] &&
+        activeChain?.id &&
+        activeChain.id == networkToId(process.env.NEXT_PUBLIC_CHAIN)
+      ) {
+        for (let error of newErrors) {
+          console.error(error)
+          if (error instanceof Error) {
+            error = JSON.parse(
+              JSON.stringify(error, Object.getOwnPropertyNames(error))
+            )
+            // Don't add the error if it's "invalid address or ENS name",
+            // no idea why those errors appear in the first place.
+            if (
+              error.code &&
+              (error.code === 'INVALID_ARGUMENT' ||
+                error.code === 'MISSING_ARGUMENT')
+            ) {
+              return
+            }
           }
+          setErrors((prev) => [...prev, { key: prev.length, ...error }])
+          setCount((prev) => prev + 1)
         }
-        setErrors((prev) => [...prev, {key: prev.length, ...error}]);
-        setCount((prev) => prev + 1)
       }
-    }
-  }, [activeChain?.id]);
+    },
+    [activeChain?.id]
+  )
 
   const removeError = (key: any) => {
     if (key > -1) {

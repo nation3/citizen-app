@@ -1,11 +1,11 @@
-import { ClockIcon } from '@heroicons/react/24/outline';
-import { dateToReadable } from '../lib/date';
+import { ClockIcon } from '@heroicons/react/24/outline'
+import { dateToReadable } from '../lib/date'
 
 interface Props {
-  date: Date | undefined;
+  date: Date | undefined
 }
 
-export default function PassportExpiration({date}: Props) {
+export default function PassportExpiration({ date }: Props) {
   return (
     <div className="stat">
       <div className="stat-figure">
@@ -13,7 +13,7 @@ export default function PassportExpiration({date}: Props) {
       </div>
       <div className="stat-title">Passport expiration date</div>
       <div className="stat-value">
-        {!!date ? (date > new Date()) ? dateToReadable(date) : 'Expired' : '-'}
+        {!!date ? (date > new Date() ? dateToReadable(date) : 'Expired') : '-'}
       </div>
     </div>
   )

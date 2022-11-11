@@ -1,28 +1,37 @@
 import {
   ClockIcon,
-  InformationCircleIcon, LockClosedIcon, SparklesIcon
+  InformationCircleIcon,
+  ExclamationTriangleIcon,
+  LockClosedIcon,
+  SparklesIcon,
 } from '@heroicons/react/24/outline'
 import { BigNumber, ethers } from 'ethers'
 import { useEffect, useMemo, useState } from 'react'
-import ActionButton, { ActionButtonProps } from '../components/ActionButton'
-import Balance from '../components/Balance'
-import EthersInput from '../components/EthersInput'
-import GradientLink from '../components/GradientLink'
-import Head from '../components/Head'
-import MainCard from '../components/MainCard'
-import TimeRange from '../components/TimeRange'
 import {
-  nationToken, nationPassportRequiredBalance,
-  veNationRewardsMultiplier, veNationToken
+  nationToken,
+  nationPassportRequiredBalance,
+  veNationRewardsMultiplier,
+  veNationToken,
 } from '../lib/config'
 import { dateToReadable } from '../lib/date'
 import { useNationBalance } from '../lib/nation-token'
 import { NumberType, transformNumber } from '../lib/numbers'
 import { useAccount } from '../lib/use-wagmi'
 import {
-  useVeNationBalance, useVeNationCreateLock,
-  useVeNationIncreaseLock, useVeNationLock, useVeNationWithdrawLock
+  useVeNationBalance,
+  useVeNationCreateLock,
+  useVeNationIncreaseLock,
+  useVeNationLock,
+  useVeNationWithdrawLock,
 } from '../lib/ve-token'
+import ActionButton, { ActionButtonProps } from '../components/ActionButton'
+import { AllowanceWarning } from '../components/AllowanceWarning'
+import Balance from '../components/Balance'
+import EthersInput from '../components/EthersInput'
+import GradientLink from '../components/GradientLink'
+import Head from '../components/Head'
+import MainCard from '../components/MainCard'
+import TimeRange from '../components/TimeRange'
 
 const bigNumberToDate = (bigNumber: any) => {
   return bigNumber && new Date(bigNumber.mul(1000).toNumber())
@@ -93,7 +102,7 @@ export default function Lock() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [veNationLock])
 
-  const [lockAmount, setLockAmount] = useState<string>("")
+  const [lockAmount, setLockAmount] = useState<string>('')
 
   const oneWeekOut = useMemo(() => dateOut(new Date(), { days: 7 }), [])
 
@@ -115,17 +124,17 @@ export default function Lock() {
         formatted: dateToReadable(bigNumberToDate(veNationLock[1])),
       }
       !lockTime.orig &&
-      setLockTime({
-        ...origTime,
-        orig: origTime,
-      })
+        setLockTime({
+          ...origTime,
+          orig: origTime,
+        })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasLock, veNationLock])
 
   useEffect(() => {
     if (hasLock && veNationLock) {
-      const originalLockDate = dateToReadable(bigNumberToDate(veNationLock[1]));
+      const originalLockDate = dateToReadable(bigNumberToDate(veNationLock[1]))
       setMinMaxLockTime({
         min: originalLockDate,
         max: dateToReadable(dateOut(new Date(), { years: 4 })),
@@ -164,23 +173,24 @@ export default function Lock() {
 
   const withdraw = useVeNationWithdrawLock()
 
-  const approval = useMemo<ActionButtonProps['approval']>(() => ({
-    token: nationToken,
-    spender: veNationToken,
-    amountNeeded:
-      hasLock && veNationLock && veNationLock[0]
-        ? (
-            transformNumber(
-              lockAmount ?? '0',
-              NumberType.bignumber
-            ) as BigNumber
-          ).sub(veNationLock[0])
-        : transformNumber(
-            lockAmount ?? '0',
-            NumberType.bignumber
-          ),
-    approveText: 'Approve $NATION',
-  }), [hasLock, veNationLock, lockAmount])
+  const approval = useMemo<ActionButtonProps['approval']>(
+    () => ({
+      token: nationToken,
+      spender: veNationToken,
+      amountNeeded:
+        hasLock && veNationLock && veNationLock[0]
+          ? (
+              transformNumber(
+                lockAmount ?? '0',
+                NumberType.bignumber
+              ) as BigNumber
+            ).sub(veNationLock[0])
+          : transformNumber(lockAmount ?? '0', NumberType.bignumber),
+      approveText: 'Approve $NATION',
+      allowUnlimited: false,
+    }),
+    [hasLock, veNationLock, lockAmount]
+  )
 
   return (
     <>
@@ -213,22 +223,27 @@ export default function Lock() {
               will be needed to mint a passport NFT.
               <br />
               <br />
-              Some examples of how to get to {nationPassportRequiredBalance} $veNATION:
+              Some examples of how to get to {
+                nationPassportRequiredBalance
+              }{' '}
+              $veNATION:
             </p>
 
             <ul className="list-disc list-inside mb-4">
               <li>
-                At least {nationPassportRequiredBalance as unknown as number} $NATION
-                locked for 4 years, or
+                At least {nationPassportRequiredBalance as unknown as number}{' '}
+                $NATION locked for 4 years, or
               </li>
 
               <li>
-                At least {(nationPassportRequiredBalance as unknown as number) * 2}{' '}
+                At least{' '}
+                {(nationPassportRequiredBalance as unknown as number) * 2}{' '}
                 $NATION locked for 2 years, or
               </li>
 
               <li>
-                At least {(nationPassportRequiredBalance as unknown as number) * 4}{' '}
+                At least{' '}
+                {(nationPassportRequiredBalance as unknown as number) * 4}{' '}
                 $NATION locked for 1 year
               </li>
             </ul>
@@ -238,10 +253,11 @@ export default function Lock() {
                 <InformationCircleIcon className="h-24 w-24 text-n3blue" />
                 <span>
                   We suggest you to obtain at least{' '}
-                  {nationPassportRequiredBalance || 0 + 0.5} $veNATION if you want to
-                  mint a passport NFT, since $veNATION balance drops over time.
-                  If it falls below the required threshold, your passport can be
-                  revoked. You can always lock more $NATION later.
+                  {nationPassportRequiredBalance || 0 + 0.5} $veNATION if you
+                  want to mint a passport NFT, since $veNATION balance drops
+                  over time. If it falls below the required threshold, your
+                  passport can be revoked. You can always lock more $NATION
+                  later.
                 </span>
               </div>
             </div>
@@ -351,7 +367,7 @@ export default function Lock() {
                             ? ethers.utils.formatEther(
                                 veNationLock[0].add(nationBalance?.value)
                               )
-                            : (nationBalance?.formatted || '')
+                            : nationBalance?.formatted || ''
                         )
                         setWantsToIncrease(true)
                       }}
@@ -364,7 +380,9 @@ export default function Lock() {
                       Lock expiration date
                       <br />
                       <span className="text-xs">
-                        { hasLock && veNationLock ? "Maximum four years from now." : "Minimum one week, maximum four years from now."}
+                        {hasLock && veNationLock
+                          ? 'Maximum four years from now.'
+                          : 'Minimum one week, maximum four years from now.'}
                       </span>
                     </span>
                   </label>
@@ -377,7 +395,7 @@ export default function Lock() {
                     max={minMaxLockTime.max}
                     onChange={(e: any) => {
                       if (e.target.value < minMaxLockTime.min) {
-                        return false;
+                        return false
                       }
                       setLockTime({
                         ...lockTime,
@@ -459,6 +477,7 @@ export default function Lock() {
                 </>
               )}
             </div>
+            <AllowanceWarning token={nationToken} spender={veNationToken} />
           </div>
         </div>
       </MainCard>
