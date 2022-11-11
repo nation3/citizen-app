@@ -23,9 +23,8 @@ export function provider() {
       `Provider: Connected to the external provider on chain ${process.env.NEXT_PUBLIC_CHAIN}`
     )
     return ethers.getDefaultProvider(process.env.NEXT_PUBLIC_CHAIN, {
-      infura: process.env.INFURA_ID,
-      alchemy: process.env.ALCHEMY_ID,
-      etherscan: process.env.ETHERSCAN_ID,
+      infura: process.env.NEX_PUBLIC_INFURA_ID,
+      alchemy: process.env.NEXT_PUBLIC_ALCHEMY_ID,
       quorum: 1,
     });
   }
@@ -40,6 +39,10 @@ export const connectors = [
     chains,
     options: {
       qrcode: true,
+      rpc: {
+          1: `https://eth-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_ID}`,
+          5: `https://eth-goerli.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_ID}`,
+      }
     },
   }),
   new CoinbaseWalletConnector({
