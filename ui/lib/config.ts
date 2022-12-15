@@ -18,7 +18,6 @@ interface DeploymentConfig {
 interface Config {
   nationToken: string,
   veNationToken: string,
-  veNationRewardsMultiplier: number,
   balancerDomain: string,
   balancerVault: string,
   balancerPoolId: string,
@@ -39,7 +38,6 @@ const defaultConfig = require(`../../contracts/deployments/${chain}.json`) as De
 const config: Config = {
   nationToken: defaultConfig.nationToken || zeroAddress,
   veNationToken: defaultConfig.veNationToken || zeroAddress,
-  veNationRewardsMultiplier: 2.5,
   balancerDomain: chain === 'goerli' ? 'https://goerli.balancer.fi' : 'https://app.balancer.fi',
   balancerVault: defaultConfig.balancerVault || zeroAddress,
   balancerPoolId: defaultConfig.balancerPoolId || zeroAddress,
@@ -60,7 +58,6 @@ console.log(config)
 export const {
   nationToken,
   veNationToken,
-  veNationRewardsMultiplier,
   balancerDomain,
   balancerVault,
   balancerPoolId,

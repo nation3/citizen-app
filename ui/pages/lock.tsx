@@ -10,7 +10,6 @@ import { useEffect, useMemo, useState } from 'react'
 import {
   nationToken,
   nationPassportRequiredBalance,
-  veNationRewardsMultiplier,
   veNationToken,
 } from '../lib/config'
 import { dateToReadable } from '../lib/date'
@@ -198,8 +197,7 @@ export default function Lock() {
 
       <MainCard title="Lock $NATION to get $veNATION">
         <p className="mb-4">
-          $veNATION enables governance, minting passport NFTs and boosting
-          liquidity rewards (up to {veNationRewardsMultiplier}x).{' '}
+          $veNATION enables governance and minting passport NFTs.{' '}
           <GradientLink
             text="Learn more"
             href="https://wiki.nation3.org/token/#venation"

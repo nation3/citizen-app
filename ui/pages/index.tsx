@@ -1,6 +1,5 @@
 import {
   UserPlusIcon,
-  CurrencyDollarIcon,
   LockClosedIcon,
   PlusIcon,
 } from '@heroicons/react/24/outline'
@@ -9,9 +8,7 @@ import Link from 'next/link'
 import React from 'react'
 import {
   balancerDomain,
-  balancerPoolId,
   nationToken,
-  veNationRewardsMultiplier,
 } from '../lib/config'
 import GradientLink from '../components/GradientLink'
 import Head from '../components/Head'
@@ -65,29 +62,6 @@ export default function Index() {
             <p>
               Once you have $veNATION, you can claim a passport. Only 420
               Genesis passports will be launched in the beginning.
-            </p>
-          </HomeCard>
-
-          <HomeCard
-            href="/liquidity"
-            icon={
-              <CurrencyDollarIcon className="h-5 w-5 absolute right-8 text-n3blue" />
-            }
-            title="Earn LP rewards"
-            linkText="Provide liquidity"
-          >
-            <p>
-              Provide liquidity in the{' '}
-              <a
-                href={`${balancerDomain}/#/pool/${balancerPoolId}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-n3blue"
-              >
-                80% $NATION / 20% $ETH Balancer pool
-              </a>{' '}
-              and earn liquidity rewards. Boost your APY by $
-              {veNationRewardsMultiplier}x by having $veNATION.
             </p>
           </HomeCard>
 
