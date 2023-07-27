@@ -59,7 +59,7 @@ const navigation = [
   },
   {
     name: 'Buy $NATION',
-    href: `${balancerDomain}/#/trade/ether/${nationToken}`,
+    href: `${balancerDomain}/#/ethereum/swap/ether/${nationToken}`,
     icon: <PlusIcon className="h-5 w-5" />,
   },
   {
