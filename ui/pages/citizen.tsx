@@ -41,13 +41,7 @@ export default function Citizen() {
       console.error('signMessageAndDownloadPass error:', error)
     },
   })
-
-  const [passportSigner, setPassportSigner] = useState(passportSignerData)
-  const updatePassportSigner = useSetPassportSigner(
-    passportData?.id,
-    passportSigner
-  )
-
+  
   const passportExpirationDate = usePassportExpirationDate()
 
   return (
