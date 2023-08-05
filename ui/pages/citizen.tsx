@@ -109,41 +109,6 @@ export default function Citizen() {
                 <PassportExpiration date={passportExpirationDate} />
               </div>
             </div>
-            <div className="card shadow-md p-4 bg-white mt-8 mx-4 lg:mx-32 max-w-sm xl:max-w-full">
-              <div className="form-control w-full">
-                <h2 className="text-xl">Settings</h2>
-                <label className="label">
-                  <span className="label-text">
-                    Signer account
-                    <br />
-                    <span className="text-xs">
-                      You can specify another account as a signer. This feature
-                      will be used in the future so you can participate in votes
-                      on the go, or authenticate yourself at in-person events
-                      without carrying your main private key.
-                    </span>
-                  </span>
-                </label>
-                <input
-                  type="text"
-                  placeholder="Passport signer"
-                  className="input input-bordered w-full"
-                  value={passportSigner}
-                  onChange={(e: any) => {
-                    setPassportSigner(e.target.value)
-                  }}
-                />
-
-                <div className="card-actions mt-4">
-                  <ActionButton
-                    className="btn btn-primary normal-case font-medium w-full"
-                    action={updatePassportSigner}
-                  >
-                    Set passport signer
-                  </ActionButton>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       ) : (
