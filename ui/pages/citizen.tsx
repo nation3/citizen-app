@@ -7,8 +7,6 @@ import { mobilePassportDomain } from '../lib/config'
 import { usePassportExpirationDate } from '../lib/passport-expiration-hook'
 import {
   usePassport,
-  usePassportSigner,
-  useSetPassportSigner,
 } from '../lib/passport-nft'
 import { useAccount } from '../lib/use-wagmi'
 import ActionButton from '../components/ActionButton'
@@ -22,7 +20,6 @@ import AddToWallet from '../public/passport/wallet.svg'
 export default function Citizen() {
   const { data: account } = useAccount()
   const { data: passportData } = usePassport(account?.address)
-  const { data: passportSignerData } = usePassportSigner(passportData?.id)
   const [confettiNumber, setConfettiNumber] = useState<Array<Number>>([])
 
   const addConfetti = () => {
@@ -41,7 +38,7 @@ export default function Citizen() {
       console.error('signMessageAndDownloadPass error:', error)
     },
   })
-  
+
   const passportExpirationDate = usePassportExpirationDate()
 
   return (
