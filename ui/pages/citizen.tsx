@@ -5,13 +5,8 @@ import Card from 'react-animated-3d-card'
 import { useSignMessage } from 'wagmi'
 import { mobilePassportDomain } from '../lib/config'
 import { usePassportExpirationDate } from '../lib/passport-expiration-hook'
-import {
-  usePassport,
-  usePassportSigner,
-  useSetPassportSigner,
-} from '../lib/passport-nft'
+import { usePassport } from '../lib/passport-nft'
 import { useAccount } from '../lib/use-wagmi'
-import ActionButton from '../components/ActionButton'
 import Confetti from '../components/Confetti'
 import Head from '../components/Head'
 import PassportExpiration from '../components/PassportExpiration'
@@ -22,7 +17,6 @@ import AddToWallet from '../public/passport/wallet.svg'
 export default function Citizen() {
   const { data: account } = useAccount()
   const { data: passportData } = usePassport(account?.address)
-  const { data: passportSignerData } = usePassportSigner(passportData?.id)
   const [confettiNumber, setConfettiNumber] = useState<Array<Number>>([])
 
   const addConfetti = () => {
@@ -41,12 +35,6 @@ export default function Citizen() {
       console.error('signMessageAndDownloadPass error:', error)
     },
   })
-
-  const [passportSigner, setPassportSigner] = useState(passportSignerData)
-  const updatePassportSigner = useSetPassportSigner(
-    passportData?.id,
-    passportSigner
-  )
 
   const passportExpirationDate = usePassportExpirationDate()
 
