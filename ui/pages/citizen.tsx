@@ -109,20 +109,6 @@ export default function Citizen() {
                 <PassportExpiration date={passportExpirationDate} />
               </div>
             </div>
-            <div className="card shadow-md p-4 bg-white mt-8 mx-4 lg:mx-32 max-w-sm xl:max-w-full">
-              <div className="form-control w-full">
-                <h2 className="text-xl">Settings</h2>
-
-                <div className="card-actions mt-4">
-                  <ActionButton
-                    className="btn btn-primary normal-case font-medium w-full"
-                    action={updatePassportSigner}
-                  >
-                    Set passport signer
-                  </ActionButton>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       ) : (
