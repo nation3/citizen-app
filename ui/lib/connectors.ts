@@ -38,6 +38,7 @@ export const connectors = [
   new WalletConnectConnector({
     chains,
     options: {
+      projectId: process.env.WALLETCONNECT_PROJECT_ID,
       qrcode: true,
       rpc: {
           1: `https://eth-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_ID}`,
