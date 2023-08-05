@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { useNft } from 'use-nft'
-import PassportNFT from '../abis/Passport.json'
 import PassportIssuer from '../abis/PassportIssuer.json'
 import { nationPassportNFT, nationPassportNFTIssuer } from './config'
 import { useContractRead, useContractWrite } from './use-wagmi'
