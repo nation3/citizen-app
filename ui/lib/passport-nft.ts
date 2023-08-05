@@ -58,31 +58,3 @@ export function usePassport(address: any) {
   const { loading, nft } = useNft(nationPassportNFT || '', id)
   return { data: { id, nft }, isLoading: loadingID || loading }
 }
-
-export function usePassportSigner(id: number) {
-  return useContractRead(
-    {
-      addressOrName: nationPassportNFT,
-      contractInterface: PassportNFT.abi,
-    },
-    'signerOf',
-    {
-      args: [id],
-      watch: true,
-      enable: id,
-    }
-  )
-}
-
-export function useSetPassportSigner(id: number, signerAddress: string) {
-  return useContractWrite(
-    {
-      addressOrName: nationPassportNFT,
-      contractInterface: PassportNFT.abi,
-    },
-    'setSigner',
-    {
-      args: [id, signerAddress],
-    }
-  )
-}
