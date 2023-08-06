@@ -1,5 +1,8 @@
 import { ethers } from 'ethers'
-import { chain } from 'wagmi'
+import { configureChains, createClient } from 'wagmi'
+import { mainnet, goerli, hardhat } from 'wagmi/chains'
+import { alchemyProvider } from 'wagmi/providers/alchemy'
+import { publicProvider } from 'wagmi/providers/public'
 import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet'
 import { InjectedConnector } from 'wagmi/connectors/injected'
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
@@ -9,9 +12,13 @@ import MetaMaskIcon from '../public/icons/connectors/metamask.svg'
 import WalletConnectIcon from '../public/icons/connectors/walletconnect.svg'
 import { networkToId } from './network-id'
 
-const chains = [chain.mainnet, chain.goerli, chain.hardhat]
+const { chains } = configureChains(
+  [mainnet, goerli, hardhat],
+  [alchemyProvider({ apiKey: 'yourAlchemyApiKey' }), publicProvider()],
+)
 
 export function provider() {
+
   if (process.env.NEXT_PUBLIC_CHAIN === 'local') {
     console.log('Provider: Connected to localhost provider')
     return new ethers.providers.JsonRpcProvider(
@@ -38,11 +45,12 @@ export const connectors = [
   new WalletConnectConnector({
     chains,
     options: {
-      qrcode: true,
+      projectId: 'projectId',
+      showQrModal: true,
       rpc: {
-          1: `https://eth-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_ID}`,
-          5: `https://eth-goerli.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_ID}`,
-      }
+        1: `https://eth-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_ID}`,
+        5: `https://eth-goerli.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_ID}`,
+      },
     },
   }),
   new CoinbaseWalletConnector({

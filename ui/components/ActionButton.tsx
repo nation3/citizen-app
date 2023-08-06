@@ -40,7 +40,7 @@ export default function ActionButton({
     postAction && postAction()
   }
 
-  const { activeChain } = useNetwork({})
+  const { activeChain } = useNetwork()
   const { isPreferredNetwork } = usePreferredNetwork()
 
   return (

@@ -23,8 +23,8 @@ export function useAccount(params?: any) {
   return useHandleError(_useAccount(params))
 }
 
-export function useNetwork(params: any) {
-  return useHandleError(_useNetwork(params))
+export function useNetwork() {
+  return useHandleError(_useNetwork())
 }
 
 export function useBalance(params: any) {
@@ -38,7 +38,7 @@ export function useContractRead(
   throwOnRevert?: any
 ) {
   return useHandleError(
-    _useContractRead(config, method, argsAndOverrides),
+    _useContractRead(config),
     throwOnRevert
   )
 }
@@ -50,7 +50,7 @@ export function useContractWrite(
   throwOnRevert?: any
 ) {
   return useHandleError(
-    _useContractWrite(config, method, argsAndOverrides),
+    _useContractWrite(config),
     throwOnRevert
   )
 }
