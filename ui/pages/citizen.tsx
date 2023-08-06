@@ -9,7 +9,6 @@ import {
   usePassport,
 } from '../lib/passport-nft'
 import { useAccount } from '../lib/use-wagmi'
-import ActionButton from '../components/ActionButton'
 import Confetti from '../components/Confetti'
 import Head from '../components/Head'
 import PassportExpiration from '../components/PassportExpiration'
