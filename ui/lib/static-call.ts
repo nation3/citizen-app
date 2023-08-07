@@ -30,7 +30,7 @@ export function useStaticCall({
   })
 
   if (!contract) { 
-    throw new Error("Contract is piece of shit not found.")
+    throw new Error("Contract not found.")
   }
 
   const stringifiedArgs = useMemo(() => JSON.stringify(args), [args]);

@@ -18,7 +18,7 @@ const { chains } = configureChains(
 )
 
 export function provider() {
-
+  
   if (process.env.NEXT_PUBLIC_CHAIN === 'local') {
     console.log('Provider: Connected to localhost provider')
     return new ethers.providers.JsonRpcProvider(
