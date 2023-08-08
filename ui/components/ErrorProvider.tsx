@@ -7,7 +7,7 @@ const ErrorContext = createContext({} as any)
 function ErrorProvider({ children }: any) {
   const [errors, setErrors] = useState([] as any[])
   let [count, setCount] = useState(0)
-  const { activeChain } = useNetwork()
+  const { chain: activeChain } = useNetwork()
 
   const addError = useCallback(
     (newErrors: any) => {
