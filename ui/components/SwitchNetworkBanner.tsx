@@ -12,7 +12,6 @@ type Indexable = {
 }
 
 export default function SwitchNetworkBanner({ newNetwork }: any) {
-  // @ts-expect-error
   const { switchNetwork } = useNetwork()
 
   const capitalized = (network: any) =>
