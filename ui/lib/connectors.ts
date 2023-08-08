@@ -1,15 +1,15 @@
 import { ethers } from 'ethers'
-import { chain } from 'wagmi'
+import { mainnet, goerli } from 'wagmi'
 import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet'
 import { InjectedConnector } from 'wagmi/connectors/injected'
-import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
+import { WalletConnectLegacyConnector } from 'wagmi/connectors/walletConnectLegacy'
 import CoinbaseWalletIcon from '../public/icons/connectors/coinbase.svg'
 import FrameIcon from '../public/icons/connectors/frame.svg'
 import MetaMaskIcon from '../public/icons/connectors/metamask.svg'
 import WalletConnectIcon from '../public/icons/connectors/walletconnect.svg'
 import { networkToId } from './network-id'
 
-const chains = [chain.mainnet, chain.goerli, chain.hardhat]
+const chains = [mainnet, goerli]
 
 export function provider() {
   if (process.env.NEXT_PUBLIC_CHAIN === 'local') {
@@ -35,14 +35,14 @@ export const connectors = [
     chains,
     options: { shimDisconnect: true },
   }),
-  new WalletConnectConnector({
+  new WalletConnectLegacyConnector({
     chains,
     options: {
       qrcode: true,
       rpc: {
           1: `https://eth-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_ID}`,
           5: `https://eth-goerli.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_ID}`,
-      }
+      }, 
     },
   }),
   new CoinbaseWalletConnector({
