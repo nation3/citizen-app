@@ -26,23 +26,25 @@ let gasLimits = {
 }
 
 export function useVeNationLock(address: any) {
-  return useContractRead(contractParams, 'locked', {
-    args: [address],
-    watch: true,
-    enabled: !!address,
-    overrides: {
-      gasLimit: gasLimits.locked,
-    },
-  })
+  return useContractRead(
+    {
+      ...contractParams,
+      watch: true,
+      enabled: !!address,
+    }, 
+    'locked', 
+    [address],
+    { gasLimit: gasLimits.locked }
+  )
 }
 
 export function useVeNationCreateLock(amount: any, time: any) {
-  return useContractWrite(contractParams, 'create_lock', {
-    args: [amount, time],
-    overrides: {
-      gasLimit: gasLimits.create_lock,
-    },
-  })
+  return useContractWrite(
+    contractParams, 
+    'create_lock', 
+    [amount, time],
+    { gasLimit: gasLimits.create_lock },
+  )
 }
 
 export function useVeNationIncreaseLock({
@@ -66,29 +68,29 @@ export function useVeNationIncreaseLock({
 }
 
 export function useVeNationIncreaseLockAmount(amount: any) {
-  return useContractWrite(contractParams, 'increase_amount', {
-    args: [amount],
-    overrides: {
-      gasLimit: gasLimits.increase_amount,
-    },
-  })
+  return useContractWrite(
+    contractParams, 
+    'increase_amount', 
+    [amount],
+    { gasLimit: gasLimits.increase_amount }
+  )
 }
 
 export function useVeNationIncreaseLockTime(time: any) {
-  return useContractWrite(contractParams, 'increase_unlock_time', {
-    args: [time],
-    overrides: {
-      gasLimit: gasLimits.increase_unlock_time,
-    },
-  })
+  return useContractWrite(
+    contractParams, 
+    'increase_unlock_time', 
+    [time],
+    { gasLimit: gasLimits.increase_unlock_time }
+  )
 }
 
 export function useVeNationWithdrawLock() {
-  return useContractWrite(contractParams, 'withdraw', {
-    overrides: {
-      gasLimit: gasLimits.withdraw,
-    },
-  })
+  return useContractWrite(
+    contractParams, 
+    'withdraw', 
+    { gasLimit: gasLimits.withdraw }
+  )
 }
 
 export function useVeNationSupply() {

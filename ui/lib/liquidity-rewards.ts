@@ -12,13 +12,13 @@ import {
 } from './use-wagmi'
 
 const contractParams = {
-  addressOrName: lpRewardsContract,
-  contractInterface: LiquidityRewardsDistributor.abi,
+  address: lpRewardsContract,
+  abi: LiquidityRewardsDistributor.abi,
 }
 
 export function useLiquidityRewards({ nationPrice, poolValue, address }: any) {
   const { data: totalRewards, isLoading: totalRewardsLoading } =
-    useContractRead(contractParams, 'totalRewards', {}, false)
+    useContractRead(contractParams, 'totalRewards', undefined, undefined, false)
   const months = 6
 
   const { data: unclaimedRewards, loading: unclaimedRewardsLoading } =
@@ -31,34 +31,35 @@ export function useLiquidityRewards({ nationPrice, poolValue, address }: any) {
     })
 
   const { data: userDeposit, isLoading: userDepositLoading } = useContractRead(
-    contractParams,
-    'userDeposit',
     {
-      args: [address],
+      ...contractParams,
       watch: true,
       enabled: Boolean(address),
-    }
+    },
+    'userDeposit',
+    [address]
   )
 
   const { data: totalDeposit, isLoading: totalDepositLoading } =
-    useContractRead(contractParams, 'totalDeposit', {}, false)
+    useContractRead(contractParams, 'totalDeposit', undefined, undefined, false)
 
   const { data: lpTokensSupply, isLoading: lpTokensSupplyLoading } =
     useContractRead(
-      { addressOrName: balancerLPToken, contractInterface: ERC20.abi },
+      { address: balancerLPToken, abi: ERC20.abi },
       'totalSupply',
-      {},
+      undefined,
+      undefined,
       false
     )
 
   const { data: userBalance, isLoading: userBalanceLoading } = useContractRead(
-    contractParams,
-    'userBalance',
-    {
-      args: [address],
+    { 
+      ...contractParams,
       watch: true,
       enabled: Boolean(address),
-    }
+    },
+    'userBalance',
+    [address]
   )
 
   const [liquidityRewardsAPY, setLiquidityRewardsAPY] = useState<BigNumber>(
@@ -102,7 +103,7 @@ export function useLiquidityRewards({ nationPrice, poolValue, address }: any) {
 
 export function usePoolTokenBalance(address: any) {
   return useBalance({
-    addressOrName: address,
+    address: address,
     token: balancerLPToken,
     watch: true,
     enabled: address,
@@ -201,27 +202,17 @@ export function useBoostedAPY({ defaultAPY, boostMultiplier }: any) {
 
 // Using Wagmi's contractWrite directly, getting a "no signer connected" error otherwise
 export function useClaimRewards() {
-  return useContractWrite(contractParams, 'claimRewards', {
-    overrides: { gasLimit: 300000 },
-  })
+  return useContractWrite(contractParams, 'claimRewards', undefined, { gasLimit: 300000 })
 }
 
 export function useDeposit(amount: any) {
-  return useContractWrite(contractParams, 'deposit', {
-    args: [amount],
-    overrides: { gasLimit: 300000 },
-  })
+  return useContractWrite(contractParams, 'deposit', [amount], { gasLimit: 300000 })
 }
 
 export function useWithdraw(amount: any) {
-  return useContractWrite(contractParams, 'withdraw', {
-    args: [amount],
-    overrides: { gasLimit: 300000 },
-  })
+  return useContractWrite(contractParams, 'withdraw', [amount], { gasLimit: 300000 })
 }
 
 export function useWithdrawAndClaim() {
-  return useContractWrite(contractParams, 'withdrawAndClaim', {
-    overrides: { gasLimit: 300000 },
-  })
+  return useContractWrite(contractParams, 'withdrawAndClaim', undefined, { gasLimit: 300000 })
 }
