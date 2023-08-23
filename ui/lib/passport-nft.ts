@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { useNft } from 'use-nft'
-import PassportNFT from '../abis/Passport.json'
 import PassportIssuer from '../abis/PassportIssuer.json'
 import { nationPassportNFT, nationPassportNFTIssuer } from './config'
 import { useContractRead, useContractWrite } from './use-wagmi'
@@ -62,28 +61,4 @@ export function usePassport(address: any) {
   console.log(`Passport ID ${id}`)
   const { loading, nft } = useNft(nationPassportNFT || '', id)
   return { data: { id, nft }, isLoading: loadingID || loading }
-}
-
-export function usePassportSigner(id: number) {
-  return useContractRead(
-    {
-      address: nationPassportNFT,
-      abi: PassportNFT.abi,
-      watch: true,
-      enable: id,
-    },
-    'signerOf',
-    [id],
-  )
-}
-
-export function useSetPassportSigner(id: number, signerAddress: string) {
-  return useContractWrite(
-    {
-      address: nationPassportNFT,
-      abi: PassportNFT.abi,
-    },
-    'setSigner',
-    [id, signerAddress],
-  )
 }
