@@ -4,8 +4,8 @@ import { veNationToken } from '../lib/config'
 import { useBalance, useContractRead, useContractWrite } from './use-wagmi'
 
 const contractParams = {
-  addressOrName: veNationToken,
-  contractInterface: VotingEscrow.abi,
+  address: veNationToken,
+  abi: VotingEscrow.abi,
 }
 
 export function useVeNationBalance(address: any) {
@@ -94,5 +94,5 @@ export function useVeNationWithdrawLock() {
 }
 
 export function useVeNationSupply() {
-  return useContractRead(contractParams, 'totalSupply()', {})
+  return useContractRead(contractParams, 'totalSupply')
 }
