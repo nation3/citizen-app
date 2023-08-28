@@ -34,7 +34,7 @@ export function useBalance(params: any) {
 export function useContractRead(
   config: any,
   functionName: any,
-  args: any,
+  args?: any,
   overrides?: any,
   throwOnRevert?: any
 ) {
