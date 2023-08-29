@@ -33,8 +33,7 @@ export function useVeNationLock(address: any) {
       enabled: !!address,
     }, 
     'locked', 
-    [address],
-    { gasLimit: gasLimits.locked }
+    [address]
   )
 }
 
