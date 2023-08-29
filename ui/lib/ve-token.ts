@@ -10,10 +10,10 @@ const contractParams = {
 
 export function useVeNationBalance(address: any) {
   return useBalance({
-    addressOrName: address,
+    address,
     token: veNationToken,
     watch: true,
-    enabled: address,
+    enabled: !!address,
   })
 }
 
