@@ -5,8 +5,8 @@ import { nationPassportNFT, nationPassportNFTIssuer } from './config'
 import { useContractRead, useContractWrite } from './use-wagmi'
 
 const nftIssuerContractParams = {
-  addressOrName: nationPassportNFTIssuer,
-  contractInterface: PassportIssuer.abi,
+  address: nationPassportNFTIssuer,
+  abi: PassportIssuer.abi,
 }
 
 export function useHasPassport(address: any) {
@@ -24,13 +24,14 @@ export function useHasPassport(address: any) {
 
 export function usePassportStatus(address: any) {
   return useContractRead(
-    nftIssuerContractParams,
-    'passportStatus',
     {
-      args: [address],
+      ...nftIssuerContractParams,
       watch: true,
       enabled: Boolean(address),
     },
+    'passportStatus',
+    [address],
+    undefined,
     false
   )
 }
@@ -38,23 +39,26 @@ export function usePassportStatus(address: any) {
 export function useClaimPassport() {
   return useContractWrite(
     {
-      addressOrName: nationPassportNFTIssuer,
-      contractInterface: PassportIssuer.abi,
+      address: nationPassportNFTIssuer,
+      abi: PassportIssuer.abi,
     },
     'claim',
-    {}
+    undefined
   )
 }
 
 export function usePassport(address: any) {
   const { data: id, isLoading: loadingID } = useContractRead(
-    nftIssuerContractParams,
+    {
+      ...nftIssuerContractParams,
+       enable: Boolean(address)
+    },
     'passportId',
-    { args: [address], enable: address },
+    [address],
+    undefined,
     false
   )
   console.log(`Passport ID ${id}`)
   const { loading, nft } = useNft(nationPassportNFT || '', id)
   return { data: { id, nft }, isLoading: loadingID || loading }
 }
-

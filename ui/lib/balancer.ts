@@ -7,13 +7,12 @@ import { useContractRead } from './use-wagmi'
 export function useBalancerPool(id: any) {
   const { data: poolData, isLoading } = useContractRead(
     {
-      addressOrName: balancerVault,
-      contractInterface: BalancerVault.abi,
+      address: balancerVault,
+      abi: BalancerVault.abi,
     },
     'getPoolTokens',
-    {
-      args: id,
-    },
+    [id],
+    undefined,
     process.env.NEXT_PUBLIC_CHAIN === 'mainnet'
   )
 

@@ -6,8 +6,8 @@ import { useVeNationLock } from "./ve-token";
 import { nationPassportRevokeUnderBalance } from "../lib/config";
 
 export function usePassportExpirationDate(): Date | undefined {
-  const { data: account } = useAccount()
-  const { data: veNationLock } = useVeNationLock(account?.address)
+  const { address } = useAccount()
+  const { data: veNationLock } = useVeNationLock(address)
 
   const threshold = ethers.BigNumber.from(String(nationPassportRevokeUnderBalance * 10 ** 18));
     

@@ -13,7 +13,7 @@ import Head from '../components/Head'
 import MainCard from '../components/MainCard'
 
 export default function Liquidity() {
-  const { data: account } = useAccount()
+  const { address } = useAccount()
 
   const {
     poolValue,
@@ -28,7 +28,7 @@ export default function Liquidity() {
   } = useLiquidityRewards({
     nationPrice,
     poolValue,
-    address: account?.address,
+    address,
   })
 
   const withdrawAndClaimRewards = useWithdrawAndClaim()

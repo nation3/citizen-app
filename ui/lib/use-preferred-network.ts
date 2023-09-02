@@ -5,7 +5,7 @@ import { useNetwork } from './use-wagmi'
 const preferredNetwork = process.env.NEXT_PUBLIC_CHAIN
 
 export default function usePreferredNetwork() {
-  const { activeChain } = useNetwork({})
+  const { chain: activeChain } = useNetwork()
 
   const [isPreferredNetwork, setIsPreferredNetwork] = useState(false)
 

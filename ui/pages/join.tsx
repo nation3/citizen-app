@@ -25,14 +25,12 @@ import Head from '../components/Head'
 import MainCard from '../components/MainCard'
 
 export default function Join() {
-  const { data: account } = useAccount()
+  const { address } = useAccount()
   const { data: nationBalance, isLoading: nationBalanceLoading } =
-    useNationBalance(account?.address)
+    useNationBalance(address)
   const { data: veNationBalance, isLoading: veNationBalanceLoading } =
-    useVeNationBalance(account?.address)
-  const { hasPassport, isLoading: hasPassportLoading } = useHasPassport(
-    account?.address
-  )
+    useVeNationBalance(address)
+  const { hasPassport, isLoading: hasPassportLoading } = useHasPassport(address)
 
   const { writeAsync: claim, data: claimData } = useClaimPassport()
   const { isLoading: claimPassportLoading } = useWaitForTransaction({
@@ -41,7 +39,11 @@ export default function Join() {
   const { isLoading: signatureLoading, signTypedData } = useSignAgreement({
     onSuccess: async (signature: string) => {
       const sigs = ethers.utils.splitSignature(signature)
-      const tx = await claim({ args: [sigs.v, sigs.r, sigs.s] })
+      const tx = await claim({
+        recklesslySetUnpreparedArgs: [sigs.v, sigs.r, sigs.s]
+      })
+
+      
       // The signature will be stored permanently on the Ethereum blockchain,
       // so uploading it to IPFS is only a nice to have
       await storeSignature(signature, tx.hash)

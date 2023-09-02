@@ -4,7 +4,7 @@ import { useNetwork } from '../lib/use-wagmi'
 import SwitchNetworkBanner from './SwitchNetworkBanner'
 
 export default function PreferredNetworkWrapper({ children }: any) {
-  const { activeChain } = useNetwork({})
+  const { chain: activeChain } = useNetwork()
   const { isPreferredNetwork, preferredNetwork } = usePreferredNetwork()
 
   return (

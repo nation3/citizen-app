@@ -76,10 +76,10 @@ const navigation = [
 
 export default function Layout({ children }: any) {
   const router = useRouter()
-  const { connectors, connect, error: connectError } = useConnect()
-  const { data: account } = useAccount()
-
-  const { data: ensName } = useEnsName({ address: account?.address ?? '' })
+  const { connectors, connect, error: connectError, data: connectData } = useConnect()
+  const { address } = useAccount()
+  
+  const { data: ensName } = useEnsName({ address: address ?? '' })
   const { disconnect } = useDisconnect()
   const [nav, setNav] = useState(navigation)
   const errorContext = useErrorContext()
@@ -193,18 +193,18 @@ export default function Layout({ children }: any) {
                 ))}
               </ul>
               <ul className="menu p-4 text-base-400">
-                {account?.address ? (
+                {address ? (
                   <li>
                     <label htmlFor="web3-modal">
                       <div className="mask mask-circle cursor-pointer">
-                        <Blockies seed={account?.address} size={12} />
+                        <Blockies seed={address} size={12} />
                       </div>
                       {ensName
                         ? ensName
-                        : `${((account.address as string) ?? '').substring(
+                        : `${((address as string) ?? '').substring(
                             0,
                             6
-                          )}...${account.address.slice(-4)}`}
+                          )}...${address.slice(-4)}`}
                       <ChevronDownIcon className="h-5 w-5 absolute right-4 opacity-50" />
                     </label>
                   </li>
@@ -235,26 +235,26 @@ export default function Layout({ children }: any) {
             ✕
           </label>
 
-          {account ? (
+          {address ? (
             <>
               <h3 className="text-lg font-bold px-4">Account</h3>
 
-              <p className="p-4">Connected to {account.connector?.name}</p>
+              <p className="p-4">Connected to {connectData?.connector?.name}</p>
 
               <ul className="menu bg-base-100 p-2 -m-2 rounded-box">
                 <li key="address">
                   <a
-                    href={`${etherscanDomain}/address/${account.address}`}
+                    href={`${etherscanDomain}/address/${address}`}
                     rel="noreferrer noopener"
                     target="_blank"
                   >
                     <UserIcon className="h-5 w-5" />
                     {ensName
                       ? ensName
-                      : `${((account.address as string) ?? '').substring(
+                      : `${((address as string) ?? '').substring(
                           0,
                           6
-                        )}...${((account.address as string) ?? '').slice(-4)}`}
+                        )}...${((address as string) ?? '').slice(-4)}`}
                   </a>
                 </li>
 
@@ -289,7 +289,7 @@ export default function Layout({ children }: any) {
                   <li key={connector.id}>
                     <button
                       disabled={!connector.ready}
-                      onClick={() => connect(connector)}
+                      onClick={() => connect({connector})}
                     >
                       {(connectorIcons as Indexable)[connector.name] ? (
                         <div className="h-5 w-5">
@@ -348,10 +348,10 @@ export default function Layout({ children }: any) {
     </div>
   )
 
-  if (account?.address) {
+  if (address) {
     return (
       <PassportCheck
-        address={account.address}
+        address={address}
         onPassportChecked={onPassportChecked}
       >
         {layout}

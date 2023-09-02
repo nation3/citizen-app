@@ -9,9 +9,9 @@ interface AllowanceWarningProps {
 }
 
 export const AllowanceWarning = ({ token, spender }: AllowanceWarningProps) => {
-  const { data: account } = useAccount()
+  const { address } = useAccount()
   const { data: tokenAllowance, isLoading: tokenAllowanceLoading } =
-    useTokenAllowance({ token, address: account?.address, spender })
+    useTokenAllowance({ token, address, spender })
 
   const { write: revokeAllowance } = useTokenApproval({
     amountNeeded: BigNumber.from('0'),
