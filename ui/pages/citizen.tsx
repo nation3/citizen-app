@@ -80,7 +80,7 @@ export default function Citizen() {
                     className="btn btn-primary gap-2 flex-1"
                     rel="noopener noreferrer"
                     target="_blank"
-                    href="https://discord.gg/JGfcHKmRMB"
+                    href="https://discord.gg/nation3-690584551239581708"
                   >
                     <Image src={DiscordIcon} width={24} height={24} />
                     <span className="hidden xl:block">
