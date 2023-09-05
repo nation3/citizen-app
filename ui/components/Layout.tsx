@@ -101,7 +101,6 @@ export default function Layout({ children }: any) {
 
   const layout = (
     <div className="mx-auto bg-n3bg font-display">
-      <Script src="https://cdn.splitbee.io/sb.js" />
       <div className="h-screen">
         <div className="navbar bg-base-100 border-slate-100 border-b-2 py-0 pl-0 lg:hidden sticky z-10">
           <div className="navbar-start border-slate-100 pl-0">
