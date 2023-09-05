@@ -226,7 +226,7 @@ export default function Layout({ children }: any) {
 
       <input type="checkbox" id="web3-modal" className="modal-toggle" />
 
-      <label htmlFor="web3-modal" className="modal cursor-pointer">
+      <label htmlFor="web3-modal" className="modal cursor-pointer" style={{zIndex: 1}}>
         <label className="modal-box relative" htmlFor="">
           <label
             htmlFor="web3-modal"
