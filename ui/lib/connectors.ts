@@ -39,7 +39,7 @@ export const connectors = [
     chains,
     options: {
       showQrModal: true,
-      projectId: 'd950f264409921b23751c97b2ee4ae12',
+      projectId: 'de21254f0716238419606243642a9266',
     },
   }),
   new CoinbaseWalletConnector({
