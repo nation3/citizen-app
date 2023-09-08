@@ -1,8 +1,8 @@
 import { ethers } from 'ethers'
-import { mainnet, goerli } from 'wagmi'
+import { mainnet, goerli, configureChains } from 'wagmi'
 import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet'
 import { InjectedConnector } from 'wagmi/connectors/injected'
-import { WalletConnectLegacyConnector } from 'wagmi/connectors/walletConnectLegacy'
+import { WalletConnectConnector } from '@wagmi/core/connectors/walletConnect'
 import CoinbaseWalletIcon from '../public/icons/connectors/coinbase.svg'
 import FrameIcon from '../public/icons/connectors/frame.svg'
 import MetaMaskIcon from '../public/icons/connectors/metamask.svg'
@@ -35,14 +35,11 @@ export const connectors = [
     chains,
     options: { shimDisconnect: true },
   }),
-  new WalletConnectLegacyConnector({
+  new WalletConnectConnector({
     chains,
     options: {
-      qrcode: true,
-      rpc: {
-          1: `https://eth-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_ID}`,
-          5: `https://eth-goerli.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_ID}`,
-      }, 
+      showQrModal: true,
+      projectId: 'de21254f0716238419606243642a9266',
     },
   }),
   new CoinbaseWalletConnector({
