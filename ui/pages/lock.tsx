@@ -60,7 +60,7 @@ const calculateVeNation = ({
   })
   const percentage = (time - vestingStart) / (max - vestingStart)
   const finalVeNationAmount = nationAmount * percentage
-  return finalVeNationAmount.toFixed(finalVeNationAmount > 1 ? 2 : 8)
+  return finalVeNationAmount.toFixed(8)
 }
 
 const calculateVestingStart = ({
