@@ -275,12 +275,7 @@ export default function Lock() {
                   <Balance
                     balance={veNationBalance?.value}
                     loading={veNationBalanceLoading}
-                    decimals={
-                      veNationBalance &&
-                      veNationBalance.value.gt(ethers.utils.parseEther('1'))
-                        ? 2
-                        : 6
-                    }
+                    decimals={6}
                   />
                 </div>
               </div>
