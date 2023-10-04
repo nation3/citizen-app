@@ -227,24 +227,21 @@ export default function Lock() {
               $veNATION:
             </p>
 
+            
             <ul className="list-disc list-inside mb-4">
-              <li>
-                At least {nationPassportRequiredBalance as unknown as number}{' '}
-                $NATION locked for 4 years, or
-              </li>
+             <li>
+               At least {2.01} $NATION locked for 4 years, or
+             </li>
 
-              <li>
-                At least{' '}
-                {(nationPassportRequiredBalance as unknown as number) * 2}{' '}
-                $NATION locked for 2 years, or
-              </li>
+             <li>
+              At least {2.01 * 2} $NATION locked for 2 years, or
+             </li>
 
-              <li>
-                At least{' '}
-                {(nationPassportRequiredBalance as unknown as number) * 4}{' '}
-                $NATION locked for 1 year
-              </li>
+             <li>
+              At least {2.01 * 4} $NATION locked for 1 year
+             </li>
             </ul>
+
 
             <div className="alert mb-4">
               <div>
