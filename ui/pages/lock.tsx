@@ -190,7 +190,6 @@ export default function Lock() {
     }),
     [hasLock, veNationLock, lockAmount]
   )
-
   return (
     <>
       <Head title="$veNATION" />
@@ -406,7 +405,7 @@ export default function Lock() {
                   <TimeRange
                     time={Date.parse(lockTime.formatted)}
                     min={Date.parse(minMaxLockTime.min)}
-                    max={Date.parse(minMaxLockTime.max)}
+                    max={Date.parse(minMaxLockTime.max) + 86400000}
                     displaySteps={!hasLock}
                     onChange={(newDate: any) => {
                       setLockTime({
@@ -428,7 +427,7 @@ export default function Lock() {
                         ),
                         time: Date.parse(lockTime.formatted),
                         lockTime: Date.parse(new Date().toString()),
-                        max: Date.parse(minMaxLockTime.max),
+                        max: Date.parse(minMaxLockTime.max) + 86400000,
                       })}{' '}
                       $veNATION
                     </p>
