@@ -443,8 +443,9 @@ export default function Lock() {
                           <p className="text-red-400">
                             Warning: {veNationAmount} $veNATION will drop to{' '}
                             {parseFloat(veNationAmount) - 0.01} as time passes.
-                            Consider locking {parseFloat(veNationAmount) + 0.1}{' '}
-                            $veNATION if you need exactly {veNationAmount}.
+                            Consider locking {parseFloat(lockAmount) + 0.1}{' '}
+                            $NATION if you need exactly {veNationAmount}{' '}
+                            $veNATION.
                           </p>
                         )}
                     </>
