@@ -50,8 +50,8 @@ const calculateVeNation = ({
   time,
   lockTime,
   max,
-}: any) => {
-  if (!nationAmount) return 0
+}: any): string => {
+  if (!nationAmount) return '0'
 
   const vestingStart = calculateVestingStart({
     nationAmount,
@@ -114,6 +114,17 @@ export default function Lock() {
 
   const [canIncrease, setCanIncrease] = useState({ amount: true, time: true })
   const [wantsToIncrease, setWantsToIncrease] = useState(false)
+
+  const veNationAmount = calculateVeNation({
+    nationAmount: lockAmount && +lockAmount,
+    veNationAmount: transformNumber(
+      veNationBalance?.value || 0,
+      NumberType.number
+    ),
+    time: Date.parse(lockTime.formatted),
+    lockTime: Date.parse(new Date().toString()),
+    max: Date.parse(minMaxLockTime.max),
+  })
 
   useEffect(() => {
     if (hasLock && veNationLock && !wantsToIncrease) {
@@ -251,11 +262,10 @@ export default function Lock() {
                 <InformationCircleIcon className="h-24 w-24 text-n3blue" />
                 <span>
                   We suggest you to obtain at least{' '}
-                  {nationPassportRequiredBalance || 0 + 0.5} $veNATION if you
-                  want to mint a passport NFT, since $veNATION balance drops
-                  over time. If it falls below the required threshold, your
-                  passport can be revoked. You can always lock more $NATION
-                  later.
+                  {nationPassportRequiredBalance + 0.5} $veNATION if you want to
+                  mint a passport NFT, since $veNATION balance drops over time.
+                  If it falls below the required threshold, your passport can be
+                  revoked. You can always lock more $NATION later.
                 </span>
               </div>
             </div>
@@ -423,20 +433,21 @@ export default function Lock() {
                     }}
                   />
                   {wantsToIncrease ? (
-                    <p>
-                      Your final balance will be approx{' '}
-                      {calculateVeNation({
-                        nationAmount: lockAmount && +lockAmount,
-                        veNationAmount: transformNumber(
-                          veNationBalance?.value || 0,
-                          NumberType.number
-                        ),
-                        time: Date.parse(lockTime.formatted),
-                        lockTime: Date.parse(new Date().toString()),
-                        max: Date.parse(minMaxLockTime.max),
-                      })}{' '}
-                      $veNATION
-                    </p>
+                    <>
+                      <p>
+                        Your final balance will be approx {veNationAmount}{' '}
+                        $veNATION
+                      </p>
+                      {Number.isInteger(parseFloat(veNationAmount)) &&
+                        veNationAmount !== '0' && (
+                          <p className="text-red-400">
+                            Warning: {veNationAmount} $veNATION will drop to{' '}
+                            {parseFloat(veNationAmount) - 0.01} as time passes.
+                            Consider locking {parseFloat(veNationAmount) + 0.1}{' '}
+                            $veNATION if you need exactly {veNationAmount}.
+                          </p>
+                        )}
+                    </>
                   ) : (
                     ''
                   )}
