@@ -12,7 +12,7 @@ export default function MainCard({
       {!loading ? (
         <div
           className={
-            !maxWidthClassNames ? 'max-w-md md:max-w-xl' : maxWidthClassNames
+            !maxWidthClassNames ? 'max-w-xxl md:max-w-xxl' : maxWidthClassNames
           }
         >
           <div
