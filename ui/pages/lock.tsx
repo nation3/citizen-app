@@ -229,19 +229,19 @@ export default function Lock() {
 
             <ul className="list-disc list-inside mb-4">
               <li>
-                At least {nationPassportRequiredBalance as unknown as number}{' '}
+                At least {nationPassportRequiredBalance as unknown as number + 0.01}{' '}
                 $NATION locked for 4 years, or
               </li>
 
               <li>
                 At least{' '}
-                {(nationPassportRequiredBalance as unknown as number) * 2}{' '}
+                {(nationPassportRequiredBalance as unknown as number) * 2 + 0.01}{' '}
                 $NATION locked for 2 years, or
               </li>
 
               <li>
                 At least{' '}
-                {(nationPassportRequiredBalance as unknown as number) * 4}{' '}
+                {(nationPassportRequiredBalance as unknown as number) * 4 + 0.01}{' '}
                 $NATION locked for 1 year
               </li>
             </ul>
@@ -251,7 +251,7 @@ export default function Lock() {
                 <InformationCircleIcon className="h-24 w-24 text-n3blue" />
                 <span>
                   We suggest you to obtain at least{' '}
-                  {nationPassportRequiredBalance + 0.1 || 0 + 0.5} $veNATION if you
+                  {nationPassportRequiredBalance + 0.01 || 0 + 0.5} $veNATION if you
                   want to mint a passport NFT, since $veNATION balance drops immediatly and 
                   over time. If it falls below the required threshold, your
                   passport can be revoked. You can always lock more $NATION
