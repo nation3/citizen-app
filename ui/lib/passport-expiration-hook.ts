@@ -1,22 +1,23 @@
-import { ethers } from "ethers";
-import { useMemo } from "react";
-import { getPassportExpirationDate } from "./passport-expiration";
-import { useAccount } from "./use-wagmi";
-import { useVeNationLock } from "./ve-token";
-import { nationPassportRevokeUnderBalance } from "../lib/config";
+import { ethers } from 'ethers'
+import { useMemo } from 'react'
+import { getPassportExpirationDate } from './passport-expiration'
+import { usePassportRevokeUnderBalance } from './passport-nft'
+import { useAccount } from './use-wagmi'
+import { useVeNationLock } from './ve-token'
 
 export function usePassportExpirationDate(): Date | undefined {
   const { address } = useAccount()
   const { data: veNationLock } = useVeNationLock(address)
 
-  const threshold = ethers.BigNumber.from(String(nationPassportRevokeUnderBalance * 10 ** 18));
-    
-  return useMemo(() => {
-      if (!veNationLock) {
-        return undefined;
-      }
+  const threshold = usePassportRevokeUnderBalance()
 
-      const [lockAmount, lockEnd]: [ethers.BigNumber, ethers.BigNumber] = veNationLock;
-      return getPassportExpirationDate(lockAmount, lockEnd, threshold);
-  }, [veNationLock, threshold]);
+  return useMemo(() => {
+    if (!veNationLock) {
+      return undefined
+    }
+
+    const [lockAmount, lockEnd]: [ethers.BigNumber, ethers.BigNumber] =
+      veNationLock
+    return getPassportExpirationDate(lockAmount, lockEnd, threshold)
+  }, [veNationLock, threshold])
 }

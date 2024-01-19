@@ -36,6 +36,16 @@ export function usePassportStatus(address: any) {
   )
 }
 
+export function usePassportRevokeUnderBalance() {
+  return useContractRead(
+    {
+      ...nftIssuerContractParams,
+    },
+    'revokeUnderBalance',
+    undefined
+  )
+}
+
 export function useClaimPassport() {
   return useContractWrite(
     {
@@ -51,7 +61,7 @@ export function usePassport(address: any) {
   const { data: id, isLoading: loadingID } = useContractRead(
     {
       ...nftIssuerContractParams,
-       enable: Boolean(address)
+      enable: Boolean(address),
     },
     'passportId',
     [address],
