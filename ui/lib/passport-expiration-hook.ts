@@ -1,5 +1,5 @@
 import { ethers } from 'ethers'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { getPassportExpirationDate } from './passport-expiration'
 import { usePassportRevokeUnderBalance } from './passport-nft'
 import { useAccount } from './use-wagmi'
@@ -9,7 +9,7 @@ export function usePassportExpirationDate(): Date | undefined {
   const { address } = useAccount()
   const { data: veNationLock } = useVeNationLock(address)
 
-  const threshold = usePassportRevokeUnderBalance()
+  const { data: threshold } = usePassportRevokeUnderBalance()
 
   return useMemo(() => {
     if (!veNationLock) {
