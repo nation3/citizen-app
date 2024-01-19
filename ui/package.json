@@ -2,7 +2,7 @@
   "name": "nation3-app",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "PORT=42069 next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
