@@ -12,7 +12,6 @@ interface DeploymentConfig {
   nationPassportAgreementStatement: string,
   nationPassportAgreementURI: string,
   nationPassportRequiredBalance: string,
-  nationPassportRevokeUnderBalance: string,
 }
 
 interface Config {
@@ -30,11 +29,12 @@ interface Config {
   nationPassportAgreementStatement: string,
   nationPassportAgreementURI: string,
   nationPassportRequiredBalance: number,
-  nationPassportRevokeUnderBalance: number,
 }
 
 const chain = process.env.NEXT_PUBLIC_CHAIN || "goerli";
 const defaultConfig = require(`../../contracts/deployments/${chain}.json`) as DeploymentConfig
+
+    
 const config: Config = {
   nationToken: defaultConfig.nationToken || zeroAddress,
   veNationToken: defaultConfig.veNationToken || zeroAddress,
@@ -50,10 +50,9 @@ const config: Config = {
   nationPassportAgreementStatement: defaultConfig.nationPassportAgreementStatement || "",
   nationPassportAgreementURI: defaultConfig.nationPassportAgreementURI || "",
   nationPassportRequiredBalance: Number(defaultConfig.nationPassportRequiredBalance),
-  nationPassportRevokeUnderBalance: Number(defaultConfig.nationPassportRevokeUnderBalance)
 }
 
-console.log(config)
+ console.log(config)
 
 export const {
   nationToken,
@@ -69,7 +68,5 @@ export const {
   nationPassportNFTIssuer,
   nationPassportAgreementStatement,
   nationPassportAgreementURI,
-  nationPassportRequiredBalance,
-  nationPassportRevokeUnderBalance
+  nationPassportRequiredBalance, 
 } = config
-
