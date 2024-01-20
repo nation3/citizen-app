@@ -9,7 +9,6 @@ export function usePassportExpirationDate(): Date | undefined {
   const { data: veNationLock } = useVeNationLock(address)
 
   const { data: threshold } = usePassportRevokeUnderBalance()
-  console.log(threshold)
 
   return useMemo(() => {
     if (!veNationLock) {
