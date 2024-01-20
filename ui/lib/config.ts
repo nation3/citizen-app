@@ -11,8 +11,7 @@ interface DeploymentConfig {
   nationPassportNFTIssuer: string,
   nationPassportAgreementStatement: string,
   nationPassportAgreementURI: string,
-  nationPassportRequiredBalance: string,
-  nationPassportRevokeUnderBalance: string,
+  nationPassportRequiredBalance: string
 }
 
 interface Config {
@@ -29,8 +28,7 @@ interface Config {
   nationPassportNFTIssuer: string,
   nationPassportAgreementStatement: string,
   nationPassportAgreementURI: string,
-  nationPassportRequiredBalance: number,
-  nationPassportRevokeUnderBalance: number,
+  nationPassportRequiredBalance: number
 }
 
 const chain = process.env.NEXT_PUBLIC_CHAIN || "goerli";
@@ -49,8 +47,7 @@ const config: Config = {
   nationPassportNFTIssuer: defaultConfig.nationPassportNFTIssuer || zeroAddress,
   nationPassportAgreementStatement: defaultConfig.nationPassportAgreementStatement || "",
   nationPassportAgreementURI: defaultConfig.nationPassportAgreementURI || "",
-  nationPassportRequiredBalance: Number(defaultConfig.nationPassportRequiredBalance),
-  nationPassportRevokeUnderBalance: Number(defaultConfig.nationPassportRevokeUnderBalance)
+  nationPassportRequiredBalance: Number(defaultConfig.nationPassportRequiredBalance)
 }
 
 console.log(config)
@@ -70,6 +67,5 @@ export const {
   nationPassportAgreementStatement,
   nationPassportAgreementURI,
   nationPassportRequiredBalance,
-  nationPassportRevokeUnderBalance
 } = config
 
