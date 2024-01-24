@@ -41,6 +41,18 @@ Start the development server:
 yarn dev
 ```
 
+## Testing against the Sepolia Ethereum testnet
+
+Add Sepolia testnet variables to your local development environment:
+```
+cp .env.sepolia .env.local
+```
+
+Start the development server:
+```
+yarn dev
+```
+
 Once you go to http://localhost:42069, you will see the message "Nation3 uses Goerli as its preferred network":
 
 > <img width="966" alt="Screen Shot 2022-05-21 at 11 10 06 AM" src="https://user-images.githubusercontent.com/95955389/169633157-50b239e4-9b4f-484d-a62e-8c3b6627dc29.png">
