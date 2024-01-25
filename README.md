@@ -62,10 +62,9 @@ Once you go to http://localhost:42069, you will see the message "Nation3 uses Se
 
 > <img width="801" alt="Screenshot 2024-01-25 at 13 09 56" src="https://github.com/nation3/app/assets/42999269/6121fde4-8b5c-4f8c-be50-531723121770">
 
-Solve this by switching to the Sepolia Test Network_ in MetaMask:
+Solve this by switching to the Sepolia Test Network in MetaMask:
 
-> <img width="325" alt="Screenshot 2024-01-25 at 13 06 18" src="https://github.com/nation3/app/assets/42999269/635e300f-9673-4fd2-8e1e-458a3f621bc1">
-
+> <img width="315" alt="Screenshot 2024-01-25 at 14 45 18" src="https://github.com/nation3/app/assets/42999269/3331f209-1d48-4b6b-8e71-f1ca53a37394">
 
 ## Run the smart contracts locally
 
