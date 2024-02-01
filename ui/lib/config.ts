@@ -11,8 +11,7 @@ interface DeploymentConfig {
   nationPassportNFTIssuer: string,
   nationPassportAgreementStatement: string,
   nationPassportAgreementURI: string,
-  nationPassportRequiredBalance: string,
-  nationPassportRevokeUnderBalance: string,
+  nationPassportRequiredBalance: string
 }
 
 interface Config {
@@ -29,28 +28,27 @@ interface Config {
   nationPassportNFTIssuer: string,
   nationPassportAgreementStatement: string,
   nationPassportAgreementURI: string,
-  nationPassportRequiredBalance: number,
-  nationPassportRevokeUnderBalance: number,
+  nationPassportRequiredBalance: number
 }
+
 
 const chain = process.env.NEXT_PUBLIC_CHAIN || "goerli";
 const defaultConfig = require(`../../contracts/deployments/${chain}.json`) as DeploymentConfig
 const config: Config = {
   nationToken: defaultConfig.nationToken || zeroAddress,
   veNationToken: defaultConfig.veNationToken || zeroAddress,
-  balancerDomain: chain === 'goerli' ? 'https://goerli.balancer.fi' : 'https://app.balancer.fi',
+  balancerDomain: chain === 'mainnet' ? 'https://app.balancer.fi/#/ethereum' : `https://app.balancer.fi/#/${chain}`,
   balancerVault: defaultConfig.balancerVault || zeroAddress,
   balancerPoolId: defaultConfig.balancerPoolId || zeroAddress,
   balancerLPToken: defaultConfig.balancerLPToken || zeroAddress,
-  etherscanDomain: chain === 'goerli' ? 'https://goerli.etherscan.io' : 'https://etherscan.io',
+  etherscanDomain: chain === 'mainnet' ? 'https://etherscan.io' : `https://${chain}.etherscan.io`,
   lpRewardsContract: defaultConfig.lpRewardsContract || zeroAddress,
-  mobilePassportDomain: chain === 'goerli' ? 'https://mobile-passport-goerli.vercel.app' : 'https://passports.nation3.org',
+  mobilePassportDomain: chain === 'mainnet' ? 'https://passports.nation3.org' : `https://mobile-passport-${chain}.vercel.app`,
   nationPassportNFT: defaultConfig.nationPassportNFT || zeroAddress,
   nationPassportNFTIssuer: defaultConfig.nationPassportNFTIssuer || zeroAddress,
   nationPassportAgreementStatement: defaultConfig.nationPassportAgreementStatement || "",
   nationPassportAgreementURI: defaultConfig.nationPassportAgreementURI || "",
-  nationPassportRequiredBalance: Number(defaultConfig.nationPassportRequiredBalance),
-  nationPassportRevokeUnderBalance: Number(defaultConfig.nationPassportRevokeUnderBalance)
+  nationPassportRequiredBalance: Number(defaultConfig.nationPassportRequiredBalance)
 }
 
 console.log(config)
@@ -70,6 +68,5 @@ export const {
   nationPassportAgreementStatement,
   nationPassportAgreementURI,
   nationPassportRequiredBalance,
-  nationPassportRevokeUnderBalance
 } = config
 

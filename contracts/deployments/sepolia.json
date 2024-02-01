@@ -1,0 +1,10 @@
+{
+ "nationToken": "0x23Ca3002706b71a440860E3cf8ff64679A00C9d7",
+ "veNationToken": "0x8100e77899C24b0F7B516153F84868f850C034BF",
+ "balancerLPToken": "0x6417755C00d5c17DeC196Df00a6F151E448B1471",
+ "lpRewardsContract": "0x534AB4F195Ac166B78d9edCdbeA04802392711aA",
+ "nationPassportNFT": "0x11f30642277A70Dab74C6fAF4170a8b340BE2f98",
+ "nationPassportNFTIssuer": "0xdad32e13E73ce4155a181cA0D350Fee0f2596940",
+ "nationPassportAgreementStatement": "By claiming a Nation3 passport I agree to the terms defined in the following URL",
+ "nationPassportAgreementURI": "https://bafkreiadlf3apu3u7blxw7t2yxi7oyumeuzhoasq7gqmcbaaycq342xq74.ipfs.dweb.link"
+}

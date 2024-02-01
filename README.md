@@ -1,10 +1,7 @@
 # Nation3 App ☁️🇺🇳
 
 ![Vercel](https://vercelbadge.vercel.app/api/nation3/app)
-
-<a href="https://github.com/nation3/app/graphs/contributors" alt="Contributors">
-  <img src="https://img.shields.io/github/contributors/nation3/app" /></a>
-<a href="https://github.com/nation3/app/pulse" alt="Activity">
+<a href="https://github.com/nation3/app/graphs/contributors" alt="Contributors"> <img src="https://img.shields.io/github/contributors/nation3/app" /></a> <a href="https://github.com/nation3/app/pulse" alt="Activity">
   <img src="https://img.shields.io/github/commit-activity/m/nation3/app" /></a>
 
 ---
@@ -49,6 +46,25 @@ Solve this by switching to the _Goerli Test Network_ in MetaMask:
 
 > <img width="328" alt="Screen Shot 2022-05-21 at 11 03 28 AM" src="https://user-images.githubusercontent.com/95955389/169633167-3570d17b-e7a9-4726-a377-e4a4ce455f5e.png">
 
+## Testing against the Sepolia Ethereum testnet
+
+Add Sepolia testnet variables to your local development environment:
+```
+cp .env.sepolia .env.local
+```
+
+Start the development server:
+```
+yarn dev
+```
+
+Once you go to http://localhost:42069, you will see the message "Nation3 uses Sepolia as its preferred network":
+
+> <img width="801" alt="Screenshot 2024-01-25 at 13 09 56" src="https://github.com/nation3/app/assets/42999269/6121fde4-8b5c-4f8c-be50-531723121770">
+
+Solve this by switching to the Sepolia Test Network in MetaMask:
+
+> <img width="315" alt="Screenshot 2024-01-25 at 14 45 18" src="https://github.com/nation3/app/assets/42999269/3331f209-1d48-4b6b-8e71-f1ca53a37394">
 
 ## Run the smart contracts locally
 

@@ -10,6 +10,5 @@
   "nationPassportNFTIssuer": "0x8c16926819AB30B8b29A8E23F5C230d164337093",
   "nationPassportAgreementStatement": "By claiming a Nation3 passport I agree to the terms defined in the following URL",
   "nationPassportAgreementURI": "https://bafkreiadlf3apu3u7blxw7t2yxi7oyumeuzhoasq7gqmcbaaycq342xq74.ipfs.dweb.link",
-  "nationPassportRequiredBalance": 2,
-  "nationPassportRevokeUnderBalance": 1.5
+  "nationPassportRequiredBalance": 2
 }
