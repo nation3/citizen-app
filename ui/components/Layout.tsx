@@ -68,8 +68,8 @@ const navigation = [
     icon: <HomeIcon className="h-5 w-5" />,
   },
   {
-    name: 'Docs',
-    href: 'https://docs.nation3.org',
+    name: 'Wiki',
+    href: 'https://wiki.nation3.org',
     icon: <NewspaperIcon className="h-5 w-5" />,
   },
 ]
