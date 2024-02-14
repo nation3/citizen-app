@@ -6,6 +6,11 @@ test("networkToId goerli", () => {
   expect(actual).toBe(5)
 })
 
+test("networkToId sepolia", () => {
+  const actual = networkToId('sepolia')
+  expect(actual).toBe(11155111)
+})
+
 test("networkToId mainnet", () => {
   const actual = networkToId('mainnet')
   expect(actual).toBe(1)
