@@ -21,7 +21,7 @@
     "daisyui": "^2.13.5",
     "ethers": "^5.7.1",
     "next": "12.1.0",
-    "nft.storage": "^6.3.0",
+    "nft.storage": "^7.1.1",
     "react": "17.0.2",
     "react-animated-3d-card": "^1.0.2",
     "react-blockies": "^1.4.1",
