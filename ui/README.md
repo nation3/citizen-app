@@ -1,4 +1,4 @@
-# Nation3 App UI
+# Nation3 Citizen App UI
 
 https://app.nation3.org
 
