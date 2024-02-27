@@ -26,11 +26,11 @@ The code in this repository is structured into two main parts:
 
 See [ui/README.md](ui/README.md)
 
-## Testing against the Goerli Ethereum testnet
+## Testing against the Sepolia Ethereum testnet
 
-Add Goerli testnet variables to your local development environment:
+Add Sepolia testnet variables to your local development environment:
 ```
-cp .env.goerli .env.local
+cp .env.sepolia .env.local
 ```
 
 Start the development server:
