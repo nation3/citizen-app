@@ -68,6 +68,8 @@ yarn test
 
 [![codecov](https://codecov.io/gh/nation3/citizen-app/branch/main/graph/badge.svg)](https://codecov.io/gh/nation3/citizen-app)
 
+[![codecov](https://codecov.io/gh/nation3/citizen-app/graphs/icicle.svg)](https://codecov.io/gh/nation3/citizen-app)
+
 Run code coverage:
 ```
 yarn test:coverage
