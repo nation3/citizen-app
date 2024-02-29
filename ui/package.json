@@ -1,5 +1,5 @@
 {
-  "name": "nation3-app",
+  "name": "citizen-app",
   "private": true,
   "scripts": {
     "dev": "PORT=42069 next dev",

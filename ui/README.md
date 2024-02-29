@@ -1,4 +1,4 @@
-# Nation3 App UI
+# Nation3 Citizen App UI
 
 https://app.nation3.org
 
@@ -66,7 +66,9 @@ yarn test
 
 ## Code Coverage
 
-[![codecov](https://codecov.io/gh/nation3/app/branch/main/graph/badge.svg)](https://codecov.io/gh/nation3/app)
+[![codecov](https://codecov.io/gh/nation3/citizen-app/branch/main/graph/badge.svg)](https://codecov.io/gh/nation3/citizen-app)
+
+[![codecov](https://codecov.io/gh/nation3/citizen-app/graphs/icicle.svg)](https://codecov.io/gh/nation3/citizen-app)
 
 Run code coverage:
 ```
