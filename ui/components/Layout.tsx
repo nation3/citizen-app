@@ -1,4 +1,5 @@
 import {
+  BanknotesIcon,
   ChevronDownIcon,
   ChevronRightIcon,
   CurrencyDollarIcon,
@@ -62,6 +63,11 @@ const navigation = [
     name: 'Liquidity rewards',
     href: '/liquidity',
     icon: <CurrencyDollarIcon className="h-5 w-5" />,
+  },
+  {
+    name: 'Claim basic income',
+    href: 'https://income.nation3.org',
+    icon: <BanknotesIcon className="h-5 w-5" />,
   },
   {
     name: 'Buy $NATION',
