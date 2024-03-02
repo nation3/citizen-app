@@ -17,3 +17,7 @@
 - [ ] Status checks pass (lint, build, test)
 - [ ] Works with Sepolia
 - [ ] Works with Mainnet
+
+## Are There Admin Tasks?
+
+<!--- Please include any related admin tasks, like adding/changing environment variables in Vercel. -->
