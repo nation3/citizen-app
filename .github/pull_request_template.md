@@ -13,8 +13,8 @@
 <!--- Please describe in detail how you tested your changes. -->
 
 - [ ] Status checks pass (lint, build, test)
-- [ ] Works with Sepolia
-- [ ] Works with Mainnet
+- [ ] Works on Sepolia preview deployment
+- [ ] Works on Mainnet preview deployment
 
 ## Are There Admin Tasks?
 
