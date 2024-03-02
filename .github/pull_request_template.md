@@ -13,3 +13,7 @@
 ## How Has This Been Tested?
 
 <!--- Please describe in detail how you tested your changes. -->
+
+- [ ] Status checks pass (lint, build, test)
+- [ ] Works with Sepolia
+- [ ] Works with Mainnet
