@@ -12,6 +12,7 @@ import {
   PlusIcon,
   UserPlusIcon,
   UserIcon,
+  UsersIcon,
   Squares2X2Icon,
   XCircleIcon,
 } from '@heroicons/react/24/outline'
@@ -46,6 +47,11 @@ const navigation = [
     name: 'Become a citizen',
     href: '/join',
     icon: <UserPlusIcon className="h-5 w-5" />,
+  },
+  {
+    name: 'Citizen directory',
+    href: 'https://citizens.nation3.org',
+    icon: <UsersIcon className="h-5 w-5" />,
   },
   {
     name: 'Lock tokens',
