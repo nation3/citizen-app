@@ -8,7 +8,6 @@ export default function Balance({
   suffix = '',
   decimals = 2,
 }: any) {
-  console.log(balance)
   return (
     <>
       {loading ? (

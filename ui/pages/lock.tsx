@@ -81,7 +81,7 @@ export default function Lock() {
   const { data: claimRequiredBalance, isLoading: claimRequiredBalanceLoading } = useClaimRequiredBalance()
   const requiredBalance = useMemo(() => {
     if (claimRequiredBalanceLoading) {
-      return 0
+      return -1
     }
     return transformNumber(claimRequiredBalance, NumberType.string, 0) as number
   }, [claimRequiredBalance, claimRequiredBalanceLoading])
@@ -221,29 +221,29 @@ export default function Lock() {
               <br />
               <br />
               <span className="font-semibold">
-                {requiredBalance} $veNATION
+                {requiredBalance == -1 ? "..." : requiredBalance} $veNATION
               </span>{' '}
               will be needed to mint a passport NFT.
               <br />
               <br />
-              Some examples of how to get to {requiredBalance} $veNATION:
+              Some examples of how to get to {requiredBalance == -1 ? "..." : requiredBalance} $veNATION:
             </p>
 
             <ul className="list-disc list-inside mb-4">
-              <li>At least {requiredBalance} $NATION locked for 4 years, or</li>
+              <li>At least {requiredBalance == -1 ? "..." : requiredBalance} $NATION locked for 4 years, or</li>
 
               <li>
-                At least {requiredBalance * 2} $NATION locked for 2 years, or
+                At least {requiredBalance == -1 ? "..." : requiredBalance * 2} $NATION locked for 2 years, or
               </li>
 
-              <li>At least {requiredBalance * 4} $NATION locked for 1 year</li>
+              <li>At least {requiredBalance == -1 ? "..." : requiredBalance * 4} $NATION locked for 1 year</li>
             </ul>
 
             <div className="alert mb-4">
               <div>
                 <InformationCircleIcon className="h-24 w-24 text-n3blue" />
                 <span>
-                  We suggest you to obtain at least {requiredBalance || 0 + 0.5}{' '}
+                  We suggest you to obtain at least {(requiredBalance == -1 ? "..." : requiredBalance) || 0 + 0.5}{' '}
                   $veNATION if you want to mint a passport NFT, since $veNATION
                   balance drops over time. If it falls below the required
                   threshold, your passport can be revoked. You can always lock

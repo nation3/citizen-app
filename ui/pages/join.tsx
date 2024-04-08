@@ -37,7 +37,7 @@ export default function Join() {
   const { data: claimRequiredBalance, isLoading: claimRequiredBalanceLoading } = useClaimRequiredBalance()
   const requiredBalance = useMemo(() => {
     if (claimRequiredBalanceLoading) {
-      return 0
+      return -1
     }
     return transformNumber(claimRequiredBalance, NumberType.string, 0) as number
   }, [claimRequiredBalance, claimRequiredBalanceLoading])
@@ -131,7 +131,7 @@ export default function Join() {
             <p>
               To become a citizen, you need to mint a passport NFT by holding at
               least{' '}
-              <span className="font-semibold">{requiredBalance} $veNATION</span>
+              <span className="font-semibold">{requiredBalance == -1 ? "..." : requiredBalance} $veNATION</span>
               . This is to make sure all citizens are economically aligned.
               <br />
               <br />
@@ -154,7 +154,7 @@ export default function Join() {
                   <LockClosedIcon className="h-8 w-8" />
                 </div>
                 <div className="stat-title">Needed balance</div>
-                <div className="stat-value">{requiredBalance}</div>
+                <div className="stat-value">{requiredBalance == -1 ? "..." : requiredBalance}</div>
                 <div className="stat-desc">$veNATION</div>
               </div>
 
