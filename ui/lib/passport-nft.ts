@@ -40,6 +40,7 @@ export function useClaimRequiredBalance() {
   return useContractRead(
     {
       ...nftIssuerContractParams,
+      watch: true,
     },
     'claimRequiredBalance',
     undefined,
