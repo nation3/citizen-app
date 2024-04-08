@@ -233,10 +233,10 @@ export default function Lock() {
               <li>At least {requiredBalance} $NATION locked for 4 years, or</li>
 
               <li>
-                At least {requiredBalance ?? 0 * 2} $NATION locked for 2 years, or
+                At least {requiredBalance * 2} $NATION locked for 2 years, or
               </li>
 
-              <li>At least {requiredBalance ?? 0 * 4} $NATION locked for 1 year</li>
+              <li>At least {requiredBalance * 4} $NATION locked for 1 year</li>
             </ul>
 
             <div className="alert mb-4">
