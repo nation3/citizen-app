@@ -2,10 +2,9 @@ import { LockClosedIcon, SparklesIcon } from '@heroicons/react/24/outline'
 import { ethers } from 'ethers'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useWaitForTransaction } from 'wagmi'
 import {
-  nationPassportRequiredBalance,
   nationToken,
   balancerDomain,
   nationPassportAgreementStatement,
@@ -13,7 +12,7 @@ import {
 } from '../lib/config'
 import { useNationBalance } from '../lib/nation-token'
 import { NumberType, transformNumber } from '../lib/numbers'
-import { useClaimPassport, useHasPassport } from '../lib/passport-nft'
+import { useClaimPassport, useHasPassport, useClaimRequiredBalance } from '../lib/passport-nft'
 import { storeSignature, useSignAgreement } from '../lib/sign-agreement'
 import { useAccount } from '../lib/use-wagmi'
 import { useVeNationBalance } from '../lib/ve-token'
@@ -31,6 +30,14 @@ export default function Join() {
   const { data: veNationBalance, isLoading: veNationBalanceLoading } =
     useVeNationBalance(address)
   const { hasPassport, isLoading: hasPassportLoading } = useHasPassport(address)
+  const { data: claimRequiredBalance } = useClaimRequiredBalance()
+  const requiredBalance = useMemo(() => {
+    return transformNumber(
+      claimRequiredBalance,
+      NumberType.string,
+      0
+    ) as number
+  }, [claimRequiredBalance])
 
   const { writeAsync: claim, data: claimData } = useClaimPassport()
   const { isLoading: claimPassportLoading } = useWaitForTransaction({
@@ -43,7 +50,7 @@ export default function Join() {
         recklesslySetUnpreparedArgs: [sigs.v, sigs.r, sigs.s]
       })
 
-      
+
       // The signature will be stored permanently on the Ethereum blockchain,
       // so uploading it to IPFS is only a nice to have
       await storeSignature(signature, tx.hash)
@@ -79,7 +86,7 @@ export default function Join() {
     setAction({
       mint: veNationBalance.value.gte(
         transformNumber(
-          nationPassportRequiredBalance as unknown as number,
+          claimRequiredBalance as number,
           NumberType.bignumber
         )
       ),
@@ -87,7 +94,7 @@ export default function Join() {
         .mul(4)
         .gte(
           transformNumber(
-            (nationPassportRequiredBalance as unknown as number) / 4,
+            (claimRequiredBalance as number) / 4,
             NumberType.bignumber
           )
         ),
@@ -109,9 +116,8 @@ export default function Join() {
             Lock $NATION
           </li>
           <li
-            className={`step text-sm ${
-              (action.mint && !hasPassport) || hasPassport ? 'step-primary' : ''
-            }`}
+            className={`step text-sm ${(action.mint && !hasPassport) || hasPassport ? 'step-primary' : ''
+              }`}
           >
             Claim passport
           </li>
@@ -126,7 +132,7 @@ export default function Join() {
               To become a citizen, you need to mint a passport NFT by holding at
               least{' '}
               <span className="font-semibold">
-                {nationPassportRequiredBalance} $veNATION
+                {requiredBalance} $veNATION
               </span>
               . This is to make sure all citizens are economically aligned.
               <br />
@@ -151,7 +157,7 @@ export default function Join() {
                 </div>
                 <div className="stat-title">Needed balance</div>
                 <div className="stat-value">
-                  {nationPassportRequiredBalance}
+                  {requiredBalance}
                 </div>
                 <div className="stat-desc">$veNATION</div>
               </div>

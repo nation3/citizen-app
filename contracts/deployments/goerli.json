@@ -1,7 +1,9 @@
 {
   "nationToken": "0x333A4823466879eeF910A04D473505da62142069",
   "veNationToken": "0xF7deF1D2FBDA6B74beE7452fdf7894Da9201065d",
-  "nationDropContracts": ["0xCBbd5a8871E6Cf995305e58168cEaFB0be512c67"],
+  "nationDropContracts": [
+    "0xCBbd5a8871E6Cf995305e58168cEaFB0be512c67"
+  ],
   "balancerVault": "0xba12222222228d8ba445958a75a0704d566bf2c8",
   "balancerPoolId": "0x6f57329d43f3de9ff39d4424576db920b55060b30002000000000000000000d7",
   "balancerLPToken": "0x6f57329d43f3de9ff39d4424576db920b55060b3",
@@ -9,6 +11,5 @@
   "nationPassportNFT": "0x51F728c58697aFf9582cFDe3cBD00EC83E9ae7FC",
   "nationPassportNFTIssuer": "0x8c16926819AB30B8b29A8E23F5C230d164337093",
   "nationPassportAgreementStatement": "By claiming a Nation3 passport I agree to the terms defined in the following URL",
-  "nationPassportAgreementURI": "https://bafkreiadlf3apu3u7blxw7t2yxi7oyumeuzhoasq7gqmcbaaycq342xq74.ipfs.dweb.link",
-  "nationPassportRequiredBalance": 2
+  "nationPassportAgreementURI": "https://bafkreiadlf3apu3u7blxw7t2yxi7oyumeuzhoasq7gqmcbaaycq342xq74.ipfs.dweb.link"
 }
