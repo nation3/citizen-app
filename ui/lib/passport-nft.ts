@@ -36,7 +36,6 @@ export function usePassportStatus(address: any) {
   )
 }
 
-
 export function useClaimRequiredBalance() {
   return useContractRead(
     {
