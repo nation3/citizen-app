@@ -104,6 +104,7 @@ export default function Join() {
     nationBalanceLoading,
     veNationBalance,
     veNationBalanceLoading,
+    claimRequiredBalance,
   ])
 
   return (
