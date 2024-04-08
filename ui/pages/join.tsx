@@ -2,7 +2,7 @@ import { LockClosedIcon, SparklesIcon } from '@heroicons/react/24/outline'
 import { ethers } from 'ethers'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { useEffect,useMemo, useState } from 'react'
 import { useWaitForTransaction } from 'wagmi'
 import {
   nationPassportRequiredBalance,
@@ -13,7 +13,7 @@ import {
 } from '../lib/config'
 import { useNationBalance } from '../lib/nation-token'
 import { NumberType, transformNumber } from '../lib/numbers'
-import { useClaimPassport, useHasPassport } from '../lib/passport-nft'
+import { useClaimPassport, useHasPassport , usePassportclaimRequiredBalance} from '../lib/passport-nft'
 import { storeSignature, useSignAgreement } from '../lib/sign-agreement'
 import { useAccount } from '../lib/use-wagmi'
 import { useVeNationBalance } from '../lib/ve-token'
@@ -50,6 +50,14 @@ export default function Join() {
     },
   })
 
+  const { data: claimRequiredBalance } = usePassportclaimRequiredBalance()
+  const requiredBalance = useMemo(() => {
+    return transformNumber(
+      claimRequiredBalance,
+      NumberType.string,
+      0
+    ) as number
+  }, [claimRequiredBalance])
   const signAndClaim = {
     isLoadingOverride: signatureLoading || claimPassportLoading,
     writeAsync: signTypedData,
@@ -80,7 +88,8 @@ export default function Join() {
       mint: veNationBalance.value.gte(
         transformNumber(
           nationPassportRequiredBalance as unknown as number,
-          NumberType.bignumber
+          claimRequiredBalance as number,
+          NumberType.bignumber,
         )
       ),
       lockAndMint: nationBalance.value
@@ -88,6 +97,7 @@ export default function Join() {
         .gte(
           transformNumber(
             (nationPassportRequiredBalance as unknown as number) / 4,
+            (claimRequiredBalance as number) / 4,
             NumberType.bignumber
           )
         ),
@@ -126,7 +136,7 @@ export default function Join() {
               To become a citizen, you need to mint a passport NFT by holding at
               least{' '}
               <span className="font-semibold">
-                {nationPassportRequiredBalance} $veNATION
+                {requiredBalance} $veNATION
               </span>
               . This is to make sure all citizens are economically aligned.
               <br />
@@ -151,7 +161,7 @@ export default function Join() {
                 </div>
                 <div className="stat-title">Needed balance</div>
                 <div className="stat-value">
-                  {nationPassportRequiredBalance}
+                   {requiredBalance}
                 </div>
                 <div className="stat-desc">$veNATION</div>
               </div>

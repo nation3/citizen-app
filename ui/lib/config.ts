@@ -10,8 +10,7 @@ interface DeploymentConfig {
   nationPassportNFT: string,
   nationPassportNFTIssuer: string,
   nationPassportAgreementStatement: string,
-  nationPassportAgreementURI: string,
-  nationPassportRequiredBalance: string
+  nationPassportAgreementURI: string
 }
 
 interface Config {
@@ -28,7 +27,6 @@ interface Config {
   nationPassportNFTIssuer: string,
   nationPassportAgreementStatement: string,
   nationPassportAgreementURI: string,
-  nationPassportRequiredBalance: number
 }
 
 
@@ -47,8 +45,7 @@ const config: Config = {
   nationPassportNFT: defaultConfig.nationPassportNFT || zeroAddress,
   nationPassportNFTIssuer: defaultConfig.nationPassportNFTIssuer || zeroAddress,
   nationPassportAgreementStatement: defaultConfig.nationPassportAgreementStatement || "",
-  nationPassportAgreementURI: defaultConfig.nationPassportAgreementURI || "",
-  nationPassportRequiredBalance: Number(defaultConfig.nationPassportRequiredBalance)
+  nationPassportAgreementURI: defaultConfig.nationPassportAgreementURI || ""
 }
 
 console.log(config)
@@ -67,6 +64,5 @@ export const {
   nationPassportNFTIssuer,
   nationPassportAgreementStatement,
   nationPassportAgreementURI,
-  nationPassportRequiredBalance,
 } = config
 
