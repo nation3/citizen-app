@@ -5,7 +5,6 @@ import { useRouter } from 'next/router'
 import { useEffect,useMemo, useState } from 'react'
 import { useWaitForTransaction } from 'wagmi'
 import {
-  nationPassportRequiredBalance,
   nationToken,
   balancerDomain,
   nationPassportAgreementStatement,
@@ -87,7 +86,6 @@ export default function Join() {
     setAction({
       mint: veNationBalance.value.gte(
         transformNumber(
-          nationPassportRequiredBalance as unknown as number,
           claimRequiredBalance as number,
           NumberType.bignumber,
         )
@@ -96,7 +94,6 @@ export default function Join() {
         .mul(4)
         .gte(
           transformNumber(
-            (nationPassportRequiredBalance as unknown as number) / 4,
             (claimRequiredBalance as number) / 4,
             NumberType.bignumber
           )
