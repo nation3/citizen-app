@@ -84,7 +84,7 @@ export default function Lock() {
       return
     }
     return transformNumber(claimRequiredBalance, NumberType.string, 0) as number
-  }, [claimRequiredBalance])
+  }, [claimRequiredBalance, claimRequiredBalanceLoading])
 
   const { data: veNationLock, isLoading: veNationLockLoading } =
     useVeNationLock(address)

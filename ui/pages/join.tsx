@@ -40,7 +40,7 @@ export default function Join() {
       return
     }
     return transformNumber(claimRequiredBalance, NumberType.string, 0) as number
-  }, [claimRequiredBalance])
+  }, [claimRequiredBalance, claimRequiredBalanceLoading])
 
   const { writeAsync: claim, data: claimData } = useClaimPassport()
   const { isLoading: claimPassportLoading } = useWaitForTransaction({
