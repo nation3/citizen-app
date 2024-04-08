@@ -8,8 +8,7 @@ import {
 import { BigNumber, ethers } from 'ethers'
 import { useEffect, useMemo, useState } from 'react'
 import {
-  nationToken,
-  nationPassportRequiredBalance,
+  nationToken,  
   veNationToken,
 } from '../lib/config'
 import { dateToReadable } from '../lib/date'
@@ -31,6 +30,7 @@ import GradientLink from '../components/GradientLink'
 import Head from '../components/Head'
 import MainCard from '../components/MainCard'
 import TimeRange from '../components/TimeRange'
+import { useClaimRequiredBalance } from '../lib/passport-nft'
 
 const bigNumberToDate = (bigNumber: any) => {
   return bigNumber && new Date(bigNumber.mul(1000).toNumber())
@@ -114,6 +114,8 @@ export default function Lock() {
 
   const [canIncrease, setCanIncrease] = useState({ amount: true, time: true })
   const [wantsToIncrease, setWantsToIncrease] = useState(false)
+
+  const { data: nationPassportRequiredBalance } = useClaimRequiredBalance()
 
   useEffect(() => {
     if (hasLock && veNationLock && !wantsToIncrease) {

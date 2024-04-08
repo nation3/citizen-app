@@ -72,3 +72,14 @@ export function usePassportRevokeUnderBalance() {
     undefined
   )
 }
+
+
+export function useClaimRequiredBalance() {
+  return useContractRead(
+    {
+      ...nftIssuerContractParams,
+    },
+    'claimRequiredBalance',
+    undefined
+  )
+}

@@ -4,8 +4,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { useWaitForTransaction } from 'wagmi'
-import {
-  nationPassportRequiredBalance,
+import {  
   nationToken,
   balancerDomain,
   nationPassportAgreementStatement,
@@ -13,7 +12,7 @@ import {
 } from '../lib/config'
 import { useNationBalance } from '../lib/nation-token'
 import { NumberType, transformNumber } from '../lib/numbers'
-import { useClaimPassport, useHasPassport } from '../lib/passport-nft'
+import { useClaimPassport, useHasPassport, useClaimRequiredBalance } from '../lib/passport-nft'
 import { storeSignature, useSignAgreement } from '../lib/sign-agreement'
 import { useAccount } from '../lib/use-wagmi'
 import { useVeNationBalance } from '../lib/ve-token'
@@ -49,6 +48,8 @@ export default function Join() {
       await storeSignature(signature, tx.hash)
     },
   })
+
+  const { data: nationPassportRequiredBalance } = useClaimRequiredBalance()
 
   const signAndClaim = {
     isLoadingOverride: signatureLoading || claimPassportLoading,
@@ -97,6 +98,7 @@ export default function Join() {
     nationBalanceLoading,
     veNationBalance,
     veNationBalanceLoading,
+    nationPassportRequiredBalance,
   ])
 
   return (
