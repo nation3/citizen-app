@@ -78,8 +78,11 @@ export default function Lock() {
   const { data: veNationBalance, isLoading: veNationBalanceLoading } =
     useVeNationBalance(address)
 
-  const { data: claimRequiredBalance } = useClaimRequiredBalance()
+  const { data: claimRequiredBalance, isLoading: claimRequiredBalanceLoading } = useClaimRequiredBalance()
   const requiredBalance = useMemo(() => {
+    if (claimRequiredBalanceLoading) {
+      return
+    }
     return transformNumber(claimRequiredBalance, NumberType.string, 0) as number
   }, [claimRequiredBalance])
 
@@ -97,8 +100,8 @@ export default function Lock() {
     !veNationLockLoading &&
       setHasExpired(
         veNationLock &&
-          veNationLock[1] != 0 &&
-          ethers.BigNumber.from(Date.now()).gte(veNationLock[1].mul(1000)),
+        veNationLock[1] != 0 &&
+        ethers.BigNumber.from(Date.now()).gte(veNationLock[1].mul(1000)),
       )
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [veNationLock])
@@ -181,11 +184,11 @@ export default function Lock() {
       amountNeeded:
         hasLock && veNationLock && veNationLock[0]
           ? (
-              transformNumber(
-                lockAmount ?? '0',
-                NumberType.bignumber,
-              ) as BigNumber
-            ).sub(veNationLock[0])
+            transformNumber(
+              lockAmount ?? '0',
+              NumberType.bignumber,
+            ) as BigNumber
+          ).sub(veNationLock[0])
           : transformNumber(lockAmount ?? '0', NumberType.bignumber),
       approveText: 'Approve $NATION',
       allowUnlimited: false,
@@ -230,10 +233,10 @@ export default function Lock() {
               <li>At least {requiredBalance} $NATION locked for 4 years, or</li>
 
               <li>
-                At least {requiredBalance * 2} $NATION locked for 2 years, or
+                At least {requiredBalance ?? 0 * 2} $NATION locked for 2 years, or
               </li>
 
-              <li>At least {requiredBalance * 4} $NATION locked for 1 year</li>
+              <li>At least {requiredBalance ?? 0 * 4} $NATION locked for 1 year</li>
             </ul>
 
             <div className="alert mb-4">
@@ -266,7 +269,7 @@ export default function Lock() {
                     loading={veNationBalanceLoading}
                     decimals={
                       veNationBalance &&
-                      veNationBalance.value.gt(ethers.utils.parseEther('1'))
+                        veNationBalance.value.gt(ethers.utils.parseEther('1'))
                         ? 2
                         : 6
                     }
@@ -352,8 +355,8 @@ export default function Lock() {
                         setLockAmount(
                           veNationLock
                             ? ethers.utils.formatEther(
-                                veNationLock[0].add(nationBalance?.value),
-                              )
+                              veNationLock[0].add(nationBalance?.value),
+                            )
                             : nationBalance?.formatted || '',
                         )
                         setWantsToIncrease(true)
@@ -431,21 +434,18 @@ export default function Lock() {
                   )}
                   <div className="card-actions mt-4">
                     <ActionButton
-                      className={`btn btn-primary normal-case font-medium w-full ${
-                        !(canIncrease.amount || canIncrease.time)
-                          ? 'btn-disabled'
-                          : ''
-                      }`}
+                      className={`btn btn-primary normal-case font-medium w-full ${!(canIncrease.amount || canIncrease.time)
+                        ? 'btn-disabled'
+                        : ''
+                        }`}
                       action={hasLock ? increaseLock : createLock}
                       approval={approval}
                     >
                       {!hasLock
                         ? 'Lock'
-                        : `Increase lock ${
-                            canIncrease.amount ? 'amount' : ''
-                          } ${
-                            canIncrease.amount && canIncrease.time ? '&' : ''
-                          } ${canIncrease.time ? 'time' : ''}`}
+                        : `Increase lock ${canIncrease.amount ? 'amount' : ''
+                        } ${canIncrease.amount && canIncrease.time ? '&' : ''
+                        } ${canIncrease.time ? 'time' : ''}`}
                     </ActionButton>
                   </div>
                 </>

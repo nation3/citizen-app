@@ -34,8 +34,11 @@ export default function Join() {
   const { data: veNationBalance, isLoading: veNationBalanceLoading } =
     useVeNationBalance(address)
   const { hasPassport, isLoading: hasPassportLoading } = useHasPassport(address)
-  const { data: claimRequiredBalance } = useClaimRequiredBalance()
+  const { data: claimRequiredBalance, isLoading: claimRequiredBalanceLoading } = useClaimRequiredBalance()
   const requiredBalance = useMemo(() => {
+    if (claimRequiredBalanceLoading) {
+      return
+    }
     return transformNumber(claimRequiredBalance, NumberType.string, 0) as number
   }, [claimRequiredBalance])
 
@@ -113,9 +116,8 @@ export default function Join() {
             Lock $NATION
           </li>
           <li
-            className={`step text-sm ${
-              (action.mint && !hasPassport) || hasPassport ? 'step-primary' : ''
-            }`}
+            className={`step text-sm ${(action.mint && !hasPassport) || hasPassport ? 'step-primary' : ''
+              }`}
           >
             Claim passport
           </li>
