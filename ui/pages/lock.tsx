@@ -81,7 +81,7 @@ export default function Lock() {
   const { data: claimRequiredBalance, isLoading: claimRequiredBalanceLoading } = useClaimRequiredBalance()
   const requiredBalance = useMemo(() => {
     if (claimRequiredBalanceLoading) {
-      return
+      return 0
     }
     return transformNumber(claimRequiredBalance, NumberType.string, 0) as number
   }, [claimRequiredBalance, claimRequiredBalanceLoading])
