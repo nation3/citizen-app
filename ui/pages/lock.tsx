@@ -1,18 +1,14 @@
 import {
   ClockIcon,
   InformationCircleIcon,
-  ExclamationTriangleIcon,
   LockClosedIcon,
   SparklesIcon,
 } from '@heroicons/react/24/outline'
 import { BigNumber, ethers } from 'ethers'
 import { useEffect, useMemo, useState } from 'react'
-import {
-  nationToken,
-  nationPassportRequiredBalance,
-  veNationToken,
-} from '../lib/config'
+import { nationToken, veNationToken } from '../lib/config'
 import { dateToReadable } from '../lib/date'
+import { GetClaimRequestBalance } from '../lib/helper'
 import { useNationBalance } from '../lib/nation-token'
 import { NumberType, transformNumber } from '../lib/numbers'
 import { useAccount } from '../lib/use-wagmi'
@@ -74,6 +70,8 @@ const calculateVestingStart = ({
 
 export default function Lock() {
   const { address } = useAccount()
+
+  const { data: claimRequestBalance } = GetClaimRequestBalance()
 
   const { data: nationBalance, isLoading: nationBalanceLoading } =
     useNationBalance(address)
@@ -216,32 +214,27 @@ export default function Lock() {
               <br />
               <br />
               <span className="font-semibold">
-                {nationPassportRequiredBalance} $veNATION
+                {claimRequestBalance} $veNATION
               </span>{' '}
               will be needed to mint a passport NFT.
               <br />
               <br />
-              Some examples of how to get to {
-                nationPassportRequiredBalance
-              }{' '}
-              $veNATION:
+              Some examples of how to get to {claimRequestBalance} $veNATION:
             </p>
 
             <ul className="list-disc list-inside mb-4">
               <li>
-                At least {nationPassportRequiredBalance as unknown as number}{' '}
-                $NATION locked for 4 years, or
+                At least {claimRequestBalance as unknown as number} $NATION
+                locked for 4 years, or
               </li>
 
               <li>
-                At least{' '}
-                {(nationPassportRequiredBalance as unknown as number) * 2}{' '}
+                At least {(claimRequestBalance as unknown as number) * 2}{' '}
                 $NATION locked for 2 years, or
               </li>
 
               <li>
-                At least{' '}
-                {(nationPassportRequiredBalance as unknown as number) * 4}{' '}
+                At least {(claimRequestBalance as unknown as number) * 4}{' '}
                 $NATION locked for 1 year
               </li>
             </ul>
@@ -251,11 +244,10 @@ export default function Lock() {
                 <InformationCircleIcon className="h-24 w-24 text-n3blue" />
                 <span>
                   We suggest you to obtain at least{' '}
-                  {nationPassportRequiredBalance || 0 + 0.5} $veNATION if you
-                  want to mint a passport NFT, since $veNATION balance drops
-                  over time. If it falls below the required threshold, your
-                  passport can be revoked. You can always lock more $NATION
-                  later.
+                  {claimRequestBalance || 0 + 0.5} $veNATION if you want to mint
+                  a passport NFT, since $veNATION balance drops over time. If it
+                  falls below the required threshold, your passport can be
+                  revoked. You can always lock more $NATION later.
                 </span>
               </div>
             </div>

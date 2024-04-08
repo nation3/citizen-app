@@ -11,6 +11,7 @@ import {
   nationPassportAgreementStatement,
   nationPassportAgreementURI,
 } from '../lib/config'
+import { GetClaimRequestBalance } from '../lib/helper'
 import { useNationBalance } from '../lib/nation-token'
 import { NumberType, transformNumber } from '../lib/numbers'
 import { useClaimPassport, useHasPassport } from '../lib/passport-nft'
@@ -26,6 +27,8 @@ import MainCard from '../components/MainCard'
 
 export default function Join() {
   const { address } = useAccount()
+  const { data: claimRequestBalance } = GetClaimRequestBalance()
+
   const { data: nationBalance, isLoading: nationBalanceLoading } =
     useNationBalance(address)
   const { data: veNationBalance, isLoading: veNationBalanceLoading } =
@@ -40,10 +43,9 @@ export default function Join() {
     onSuccess: async (signature: string) => {
       const sigs = ethers.utils.splitSignature(signature)
       const tx = await claim({
-        recklesslySetUnpreparedArgs: [sigs.v, sigs.r, sigs.s]
+        recklesslySetUnpreparedArgs: [sigs.v, sigs.r, sigs.s],
       })
 
-      
       // The signature will be stored permanently on the Ethereum blockchain,
       // so uploading it to IPFS is only a nice to have
       await storeSignature(signature, tx.hash)
@@ -79,7 +81,7 @@ export default function Join() {
     setAction({
       mint: veNationBalance.value.gte(
         transformNumber(
-          nationPassportRequiredBalance as unknown as number,
+          claimRequestBalance as unknown as number,
           NumberType.bignumber
         )
       ),
@@ -87,7 +89,7 @@ export default function Join() {
         .mul(4)
         .gte(
           transformNumber(
-            (nationPassportRequiredBalance as unknown as number) / 4,
+            (claimRequestBalance as unknown as number) / 4,
             NumberType.bignumber
           )
         ),
@@ -97,6 +99,7 @@ export default function Join() {
     nationBalanceLoading,
     veNationBalance,
     veNationBalanceLoading,
+    claimRequestBalance,
   ])
 
   return (
@@ -126,7 +129,7 @@ export default function Join() {
               To become a citizen, you need to mint a passport NFT by holding at
               least{' '}
               <span className="font-semibold">
-                {nationPassportRequiredBalance} $veNATION
+                {claimRequestBalance} $veNATION
               </span>
               . This is to make sure all citizens are economically aligned.
               <br />
@@ -150,9 +153,7 @@ export default function Join() {
                   <LockClosedIcon className="h-8 w-8" />
                 </div>
                 <div className="stat-title">Needed balance</div>
-                <div className="stat-value">
-                  {nationPassportRequiredBalance}
-                </div>
+                <div className="stat-value">{claimRequestBalance}</div>
                 <div className="stat-desc">$veNATION</div>
               </div>
 
