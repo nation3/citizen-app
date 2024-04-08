@@ -7,10 +7,7 @@ import {
 } from '@heroicons/react/24/outline'
 import { BigNumber, ethers } from 'ethers'
 import { useEffect, useMemo, useState } from 'react'
-import {
-  nationToken,
-  veNationToken,
-} from '../lib/config'
+import { nationToken, veNationToken } from '../lib/config'
 import { dateToReadable } from '../lib/date'
 import { useNationBalance } from '../lib/nation-token'
 import { NumberType, transformNumber } from '../lib/numbers'
@@ -83,11 +80,7 @@ export default function Lock() {
 
   const { data: claimRequiredBalance } = useClaimRequiredBalance()
   const requiredBalance = useMemo(() => {
-    return transformNumber(
-      claimRequiredBalance,
-      NumberType.string,
-      0
-    ) as number
+    return transformNumber(claimRequiredBalance, NumberType.string, 0) as number
   }, [claimRequiredBalance])
 
   const { data: veNationLock, isLoading: veNationLockLoading } =
@@ -104,8 +97,8 @@ export default function Lock() {
     !veNationLockLoading &&
       setHasExpired(
         veNationLock &&
-        veNationLock[1] != 0 &&
-        ethers.BigNumber.from(Date.now()).gte(veNationLock[1].mul(1000))
+          veNationLock[1] != 0 &&
+          ethers.BigNumber.from(Date.now()).gte(veNationLock[1].mul(1000)),
       )
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [veNationLock])
@@ -153,7 +146,7 @@ export default function Lock() {
         time:
           lockTime?.value &&
           lockTime.value.gt(
-            +dateOut(bigNumberToDate(veNationLock[1]), { days: 7 })
+            +dateOut(bigNumberToDate(veNationLock[1]), { days: 7 }),
           ),
       })
     } else {
@@ -166,7 +159,7 @@ export default function Lock() {
 
   const createLock = useVeNationCreateLock(
     lockAmount && ethers.utils.parseEther(lockAmount),
-    lockTime.value.div(1000)
+    lockTime.value.div(1000),
   )
 
   const increaseLock = useVeNationIncreaseLock({
@@ -188,16 +181,16 @@ export default function Lock() {
       amountNeeded:
         hasLock && veNationLock && veNationLock[0]
           ? (
-            transformNumber(
-              lockAmount ?? '0',
-              NumberType.bignumber
-            ) as BigNumber
-          ).sub(veNationLock[0])
+              transformNumber(
+                lockAmount ?? '0',
+                NumberType.bignumber,
+              ) as BigNumber
+            ).sub(veNationLock[0])
           : transformNumber(lockAmount ?? '0', NumberType.bignumber),
       approveText: 'Approve $NATION',
       allowUnlimited: false,
     }),
-    [hasLock, veNationLock, lockAmount]
+    [hasLock, veNationLock, lockAmount],
   )
 
   return (
@@ -230,35 +223,28 @@ export default function Lock() {
               will be needed to mint a passport NFT.
               <br />
               <br />
-              Some examples of how to get to {requiredBalance
-              }{' '}
-              $veNATION:
+              Some examples of how to get to {requiredBalance} $veNATION:
             </p>
 
             <ul className="list-disc list-inside mb-4">
-              <li>
-                At least {requiredBalance} $NATION locked for 4 years, or
-              </li>
+              <li>At least {requiredBalance} $NATION locked for 4 years, or</li>
 
               <li>
                 At least {requiredBalance * 2} $NATION locked for 2 years, or
               </li>
 
-              <li>
-                At least {requiredBalance * 4} $NATION locked for 1 year
-              </li>
+              <li>At least {requiredBalance * 4} $NATION locked for 1 year</li>
             </ul>
 
             <div className="alert mb-4">
               <div>
                 <InformationCircleIcon className="h-24 w-24 text-n3blue" />
                 <span>
-                  We suggest you to obtain at least{' '}
-                  {requiredBalance || 0 + 0.5} $veNATION if you
-                  want to mint a passport NFT, since $veNATION balance drops
-                  over time. If it falls below the required threshold, your
-                  passport can be revoked. You can always lock more $NATION
-                  later.
+                  We suggest you to obtain at least {requiredBalance || 0 + 0.5}{' '}
+                  $veNATION if you want to mint a passport NFT, since $veNATION
+                  balance drops over time. If it falls below the required
+                  threshold, your passport can be revoked. You can always lock
+                  more $NATION later.
                 </span>
               </div>
             </div>
@@ -280,7 +266,7 @@ export default function Lock() {
                     loading={veNationBalanceLoading}
                     decimals={
                       veNationBalance &&
-                        veNationBalance.value.gt(ethers.utils.parseEther('1'))
+                      veNationBalance.value.gt(ethers.utils.parseEther('1'))
                         ? 2
                         : 6
                     }
@@ -366,9 +352,9 @@ export default function Lock() {
                         setLockAmount(
                           veNationLock
                             ? ethers.utils.formatEther(
-                              veNationLock[0].add(nationBalance?.value)
-                            )
-                            : nationBalance?.formatted || ''
+                                veNationLock[0].add(nationBalance?.value),
+                              )
+                            : nationBalance?.formatted || '',
                         )
                         setWantsToIncrease(true)
                       }}
@@ -432,7 +418,7 @@ export default function Lock() {
                         nationAmount: lockAmount && +lockAmount,
                         veNationAmount: transformNumber(
                           veNationBalance?.value || 0,
-                          NumberType.number
+                          NumberType.number,
                         ),
                         time: Date.parse(lockTime.formatted),
                         lockTime: Date.parse(new Date().toString()),
@@ -445,18 +431,21 @@ export default function Lock() {
                   )}
                   <div className="card-actions mt-4">
                     <ActionButton
-                      className={`btn btn-primary normal-case font-medium w-full ${!(canIncrease.amount || canIncrease.time)
-                        ? 'btn-disabled'
-                        : ''
-                        }`}
+                      className={`btn btn-primary normal-case font-medium w-full ${
+                        !(canIncrease.amount || canIncrease.time)
+                          ? 'btn-disabled'
+                          : ''
+                      }`}
                       action={hasLock ? increaseLock : createLock}
                       approval={approval}
                     >
                       {!hasLock
                         ? 'Lock'
-                        : `Increase lock ${canIncrease.amount ? 'amount' : ''
-                        } ${canIncrease.amount && canIncrease.time ? '&' : ''
-                        } ${canIncrease.time ? 'time' : ''}`}
+                        : `Increase lock ${
+                            canIncrease.amount ? 'amount' : ''
+                          } ${
+                            canIncrease.amount && canIncrease.time ? '&' : ''
+                          } ${canIncrease.time ? 'time' : ''}`}
                     </ActionButton>
                   </div>
                 </>

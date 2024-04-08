@@ -12,7 +12,11 @@ import {
 } from '../lib/config'
 import { useNationBalance } from '../lib/nation-token'
 import { NumberType, transformNumber } from '../lib/numbers'
-import { useClaimPassport, useHasPassport, useClaimRequiredBalance } from '../lib/passport-nft'
+import {
+  useClaimPassport,
+  useHasPassport,
+  useClaimRequiredBalance,
+} from '../lib/passport-nft'
 import { storeSignature, useSignAgreement } from '../lib/sign-agreement'
 import { useAccount } from '../lib/use-wagmi'
 import { useVeNationBalance } from '../lib/ve-token'
@@ -32,11 +36,7 @@ export default function Join() {
   const { hasPassport, isLoading: hasPassportLoading } = useHasPassport(address)
   const { data: claimRequiredBalance } = useClaimRequiredBalance()
   const requiredBalance = useMemo(() => {
-    return transformNumber(
-      claimRequiredBalance,
-      NumberType.string,
-      0
-    ) as number
+    return transformNumber(claimRequiredBalance, NumberType.string, 0) as number
   }, [claimRequiredBalance])
 
   const { writeAsync: claim, data: claimData } = useClaimPassport()
@@ -47,9 +47,8 @@ export default function Join() {
     onSuccess: async (signature: string) => {
       const sigs = ethers.utils.splitSignature(signature)
       const tx = await claim({
-        recklesslySetUnpreparedArgs: [sigs.v, sigs.r, sigs.s]
+        recklesslySetUnpreparedArgs: [sigs.v, sigs.r, sigs.s],
       })
-
 
       // The signature will be stored permanently on the Ethereum blockchain,
       // so uploading it to IPFS is only a nice to have
@@ -85,18 +84,15 @@ export default function Join() {
     if (!nationBalance || !veNationBalance) return
     setAction({
       mint: veNationBalance.value.gte(
-        transformNumber(
-          claimRequiredBalance as number,
-          NumberType.bignumber
-        )
+        transformNumber(claimRequiredBalance as number, NumberType.bignumber),
       ),
       lockAndMint: nationBalance.value
         .mul(4)
         .gte(
           transformNumber(
             (claimRequiredBalance as number) / 4,
-            NumberType.bignumber
-          )
+            NumberType.bignumber,
+          ),
         ),
     })
   }, [
@@ -117,8 +113,9 @@ export default function Join() {
             Lock $NATION
           </li>
           <li
-            className={`step text-sm ${(action.mint && !hasPassport) || hasPassport ? 'step-primary' : ''
-              }`}
+            className={`step text-sm ${
+              (action.mint && !hasPassport) || hasPassport ? 'step-primary' : ''
+            }`}
           >
             Claim passport
           </li>
@@ -132,9 +129,7 @@ export default function Join() {
             <p>
               To become a citizen, you need to mint a passport NFT by holding at
               least{' '}
-              <span className="font-semibold">
-                {requiredBalance} $veNATION
-              </span>
+              <span className="font-semibold">{requiredBalance} $veNATION</span>
               . This is to make sure all citizens are economically aligned.
               <br />
               <br />
@@ -157,9 +152,7 @@ export default function Join() {
                   <LockClosedIcon className="h-8 w-8" />
                 </div>
                 <div className="stat-title">Needed balance</div>
-                <div className="stat-value">
-                  {requiredBalance}
-                </div>
+                <div className="stat-value">{requiredBalance}</div>
                 <div className="stat-desc">$veNATION</div>
               </div>
 

@@ -5,9 +5,7 @@ import Card from 'react-animated-3d-card'
 import { useSignMessage } from 'wagmi'
 import { mobilePassportDomain } from '../lib/config'
 import { usePassportExpirationDate } from '../lib/passport-expiration-hook'
-import {
-  usePassport,
-} from '../lib/passport-nft'
+import { usePassport } from '../lib/passport-nft'
 import { useAccount } from '../lib/use-wagmi'
 import Confetti from '../components/Confetti'
 import Head from '../components/Head'
@@ -17,7 +15,6 @@ import DiscordIcon from '../public/passport/discord.svg'
 import AddToWallet from '../public/passport/wallet.svg'
 
 export default function Citizen() {
-
   const { address } = useAccount()
   const { data: passportData } = usePassport(address)
   const [confettiNumber, setConfettiNumber] = useState<Array<Number>>([])

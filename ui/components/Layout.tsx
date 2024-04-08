@@ -82,7 +82,12 @@ const navigation = [
 
 export default function Layout({ children }: any) {
   const router = useRouter()
-  const { connectors, connect, error: connectError, data: connectData } = useConnect()
+  const {
+    connectors,
+    connect,
+    error: connectError,
+    data: connectData,
+  } = useConnect()
   const { address } = useAccount()
 
   const { data: ensName } = useEnsName({ address: address ?? '' })
@@ -171,8 +176,9 @@ export default function Layout({ children }: any) {
                     {item.href.charAt(0) === '/' ? (
                       <Link href={item.href}>
                         <a
-                          className={`py-4 ${router.pathname == item.href ? 'active' : ''
-                            }`}
+                          className={`py-4 ${
+                            router.pathname == item.href ? 'active' : ''
+                          }`}
                         >
                           {item.icon}
                           {item.name}
@@ -181,8 +187,9 @@ export default function Layout({ children }: any) {
                       </Link>
                     ) : (
                       <a
-                        className={`py-4 ${router.pathname == item.href ? 'active' : ''
-                          }`}
+                        className={`py-4 ${
+                          router.pathname == item.href ? 'active' : ''
+                        }`}
                         href={item.href}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -205,9 +212,9 @@ export default function Layout({ children }: any) {
                       {ensName
                         ? ensName
                         : `${((address as string) ?? '').substring(
-                          0,
-                          6
-                        )}...${address.slice(-4)}`}
+                            0,
+                            6,
+                          )}...${address.slice(-4)}`}
                       <ChevronDownIcon className="h-5 w-5 absolute right-4 opacity-50" />
                     </label>
                   </li>
@@ -255,9 +262,9 @@ export default function Layout({ children }: any) {
                     {ensName
                       ? ensName
                       : `${((address as string) ?? '').substring(
-                        0,
-                        6
-                      )}...${((address as string) ?? '').slice(-4)}`}
+                          0,
+                          6,
+                        )}...${((address as string) ?? '').slice(-4)}`}
                   </a>
                 </li>
 
@@ -353,10 +360,7 @@ export default function Layout({ children }: any) {
 
   if (address) {
     return (
-      <PassportCheck
-        address={address}
-        onPassportChecked={onPassportChecked}
-      >
+      <PassportCheck address={address} onPassportChecked={onPassportChecked}>
         {layout}
       </PassportCheck>
     )
