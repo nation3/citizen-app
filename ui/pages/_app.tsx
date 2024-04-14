@@ -16,8 +16,6 @@ function App({ Component, pageProps }: any) {
 
     const userProvider =
       window.ethereum || (window as unknown as any).web3?.currentProvider
-    console.log(userProvider)
-    console.log(process.env.NEXT_PUBLIC_CHAIN)
     if (userProvider && process.env.NEXT_PUBLIC_CHAIN !== 'local') {
       provider = () => {
         console.log(
