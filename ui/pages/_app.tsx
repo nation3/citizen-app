@@ -23,12 +23,10 @@ function App({ Component, pageProps }: any) {
             userProvider.networkVersion,
           )}`,
         )
-
-        return ethers.getDefaultProvider(process.env.NEXT_PUBLIC_CHAIN, {
-          infura: process.env.NEXT_PUBLIC_INFURA_ID,
-          alchemy: process.env.NEXT_PUBLIC_ALCHEMY_ID,
-          quorum: 1,
-        });
+        return new ethers.providers.Web3Provider(
+          userProvider,
+          process.env.NEXT_PUBLIC_CHAIN,
+        )
       }
     }
     setClient(
