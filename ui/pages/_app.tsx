@@ -16,6 +16,8 @@ function App({ Component, pageProps }: any) {
 
     const userProvider =
       window.ethereum || (window as unknown as any).web3?.currentProvider
+    console.log(userProvider)
+    console.log(process.env.NEXT_PUBLIC_CHAIN)
     if (userProvider && process.env.NEXT_PUBLIC_CHAIN !== 'local') {
       provider = () => {
         console.log(
@@ -23,10 +25,12 @@ function App({ Component, pageProps }: any) {
             userProvider.networkVersion,
           )}`,
         )
-        return new ethers.providers.Web3Provider(
-          userProvider,
-          process.env.NEXT_PUBLIC_CHAIN,
-        )
+
+        return ethers.getDefaultProvider(process.env.NEXT_PUBLIC_CHAIN, {
+          infura: process.env.NEXT_PUBLIC_INFURA_ID,
+          alchemy: process.env.NEXT_PUBLIC_ALCHEMY_ID,
+          quorum: 1,
+        });
       }
     }
     setClient(
