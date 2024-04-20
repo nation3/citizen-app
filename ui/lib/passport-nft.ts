@@ -36,6 +36,17 @@ export function usePassportStatus(address: any) {
   )
 }
 
+export function useClaimRequiredBalance() {
+  return useContractRead(
+    {
+      ...nftIssuerContractParams,
+      watch: true,
+    },
+    'claimRequiredBalance',
+    undefined,
+  )
+}
+
 export function useClaimPassport() {
   return useContractWrite(
     {

@@ -1,4 +1,7 @@
 export function networkToId(network: any) {
+  if (network == undefined) {
+    return 1
+  }
   switch (network.toLowerCase()) {
     case 'mainnet':
       return 1

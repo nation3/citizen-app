@@ -21,7 +21,7 @@ function ErrorProvider({ children }: any) {
           console.error(error)
           if (error instanceof Error) {
             error = JSON.parse(
-              JSON.stringify(error, Object.getOwnPropertyNames(error))
+              JSON.stringify(error, Object.getOwnPropertyNames(error)),
             )
             // Don't add the error if it's "invalid address or ENS name",
             // no idea why those errors appear in the first place.
@@ -38,7 +38,7 @@ function ErrorProvider({ children }: any) {
         }
       }
     },
-    [activeChain?.id]
+    [activeChain?.id],
   )
 
   const removeError = (key: any) => {
