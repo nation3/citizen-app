@@ -464,7 +464,8 @@ export default function Lock() {
                 </>
               )}
             </div>
-            <AllowanceWarning token={nationToken} spender={veNationToken} />
+            <!-- Remove allowance revocation from UI -->
+            <!-- <AllowanceWarning token={nationToken} spender={veNationToken} /> -->
           </div>
         </div>
       </MainCard>
