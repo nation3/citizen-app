@@ -21,7 +21,6 @@ import {
   useVeNationWithdrawLock,
 } from '../lib/ve-token'
 import ActionButton, { ActionButtonProps } from '../components/ActionButton'
-import { AllowanceWarning } from '../components/AllowanceWarning'
 import Balance from '../components/Balance'
 import EthersInput from '../components/EthersInput'
 import GradientLink from '../components/GradientLink'
@@ -464,7 +463,6 @@ export default function Lock() {
                 </>
               )}
             </div>
-            <AllowanceWarning token={nationToken} spender={veNationToken} />
           </div>
         </div>
       </MainCard>
