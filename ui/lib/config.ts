@@ -17,6 +17,7 @@ interface Config {
   nationToken: string,
   veNationToken: string,
   balancerDomain: string,
+  veNationRewardsMultiplier: number,
   balancerVault: string,
   balancerPoolId: string,
   balancerLPToken: string,
@@ -35,6 +36,7 @@ const defaultConfig = require(`../../contracts/deployments/${chain}.json`) as De
 const config: Config = {
   nationToken: defaultConfig.nationToken || zeroAddress,
   veNationToken: defaultConfig.veNationToken || zeroAddress,
+  veNationRewardsMultiplier: 2.5,
   balancerDomain: chain === 'mainnet' ? 'https://app.balancer.fi/#/ethereum' : `https://app.balancer.fi/#/${chain}`,
   balancerVault: defaultConfig.balancerVault || zeroAddress,
   balancerPoolId: defaultConfig.balancerPoolId || zeroAddress,
@@ -56,6 +58,7 @@ export const {
   balancerDomain,
   balancerVault,
   balancerPoolId,
+  veNationRewardsMultiplier,
   balancerLPToken,
   etherscanDomain,
   lpRewardsContract,
