@@ -34,7 +34,6 @@ import EthersInput from '../components/EthersInput'
 import GradientLink from '../components/GradientLink'
 import Head from '../components/Head'
 import MainCard from '../components/MainCard'
-import { StakeWarning } from '../components/StakeWarning'
 
 export default function Liquidity() {
   const { data: account } = useAccount()
@@ -249,6 +248,15 @@ export default function Liquidity() {
             <div className="form-control">
               {activeTab === 0 ? (
                 <>
+                  <p className="mb-4">
+                    Available to deposit:{' '}
+                    <Balance
+                      balance={poolTokenBalance?.formatted}
+                      loading={poolTokenBalanceLoading}
+                    />{' '}
+                    LP tokens
+                  </p>
+
                   <div className="input-group">
                     <EthersInput
                       type="number"
@@ -260,7 +268,6 @@ export default function Liquidity() {
 
                     <button
                       className="btn btn-outline"
-                      disabled
                       onClick={() =>
                         poolTokenBalance &&
                         setDepositValue(poolTokenBalance?.formatted)
@@ -272,7 +279,7 @@ export default function Liquidity() {
 
                   <div className="card-actions mt-4">
                     <ActionButton
-                      className="btn btn-primary normal-case btn-disabled font-medium w-full"
+                      className="btn btn-primary normal-case font-medium w-full"
                       action={deposit}
                       approval={{
                         token: balancerLPToken,
@@ -352,7 +359,6 @@ export default function Liquidity() {
                 </>
               )}
             </div>
-            <StakeWarning />
           </div>
         </div>
       </MainCard>
