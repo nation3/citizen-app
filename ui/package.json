@@ -16,7 +16,7 @@
   "dependencies": {
     "@heroicons/react": "^2.0.11",
     "@metamask/eth-sig-util": "^7.0.1",
-    "@types/node": "^20.10.4",
+    "@types/node": "^20.12.10",
     "@types/react-dom": "^18.0.4",
     "daisyui": "^2.13.5",
     "ethers": "^5.7.1",
