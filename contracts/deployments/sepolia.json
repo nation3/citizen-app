@@ -4,7 +4,7 @@
  "balancerVault": "0xBA12222222228d8Ba445958a75a0704d566BF2C8",
  "balancerPoolId": "0x1fe2f25dff7272e969fcb8b0fb978a9a6a18471b00020000000000000000007a",
  "balancerLPToken": "0x1FE2F25Dff7272E969fcb8b0FB978a9A6a18471b",
- "lpRewardsContract": "0x5514cF24D2241Ecc6012306927eA8d74E052416D",
+ "lpRewardsContract": "0x18C82f66F8caC20f6b066fd99e67f302AACcbc40",
  "nationPassportNFT": "0x11f30642277A70Dab74C6fAF4170a8b340BE2f98",
  "nationPassportNFTIssuer": "0xdad32e13E73ce4155a181cA0D350Fee0f2596940",
  "nationPassportAgreementStatement": "By claiming a Nation3 passport I agree to the terms defined in the following URL",
