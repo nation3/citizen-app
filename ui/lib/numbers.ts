@@ -52,6 +52,10 @@ export function transformNumber(
 export function isFixedDecimalsNumber(value: any, decimals = 18) {
   const NUMBER_REGEX = RegExp(`^(\\d*\\.{0,1}\\d{0,${decimals}}$)`)
   const isValid = value.toString().match(NUMBER_REGEX)
-  
-  return Boolean(isValid);
+
+  return Boolean(isValid)
+}
+
+export function formatNumberAsPercentage(num: any) {
+  return parseFloat(num.toFixed(2))
 }
