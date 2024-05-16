@@ -1,39 +1,20 @@
-import {
-  ArrowTrendingUpIcon,
-  CurrencyDollarIcon,
-  SparklesIcon,
-  CalculatorIcon,
-  InformationCircleIcon,
-} from '@heroicons/react/24/outline'
-import { useEffect, useState } from 'react'
-import React from 'react'
-import { useBalancerPool } from '../lib/balancer'
-import {
-  balancerPoolId,
-  balancerLPToken,
-  lpRewardsContract,
-  // veNationRewardsMultiplier,
-  balancerDomain,
-} from '../lib/config'
-import {
-  useLiquidityRewards,
-  usePoolTokenBalance,
-  useVeNationBoost,
-  useBoostedAPY,
-  useDeposit,
-  useWithdraw,
-  useWithdrawAndClaim,
-  useClaimRewards,
-} from '../lib/liquidity-rewards'
-import { NumberType, transformNumber } from '../lib/numbers'
-import { useAccount } from '../lib/use-wagmi'
-import { useVeNationBalance, useVeNationSupply } from '../lib/ve-token'
-import ActionButton from '../components/ActionButton'
-import Balance from '../components/Balance'
-import EthersInput from '../components/EthersInput'
-import GradientLink from '../components/GradientLink'
-import Head from '../components/Head'
-import MainCard from '../components/MainCard'
+import { ArrowTrendingUpIcon, CurrencyDollarIcon, SparklesIcon, CalculatorIcon, InformationCircleIcon } from '@heroicons/react/24/outline';
+import { useEffect, useState } from 'react';
+import React from 'react';
+import { useBalancerPool } from '../lib/balancer';
+import { balancerPoolId, balancerLPToken, lpRewardsContract, // veNationRewardsMultiplier,
+balancerDomain } from '../lib/config';
+import { useLiquidityRewards, usePoolTokenBalance, useVeNationBoost, useBoostedAPY, useDeposit, useWithdraw, useWithdrawAndClaim, useClaimRewards } from '../lib/liquidity-rewards';
+import { NumberType, formatNumberAsPercentage, transformNumber } from '../lib/numbers';
+import { useAccount } from '../lib/use-wagmi';
+import { useVeNationBalance, useVeNationSupply } from '../lib/ve-token';
+import ActionButton from '../components/ActionButton';
+import Balance from '../components/Balance';
+import EthersInput from '../components/EthersInput';
+import GradientLink from '../components/GradientLink';
+import Head from '../components/Head';
+import MainCard from '../components/MainCard';
+
 
 export default function Liquidity() {
   const { address } = useAccount()
@@ -189,16 +170,9 @@ export default function Liquidity() {
               <div>
                 You can boost your APY to{' '}
                 <span className="text-n3blue font-semibold">
-                  {transformNumber(
-                    ((transformNumber(
-                      liquidityRewardsAPY ?? 0,
-                      NumberType.number
-                    ) as number) /
-                      10 ** 18) *
-                      potentialBoost,
-                    NumberType.number,
-                    2
-                  ) + '%'}
+                  {formatNumberAsPercentage(
+                    (transformNumber(liquidityRewardsAPY ?? 0, NumberType.number) as number / 10**18) * potentialBoost
+                  )+ '%'}
                 </span>
                 . To do so, claim your current rewards.
               </div>
