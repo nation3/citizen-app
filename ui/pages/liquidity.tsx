@@ -190,12 +190,12 @@ export default function Liquidity() {
                 You can boost your APY to{' '}
                 <span className="text-n3blue font-semibold">
                   {transformNumber(
-                    ((transformNumber(
+                    (((transformNumber(
                       liquidityRewardsAPY ?? 0,
                       NumberType.number
                     ) as number) /
                       10 ** 18) *
-                      potentialBoost,
+                      potentialBoost).toString(),
                     NumberType.number,
                     2
                   ) + '%'}
