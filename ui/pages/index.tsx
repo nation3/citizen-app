@@ -63,7 +63,7 @@ export default function Index() {
           </HomeCard>
 
           <HomeCard
-            href={`${balancerDomain}/trade/ether/${nationToken}`}
+            href={`${balancerDomain}/swap/ether/${nationToken}`}
             icon={<PlusIcon className="h-5 w-5 absolute right-8 text-n3blue" />}
             title="Buy more $NATION"
             linkText="Buy $NATION"

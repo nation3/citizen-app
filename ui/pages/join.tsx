@@ -193,7 +193,7 @@ export default function Join() {
             ) : (
               <a
                 className="btn btn-primary normal-case font-medium grow"
-                href={`${balancerDomain}/#/trade/ether/${nationToken}`}
+                href={`${balancerDomain}/swap/ether/${nationToken}`}
                 rel="noopener noreferrer"
                 target="_blank"
               >
