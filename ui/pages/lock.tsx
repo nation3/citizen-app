@@ -171,7 +171,16 @@ export default function Lock() {
   })
 
   const withdraw = useVeNationWithdrawLock()
-
+  
+  const handleWithdraw = async () => {
+    try {
+      const result = await withdraw.writeAsync()
+      console.log('Withdraw successful:', result)
+    } catch (error) {
+      console.error('Withdraw failed:', error)
+    }
+  }
+  
   const approval = useMemo<ActionButtonProps['approval']>(
     () => ({
       token: nationToken,
@@ -467,7 +476,7 @@ export default function Lock() {
                   <div className="card-actions mt-4">
                     <ActionButton
                       className="btn btn-primary normal-case font-medium w-full"
-                      action={withdraw}
+                      action={handleWithdraw}
                     >
                       Withdraw
                     </ActionButton>
