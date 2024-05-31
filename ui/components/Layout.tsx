@@ -1,4 +1,5 @@
 import {
+  BanknotesIcon,
   ChevronDownIcon,
   ChevronRightIcon,
   CurrencyDollarIcon,
@@ -12,6 +13,7 @@ import {
   PlusIcon,
   UserPlusIcon,
   UserIcon,
+  UsersIcon,
   Squares2X2Icon,
   XCircleIcon,
 } from '@heroicons/react/24/outline'
@@ -48,6 +50,11 @@ const navigation = [
     icon: <UserPlusIcon className="h-5 w-5" />,
   },
   {
+    name: 'Citizen directory',
+    href: 'https://citizens.nation3.org',
+    icon: <UsersIcon className="h-5 w-5" />,
+  },
+  {
     name: 'Lock tokens',
     href: '/lock',
     icon: <LockClosedIcon className="h-5 w-5" />,
@@ -58,8 +65,13 @@ const navigation = [
     icon: <CurrencyDollarIcon className="h-5 w-5" />,
   },
   {
+    name: 'Claim basic income',
+    href: 'https://income.nation3.org',
+    icon: <BanknotesIcon className="h-5 w-5" />,
+  },
+  {
     name: 'Buy $NATION',
-    href: `${balancerDomain}/#/ethereum/swap/ether/${nationToken}`,
+    href: `${balancerDomain}/swap/ether/${nationToken}`,
     icon: <PlusIcon className="h-5 w-5" />,
   },
   {
@@ -68,17 +80,22 @@ const navigation = [
     icon: <HomeIcon className="h-5 w-5" />,
   },
   {
-    name: 'Docs',
-    href: 'https://docs.nation3.org',
+    name: 'Wiki',
+    href: 'https://wiki.nation3.org',
     icon: <NewspaperIcon className="h-5 w-5" />,
   },
 ]
 
 export default function Layout({ children }: any) {
   const router = useRouter()
-  const { connectors, connect, error: connectError, data: connectData } = useConnect()
+  const {
+    connectors,
+    connect,
+    error: connectError,
+    data: connectData,
+  } = useConnect()
   const { address } = useAccount()
-  
+
   const { data: ensName } = useEnsName({ address: address ?? '' })
   const { disconnect } = useDisconnect()
   const [nav, setNav] = useState(navigation)
@@ -202,7 +219,7 @@ export default function Layout({ children }: any) {
                         ? ensName
                         : `${((address as string) ?? '').substring(
                             0,
-                            6
+                            6,
                           )}...${address.slice(-4)}`}
                       <ChevronDownIcon className="h-5 w-5 absolute right-4 opacity-50" />
                     </label>
@@ -252,7 +269,7 @@ export default function Layout({ children }: any) {
                       ? ensName
                       : `${((address as string) ?? '').substring(
                           0,
-                          6
+                          6,
                         )}...${((address as string) ?? '').slice(-4)}`}
                   </a>
                 </li>
@@ -288,7 +305,7 @@ export default function Layout({ children }: any) {
                   <li key={connector.id}>
                     <button
                       disabled={!connector.ready}
-                      onClick={() => connect({connector})}
+                      onClick={() => connect({ connector })}
                     >
                       {(connectorIcons as Indexable)[connector.name] ? (
                         <div className="h-5 w-5">
@@ -349,10 +366,7 @@ export default function Layout({ children }: any) {
 
   if (address) {
     return (
-      <PassportCheck
-        address={address}
-        onPassportChecked={onPassportChecked}
-      >
+      <PassportCheck address={address} onPassportChecked={onPassportChecked}>
         {layout}
       </PassportCheck>
     )

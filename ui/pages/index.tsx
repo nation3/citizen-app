@@ -6,10 +6,7 @@ import {
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
-import {
-  balancerDomain,
-  nationToken,
-} from '../lib/config'
+import { balancerDomain, nationToken } from '../lib/config'
 import GradientLink from '../components/GradientLink'
 import Head from '../components/Head'
 import HomeCard from '../components/HomeCard'
@@ -66,7 +63,7 @@ export default function Index() {
           </HomeCard>
 
           <HomeCard
-            href={`${balancerDomain}/#/trade/ether/${nationToken}`}
+            href={`${balancerDomain}/swap/ether/${nationToken}`}
             icon={<PlusIcon className="h-5 w-5 absolute right-8 text-n3blue" />}
             title="Buy more $NATION"
             linkText="Buy $NATION"

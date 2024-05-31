@@ -1,4 +1,4 @@
-name: /ui (Goerli) CI
+name: /ui (Sepolia) CI
 
 on:
   push:
@@ -17,7 +17,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [16.x, 18.x]
+        node-version: [18.x, 20.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
@@ -30,13 +30,15 @@ jobs:
         cache-dependency-path: ui/yarn.lock
     - run: npm install --global yarn
     - run: echo $(yarn --version)
-    - run: cp .env.goerli .env.local
+    - run: cp .env.sepolia .env.local
     - run: yarn install
     - run: yarn build
     - run: yarn lint
     - run: yarn e2e:headless
     - run: yarn test
     - run: yarn test:coverage
-    - uses: codecov/codecov-action@v3
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v4.0.1
       with:
-        fail_ci_if_error: true
+        token: ${{ secrets.CODECOV_TOKEN }}
+        slug: nation3/citizen-app

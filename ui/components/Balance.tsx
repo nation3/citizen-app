@@ -16,7 +16,7 @@ export default function Balance({
         `${prefix}${transformNumber(
           balance,
           NumberType.string,
-          decimals
+          decimals,
         )}${suffix}`
       ) : (
         0

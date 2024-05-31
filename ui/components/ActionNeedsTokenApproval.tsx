@@ -17,20 +17,20 @@ export default function ActionNeedsTokenApproval({
   preAction,
   allowUnlimited = true,
 }: any) {
-  const { address  } = useAccount()
+  const { address } = useAccount()
   const { data: tokenAllowance, isLoading: tokenAllowanceLoading } =
     useTokenAllowance({ token, address, spender })
   const [approveUnlimited, setApproveUnlimited] = useState(allowUnlimited)
   const [weiAmountNeeded, setWeiAmountNeeded] = useState<BigNumber>(
-    BigNumber.from(0)
+    BigNumber.from(0),
   )
 
   useEffect(() => {
     setWeiAmountNeeded(
       transformNumber(
         amountNeeded?.formatted || amountNeeded,
-        NumberType.bignumber
-      ) as BigNumber
+        NumberType.bignumber,
+      ) as BigNumber,
     )
   }, [amountNeeded])
 

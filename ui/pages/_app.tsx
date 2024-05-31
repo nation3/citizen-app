@@ -20,12 +20,12 @@ function App({ Component, pageProps }: any) {
       provider = () => {
         console.log(
           `Provider: Connected to the user's provider on chain with ID ${parseInt(
-            userProvider.networkVersion
-          )}`
+            userProvider.networkVersion,
+          )}`,
         )
         return new ethers.providers.Web3Provider(
           userProvider,
-          process.env.NEXT_PUBLIC_CHAIN
+          process.env.NEXT_PUBLIC_CHAIN,
         )
       }
     }
@@ -34,7 +34,7 @@ function App({ Component, pageProps }: any) {
         autoConnect: true,
         connectors,
         provider: provider(),
-      })
+      }),
     )
   }, [])
 
