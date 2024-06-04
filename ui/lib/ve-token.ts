@@ -88,6 +88,7 @@ export function useVeNationWithdrawLock() {
   return useContractWrite(
     contractParams, 
     'withdraw', 
+    [],
     { gasLimit: gasLimits.withdraw }
   )
 }
