@@ -309,7 +309,7 @@ export default function Lock() {
         <div className="card bg-base-100 shadow overflow-visible">
           <div className="card-body">
             <div className="form-control">
-              {false ? (
+              {!hasExpired ? (
                 <>
                   <p className="mb-4">
                     Available to lock:{' '}
