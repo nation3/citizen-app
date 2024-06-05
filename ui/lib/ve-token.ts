@@ -22,7 +22,7 @@ let gasLimits = {
   create_lock: 600000,
   increase_amount: 600000,
   increase_unlock_time: 600000,
-  withdraw: 800000,
+  withdraw: 480000,
 }
 
 export function useVeNationLock(address: any) {
@@ -88,6 +88,7 @@ export function useVeNationWithdrawLock() {
   return useContractWrite(
     contractParams, 
     'withdraw', 
+    [],
     { gasLimit: gasLimits.withdraw }
   )
 }
