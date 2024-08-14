@@ -1,5 +1,6 @@
 import { ethers } from 'ethers'
-import { mainnet, sepolia, configureChains, } from 'wagmi'
+import { configureChains, } from 'wagmi'
+import { mainnet, sepolia } from 'wagmi/chains'
 import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet'
 import { InjectedConnector } from 'wagmi/connectors/injected'
 import { WalletConnectConnector } from '@wagmi/core/connectors/walletConnect'
