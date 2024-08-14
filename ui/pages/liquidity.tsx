@@ -108,13 +108,15 @@ export default function Liquidity() {
           <GradientLink href="/lock" text="Get $veNATION" textSize="md" /> */}
         </p>
 
-        <div className="stats stats-vertical lg:stats-horizontal shadow my-4">
+        <div className="stats stats-vertical lg:stats-horizontal shadow my-4 dark:bg-slate-300">
           <div className="stat">
             <div className="stat-figure">
               <CurrencyDollarIcon className="h-8 w-8" />
             </div>
 
-            <div className="stat-title">Total liquidity</div>
+            <div className="stat-title dark:text-slate-900">
+              Total liquidity
+            </div>
 
             <div className="stat-value">
               <Balance
@@ -135,7 +137,7 @@ export default function Liquidity() {
               <ArrowTrendingUpIcon className="h-8 w-8" />
             </div>
 
-            <div className="stat-title">Rewards APY</div>
+            <div className="stat-title dark:text-slate-900">Rewards APY</div>
 
             <div className="stat-value">
               <Balance
@@ -148,15 +150,15 @@ export default function Liquidity() {
           </div>
         </div>
 
-        <div className="stats stats-vertical lg:stats-horizontal shadow mb-4">
+        <div className="stats stats-vertical lg:stats-horizontal shadow mb-4 dark:bg-slate-300">
           <div className="stat">
             <div className="stat-figure text-primary">
               <SparklesIcon className="h-8 w-8" />
             </div>
 
-            <div className="stat-title">Your veNATION</div>
+            <div className="stat-title dark:text-slate-900">Your veNATION</div>
 
-            <div className="stat-value text-primary">
+            <div className="stat-value text-primary dark:text-primary-focus">
               <Balance
                 balance={veNationBalance?.value}
                 loading={veNationBalanceLoading}
@@ -170,9 +172,11 @@ export default function Liquidity() {
               <CalculatorIcon className="h-8 w-8" />
             </div>
 
-            <div className="stat-title">Your boosted APY</div>
+            <div className="stat-title dark:text-slate-900">
+              Your boosted APY
+            </div>
 
-            <div className="stat-value text-secondary">
+            <div className="stat-value text-secondary dark:text-secondary">
               <Balance
                 balance={boostedAPY || liquidityRewardsAPY}
                 suffix="%"
@@ -208,7 +212,7 @@ export default function Liquidity() {
           </div>
         )}
 
-        <div className="stats stats-vertical lg:stats-horizontal shadow mb-4">
+        <div className="stats stats-vertical lg:stats-horizontal shadow mb-4 dark:bg-slate-300">
           <div className="stat">
             <div className="stat-figure text-secondary">
               <ActionButton
@@ -219,28 +223,28 @@ export default function Liquidity() {
               </ActionButton>
             </div>
 
-            <div className="stat-title">Your rewards</div>
+            <div className="stat-title dark:text-slate-900">Your rewards</div>
 
             <div className="stat-value text-primary">
               <Balance balance={unclaimedRewards} decimals={4} />
             </div>
 
-            <div className="stat-desc">NATION tokens</div>
+            <div className="stat-desc dark:text-slate-900">NATION tokens</div>
           </div>
         </div>
 
-        <div className="card bg-base-100 shadow overflow-visible">
+        <div className="card bg-base-100 shadow overflow-visible dark:bg-slate-300">
           <div className="card-body">
-            <div className="tabs flex justify-center bg-white mb-4">
+            <div className="tabs flex justify-center bg-white mb-4 dark:bg-slate-300">
               <a
-                className={`tab grow ${activeTab === 0 ? 'tab-active' : ''}`}
+                className={`tab grow ${activeTab === 0 ? 'tab-active dark:font-semibold' : ''}`}
                 onClick={() => setActiveTab(0)}
               >
                 Stake
               </a>
 
               <a
-                className={`tab grow ${activeTab === 1 ? 'tab-active' : ''}`}
+                className={`tab grow ${activeTab === 1 ? 'tab-active dark:font-semibold' : ''}`}
                 onClick={() => setActiveTab(1)}
               >
                 Unstake
@@ -263,7 +267,7 @@ export default function Liquidity() {
                     <EthersInput
                       type="number"
                       placeholder="Amount"
-                      className="input input-bordered w-full"
+                      className="input input-bordered w-full dark:bg-slate-200"
                       value={depositValue}
                       onChange={setDepositValue}
                     />
@@ -305,7 +309,7 @@ export default function Liquidity() {
                     <EthersInput
                       type="number"
                       placeholder="Amount"
-                      className="input input-bordered w-full"
+                      className="input input-bordered w-full dark:bg-slate-200"
                       value={withdrawalValue}
                       onChange={(value: any) => {
                         setWithdrawalValue(value)
