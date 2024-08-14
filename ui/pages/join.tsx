@@ -112,26 +112,33 @@ export default function Join() {
       {hasPassport && <Confetti />}
       <MainCard title="Become a Nation3 citizen">
         <ul className="steps steps-vertical lg:steps-horizontal my-8">
-          <li className={`step text-sm ${action.mint ? 'step-primary' : ''}`}>
+          <li
+            className={`step text-sm ${action.mint ? 'step-primary' : ''} dark:text-slate-300`}
+          >
             Lock $NATION
           </li>
           <li
-            className={`step text-sm ${(action.mint && !hasPassport) || hasPassport ? 'step-primary' : ''
-              }`}
+            className={`step text-sm ${
+              (action.mint && !hasPassport) || hasPassport ? 'step-primary' : ''
+            } dark:text-slate-300`}
           >
             Claim passport
           </li>
-          <li className={`step text-sm ${hasPassport ? 'step-primary' : ''}`}>
+          <li
+            className={`step text-sm ${hasPassport ? 'step-primary' : ''} dark:text-slate-300`}
+          >
             Adore your passport
           </li>
         </ul>
 
         {!hasPassport ? (
           <>
-            <p>
+            <p className="dark:text-slate-300">
               To become a citizen, you need to mint a passport NFT by holding at
               least{' '}
-              <span className="font-semibold">{requiredBalance == -1 ? "..." : requiredBalance} $veNATION</span>
+              <span className="font-semibold">
+                {requiredBalance == -1 ? '...' : requiredBalance} $veNATION
+              </span>
               . This is to make sure all citizens are economically aligned.
               <br />
               <br />
@@ -154,7 +161,9 @@ export default function Join() {
                   <LockClosedIcon className="h-8 w-8" />
                 </div>
                 <div className="stat-title">Needed balance</div>
-                <div className="stat-value">{requiredBalance == -1 ? "..." : requiredBalance}</div>
+                <div className="stat-value">
+                  {requiredBalance == -1 ? '...' : requiredBalance}
+                </div>
                 <div className="stat-desc">$veNATION</div>
               </div>
 

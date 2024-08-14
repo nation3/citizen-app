@@ -96,7 +96,7 @@ export default function Liquidity() {
       <Head title="$NATION liquidity rewards" />
 
       <MainCard title="$NATION liquidity rewards">
-        <p>
+        <p className="dark:text-slate-300">
           Provide liquidity in the pool and then deposit the pool token here.{' '}
           <GradientLink
             href={`${balancerDomain}/pool/${balancerPoolId}`}
@@ -190,14 +190,16 @@ export default function Liquidity() {
                 You can boost your APY to{' '}
                 <span className="text-n3blue font-semibold">
                   {transformNumber(
-                    (((transformNumber(
-                      liquidityRewardsAPY ?? 0,
-                      NumberType.number
-                    ) as number) /
-                      10 ** 18) *
-                      potentialBoost).toString(),
+                    (
+                      ((transformNumber(
+                        liquidityRewardsAPY ?? 0,
+                        NumberType.number,
+                      ) as number) /
+                        10 ** 18) *
+                      potentialBoost
+                    ).toString(),
                     NumberType.number,
-                    2
+                    2,
                   ) + '%'}
                 </span>
                 . To do so, claim your current rewards.
@@ -317,8 +319,8 @@ export default function Liquidity() {
                         setWithdrawalValue(
                           transformNumber(
                             userDeposit,
-                            NumberType.string
-                          ) as string
+                            NumberType.string,
+                          ) as string,
                         )
                       }
                     >
@@ -342,8 +344,8 @@ export default function Liquidity() {
                         setWithdrawalValue(
                           transformNumber(
                             userDeposit,
-                            NumberType.string
-                          ) as string
+                            NumberType.string,
+                          ) as string,
                         )
                       }
                     >

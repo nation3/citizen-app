@@ -17,12 +17,12 @@ export default function Index() {
     <>
       <Head title="Home" />
       <div className="flex flex-col max-w-3xl">
-        <h1 className="card-title text-center text-3xl font-semibold mb-2">
+        <h1 className="card-title text-center text-3xl font-semibold mb-2 dark:text-slate-300">
           Welcome to Nation3
           <Image src={flag} width={36} height={36} />
         </h1>
 
-        <p className="mb-8">
+        <p className="mb-8 dark:text-slate-300">
           Nation3 is a sovereign cloud nation. We are building a community of
           like-minded people creating a nation on the cloud.{' '}
           <GradientLink text="Read more" href="https://nation3.org" />
@@ -32,7 +32,7 @@ export default function Index() {
           community, such as...
         </p>
 
-        <div className="grid xl:grid-cols-2 mt-2 gap-8">
+        <div className="grid xl:grid-cols-2 mt-2 gap-8 ">
           <HomeCard
             href="/lock"
             icon={
@@ -41,7 +41,7 @@ export default function Index() {
             title="Get $veNATION"
             linkText="Get $veNATION"
           >
-            <p>
+            <p className="dark:text-slate-300">
               Lock your $NATION to obtain $veNATION and help govern the Nation3
               DAO. $veNATION will be required to mint the upcoming passport NFTs
               to become a citizen.
@@ -56,7 +56,7 @@ export default function Index() {
             title="Become a citizen"
             linkText="Claim a passport"
           >
-            <p>
+            <p className="dark:text-slate-300">
               Once you have $veNATION, you can claim a passport. Only 420
               Genesis passports will be launched in the beginning.
             </p>
@@ -68,7 +68,7 @@ export default function Index() {
             title="Buy more $NATION"
             linkText="Buy $NATION"
           >
-            <p>
+            <p className="dark:text-slate-300">
               You can buy more $NATION and participate in liquidity rewards. You
               can also lock your $NATION to get $veNATION to boost your rewards,
               get a passport NFT, and govern the DAO.

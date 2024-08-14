@@ -18,13 +18,13 @@ export default function MainCard({
           <div
             className={`card min-w-80 md:w-full bg-base-100 shadow-md overflow-visible ${
               gradientBg && 'bg-gradient-to-r from-n3blue to-n3green'
-            }`}
+            } dark:bg-slate-600`}
           >
             <div className="card-body items-stretch items-center">
               <h2
                 className={`card-title text-center text-3xl font-medium mb-2 ${
                   gradientBg && 'text-white'
-                }`}
+                } dark:text-slate-300`}
               >
                 {title}
               </h2>
@@ -38,3 +38,6 @@ export default function MainCard({
     </>
   )
 }
+
+// className="dark:text-slate-300"
+// dark:bg-slate-600

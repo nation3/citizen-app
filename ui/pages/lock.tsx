@@ -200,7 +200,7 @@ export default function Lock() {
       <Head title="$veNATION" />
 
       <MainCard title="Lock $NATION to get $veNATION">
-        <p className="mb-4">
+        <p className="mb-4 dark:text-slate-300">
           $veNATION enables governance and minting passport NFTs.{' '}
           <GradientLink
             text="Learn more"
@@ -211,7 +211,7 @@ export default function Lock() {
         </p>
         {!hasLock ? (
           <>
-            <p>
+            <p className="mb-4 dark:text-slate-300">
               Your veNATION balance is dynamic and always correlates to the
               remainder of the time lock. As time passes and the remainder of
               time lock decreases, your veNATION balance decreases. If you want
@@ -220,29 +220,38 @@ export default function Lock() {
               <br />
               <br />
               <span className="font-semibold">
-                {requiredBalance == -1 ? "..." : requiredBalance} $veNATION
+                {requiredBalance == -1 ? '...' : requiredBalance} $veNATION
               </span>{' '}
               will be needed to mint a passport NFT.
               <br />
               <br />
-              Some examples of how to get to {requiredBalance == -1 ? "..." : requiredBalance} $veNATION:
+              Some examples of how to get to{' '}
+              {requiredBalance == -1 ? '...' : requiredBalance} $veNATION:
             </p>
 
-            <ul className="list-disc list-inside mb-4">
-              <li>At least {requiredBalance == -1 ? "..." : requiredBalance} $NATION locked for 4 years, or</li>
-
+            <ul className="list-disc list-inside mb-4 dark:text-slate-200">
               <li>
-                At least {requiredBalance == -1 ? "..." : requiredBalance * 2} $NATION locked for 2 years, or
+                At least {requiredBalance == -1 ? '...' : requiredBalance}{' '}
+                $NATION locked for 4 years, or
               </li>
 
-              <li>At least {requiredBalance == -1 ? "..." : requiredBalance * 4} $NATION locked for 1 year</li>
+              <li>
+                At least {requiredBalance == -1 ? '...' : requiredBalance * 2}{' '}
+                $NATION locked for 2 years, or
+              </li>
+
+              <li>
+                At least {requiredBalance == -1 ? '...' : requiredBalance * 4}{' '}
+                $NATION locked for 1 year
+              </li>
             </ul>
 
             <div className="alert mb-4">
               <div>
                 <InformationCircleIcon className="h-24 w-24 text-n3blue" />
                 <span>
-                  We suggest you to obtain <b>more than</b> {(requiredBalance == -1 ? "..." : requiredBalance) || 0 + 0.5}{' '}
+                  We suggest you to obtain <b>more than</b>{' '}
+                  {(requiredBalance == -1 ? '...' : requiredBalance) || 0 + 0.5}{' '}
                   $veNATION if you want to mint a passport NFT, since $veNATION
                   balance drops over time. If it falls below the required
                   threshold, your passport can be revoked. You can always lock
@@ -268,7 +277,7 @@ export default function Lock() {
                     loading={veNationBalanceLoading}
                     decimals={
                       veNationBalance &&
-                        veNationBalance.value.gt(ethers.utils.parseEther('1'))
+                      veNationBalance.value.gt(ethers.utils.parseEther('1'))
                         ? 2
                         : 6
                     }
@@ -354,8 +363,8 @@ export default function Lock() {
                         setLockAmount(
                           veNationLock
                             ? ethers.utils.formatEther(
-                              veNationLock[0].add(nationBalance?.value),
-                            )
+                                veNationLock[0].add(nationBalance?.value),
+                              )
                             : nationBalance?.formatted || '',
                         )
                         setWantsToIncrease(true)
@@ -433,18 +442,21 @@ export default function Lock() {
                   )}
                   <div className="card-actions mt-4">
                     <ActionButton
-                      className={`btn btn-primary normal-case font-medium w-full ${!(canIncrease.amount || canIncrease.time)
-                        ? 'btn-disabled'
-                        : ''
-                        }`}
+                      className={`btn btn-primary normal-case font-medium w-full ${
+                        !(canIncrease.amount || canIncrease.time)
+                          ? 'btn-disabled'
+                          : ''
+                      }`}
                       action={hasLock ? increaseLock : createLock}
                       approval={approval}
                     >
                       {!hasLock
                         ? 'Lock'
-                        : `Increase lock ${canIncrease.amount ? 'amount' : ''
-                        } ${canIncrease.amount && canIncrease.time ? '&' : ''
-                        } ${canIncrease.time ? 'time' : ''}`}
+                        : `Increase lock ${
+                            canIncrease.amount ? 'amount' : ''
+                          } ${
+                            canIncrease.amount && canIncrease.time ? '&' : ''
+                          } ${canIncrease.time ? 'time' : ''}`}
                     </ActionButton>
                   </div>
                 </>

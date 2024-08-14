@@ -4,7 +4,6 @@ module.exports = {
     './components/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
-    darkMode: 'media',
     fontFamily: {
       display: ['Poppins', 'sans-serif'],
       body: ['UniversalSans', 'sans-serif'],
@@ -17,9 +16,6 @@ module.exports = {
       bold: 500,
     },
     extend: {
-        fontSize: {
-        'xxl': ['2rem', { lineHeight: '1' }],
-      },
       colors: {
         n3blue: '#69C9FF',
         n3green: '#88F1BB',
@@ -46,4 +42,5 @@ module.exports = {
       },
     ],
   },
+  darkMode: 'media',
 }
