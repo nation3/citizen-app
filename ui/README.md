@@ -20,10 +20,6 @@ cp .env.mainnet .env.local
 ```
 or
 ```
-cp .env.goerli .env.local
-```
-or
-```
 cp .env.sepolia .env.local
 ```
 
