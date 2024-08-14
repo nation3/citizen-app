@@ -315,12 +315,12 @@ export default function Lock() {
           </>
         )}
 
-        <div className="card bg-base-100 shadow overflow-visible">
+        <div className="card bg-base-100 shadow overflow-visible dark:bg-slate-300">
           <div className="card-body">
             <div className="form-control">
               {!hasExpired ? (
                 <>
-                  <p className="mb-4">
+                  <p className="mb-4 ">
                     Available to lock:{' '}
                     <Balance
                       balance={nationBalance?.formatted}
@@ -344,7 +344,7 @@ export default function Lock() {
                       type="number"
                       placeholder="0"
                       id="lockAmount"
-                      className="input input-bordered w-full"
+                      className="input input-bordered w-full dark:bg-slate-200"
                       value={lockAmount}
                       min={
                         veNationLock
@@ -387,7 +387,7 @@ export default function Lock() {
                   <input
                     type="date"
                     placeholder="Expiration date"
-                    className="input input-bordered w-full"
+                    className="input input-bordered w-full dark:bg-slate-200"
                     value={lockTime.formatted}
                     min={minMaxLockTime.min}
                     max={minMaxLockTime.max}
