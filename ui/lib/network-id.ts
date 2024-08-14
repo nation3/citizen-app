@@ -7,8 +7,6 @@ export function networkToId(network: any) {
       return 1
     case 'ethereum':
       return 1
-    case 'goerli':
-      return 5
     case 'sepolia':
       return 11155111
     case 'local':
