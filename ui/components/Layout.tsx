@@ -159,7 +159,7 @@ export default function Layout({ children }: any) {
               htmlFor="side-drawer"
               className="drawer-overlay z-10"
             ></label>
-            <div className="bg-white w-80 flex flex-col justify-between pb-24 lg:pb-0 overflow-y-auto drop-shadow-md min-h-screen dark:bg-slate-800">
+            <div className="bg-white w-80 flex flex-col justify-between pb-24 lg:pb-0 overflow-y-auto drop-shadow-md min-h-screen dark:bg-slate-800 dark:border-r-[1px] dark:border-slate-600">
               <div className="mt-6 py-4 hidden lg:block">
                 <div className="px-8 pt-2 cursor-pointer">
                   <Link href="/" passHref>
