@@ -30,7 +30,7 @@ interface Config {
 }
 
 
-const chain = process.env.NEXT_PUBLIC_CHAIN || "goerli";
+const chain = process.env.NEXT_PUBLIC_CHAIN;
 const defaultConfig = require(`../../contracts/deployments/${chain}.json`) as DeploymentConfig
 const config: Config = {
   nationToken: defaultConfig.nationToken || zeroAddress,
@@ -65,4 +65,3 @@ export const {
   nationPassportAgreementStatement,
   nationPassportAgreementURI,
 } = config
-
