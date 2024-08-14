@@ -4,6 +4,7 @@ import { useNetwork } from '../lib/use-wagmi'
 
 const chainIds = {
   mainnet: 1,
+  sepolia: 11155111
 }
 
 type Indexable = {

@@ -1,5 +1,5 @@
 import { ethers } from 'ethers'
-import { mainnet, configureChains } from 'wagmi'
+import { mainnet, sepolia, configureChains, } from 'wagmi'
 import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet'
 import { InjectedConnector } from 'wagmi/connectors/injected'
 import { WalletConnectConnector } from '@wagmi/core/connectors/walletConnect'
@@ -9,7 +9,7 @@ import MetaMaskIcon from '../public/icons/connectors/metamask.svg'
 import WalletConnectIcon from '../public/icons/connectors/walletconnect.svg'
 import { networkToId } from './network-id'
 
-const chains = [mainnet]
+const chains = [mainnet, sepolia]
 
 export function provider() {
   if (process.env.NEXT_PUBLIC_CHAIN === 'local') {

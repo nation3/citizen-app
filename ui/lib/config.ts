@@ -30,7 +30,7 @@ interface Config {
 }
 
 
-const chain = process.env.NEXT_PUBLIC_CHAIN;
+const chain = process.env.NEXT_PUBLIC_CHAIN || 'sepolia';
 const defaultConfig = require(`../../contracts/deployments/${chain}.json`) as DeploymentConfig
 const config: Config = {
   nationToken: defaultConfig.nationToken || zeroAddress,
