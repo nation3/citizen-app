@@ -155,23 +155,27 @@ export default function Join() {
               />
             </p>
 
-            <div className="stats stats-vertical lg:stats-horizontal shadow my-4">
+            <div className="stats stats-vertical lg:stats-horizontal shadow my-4 dark:bg-slate-300">
               <div className="stat">
                 <div className="stat-figure text-primary">
                   <LockClosedIcon className="h-8 w-8" />
                 </div>
-                <div className="stat-title">Needed balance</div>
+                <div className="stat-title dark:text-slate-900">
+                  Needed balance
+                </div>
                 <div className="stat-value">
                   {requiredBalance == -1 ? '...' : requiredBalance}
                 </div>
-                <div className="stat-desc">$veNATION</div>
+                <div className="stat-desc dark:text-slate-900">$veNATION</div>
               </div>
 
               <div className="stat">
                 <div className="stat-figure text-secondary">
                   <SparklesIcon className="h-8 w-8" />
                 </div>
-                <div className="stat-title">Your balance</div>
+                <div className="stat-title dark:text-slate-900">
+                  Your balance
+                </div>
                 <div className="stat-value">
                   <Balance
                     loading={veNationBalanceLoading}
@@ -179,7 +183,7 @@ export default function Join() {
                     decimals={4}
                   />
                 </div>
-                <div className="stat-desc">$veNATION</div>
+                <div className="stat-desc dark:text-slate-900">$veNATION</div>
               </div>
             </div>
 
