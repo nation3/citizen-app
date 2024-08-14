@@ -4,6 +4,7 @@ module.exports = {
     './components/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
+    darkMode: 'media',
     fontFamily: {
       display: ['Poppins', 'sans-serif'],
       body: ['UniversalSans', 'sans-serif'],
