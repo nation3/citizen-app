@@ -119,7 +119,7 @@ export default function Layout({ children }: any) {
   const layout = (
     <div className="mx-auto bg-n3bg font-display  dark:bg-slate-800">
       <div className="h-screen">
-        <div className="navbar bg-base-100 border-slate-100 border-b-2 py-0 pl-0 lg:hidden sticky z-10 dark:bg-slate-800">
+        <div className="navbar bg-base-100 border-b-2 py-0 pl-0 lg:hidden sticky z-10 dark:bg-slate-800">
           <div className="navbar-start border-slate-100 pl-0">
             <div className="w-80 border-slate-100 py-4 box-content">
               <div className="pl-6 pt-2 cursor-pointer">
@@ -133,9 +133,9 @@ export default function Layout({ children }: any) {
                 <div className="flex-none lg:hidden">
                   <label
                     htmlFor="side-drawer"
-                    className="btn btn-square btn-ghost"
+                    className="btn btn-square btn-ghost dark:btn-outline dark:border-slate-300"
                   >
-                    <Bars3Icon className="h-8 w-8  dark:border " />
+                    <Bars3Icon className="h-8 w-8" />
                   </label>
                 </div>
               </div>
@@ -164,7 +164,12 @@ export default function Layout({ children }: any) {
                 <div className="px-8 pt-2 cursor-pointer">
                   <Link href="/" passHref>
                     <a>
-                      <Image src={Logo} />
+                      <span >
+                        <Image src={Logo} />
+                      </span>
+                      {/* <span className="dark:hidden">
+                        <Image src={LogoDark} />
+                      </span> */}
                     </a>
                   </Link>
                 </div>
