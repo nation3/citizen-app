@@ -164,9 +164,10 @@ export default function Layout({ children }: any) {
                 <div className="px-8 pt-2 cursor-pointer">
                   <Link href="/" passHref>
                     <a>
-                      <span >
+                      <span>
                         <Image src={Logo} />
                       </span>
+                      {/* Logo placeholder for Dark Mode */}
                       {/* <span className="dark:hidden">
                         <Image src={LogoDark} />
                       </span> */}
@@ -189,7 +190,7 @@ export default function Layout({ children }: any) {
                         <a
                           className={`py-4 ${
                             router.pathname == item.href ? 'active' : ''
-                          }`}
+                          } ${router.pathname !== item.href ? 'dark:hover:bg-slate-700' : ''}`}
                         >
                           {item.icon}
                           {item.name}
@@ -200,7 +201,7 @@ export default function Layout({ children }: any) {
                       <a
                         className={`py-4 ${
                           router.pathname == item.href ? 'active' : ''
-                        }`}
+                        } ${router.pathname !== item.href ? 'dark:hover:bg-slate-700' : ''}`}
                         href={item.href}
                         target="_blank"
                         rel="noopener noreferrer"
