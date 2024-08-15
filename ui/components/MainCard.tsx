@@ -38,6 +38,3 @@ export default function MainCard({
     </>
   )
 }
-
-// className="dark:text-slate-300"
-// dark:bg-slate-600
