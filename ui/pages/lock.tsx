@@ -246,9 +246,9 @@ export default function Lock() {
               </li>
             </ul>
 
-            <div className="alert mb-4">
+            <div className="alert mb-4  dark:bg-slate-200">
               <div>
-                <InformationCircleIcon className="h-24 w-24 text-n3blue" />
+                <InformationCircleIcon className="h-24 w-24 text-n3blue dark:text-blue-600" />
                 <span>
                   We suggest you to obtain <b>more than</b>{' '}
                   {(requiredBalance == -1 ? '...' : requiredBalance) || 0 + 0.5}{' '}
