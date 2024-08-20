@@ -10,10 +10,12 @@ export default function HomeCard({
 }: any) {
   return (
     <Link href={href} passHref>
-      <div className="card bg-base-100 shadow-md transition ease-in-out hover:-translate-y-1 cursor-pointer">
-        <div className="card-body items-stretch items-center ">
+      <div className="card bg-base-100 shadow-md transition ease-in-out hover:-translate-y-1 cursor-pointer dark:bg-slate-700">
+        <div className="card-body items-stretch items-center">
           {icon}
-          <h2 className="card-title text-center font-medium">{title}</h2>
+          <h2 className="card-title text-center font-medium dark:text-slate-300 dark:font-bold">
+            {title}
+          </h2>
 
           {children}
 

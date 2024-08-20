@@ -4,7 +4,7 @@ import React from 'react'
 class WebsiteDocument extends Document {
   render() {
     return (
-      <Html>
+      <Html >
         <Head>
           <link rel="preconnect" href="https://fonts.googleapis.com" />
 
@@ -20,7 +20,7 @@ class WebsiteDocument extends Document {
             href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500&display=swap"
           />
 
-          <meta name="theme-color" content="#54c3ff" />
+          {/* <meta name="theme-color" content="#54c3ff" /> */}
 
           <link rel="icon" href="/favicon.ico" />
         </Head>
