@@ -117,9 +117,9 @@ export default function Layout({ children }: any) {
   }
 
   const layout = (
-    <div className="mx-auto bg-n3bg font-display">
+    <div className="mx-auto bg-n3bg font-display  dark:bg-slate-800">
       <div className="h-screen">
-        <div className="navbar bg-base-100 border-slate-100 border-b-2 py-0 pl-0 lg:hidden sticky z-10">
+        <div className="navbar bg-base-100 border-b-2 py-0 pl-0 lg:hidden sticky z-10 dark:bg-slate-800">
           <div className="navbar-start border-slate-100 pl-0">
             <div className="w-80 border-slate-100 py-4 box-content">
               <div className="pl-6 pt-2 cursor-pointer">
@@ -133,7 +133,7 @@ export default function Layout({ children }: any) {
                 <div className="flex-none lg:hidden">
                   <label
                     htmlFor="side-drawer"
-                    className="btn btn-square btn-ghost"
+                    className="btn btn-square btn-ghost dark:btn-outline dark:border-slate-300"
                   >
                     <Bars3Icon className="h-8 w-8" />
                   </label>
@@ -159,12 +159,18 @@ export default function Layout({ children }: any) {
               htmlFor="side-drawer"
               className="drawer-overlay z-10"
             ></label>
-            <div className="bg-white w-80 flex flex-col justify-between pb-24 lg:pb-0 overflow-y-auto drop-shadow-md min-h-screen">
+            <div className="bg-white w-80 flex flex-col justify-between pb-24 lg:pb-0 overflow-y-auto drop-shadow-md min-h-screen dark:bg-slate-800 dark:border-r-[1px] dark:border-slate-600">
               <div className="mt-6 py-4 hidden lg:block">
                 <div className="px-8 pt-2 cursor-pointer">
                   <Link href="/" passHref>
                     <a>
-                      <Image src={Logo} />
+                      <span>
+                        <Image src={Logo} />
+                      </span>
+                      {/* Logo placeholder for Dark Mode */}
+                      {/* <span className="dark:hidden">
+                        <Image src={LogoDark} />
+                      </span> */}
                     </a>
                   </Link>
                 </div>
@@ -172,7 +178,7 @@ export default function Layout({ children }: any) {
               <ul className="menu p-4 overflow-y-auto text-base-400 grow">
                 {nav.map((item: any) => (
                   <li
-                    className="mt-1 relative py-2"
+                    className="mt-1 relative py-2 dark:text-slate-300"
                     onClick={() =>
                       // @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
                       (document.getElementById('side-drawer').checked = false)
@@ -184,7 +190,7 @@ export default function Layout({ children }: any) {
                         <a
                           className={`py-4 ${
                             router.pathname == item.href ? 'active' : ''
-                          }`}
+                          } ${router.pathname !== item.href ? 'dark:hover:bg-slate-700' : ''}`}
                         >
                           {item.icon}
                           {item.name}
@@ -195,7 +201,7 @@ export default function Layout({ children }: any) {
                       <a
                         className={`py-4 ${
                           router.pathname == item.href ? 'active' : ''
-                        }`}
+                        } ${router.pathname !== item.href ? 'dark:hover:bg-slate-700' : ''}`}
                         href={item.href}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -215,12 +221,13 @@ export default function Layout({ children }: any) {
                       <div className="mask mask-circle cursor-pointer">
                         <Blockies seed={address} size={12} />
                       </div>
-                      {ensName
-                        ? ensName
-                        : `${((address as string) ?? '').substring(
-                            0,
-                            6,
-                          )}...${address.slice(-4)}`}
+                      {ensName ? (
+                        ensName
+                      ) : (
+                        <span className="dark:text-slate-300">{`${(
+                          (address as string) ?? ''
+                        ).substring(0, 6)}...${address.slice(-4)}`}</span>
+                      )}
                       <ChevronDownIcon className="h-5 w-5 absolute right-4 opacity-50" />
                     </label>
                   </li>

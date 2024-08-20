@@ -21,3 +21,7 @@ a {
 * {
   box-sizing: border-box;
 }
+
+.dark-card {
+  @apply bg-slate-800 border border-slate-400;
+}
