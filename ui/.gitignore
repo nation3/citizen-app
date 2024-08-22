@@ -35,5 +35,6 @@ yarn-error.log*
 .vercel
 
 # cypress
+cypress/downloads
 cypress/screenshots
 cypress/videos
