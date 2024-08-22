@@ -19,7 +19,9 @@ export default function HomeCard({
 
           {children}
 
-          <GradientLink text={linkText} href={href}></GradientLink>
+          <div className='font-medium bg-gradient-to-r from-n3blue to-n3green text-transparent bg-clip-text'>
+            {linkText} →
+          </div>
         </div>
       </div>
     </Link>

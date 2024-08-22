@@ -239,6 +239,7 @@ export default function Liquidity() {
               <a
                 className={`tab grow ${activeTab === 0 ? 'tab-active dark:font-semibold' : ''}`}
                 onClick={() => setActiveTab(0)}
+                id="stakeTab"
               >
                 Stake
               </a>
@@ -246,6 +247,7 @@ export default function Liquidity() {
               <a
                 className={`tab grow ${activeTab === 1 ? 'tab-active dark:font-semibold' : ''}`}
                 onClick={() => setActiveTab(1)}
+                id="unstakeTab"
               >
                 Unstake
               </a>
@@ -268,6 +270,7 @@ export default function Liquidity() {
                       type="number"
                       placeholder="Amount"
                       className="input input-bordered w-full dark:bg-slate-200"
+                      id="depositValue"
                       value={depositValue}
                       onChange={setDepositValue}
                     />
@@ -310,6 +313,7 @@ export default function Liquidity() {
                       type="number"
                       placeholder="Amount"
                       className="input input-bordered w-full dark:bg-slate-200"
+                      id="withdrawalValue"
                       value={withdrawalValue}
                       onChange={(value: any) => {
                         setWithdrawalValue(value)

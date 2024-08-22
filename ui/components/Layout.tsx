@@ -125,9 +125,7 @@ export default function Layout({ children }: any) {
               <div className="pl-6 pt-2 cursor-pointer">
                 <div className="flex-none hidden lg:block">
                   <Link href="/" passHref>
-                    <a>
-                      <Image src={Logo} />
-                    </a>
+                    <Image src={Logo} alt="Logo" />
                   </Link>
                 </div>
                 <div className="flex-none lg:hidden">
@@ -163,19 +161,17 @@ export default function Layout({ children }: any) {
               <div className="mt-6 py-4 hidden lg:block">
                 <div className="px-8 pt-2 cursor-pointer">
                   <Link href="/" passHref>
-                    <a>
-                      <span>
-                        <Image src={Logo} />
-                      </span>
-                      {/* Logo placeholder for Dark Mode */}
-                      {/* <span className="dark:hidden">
-                        <Image src={LogoDark} />
-                      </span> */}
-                    </a>
+                    <span>
+                      <Image src={Logo} alt="Logo" />
+                    </span>
+                    {/* Logo placeholder for Dark Mode */}
+                    {/* <span className="dark:hidden">
+                      <Image src={LogoDark} />
+                    </span> */}
                   </Link>
                 </div>
               </div>
-              <ul className="menu p-4 overflow-y-auto text-base-400 grow">
+              <ul className="menu p-4 text-base-400 grow">
                 {nav.map((item: any) => (
                   <li
                     className="mt-1 relative py-2 dark:text-slate-300"
@@ -186,16 +182,10 @@ export default function Layout({ children }: any) {
                     key={item.href}
                   >
                     {item.href.charAt(0) === '/' ? (
-                      <Link href={item.href}>
-                        <a
-                          className={`py-4 ${
-                            router.pathname == item.href ? 'active' : ''
-                          } ${router.pathname !== item.href ? 'dark:hover:bg-slate-700' : ''}`}
-                        >
-                          {item.icon}
-                          {item.name}
-                          <ChevronRightIcon className="h-5 w-5 absolute right-4 opacity-50" />
-                        </a>
+                      <Link href={item.href} className={`py-4 ${router.pathname == item.href ? 'active' : ''} ${router.pathname !== item.href ? 'dark:hover:bg-slate-700' : ''}`}>
+                        {item.icon}
+                        {item.name}
+                        <ChevronRightIcon className="h-5 w-5 absolute right-4 opacity-50" />
                       </Link>
                     ) : (
                       <a
@@ -318,6 +308,7 @@ export default function Layout({ children }: any) {
                         <div className="h-5 w-5">
                           <Image
                             src={(connectorIcons as Indexable)[connector.name]}
+                            alt="Connector icons"
                           />
                         </div>
                       ) : (
