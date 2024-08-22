@@ -126,7 +126,7 @@ export default function Layout({ children }: any) {
                 <div className="flex-none hidden lg:block">
                   <Link href="/" passHref>
                     <a>
-                      <Image src={Logo} />
+                      <Image src={Logo} alt="Logo" />
                     </a>
                   </Link>
                 </div>
@@ -165,7 +165,7 @@ export default function Layout({ children }: any) {
                   <Link href="/" passHref>
                     <a>
                       <span>
-                        <Image src={Logo} />
+                        <Image src={Logo} alt="Logo" />
                       </span>
                       {/* Logo placeholder for Dark Mode */}
                       {/* <span className="dark:hidden">
@@ -318,6 +318,7 @@ export default function Layout({ children }: any) {
                         <div className="h-5 w-5">
                           <Image
                             src={(connectorIcons as Indexable)[connector.name]}
+                            alt="Connector icons"
                           />
                         </div>
                       ) : (
