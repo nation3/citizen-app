@@ -250,9 +250,9 @@ export default function Lock() {
               <div>
                 <InformationCircleIcon className="h-24 w-24 text-n3blue  dark:text-blue-600" />
                 <span>
-                  We suggest you to obtain <b>more than</b>{' '}
+                  We suggest you obtain <b>more than</b>{' '}
                   {(requiredBalance == -1 ? '...' : requiredBalance) || 0 + 0.5}{' '}
-                  $veNATION if you want to mint a passport NFT, since $veNATION
+                  $veNATION if you want to mint a passport NFT, since the $veNATION
                   balance drops over time. If it falls below the required
                   threshold, your passport can be revoked. You can always lock
                   more $NATION later.
