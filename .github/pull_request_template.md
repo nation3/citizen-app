@@ -4,17 +4,17 @@
 ## Related GitHub Issue
 
 <!--- Please link to the GitHub issue here. -->
-closes #<👉INSERT ISSUE NUMBER HERE👈>
+closes #<👉INSERT_ISSUE_NUMBER_HERE👈>
 
 ## Screenshots (if appropriate):
 
 <!--- If your pull request changes the UI, please include before/after screenshots. -->
 
 _Before_ code change:
-> ![](...)
+> ![](<INSERT_SCREENSHOT URL_HERE>)
 
 _After_ code change:
-> ![](...)
+> ![](<INSERT_SCREENSHOT URL_HERE>)
 
 ## How Has This Change Been Tested?
 
