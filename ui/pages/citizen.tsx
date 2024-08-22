@@ -61,7 +61,7 @@ export default function Citizen() {
                   }}
                   onClick={() => addConfetti()}
                 >
-                  <Image src={passportData.nft.image} layout="fill" />
+                  <Image src={passportData.nft.image} alt="NFT image" layout="fill" />
                 </Card>
               </div>
 
@@ -71,7 +71,7 @@ export default function Citizen() {
                     onClick={() => signMessageAndDownloadPass()}
                     className="w-40 xl:w-full"
                   >
-                    <Image src={AddToWallet} layout="responsive" />
+                    <Image src={AddToWallet} alt="Add to wallet" layout="responsive" />
                   </button>
                   <a
                     className="btn btn-primary gap-2 flex-1"
@@ -79,7 +79,7 @@ export default function Citizen() {
                     target="_blank"
                     href="https://discord.gg/nation3-690584551239581708"
                   >
-                    <Image src={DiscordIcon} width={24} height={24} />
+                    <Image src={DiscordIcon} alt="Discord icon" width={24} height={24} />
                     <span className="hidden xl:block">
                       Access gated channels
                     </span>
@@ -90,7 +90,7 @@ export default function Citizen() {
                     target="_blank"
                     href="https://vote.nation3.org"
                   >
-                    <Image src={BallotIcon} width={24} height={24} />
+                    <Image src={BallotIcon} alt="Ballot icon" width={24} height={24} />
                     <span className="hidden xl:block">Vote on proposals</span>
                   </a>
                 </div>
