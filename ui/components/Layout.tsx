@@ -171,7 +171,7 @@ export default function Layout({ children }: any) {
                   </Link>
                 </div>
               </div>
-              <ul className="menu p-4 overflow-y-auto text-base-400 grow">
+              <ul className="menu p-4 text-base-400 grow">
                 {nav.map((item: any) => (
                   <li
                     className="mt-1 relative py-2 dark:text-slate-300"
