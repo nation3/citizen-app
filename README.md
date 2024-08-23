@@ -10,7 +10,8 @@
 
 The Nation3 Citizen App at https://app.nation3.org is where people can connect their Ethereum wallet and interact with the [foundational](https://github.com/nation3/foundations) Nation3 smart contracts.
 
-> [![app](https://user-images.githubusercontent.com/95955389/169034356-f1fdb540-d65b-4c1b-bd4d-21c76f7f8af3.png)](https://app.nation3.org)
+> [![app](https://github.com/user-attachments/assets/e1a82323-1750-4993-8b82-d9ee9f529b7c)](https://app.nation3.org)
+
 
 ## File Structure
 
