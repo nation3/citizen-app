@@ -39,7 +39,7 @@ Start the development server:
 yarn dev
 ```
 
-Then open http://localhost:42069 in a browser.
+Then open http://localhost:3000 in a browser.
 
 ## Integration Testing
 

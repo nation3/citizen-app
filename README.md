@@ -38,7 +38,7 @@ Start the development server:
 yarn dev
 ```
 
-Once you go to http://localhost:42069, you will see the message "Nation3 uses Sepolia as its preferred network":
+Once you go to http://localhost:3000, you will see the message "Nation3 uses Sepolia as its preferred network":
 
 > <img width="801" alt="Screenshot 2024-01-25 at 13 09 56" src="https://github.com/nation3/citizen-app/assets/42999269/6121fde4-8b5c-4f8c-be50-531723121770">
 
