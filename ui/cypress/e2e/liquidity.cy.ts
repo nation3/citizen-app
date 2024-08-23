@@ -1,7 +1,20 @@
 describe('Liquidity', () => {
+  beforeEach(() => {
+    cy.visit('/liquidity')
+
+    cy.intercept("GET", "https://api.coingecko.com/api/v3/simple/price?ids=nation3,ethereum&vs_currencies=usd", {
+      body: {
+        "ethereum": {
+            "usd": 2672.05
+        },
+        "nation3": {
+            "usd": 30.75
+        }
+      },
+    });
+  });
 
   it('stake: type a deposit amount', () => {
-    cy.visit('/liquidity')
 
     // Expect default value to be '0'
     cy.get('#depositValue')
@@ -25,8 +38,7 @@ describe('Liquidity', () => {
   })
 
   it('unstake: type a withdrawal amount', () => {
-    cy.visit('/liquidity')
-
+    
     // Click the "Unstake" tab
     cy.get("#unstakeTab").click()
 
