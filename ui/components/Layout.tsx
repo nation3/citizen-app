@@ -1,26 +1,25 @@
 import {
+  ArrowRightOnRectangleIcon,
+  ArrowTopRightOnSquareIcon,
   BanknotesIcon,
+  Bars3Icon,
   ChevronDownIcon,
   ChevronRightIcon,
   CurrencyDollarIcon,
-  ArrowTopRightOnSquareIcon,
   HomeIcon,
   KeyIcon,
   LockClosedIcon,
-  ArrowRightOnRectangleIcon,
-  Bars3Icon,
   NewspaperIcon,
   PlusIcon,
-  UserPlusIcon,
-  UserIcon,
-  UsersIcon,
   Squares2X2Icon,
+  UserIcon,
+  UserPlusIcon,
+  UsersIcon,
   XCircleIcon,
 } from '@heroicons/react/24/outline'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import Script from 'next/script'
 import { useState } from 'react'
 // @ts-expect-error ts-migrate(7016) FIXME: Could not find a declaration file for module 'reac... Remove this comment to see the full error message
 import Blockies from 'react-blockies'
@@ -216,7 +215,12 @@ export default function Layout({ children }: any) {
               </ul>
               <ul className="menu p-4 text-base-400">
                 {address ? (
-                  <li>
+                  <li
+                    className="
+                  dark:hover:bg-slate-700
+                  dark:rounded-lg
+                  "
+                  >
                     <label htmlFor="web3-modal">
                       <div className="mask mask-circle cursor-pointer">
                         <Blockies seed={address} size={12} />
@@ -224,11 +228,14 @@ export default function Layout({ children }: any) {
                       {ensName ? (
                         ensName
                       ) : (
-                        <span className="dark:text-slate-300">{`${(
-                          (address as string) ?? ''
-                        ).substring(0, 6)}...${address.slice(-4)}`}</span>
+                        <span className="dark:text-slate-300">
+                          {`${((address as string) ?? '').substring(
+                            0,
+                            6,
+                          )}...${address.slice(-4)}`}
+                        </span>
                       )}
-                      <ChevronDownIcon className="h-5 w-5 absolute right-4 opacity-50" />
+                      <ChevronDownIcon className="h-5 w-5 absolute right-4 opacity-50 dark:text-slate-300" />
                     </label>
                   </li>
                 ) : (
@@ -251,7 +258,9 @@ export default function Layout({ children }: any) {
 
       <label htmlFor="web3-modal" className="modal cursor-pointer z-10">
         <label
-          className="modal-box relative dark:bg-slate-800 dark:text-slate-300 dark:border"
+          className="modal-box relative 
+          dark:bg-slate-800 dark:text-slate-300 
+          dark:border-[3px] dark:border-slate-600"
           htmlFor=""
         >
           <label
@@ -265,10 +274,16 @@ export default function Layout({ children }: any) {
             <>
               <h3 className="text-lg font-bold px-4">Account</h3>
 
-              <p className="p-4">Connected to {connectData?.connector?.name}</p>
+              <p className="p-4 mb-4">
+                Connected to {connectData?.connector?.name}
+              </p>
 
-              <ul className="menu bg-base-100 p-2 -m-2 rounded-box">
-                <li key="address">
+              <ul className="menu bg-base-100 p-4 -m-2 space-y-2 rounded-box dark:bg-slate-800">
+                <li
+                  key="address"
+                  className="dark:border-[1px] dark:border-slate-600 my-1 dark:bg-slate-700
+                      dark:hover:bg-slate-600 rounded-md"
+                >
                   <a
                     href={`${etherscanDomain}/address/${address}`}
                     rel="noreferrer noopener"
@@ -284,7 +299,11 @@ export default function Layout({ children }: any) {
                   </a>
                 </li>
 
-                <li key="logout">
+                <li
+                  key="logout"
+                  className="dark:border-[1px] dark:border-slate-600 my-1 dark:bg-slate-700
+                      dark:hover:bg-slate-600 rounded-md "
+                >
                   <a onClick={() => disconnect()}>
                     <ArrowRightOnRectangleIcon className="h-5 w-5" />
                     Log out
@@ -312,10 +331,12 @@ export default function Layout({ children }: any) {
 
               <ul className="menu bg-base-100 p-2 -m-2 rounded-box dark:bg-slate-800">
                 {connectors.map((connector) => (
-                  <li key={connector.id}>
+                  <li key={connector.id} className="">
                     <button
                       disabled={!connector.ready}
                       onClick={() => connect({ connector })}
+                      className="dark:border-[1px] dark:border-slate-600 my-1 dark:bg-slate-700
+                      dark:hover:bg-slate-600"
                     >
                       {(connectorIcons as Indexable)[connector.name] ? (
                         <div className="h-5 w-5">
