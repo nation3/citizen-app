@@ -5,7 +5,11 @@ export default function ErrorCard({ error }: any) {
   const { removeError } = useErrorContext()
 
   return (
-    <div className="card shadow-md bg-error text-primary-content">
+    <div
+      className="card shadow-md bg-error text-primary-content
+    dark:border-[1px] dark:border-slate-600 dark:bg-slate-800
+    dark:text-slate-300"
+    >
       <div className="card-body">
         <h2 className="card-title">Oopsie</h2>
         <p>
