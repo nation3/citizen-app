@@ -250,7 +250,10 @@ export default function Layout({ children }: any) {
       <input type="checkbox" id="web3-modal" className="modal-toggle" />
 
       <label htmlFor="web3-modal" className="modal cursor-pointer z-10">
-        <label className="modal-box relative" htmlFor="">
+        <label
+          className="modal-box relative dark:bg-slate-800 dark:text-slate-300 dark:border"
+          htmlFor=""
+        >
           <label
             htmlFor="web3-modal"
             className="btn btn-sm btn-circle btn-ghost absolute right-6 top-5"
@@ -290,7 +293,7 @@ export default function Layout({ children }: any) {
               </ul>
             </>
           ) : (
-            <>
+            <div className="">
               <h3 className="text-lg font-bold px-4">
                 Sign in by connecting your account
               </h3>
@@ -307,7 +310,7 @@ export default function Layout({ children }: any) {
                 ''
               )}
 
-              <ul className="menu bg-base-100 p-2 -m-2 rounded-box">
+              <ul className="menu bg-base-100 p-2 -m-2 rounded-box dark:bg-slate-800">
                 {connectors.map((connector) => (
                   <li key={connector.id}>
                     <button
@@ -353,7 +356,7 @@ export default function Layout({ children }: any) {
                 </a>
                 .
               </p>
-            </>
+            </div>
           )}
         </label>
       </label>
