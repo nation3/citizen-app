@@ -244,8 +244,7 @@ export default function Layout({ children }: any) {
 
       <label htmlFor="web3-modal" className="modal cursor-pointer z-10">
         <label
-          className="modal-box relative dark:bg-slate-800 dark:text-slate-300 
-          dark:border-[3px] dark:border-slate-600"
+          className="modal-box relative dark:bg-slate-800 dark:text-slate-300"
           htmlFor=""
         >
           <label
