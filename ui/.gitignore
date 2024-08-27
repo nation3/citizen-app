@@ -24,6 +24,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# yarn
+.yarn
+
 # local env files
 .env
 .env.local
@@ -35,5 +38,6 @@ yarn-error.log*
 .vercel
 
 # cypress
+cypress/downloads
 cypress/screenshots
 cypress/videos

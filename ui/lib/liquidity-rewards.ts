@@ -68,12 +68,14 @@ export function useLiquidityRewards({ nationPrice, poolValue, address }: any) {
 
   useEffect(() => {
     if (totalRewards && poolValue && totalDeposit && lpTokensSupply) {
-      setLiquidityRewardsAPY(
-        totalRewards
-          .mul(transformNumber(12 / months, NumberType.bignumber))
-          .mul(transformNumber(nationPrice, NumberType.bignumber, 2))
-          .div(poolValue.mul(totalDeposit).div(lpTokensSupply))
-      )
+      if (totalDeposit.gt(transformNumber(0, NumberType.bignumber))){
+        setLiquidityRewardsAPY(
+          totalRewards
+            .mul(transformNumber(12 / months, NumberType.bignumber))
+            .mul(transformNumber(nationPrice, NumberType.bignumber, 2))
+            .div(poolValue.mul(totalDeposit).div(lpTokensSupply))
+        )
+      }
     }
   }, [
     poolValue,
