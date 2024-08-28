@@ -283,7 +283,7 @@ export default function Layout({ children }: any) {
 
                 <li
                   key="logout"
-                  className="dark:border-[1px] dark:border-slate-600 my-1 dark:bg-slate-700
+                  className="my-1 dark:bg-slate-700
                       dark:hover:bg-slate-600 rounded-md"
                 >
                   <a onClick={() => disconnect()}>
