@@ -260,7 +260,7 @@ export default function Layout({ children }: any) {
 
               <p className="p-4">Connected to {connectData?.connector?.name}</p>
 
-              <ul className="menu bg-base-100 p-2 -m-2 rounded-box space-y-2 rounded-box dark:bg-slate-800">
+              <ul className="menu bg-base-100 p-2 -m-2 rounded-box rounded-box dark:bg-slate-800">
                 <li
                   key="address"
                   className="dark:border-[1px] dark:border-slate-600 my-1 dark:bg-slate-700
