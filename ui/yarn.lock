@@ -2699,7 +2699,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:*":
+"@types/react@npm:*, @types/react@npm:18.3.4":
   version: 18.3.4
   resolution: "@types/react@npm:18.3.4"
   dependencies:
@@ -2709,28 +2709,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:18.0.1":
-  version: 18.0.1
-  resolution: "@types/react@npm:18.0.1"
-  dependencies:
-    "@types/prop-types": "npm:*"
-    "@types/scheduler": "npm:*"
-    csstype: "npm:^3.0.2"
-  checksum: 10c0/4ef14c4da5f685b53396e5b31e042981a54f962bdbd3dfa8cec52035f53f378f0a5244968ce94e49d6cfda26e692411b5a9a3ba082ab67ce106a3c8a882f538b
-  languageName: node
-  linkType: hard
-
 "@types/retry@npm:0.12.0":
   version: 0.12.0
   resolution: "@types/retry@npm:0.12.0"
   checksum: 10c0/7c5c9086369826f569b83a4683661557cab1361bac0897a1cefa1a915ff739acd10ca0d62b01071046fe3f5a3f7f2aec80785fe283b75602dc6726781ea3e328
-  languageName: node
-  linkType: hard
-
-"@types/scheduler@npm:*":
-  version: 0.23.0
-  resolution: "@types/scheduler@npm:0.23.0"
-  checksum: 10c0/5cf7f2ba3732b74877559eb20b19f95fcd0a20c17dcb20e75a7ca7c7369cd455aeb2d406b3ff5a38168a9750da3bad78dd20d96d11118468b78f4959b8e56090
   languageName: node
   linkType: hard
 
@@ -4483,7 +4465,7 @@ __metadata:
     "@trivago/prettier-plugin-sort-imports": "npm:^4.3.0"
     "@types/jest": "npm:^28.1.8"
     "@types/node": "npm:^20.12.11"
-    "@types/react": "npm:18.0.1"
+    "@types/react": "npm:18.3.4"
     "@types/react-dom": "npm:^18.0.4"
     autoprefixer: "npm:^10.4.0"
     cypress: "npm:^13.13.3"
