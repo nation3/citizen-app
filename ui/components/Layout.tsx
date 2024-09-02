@@ -317,7 +317,7 @@ export default function Layout({ children }: any) {
                     <button
                       disabled={!connector.ready}
                       onClick={() => connect({ connector })}
-                      className="dark:border-[1px] dark:border-slate-600 my-1 dark:bg-slate-700
+                      className="dark:bg-slate-700
                       dark:hover:bg-slate-600"
                     >
                       {(connectorIcons as Indexable)[connector.name] ? (
