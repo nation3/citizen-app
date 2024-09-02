@@ -263,8 +263,8 @@ export default function Layout({ children }: any) {
               <ul className="menu bg-base-100 p-2 -m-2 rounded-box dark:bg-slate-800">
                 <li
                   key="address"
-                  className="my-1 dark:bg-slate-700
-                      dark:hover:bg-slate-600 rounded-md"
+                  className="dark:bg-slate-700
+                      dark:hover:bg-slate-600"
                 >
                   <a
                     href={`${etherscanDomain}/address/${address}`}
