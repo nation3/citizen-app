@@ -1,26 +1,25 @@
 import {
+  ArrowRightOnRectangleIcon,
+  ArrowTopRightOnSquareIcon,
   BanknotesIcon,
+  Bars3Icon,
   ChevronDownIcon,
   ChevronRightIcon,
   CurrencyDollarIcon,
-  ArrowTopRightOnSquareIcon,
   HomeIcon,
   KeyIcon,
   LockClosedIcon,
-  ArrowRightOnRectangleIcon,
-  Bars3Icon,
   NewspaperIcon,
   PlusIcon,
-  UserPlusIcon,
-  UserIcon,
-  UsersIcon,
   Squares2X2Icon,
+  UserIcon,
+  UserPlusIcon,
+  UsersIcon,
   XCircleIcon,
 } from '@heroicons/react/24/outline'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import Script from 'next/script'
 import { useState } from 'react'
 // @ts-expect-error ts-migrate(7016) FIXME: Could not find a declaration file for module 'reac... Remove this comment to see the full error message
 import Blockies from 'react-blockies'
@@ -318,7 +317,7 @@ export default function Layout({ children }: any) {
                       disabled={!connector.ready}
                       onClick={() => connect({ connector })}
                       className="dark:bg-slate-700
-                      dark:hover:bg-slate-600"
+                      dark:hover:bg-slate-600 mb-0.5"
                     >
                       {(connectorIcons as Indexable)[connector.name] ? (
                         <div className="h-5 w-5">
