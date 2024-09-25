@@ -18,7 +18,7 @@
     "@metamask/eth-sig-util": "^7.0.1",
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
     "@types/jest": "^29.5.12",
-    "@types/node": "^20.12.11",
+    "@types/node": "^22.7.1",
     "@types/react": "18.3.5",
     "@types/react-dom": "^18.0.4",
     "autoprefixer": "^10.4.0",
