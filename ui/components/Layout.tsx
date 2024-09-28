@@ -1,26 +1,25 @@
 import {
+  ArrowRightOnRectangleIcon,
+  ArrowTopRightOnSquareIcon,
   BanknotesIcon,
+  Bars3Icon,
   ChevronDownIcon,
   ChevronRightIcon,
   CurrencyDollarIcon,
-  ArrowTopRightOnSquareIcon,
   HomeIcon,
   KeyIcon,
   LockClosedIcon,
-  ArrowRightOnRectangleIcon,
-  Bars3Icon,
   NewspaperIcon,
   PlusIcon,
-  UserPlusIcon,
-  UserIcon,
-  UsersIcon,
   Squares2X2Icon,
+  UserIcon,
+  UserPlusIcon,
+  UsersIcon,
   XCircleIcon,
 } from '@heroicons/react/24/outline'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import Script from 'next/script'
 import { useState } from 'react'
 // @ts-expect-error ts-migrate(7016) FIXME: Could not find a declaration file for module 'reac... Remove this comment to see the full error message
 import Blockies from 'react-blockies'
@@ -182,7 +181,10 @@ export default function Layout({ children }: any) {
                     key={item.href}
                   >
                     {item.href.charAt(0) === '/' ? (
-                      <Link href={item.href} className={`py-4 ${router.pathname == item.href ? 'active' : ''} ${router.pathname !== item.href ? 'dark:hover:bg-slate-700' : ''}`}>
+                      <Link
+                        href={item.href}
+                        className={`py-4 ${router.pathname == item.href ? 'active' : ''} ${router.pathname !== item.href ? 'dark:hover:bg-slate-700' : ''}`}
+                      >
                         {item.icon}
                         {item.name}
                         <ChevronRightIcon className="h-5 w-5 absolute right-4 opacity-50" />
@@ -240,7 +242,10 @@ export default function Layout({ children }: any) {
       <input type="checkbox" id="web3-modal" className="modal-toggle" />
 
       <label htmlFor="web3-modal" className="modal cursor-pointer z-10">
-        <label className="modal-box relative" htmlFor="">
+        <label
+          className="modal-box relative dark:bg-slate-800 dark:text-slate-300"
+          htmlFor=""
+        >
           <label
             htmlFor="web3-modal"
             className="btn btn-sm btn-circle btn-ghost absolute right-6 top-5"
@@ -254,8 +259,12 @@ export default function Layout({ children }: any) {
 
               <p className="p-4">Connected to {connectData?.connector?.name}</p>
 
-              <ul className="menu bg-base-100 p-2 -m-2 rounded-box">
-                <li key="address">
+              <ul className="menu bg-base-100 p-2 -m-2 rounded-box dark:bg-slate-800">
+                <li
+                  key="address"
+                  className="dark:bg-slate-700
+                      dark:hover:bg-slate-600"
+                >
                   <a
                     href={`${etherscanDomain}/address/${address}`}
                     rel="noreferrer noopener"
@@ -271,7 +280,11 @@ export default function Layout({ children }: any) {
                   </a>
                 </li>
 
-                <li key="logout">
+                <li
+                  key="logout"
+                  className="dark:bg-slate-700
+                      dark:hover:bg-slate-600"
+                >
                   <a onClick={() => disconnect()}>
                     <ArrowRightOnRectangleIcon className="h-5 w-5" />
                     Log out
@@ -297,12 +310,14 @@ export default function Layout({ children }: any) {
                 ''
               )}
 
-              <ul className="menu bg-base-100 p-2 -m-2 rounded-box">
+              <ul className="menu bg-base-100 p-2 -m-2 rounded-box dark:bg-slate-800">
                 {connectors.map((connector) => (
                   <li key={connector.id}>
                     <button
                       disabled={!connector.ready}
                       onClick={() => connect({ connector })}
+                      className="dark:bg-slate-700
+                      dark:hover:bg-slate-600 mb-0.5"
                     >
                       {(connectorIcons as Indexable)[connector.name] ? (
                         <div className="h-5 w-5">
