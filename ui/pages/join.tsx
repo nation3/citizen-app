@@ -150,6 +150,7 @@ export default function Join() {
               <br />
               {nationPassportAgreementStatement}:{' '}
               <GradientLink
+                id="agreementLink"
                 text="Read the terms"
                 href={nationPassportAgreementURI}
               />
