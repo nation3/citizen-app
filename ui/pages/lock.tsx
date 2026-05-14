@@ -3,6 +3,7 @@ import {
   InformationCircleIcon,
   ExclamationTriangleIcon,
   LockClosedIcon,
+  ShieldCheckIcon,
   SparklesIcon,
 } from '@heroicons/react/24/outline'
 import { BigNumber, ethers } from 'ethers'
@@ -68,6 +69,91 @@ const calculateVestingStart = ({
   return lockTime - (veNationAmount / nationAmount) * fourYears
 }
 
+const passportSafetyWindowMs = 90 * 24 * 60 * 60 * 1000
+
+const formatPassportSafetyNumber = (value?: number) => {
+  if (value == null || !Number.isFinite(value)) return '...'
+  return value >= 1 ? value.toFixed(2) : value.toFixed(4)
+}
+
+const formatPassportSafetyDate = (time?: number) => {
+  if (!time || !Number.isFinite(time)) return 'Set amount and date'
+  return new Intl.DateTimeFormat('en', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  }).format(new Date(time))
+}
+
+const getPassportSafety = ({
+  projectedVeNation,
+  requiredBalance,
+  lockEndTime,
+  now = Date.now(),
+}: {
+  projectedVeNation?: number
+  requiredBalance?: number
+  lockEndTime?: number
+  now?: number
+}) => {
+  if (requiredBalance == null || requiredBalance < 0) {
+    return {
+      status: 'Loading threshold',
+      statusClass: 'badge-ghost',
+      dropDate: 'Loading threshold',
+      buffer: undefined,
+      projected: undefined,
+      threshold: undefined,
+    }
+  }
+
+  if (
+    projectedVeNation == null ||
+    !Number.isFinite(projectedVeNation) ||
+    !lockEndTime ||
+    !Number.isFinite(lockEndTime)
+  ) {
+    return {
+      status: 'Enter amount and date',
+      statusClass: 'badge-ghost',
+      dropDate: 'Set amount and date',
+      buffer: undefined,
+      projected: projectedVeNation,
+      threshold: requiredBalance,
+    }
+  }
+
+  const buffer = projectedVeNation - requiredBalance
+  if (buffer <= 0) {
+    return {
+      status: 'Below threshold',
+      statusClass: 'badge-warning',
+      dropDate: 'Already below threshold',
+      buffer,
+      projected: projectedVeNation,
+      threshold: requiredBalance,
+    }
+  }
+
+  const dropTime =
+    projectedVeNation > 0
+      ? now + (1 - requiredBalance / projectedVeNation) * (lockEndTime - now)
+      : undefined
+  const dropsSoon =
+    dropTime != null &&
+    Number.isFinite(dropTime) &&
+    dropTime - now <= passportSafetyWindowMs
+
+  return {
+    status: dropsSoon ? 'At risk soon' : 'Safe for now',
+    statusClass: dropsSoon ? 'badge-warning' : 'badge-info',
+    dropDate: formatPassportSafetyDate(dropTime),
+    buffer,
+    projected: projectedVeNation,
+    threshold: requiredBalance,
+  }
+}
+
 export default function Lock() {
   const { address } = useAccount()
 
@@ -77,7 +163,8 @@ export default function Lock() {
   const { data: veNationBalance, isLoading: veNationBalanceLoading } =
     useVeNationBalance(address)
 
-  const { data: claimRequiredBalance, isLoading: claimRequiredBalanceLoading } = useClaimRequiredBalance()
+  const { data: claimRequiredBalance, isLoading: claimRequiredBalanceLoading } =
+    useClaimRequiredBalance()
   const requiredBalance = useMemo(() => {
     if (claimRequiredBalanceLoading) {
       return -1
@@ -99,8 +186,8 @@ export default function Lock() {
     !veNationLockLoading &&
       setHasExpired(
         veNationLock &&
-        veNationLock[1] != 0 &&
-        ethers.BigNumber.from(Date.now()).gte(veNationLock[1].mul(1000)),
+          veNationLock[1] != 0 &&
+          ethers.BigNumber.from(Date.now()).gte(veNationLock[1].mul(1000)),
       )
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [veNationLock])
@@ -183,11 +270,11 @@ export default function Lock() {
       amountNeeded:
         hasLock && veNationLock && veNationLock[0]
           ? (
-            transformNumber(
-              lockAmount ?? '0',
-              NumberType.bignumber,
-            ) as BigNumber
-          ).sub(veNationLock[0])
+              transformNumber(
+                lockAmount ?? '0',
+                NumberType.bignumber,
+              ) as BigNumber
+            ).sub(veNationLock[0])
           : transformNumber(lockAmount ?? '0', NumberType.bignumber),
       approveText: 'Approve $NATION',
       allowUnlimited: false,
@@ -195,39 +282,84 @@ export default function Lock() {
     [hasLock, veNationLock, lockAmount],
   )
 
+  const projectedVeNation = useMemo(() => {
+    const nationAmount = Number(lockAmount)
+    const selectedLockTime = Date.parse(lockTime?.formatted)
+    const maxLockTime = Date.parse(minMaxLockTime?.max)
+
+    if (
+      !nationAmount ||
+      nationAmount <= 0 ||
+      !Number.isFinite(selectedLockTime) ||
+      !Number.isFinite(maxLockTime)
+    ) {
+      return undefined
+    }
+
+    const projected = Number(
+      calculateVeNation({
+        nationAmount,
+        veNationAmount: transformNumber(
+          veNationBalance?.value || 0,
+          NumberType.number,
+        ),
+        time: selectedLockTime,
+        lockTime: Date.parse(new Date().toString()),
+        max: maxLockTime,
+      }),
+    )
+
+    return Number.isFinite(projected) ? projected : undefined
+  }, [lockAmount, lockTime?.formatted, minMaxLockTime?.max, veNationBalance])
+
+  const passportSafety = useMemo(
+    () =>
+      getPassportSafety({
+        projectedVeNation,
+        requiredBalance:
+          requiredBalance == -1 ? undefined : Number(requiredBalance),
+        lockEndTime: Date.parse(lockTime?.formatted),
+      }),
+    [projectedVeNation, requiredBalance, lockTime?.formatted],
+  )
+
   return (
     <>
       <Head title="$veNATION" />
 
-      <MainCard title="Lock $NATION to get $veNATION">
-        <p className="mb-4 dark:text-slate-300">
-          $veNATION enables governance and minting passport NFTs.{' '}
-          <GradientLink
-            text="Learn more"
-            href="https://wiki.nation3.org/token/#venation"
-            internal={false}
-            textSize={'md'}
-          ></GradientLink>
-        </p>
-        {!hasLock ? (
-          <>
-            <p className="mb-4 dark:text-slate-300">
-              Your veNATION balance is dynamic and always correlates to the
-              remainder of the time lock. As time passes and the remainder of
-              time lock decreases, your veNATION balance decreases. If you want
-              to increase it, you have to either increase the time lock or add
-              more NATION. $NATION balance stays the same.
-              <br />
-              <br />
-              <span className="font-semibold">
-                {requiredBalance == -1 ? '...' : requiredBalance} $veNATION
-              </span>{' '}
-              will be needed to mint a passport NFT.
-              <br />
-              <br />
-              Some examples of how to get to{' '}
-              {requiredBalance == -1 ? '...' : requiredBalance} $veNATION:
-            </p>
+      <MainCard
+        title="Lock $NATION to get $veNATION"
+        maxWidthClassNames="w-[calc(100vw-2rem)] max-w-md md:max-w-xl"
+      >
+        <div className="w-full min-w-0">
+          <p className="mb-4 dark:text-slate-300">
+            $veNATION enables governance and minting passport NFTs.{' '}
+            <GradientLink
+              text="Learn more"
+              href="https://wiki.nation3.org/token/#venation"
+              internal={false}
+              textSize={'md'}
+            ></GradientLink>
+          </p>
+          {!hasLock ? (
+            <>
+              <p className="mb-4 dark:text-slate-300">
+                Your veNATION balance is dynamic and always correlates to the
+                remainder of the time lock. As time passes and the remainder of
+                time lock decreases, your veNATION balance decreases. If you
+                want to increase it, you have to either increase the time lock
+                or add more NATION. $NATION balance stays the same.
+                <br />
+                <br />
+                <span className="font-semibold">
+                  {requiredBalance == -1 ? '...' : requiredBalance} $veNATION
+                </span>{' '}
+                will be needed to mint a passport NFT.
+                <br />
+                <br />
+                Some examples of how to get to{' '}
+                {requiredBalance == -1 ? '...' : requiredBalance} $veNATION:
+              </p>
 
             <ul className="list-disc list-inside mb-4 dark:text-slate-200">
               <li>
@@ -252,10 +384,10 @@ export default function Lock() {
                 <span>
                   We suggest you obtain <b>more than</b>{' '}
                   {(requiredBalance == -1 ? '...' : requiredBalance) || 0 + 0.5}{' '}
-                  $veNATION if you want to mint a passport NFT, since the $veNATION
-                  balance drops over time. If it falls below the required
-                  threshold, your passport can be revoked. You can always lock
-                  more $NATION later.
+                  $veNATION if you want to mint a passport NFT, since the
+                  $veNATION balance drops over time. If it falls below the
+                  required threshold, your passport can be revoked. You can
+                  always lock more $NATION later.
                 </span>
               </div>
             </div>
@@ -313,6 +445,57 @@ export default function Lock() {
               </div>
             </div>
           </>
+        )}
+
+        {!hasExpired && (
+          <div className="mb-4 rounded-lg border border-n3blue bg-n3blue-100/60 p-4 text-sm shadow-sm dark:bg-slate-300">
+            <div className="mb-3 flex items-center gap-2 font-semibold text-base-content">
+              <ShieldCheckIcon className="h-5 w-5 text-n3blue dark:text-blue-600" />
+              <span>Passport safety</span>
+            </div>
+
+            <div className="divide-y divide-slate-200 rounded-lg border border-slate-200 bg-white dark:divide-slate-300 dark:border-slate-300 dark:bg-slate-100">
+              <div className="grid gap-1 px-3 py-3 md:grid-cols-[1fr_auto] md:items-center">
+                <span className="text-slate-600">Projected $veNATION now</span>
+                <span className="font-semibold text-slate-900">
+                  {formatPassportSafetyNumber(passportSafety.projected)} /{' '}
+                  {formatPassportSafetyNumber(passportSafety.threshold)}{' '}
+                  threshold
+                  {passportSafety.buffer != null && (
+                    <span
+                      className={`ml-2 ${
+                        passportSafety.buffer > 0
+                          ? 'text-emerald-600'
+                          : 'text-amber-700'
+                      }`}
+                    >
+                      ({passportSafety.buffer > 0 ? '+' : ''}
+                      {formatPassportSafetyNumber(passportSafety.buffer)}{' '}
+                      buffer)
+                    </span>
+                  )}
+                </span>
+              </div>
+
+              <div className="grid gap-1 px-3 py-3 md:grid-cols-[1fr_auto] md:items-center">
+                <span className="text-slate-600">
+                  Estimated threshold drop date
+                </span>
+                <span className="font-semibold text-slate-900">
+                  {passportSafety.dropDate}
+                </span>
+              </div>
+
+              <div className="grid gap-1 px-3 py-3 md:grid-cols-[1fr_auto] md:items-center">
+                <span className="text-slate-600">Status</span>
+                <span
+                  className={`badge ${passportSafety.statusClass} justify-self-start md:justify-self-end`}
+                >
+                  {passportSafety.status}
+                </span>
+              </div>
+            </div>
+          </div>
         )}
 
         <div className="card bg-base-100 shadow overflow-visible dark:bg-slate-300">
@@ -373,6 +556,14 @@ export default function Lock() {
                       Max
                     </button>
                   </div>
+                  <p className="-mt-2 mb-4 flex items-start gap-2 text-xs text-slate-500 dark:text-slate-700">
+                    <InformationCircleIcon className="mt-0.5 h-4 w-4 shrink-0" />
+                    <span>
+                      {requiredBalance == -1 ? '...' : requiredBalance}{' '}
+                      $veNATION may be enough now, but $veNATION decays over
+                      time.
+                    </span>
+                  </p>
                   <label className="label">
                     <span className="label-text">
                       Lock expiration date
@@ -425,17 +616,7 @@ export default function Lock() {
                   {wantsToIncrease ? (
                     <p>
                       Your final balance will be approx{' '}
-                      {calculateVeNation({
-                        nationAmount: lockAmount && +lockAmount,
-                        veNationAmount: transformNumber(
-                          veNationBalance?.value || 0,
-                          NumberType.number,
-                        ),
-                        time: Date.parse(lockTime.formatted),
-                        lockTime: Date.parse(new Date().toString()),
-                        max: Date.parse(minMaxLockTime.max),
-                      })}{' '}
-                      $veNATION
+                      {formatPassportSafetyNumber(projectedVeNation)} $veNATION
                     </p>
                   ) : (
                     ''
@@ -475,6 +656,7 @@ export default function Lock() {
                 </>
               )}
             </div>
+          </div>
           </div>
         </div>
       </MainCard>

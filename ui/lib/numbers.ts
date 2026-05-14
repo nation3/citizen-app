@@ -13,7 +13,7 @@ export enum NumberType {
 export function transformNumber(
   num: number | BigNumber | string,
   to: NumberType,
-  decimals = 18
+  decimals = 18,
 ): BigNumber | string | number {
   if (!num) {
     return to === NumberType.bignumber ? ethers.BigNumber.from('0') : 0
@@ -23,8 +23,8 @@ export function transformNumber(
     if (num instanceof ethers.BigNumber) return num
 
     return ethers.utils.parseUnits(
-      typeof num === 'string' ? num : num.toString(),
-      decimals
+      typeof num === 'string' ? num : num.toFixed(decimals),
+      decimals,
     )
   } else if (to === NumberType.number) {
     if (typeof num === 'number') return num
@@ -40,7 +40,7 @@ export function transformNumber(
     if (num instanceof ethers.BigNumber) {
       return stringToNumber(
         ethers.utils.formatUnits(num, 18),
-        decimals
+        decimals,
       ).toString()
     } else if (typeof num === 'number') {
       return num.toFixed(decimals).toString()
@@ -52,6 +52,6 @@ export function transformNumber(
 export function isFixedDecimalsNumber(value: any, decimals = 18) {
   const NUMBER_REGEX = RegExp(`^(\\d*\\.{0,1}\\d{0,${decimals}}$)`)
   const isValid = value.toString().match(NUMBER_REGEX)
-  
-  return Boolean(isValid);
+
+  return Boolean(isValid)
 }
