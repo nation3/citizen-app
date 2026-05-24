@@ -17,6 +17,10 @@ import {
   useHasPassport,
   useClaimRequiredBalance,
 } from '../lib/passport-nft'
+import {
+  formatPassportBalance,
+  getBufferedPassportBalance,
+} from '../lib/passport-threshold'
 import { storeSignature, useSignAgreement } from '../lib/sign-agreement'
 import { useAccount } from '../lib/use-wagmi'
 import { useVeNationBalance } from '../lib/ve-token'
@@ -34,13 +38,19 @@ export default function Join() {
   const { data: veNationBalance, isLoading: veNationBalanceLoading } =
     useVeNationBalance(address)
   const { hasPassport, isLoading: hasPassportLoading } = useHasPassport(address)
-  const { data: claimRequiredBalance, isLoading: claimRequiredBalanceLoading } = useClaimRequiredBalance()
+  const { data: claimRequiredBalance, isLoading: claimRequiredBalanceLoading } =
+    useClaimRequiredBalance()
   const requiredBalance = useMemo(() => {
     if (claimRequiredBalanceLoading) {
       return -1
     }
-    return transformNumber(claimRequiredBalance, NumberType.string, 0) as number
+    return Number(transformNumber(claimRequiredBalance, NumberType.string, 0))
   }, [claimRequiredBalance, claimRequiredBalanceLoading])
+  const bufferedRequiredBalance = useMemo(
+    () =>
+      requiredBalance == -1 ? -1 : getBufferedPassportBalance(requiredBalance),
+    [requiredBalance],
+  )
 
   const { writeAsync: claim, data: claimData } = useClaimPassport()
   const { isLoading: claimPassportLoading } = useWaitForTransaction({
@@ -105,6 +115,14 @@ export default function Join() {
     veNationBalanceLoading,
     claimRequiredBalance,
   ])
+
+  const veNationBalanceNumber = Number(
+    transformNumber(veNationBalance?.value || 0, NumberType.number),
+  )
+  const shouldAddPassportBuffer =
+    Boolean(action.mint) &&
+    bufferedRequiredBalance != -1 &&
+    veNationBalanceNumber < bufferedRequiredBalance
 
   return (
     <>
@@ -188,13 +206,28 @@ export default function Join() {
             </div>
 
             {action.mint ? (
-              <ActionButton
-                className="btn btn-primary normal-case font-medium grow"
-                action={signAndClaim}
-                preAction={changeUrl}
-              >
-                Claim
-              </ActionButton>
+              <>
+                {shouldAddPassportBuffer && (
+                  <div className="alert alert-warning mb-4 dark:bg-slate-300">
+                    <div>
+                      <span>
+                        Your balance can claim now, but it is close to the
+                        required threshold and $veNATION decreases every block.
+                        For a safer mint, lock enough to reach at least{' '}
+                        {formatPassportBalance(bufferedRequiredBalance)}{' '}
+                        $veNATION before claiming.
+                      </span>
+                    </div>
+                  </div>
+                )}
+                <ActionButton
+                  className="btn btn-primary normal-case font-medium grow"
+                  action={signAndClaim}
+                  preAction={changeUrl}
+                >
+                  Claim
+                </ActionButton>
+              </>
             ) : action.lockAndMint ? (
               <>
                 <Link href="/lock" passHref>

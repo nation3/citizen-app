@@ -11,8 +11,12 @@ import { nationToken, veNationToken } from '../lib/config'
 import { dateToReadable } from '../lib/date'
 import { useNationBalance } from '../lib/nation-token'
 import { NumberType, transformNumber } from '../lib/numbers'
-import { useAccount } from '../lib/use-wagmi'
 import { useClaimRequiredBalance } from '../lib/passport-nft'
+import {
+  formatPassportBalance,
+  getBufferedPassportBalance,
+} from '../lib/passport-threshold'
+import { useAccount } from '../lib/use-wagmi'
 import {
   useVeNationBalance,
   useVeNationCreateLock,
@@ -77,13 +81,25 @@ export default function Lock() {
   const { data: veNationBalance, isLoading: veNationBalanceLoading } =
     useVeNationBalance(address)
 
-  const { data: claimRequiredBalance, isLoading: claimRequiredBalanceLoading } = useClaimRequiredBalance()
+  const { data: claimRequiredBalance, isLoading: claimRequiredBalanceLoading } =
+    useClaimRequiredBalance()
   const requiredBalance = useMemo(() => {
     if (claimRequiredBalanceLoading) {
       return -1
     }
-    return transformNumber(claimRequiredBalance, NumberType.string, 0) as number
+    return Number(transformNumber(claimRequiredBalance, NumberType.string, 0))
   }, [claimRequiredBalance, claimRequiredBalanceLoading])
+  const bufferedRequiredBalance = useMemo(
+    () =>
+      requiredBalance == -1 ? -1 : getBufferedPassportBalance(requiredBalance),
+    [requiredBalance],
+  )
+  const requiredBalanceText =
+    requiredBalance == -1 ? '...' : formatPassportBalance(requiredBalance)
+  const bufferedRequiredBalanceText =
+    bufferedRequiredBalance == -1
+      ? '...'
+      : formatPassportBalance(bufferedRequiredBalance)
 
   const { data: veNationLock, isLoading: veNationLockLoading } =
     useVeNationLock(address)
@@ -99,8 +115,8 @@ export default function Lock() {
     !veNationLockLoading &&
       setHasExpired(
         veNationLock &&
-        veNationLock[1] != 0 &&
-        ethers.BigNumber.from(Date.now()).gte(veNationLock[1].mul(1000)),
+          veNationLock[1] != 0 &&
+          ethers.BigNumber.from(Date.now()).gte(veNationLock[1].mul(1000)),
       )
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [veNationLock])
@@ -183,17 +199,33 @@ export default function Lock() {
       amountNeeded:
         hasLock && veNationLock && veNationLock[0]
           ? (
-            transformNumber(
-              lockAmount ?? '0',
-              NumberType.bignumber,
-            ) as BigNumber
-          ).sub(veNationLock[0])
+              transformNumber(
+                lockAmount ?? '0',
+                NumberType.bignumber,
+              ) as BigNumber
+            ).sub(veNationLock[0])
           : transformNumber(lockAmount ?? '0', NumberType.bignumber),
       approveText: 'Approve $NATION',
       allowUnlimited: false,
     }),
     [hasLock, veNationLock, lockAmount],
   )
+
+  const expectedVeNationBalance = wantsToIncrease
+    ? calculateVeNation({
+        nationAmount: lockAmount && +lockAmount,
+        veNationAmount: transformNumber(
+          veNationBalance?.value || 0,
+          NumberType.number,
+        ),
+        time: Date.parse(lockTime.formatted),
+        lockTime: Date.parse(new Date().toString()),
+        max: Date.parse(minMaxLockTime.max),
+      })
+    : 0
+  const expectedMeetsPassportBuffer =
+    bufferedRequiredBalance != -1 &&
+    Number(expectedVeNationBalance) >= bufferedRequiredBalance
 
   return (
     <>
@@ -220,28 +252,32 @@ export default function Lock() {
               <br />
               <br />
               <span className="font-semibold">
-                {requiredBalance == -1 ? '...' : requiredBalance} $veNATION
+                {requiredBalanceText} $veNATION
               </span>{' '}
               will be needed to mint a passport NFT.
               <br />
               <br />
-              Some examples of how to get to{' '}
-              {requiredBalance == -1 ? '...' : requiredBalance} $veNATION:
+              Some examples of how to get to {requiredBalanceText} $veNATION:
             </p>
 
             <ul className="list-disc list-inside mb-4 dark:text-slate-200">
               <li>
-                At least {requiredBalance == -1 ? '...' : requiredBalance}{' '}
-                $NATION locked for 4 years, or
+                At least {requiredBalanceText} $NATION locked for 4 years, or
               </li>
 
               <li>
-                At least {requiredBalance == -1 ? '...' : requiredBalance * 2}{' '}
+                At least{' '}
+                {bufferedRequiredBalance == -1
+                  ? '...'
+                  : formatPassportBalance(requiredBalance * 2)}{' '}
                 $NATION locked for 2 years, or
               </li>
 
               <li>
-                At least {requiredBalance == -1 ? '...' : requiredBalance * 4}{' '}
+                At least{' '}
+                {bufferedRequiredBalance == -1
+                  ? '...'
+                  : formatPassportBalance(requiredBalance * 4)}{' '}
                 $NATION locked for 1 year
               </li>
             </ul>
@@ -251,9 +287,10 @@ export default function Lock() {
                 <InformationCircleIcon className="h-24 w-24 text-n3blue  dark:text-blue-600" />
                 <span>
                   We suggest you obtain <b>more than</b>{' '}
-                  {(requiredBalance == -1 ? '...' : requiredBalance) || 0 + 0.5}{' '}
-                  $veNATION if you want to mint a passport NFT, since the $veNATION
-                  balance drops over time. If it falls below the required
+                  {bufferedRequiredBalanceText} $veNATION if you want to mint a
+                  passport NFT. $veNATION drops every block, so locking exactly
+                  the minimum can leave you below the threshold before the mint
+                  transaction finishes. If it later falls below the required
                   threshold, your passport can be revoked. You can always lock
                   more $NATION later.
                 </span>
@@ -425,20 +462,34 @@ export default function Lock() {
                   {wantsToIncrease ? (
                     <p>
                       Your final balance will be approx{' '}
-                      {calculateVeNation({
-                        nationAmount: lockAmount && +lockAmount,
-                        veNationAmount: transformNumber(
-                          veNationBalance?.value || 0,
-                          NumberType.number,
-                        ),
-                        time: Date.parse(lockTime.formatted),
-                        lockTime: Date.parse(new Date().toString()),
-                        max: Date.parse(minMaxLockTime.max),
-                      })}{' '}
-                      $veNATION
+                      {expectedVeNationBalance} $veNATION
                     </p>
                   ) : (
                     ''
+                  )}
+                  {wantsToIncrease && bufferedRequiredBalance != -1 && (
+                    <div
+                      className={`alert mt-4 ${
+                        expectedMeetsPassportBuffer
+                          ? 'alert-success'
+                          : 'alert-warning'
+                      } dark:bg-slate-300`}
+                    >
+                      <div>
+                        {expectedMeetsPassportBuffer ? (
+                          <InformationCircleIcon className="h-8 w-8" />
+                        ) : (
+                          <ExclamationTriangleIcon className="h-8 w-8" />
+                        )}
+                        <span>
+                          {expectedMeetsPassportBuffer
+                            ? 'This lock should leave enough buffer to mint a passport.'
+                            : 'This lock is still too close to the passport threshold.'}{' '}
+                          Aim for at least {bufferedRequiredBalanceText}{' '}
+                          $veNATION before claiming.
+                        </span>
+                      </div>
+                    </div>
                   )}
                   <div className="card-actions mt-4">
                     <ActionButton
